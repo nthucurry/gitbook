@@ -1,0 +1,9 @@
+# blacklist everything
+*/
+README.md
+SUMMARY.md
+.DS_Store
+
+# whitelist directories of interest and their contents
+!img
+!img/oracle
