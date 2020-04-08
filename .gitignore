@@ -7,3 +7,4 @@ SUMMARY.md
 # whitelist directories of interest and their contents
 !img
 !img/oracle
+!img/vnc
