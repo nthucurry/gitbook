@@ -1,10 +1,11 @@
-# blacklist everything
+### blacklist everything
 */
 README.md
 SUMMARY.md
 .DS_Store
 
-# whitelist directories of interest and their contents
+### whitelist directories of interest and their contents
+# img
 !img
 !img/oracle
 !img/vnc
@@ -17,3 +18,9 @@ SUMMARY.md
 !img/gcp
 !img/veeam
 !img/moss
+# office
+office/chipbond/*
+!office
+!office/chipbond
+!office/chipbond/cb-2018.md
+!office/chipbond/cb-2019.md
