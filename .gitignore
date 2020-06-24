@@ -25,3 +25,9 @@ office/chipbond/*
 !office/chipbond/cb-2018.md
 !office/chipbond/cb-2019.md
 !office/chipbond/km.md
+# knowledge
+knowledge/*
+knowledge/oracle/*
+!knowledge
+!knowledge/oracle/
+!knowledge/oracle/dataguard-demo.md
