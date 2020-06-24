@@ -176,7 +176,7 @@ alter database recover managed standby database disconnect from session;
 ```sql
 # sequence and & applied redo log(standby: redo apply YES)
 select
-	name,sequence#,applied,creator,registrar,FAL,
+    name,sequence#,applied,creator,registrar,FAL,
     to_char(first_time,'mm/dd/yy hh24:mi:ss') as first,
     to_char(next_time,'mm/dd/yy hh24:mi:ss') next
 from v$archived_log
