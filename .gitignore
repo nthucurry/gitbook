@@ -28,7 +28,10 @@ office/chipbond/*
 # knowledge
 knowledge/*
 knowledge/oracle/*
+knowledge/linux/*
 !knowledge
 !knowledge/oracle/
 !knowledge/oracle/dataguard-demo.md
 !knowledge/oracle/install-oracle-demo.md
+!knowledge/linux
+!knowledge/linux/vpn.md
