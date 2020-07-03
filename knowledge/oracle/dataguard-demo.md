@@ -2,6 +2,7 @@
 ## bash_profile
 ```bash
 export ORACLE_SID=DEMO
+export ORACLE_UNQNAME=DEMO
 export ORACLE_BASE=/u01/oracle
 export ORACLE_HOME=$ORACLE_BASE/11204
 export TNS_ADMIN=$ORACLE_HOME/network/admin
@@ -174,6 +175,9 @@ alter database recover managed standby database disconnect from session;
 
 ### Check
 ```sql
+# 增加視窗寬度
+set linesize 170
+
 # sequence and & applied redo log(standby: redo apply YES)
 select
     name,sequence#,applied,creator,registrar,FAL,
@@ -186,7 +190,7 @@ order by first_time;
 select * from v$archive_dest_status where status != 'INACTIVE';
 
 # switchover status(primary: TO STANDBY;standby: NOT ALLOWED)
-select switchover_status from v$database;
+select name, open_mode, database_role, switchover_status from v$database;
 
 # there are missing archive logs on the standby database server(no selected rows is right)
 select * from v$archive_gap;
