@@ -162,6 +162,11 @@ IFILE=/u01/oracle/11204/dbs/initDEMO_ifile.ora
 ```
 
 ## check command
+### Update spfile
+```sql
+create spfile from pfile;
+```
+
 ### Primary
 ```sql
 alter database force logging;
