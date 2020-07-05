@@ -30,9 +30,12 @@ knowledge/*
 knowledge/oracle/*
 knowledge/linux/*
 knowledge/netqwork/*
+knowledge/gcp/*
 !knowledge
 !knowledge/oracle/
 !knowledge/oracle/dataguard-demo.md
 !knowledge/oracle/install-oracle-demo.md
 !knowledge/linux
 !knowledge/netqwork/vpn.md
+!knowledge/gcp/
+!knowledge/gcp/script.md
