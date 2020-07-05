@@ -24,8 +24,8 @@ https://download.virtualbox.org/virtualbox/5.2.18/VirtualBox-5.2.18-124319-OSX.d
 
 # 網路設定
 - [Oracle VM VirtualBox 網路設定與網卡說明](https://kanchengzxdfgcv.blogspot.com/2015/10/oracle-vm-virtualbox.html)
-- [網路講解](https://www.nakivo.com/blog/virtualbox-network-setting-guide/)
-- [Port Forwarding](https://nsrc.org/workshops/2014/btnog/raw-attachment/wiki/Track2Agenda/ex-virtualbox-portforward-ssh.htm#fn1)
+- [VirtualBox Network Settings: Complete Guide](https://www.nakivo.com/blog/virtualbox-network-setting-guide/)
+- [VirtualBox lab: Port Forwarding](https://nsrc.org/workshops/2014/btnog/raw-attachment/wiki/Track2Agenda/ex-virtualbox-portforward-ssh.htm#fn1)
     - 主客機 port 不能一樣
         ![](../../img/virtualbox/port-forwarding-1.png)
         ![](../../img/virtualbox/port-forwarding-2.png)
