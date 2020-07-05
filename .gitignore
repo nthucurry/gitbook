@@ -31,6 +31,7 @@ knowledge/oracle/*
 knowledge/linux/*
 knowledge/netqwork/*
 knowledge/gcp/*
+knowledge/vm/*
 !knowledge
 !knowledge/oracle/
 !knowledge/oracle/dataguard-demo.md
@@ -39,3 +40,5 @@ knowledge/gcp/*
 !knowledge/netqwork/vpn.md
 !knowledge/gcp/
 !knowledge/gcp/script.md
+!knowledge/vm
+!knowledge/vm/vbx.md
