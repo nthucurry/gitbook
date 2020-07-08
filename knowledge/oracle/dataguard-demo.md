@@ -179,6 +179,7 @@ alter database recover managed standby database disconnect from session;
 ```
 
 ### Check
+#### Software
 ```sql
 # 增加視窗寬度
 set linesize 170
@@ -199,4 +200,11 @@ select name, open_mode, database_role, switchover_status from v$database;
 
 # there are missing archive logs on the standby database server(no selected rows is right)
 select * from v$archive_gap;
+```
+
+#### Hardware
+```bash
+ping [IP]
+telnet [IP] [port]
+traceroute [IP]
 ```

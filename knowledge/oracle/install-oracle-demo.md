@@ -79,7 +79,8 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
         - `grep SwapTotal /proc/meminfo`
     - automatic memory management
         - `df -h /dev/shm/`
-        - 永久有效(7G 的置換空間): `shmfs /dev/shm tmpfs size=7g 0`
+        - 永久有效(7G 的置換空間)
+            - `shmfs /dev/shm tmpfs size=7g 0`
 
 ## 安裝 oracle database
 - `./database/runInstaller`(用 oracle 帳號，不能用 root)
@@ -114,6 +115,7 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
             # 改成(也要 tab)
             ctxhx: $(CTXHXOBJ)
                 -static $(LINK_CTXHX) $(CTXHXOBJ) $(INSO_LINK) /usr/lib/gcc/x86_64-redhat-linux/4.8.2/libstdc++.so
+
             # tip
             sed -i 's/$(LINK_CTXHX) $(CTXHXOBJ) $(INSO_LINK)/-static $(LINK_CTXHX) $(CTXHXOBJ) $(INSO_LINK) \/usr\/lib\/gcc\/x86_64-redhat-linux\/4.8.2\/libstdc++.so/g' $ORACLE_HOME/ctx/lib/ins_ctx.mk
             ```
@@ -122,6 +124,7 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
             # 原本
             $(SYSMANBIN)emdctl:
                 $(MK_EMAGENT_NMECTL)
+
             # 改成
             $(SYSMANBIN)emdctl:
                 $(MK_EMAGENT_NMECTL) -lnnz11
@@ -129,8 +132,11 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
             # tip
             sed -i 's/$(MK_EMAGENT_NMECTL)/$(MK_EMAGENT_NMECTL) -lnnz11/g' $ORACLE_HOME/sysman/lib/ins_emagent.mk
             ```
-    - `/u01/oraInventory/orainstRoot.sh`
-    - `/u01/oracle/11204/root.sh`
+    - 執行
+        ```bash
+        /u01/oraInventory/orainstRoot.sh
+        $ORACLE_HOME/root.sh
+        ```
 
 ## 安裝 listener
 - 執行 `$ORACLE_HOME/bin/netca`
@@ -192,7 +198,7 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
 開機啟動 listener
 - `crontab -e`
     - `@reboot /home/demo/start-db.sh`
-- ``vi start-db.sh`
+- `vi start-db.sh`
     ```bash
     export ORACLE_SID=DEMO
     export ORACLE_HOME=/u01/oracle/11204
@@ -210,7 +216,7 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
 ```sql
 CREATE USER DEMO IDENTIFIED BY demo DEFAULT tablespace ts_demo;
 GRANT CONNECT TO demo_admin;
-GRANT CREATE SESSION TO demo_admin;
+GRANT CREATE SESSION TO demo_admin; -- 必要
 GRANT ALL ON DEMO.TEAM TO demo_admin;
 GRANT demo_admin TO demo;
 ```
