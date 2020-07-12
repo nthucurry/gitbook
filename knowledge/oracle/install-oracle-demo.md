@@ -1,9 +1,11 @@
 # 安裝 Oracle SOP
+# 安裝 Oracle SOP
 ## 建立帳號、群組
 ```bash
 groupadd -g 501 dba
 groupadd -g 502 oinstall
 useradd -G 501,502 -u 501 -m demo
+passwd demo
 ```
 
 ## 設定環境變數
@@ -13,9 +15,9 @@ export ORACLE_SID=DEMO
 export ORACLE_BASE=/u01/oracle
 export ORACLE_HOME=$ORACLE_BASE/11204
 export TNS_ADMIN=$ORACLE_HOME/network/admin
-LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
+LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib;
 export LD_LIBRARY_PATH
-CLASSPATH=$ORACLE_HOME/JRE:$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
+CLASSPATH=$ORACLE_HOME/JRE:$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib;
 export CLASSPATH
 PATH=$PATH:$HOME/bin:$ORACLE_HOME/bin
 export PATH
