@@ -85,11 +85,11 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
             - `shmfs /dev/shm tmpfs size=7g 0`
 
 ## 安裝 oracle database
-- `./database/runInstaller`(用 oracle 帳號，不能用 root)
+### runInstaller(用 oracle 帳號，不能用 root)
 - [x] install database software only
 - [x] single instance database installation
 - [x] enterprise edition(企業版才有 data guard)
-- prerequisite checks
+- [x] prerequisite checks
     - `yum install gcc* libaio-devel* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* binutils* compat-libcap1* -y`
     - `vi /etc/sysctl.conf`(有用懶人包會自動生成)
         ```txt
