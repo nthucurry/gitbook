@@ -1,5 +1,4 @@
 # 安裝 Oracle SOP
-# 安裝 Oracle SOP
 ## 建立帳號、群組
 ```bash
 groupadd -g 501 dba
@@ -33,6 +32,34 @@ alias tree='tree --charset ASCII'
 ```
 
 ## 檢查 LVM setting(option)
+
+## 掛載 NFS(option)
+[CentOS 7 下 yum 安装和配置 NFS](https://qizhanming.com/blog/2018/08/08/how-to-install-nfs-on-centos-7)
+- host OS
+    ```bash
+    # startup NFS(Network File System)
+    sudo systemctl enable rpcbind
+    sudo systemctl enable nfs
+    systemctl start rpcbind
+    systemctl start nfs
+
+    # firewall setting
+    firewall-cmd --zone=public --permanent --add-service={rpc-bind,mountd,nfs}
+    firewall-cmd --reload
+
+    # check NFS
+    vi /etc/exports
+    showmount -e localhost
+    ```
+- client OS
+    ```bash
+    sudo systemctl start rpcbind
+    sudo systemctl enable rpcbind
+
+    # mount NFS at startup
+    sudo vi /etc/fstab
+        目標主機名稱:/backup_new         /backup_new                   nfs     defaults        0 0
+    ```
 
 ## 安裝 VNC server(option)
 ```bash
