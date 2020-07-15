@@ -34,6 +34,7 @@ knowledge/linux/*
 knowledge/netqwork/*
 knowledge/gcp/*
 knowledge/vm/*
+knowledge/windows/*
 !knowledge
 !knowledge/oracle/
 !knowledge/oracle/startup-job.md
@@ -47,3 +48,5 @@ knowledge/vm/*
 !knowledge/gcp/script.md
 !knowledge/vm
 !knowledge/vm/vbx.md
+!knowledge/windows/
+!knowledge/windows/portable.md
