@@ -145,20 +145,32 @@ rm $script
 #!/bin/bash
 
 ### define
+proj_name="gcp-project-list.txt"
+temp_file="gcp-disk-info.tmp"
+output_file="gcp-disk-info.csv"
 vm_list="gcp-instances-list.csv"
 vm_list_disk="gcp-instances-list-detail.csv"
 
-#### initial
-rm $vm_list_disk
+rm $temp_file $output_file
 
-#### get vm disk spec
-cat $vm_list | while read line
+cat $proj_name | while read line
 do
     echo "*********** $line ***********"
-    proj_name=`echo $line | awk '{FS=" "}  {print $1}'`
-    vm_name=`echo $line | awk '{FS=" "}  {print $2}'`
-    gcloud config set project $proj_name > /dev/null 2>&1
-    gcloud compute disks list --filter="name=($vm_name)" --format="table(NAME,SIZE_GB,TYPE)" | grep -v "NAME" >> $vm_list_disk
+    gcloud config set project=" $line" > /dev/null 2>&1
+    gcloud compute instances list --project=$line --format="csv(disks[0].source,NAME)" | grep -v "name" >> $temp_file
+    gcloud config unset project > /dev/null 2>&1
+done
+
+sed -i 's/https:\/\/www.googleapis.com\/compute\/v1\/projects\///g' $temp_file
+
+cat $proj_name | while read line
+do
+    proj=`echo $line | awk 'BEGIN {FS="\/"}  {print $1}'`
+    inst=`echo $line | awk 'BEGIN {FS=","}  {print $2}'`
+    echo "*********** $proj ***********" >> $output_file
+    gcloud config set project $proj > /dev/null 2>&1
+    # gcloud compute disks list --filter="name=($inst)" --format="table(NAME,SIZE_GB,TYPE)" | grep -v "NAME" >> $output_file
+    gcloud compute disks list --format="table(NAME,SIZE_GB,TYPE)" | grep -v "NAME" >> $output_file
     gcloud config unset project > /dev/null 2>&1
 done
 ```
