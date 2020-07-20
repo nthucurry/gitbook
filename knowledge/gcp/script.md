@@ -1,41 +1,37 @@
 # GCP command
 ## 列出專案
 ```bash
-gcloud projects list --format="table(PROJECT_ID)" | grep -v "(PROJECT_ID|astute-nuance-272206)" >> gcp-proj-list.txt
+gcloud projects list --format="table(PROJECT_ID)" | grep -v "(PROJECT_ID)" >> gcp-proj-list.txt
 ```
 
 ## 列出 instance vCPU, RAM, 狀態, disk size, OS type
 ```bash
 #!/bin/bash
 
-proj_name="gcp-proj-list.txt"
-output_file="gcp-vm-detail.csv"
-
-gcloud projects list --format="table(PROJECT_ID)" \
-| grep -v "(PROJECT_ID|astute-nuance-272206)" >> $proj_name
-
+proj_name="gcp-project-list.txt"
+output_file="gcp-instance-info.csv"
+output_file2="gcp-instance-info2.csv"
 rm $output_file
 
-echo "project,dirty,name,vCPU,RAM,internal_ip,external_ip,status,licenses,disk0_size_gb,disk1_size_gb,disk2_size_gb" > $output_file
+echo "project,dirty,name,vCPU,RAM,internal_ip,external_ip,status,licenses,disk0_size_gb,disk1_size_gb,disk2_size_gb,create_time" \
+> $output_file
 
 cat $proj_name | while read line
 do
     if [ $line = "PROJECT_ID" ]; then
-    echo $line
+	echo $line
     else
         echo "*********** $line ***********"
         gcloud config set project=" $line" > /dev/null 2>&1
-        gcloud compute instances list --project=$line --format=\
-        "csv(disks[0].source,NAME,MACHINE_TYPE,INTERNAL_IP,EXTERNAL_IP,STATUS,disks[0].licenses[0].basename(),disks[0].diskSizeGb,disks[1].diskSizeGb,disks[2].diskSizeGb,creationTimestamp)" \
-        | grep -v "name" >> $output_file
+        gcloud compute instances list --project=$line --format="csv(disks[0].source,NAME,MACHINE_TYPE,INTERNAL_IP,EXTERNAL_IP,STATUS,disks[0].licenses[0].basename(),disks[0].diskSizeGb,disks[1].diskSizeGb,disks[2].diskSizeGb,creationTimestamp)" | grep -v "name" >> $output_file
         gcloud config unset project > /dev/null 2>&1
     fi
 done
 
-rm $proj_name
-echo "*********** ok ***********"
+echo "*********** instance list finish ***********"
 
 sed -i 's/https:\/\/www.googleapis.com\/compute\/v1\/projects\///g' $output_file
+cp $output_file ~/$output_file2
 
 # CIM
 sed -i 's/auo-aitea0-eda1/CIM EDA1,/g' $output_file
@@ -118,12 +114,14 @@ echo "*********** original data ***********"
 
 script="replace.sh"
 
-touch $script
+#rm $script
+#touch $script
 
 cat $output_file | while read line
 do
     #echo $line
     if [[ $line == *"custom-"* ]];then
+        #echo $line
         tmp0=`echo $line | awk 'BEGIN {FS=","} {print $4}'`
         tmp1=`echo $line | awk 'BEGIN {FS="custom-"} {print $2}'`
         k1=`echo $tmp1 | awk 'BEGIN {FS="-"} {print $1}'`
