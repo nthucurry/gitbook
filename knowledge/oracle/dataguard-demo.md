@@ -181,24 +181,29 @@ alter database recover managed standby database disconnect from session;
 ### Check
 #### Software
 ```sql
-# 增加視窗寬度
+-- 增加視窗寬度
 set linesize 170
 
-# sequence and & applied redo log(standby: redo apply YES)
+-- sequence and & applied redo log(standby: redo apply YES)
 select
-    name,sequence#,applied,creator,registrar,FAL,
-    to_char(first_time,'mm/dd/yy hh24:mi:ss') as first,
-    to_char(next_time,'mm/dd/yy hh24:mi:ss') next
+    name,
+    sequence#,
+    applied,
+    creator,
+    registrar,
+    FAL,
+    to_char(first_time,'mm/dd hh24:mi:ss') as first,
+    to_char(next_time,'mm/dd hh24:mi:ss') next
 from v$archived_log
 order by first_time;
 
-# primary DB archive status
+-- primary DB archive status
 select * from v$archive_dest_status where status != 'INACTIVE';
 
-# switchover status(primary: TO STANDBY;standby: NOT ALLOWED)
+-- switchover status(primary: TO STANDBY;standby: NOT ALLOWED)
 select name, open_mode, database_role, switchover_status from v$database;
 
-# there are missing archive logs on the standby database server(no selected rows is right)
+-- there are missing archive logs on the standby database server(no selected rows is right)
 select * from v$archive_gap;
 ```
 
@@ -207,4 +212,49 @@ select * from v$archive_gap;
 ping [IP]
 telnet [IP] [port]
 traceroute [IP]
+```
+
+## Debug
+###  archive gap sequence
+```sql
+-- 確認是否有 gap
+select thread#, low_sequence#, high_sequence# from v$archive_gap;
+
+-- 找出最小 SCN on standby
+select to_char(current_scn) from v$database;
+    /*
+    TO_CHAR(CURRENT_SCN)
+    ----------------------------------------
+    XXXXXXXX
+    */
+
+-- 確認 primary 沒有在 update datafile
+select file#,name from v$datafile where creation_change# >= XXXXXXXX;
+
+-- 停止 redo apply from primary to standby
+alter database recover managed standby database cancel;
+
+-- incremental backup on primary (RMAN)
+backup incremental from scn 12325911764204 database format '/backup_new/resovle-archive-gap/%d_%u.bak';
+
+-- create standby controlfile on primary (RMAN)
+backup format '/backup_new/resovle-archive-gap/%d_%U_stbctl.bak' current controlfile;
+
+-- backup files 複製到 standby
+scp -r -l 30000 /backup_new/resovle-archive-gap/ demo@standby:/backup_new/
+
+-- recover standby (RMAN)
+restore standby controlfile from '/backup_new/resovle-archive-gap/DEMO_71v61r4r_1_1_stbctl.bak';
+alter database mount;
+recover database noredo;
+
+-- 重開 DB
+shutdown immediate;
+startup mount;
+
+-- 執行 redo apply on standby (RMAN)
+alter database recover managed standby database disconnect from session;
+
+-- switch redo log (RMAN)
+alter system switch logfile;
 ```
