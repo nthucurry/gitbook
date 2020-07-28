@@ -37,6 +37,7 @@ knowledge/vm/*
 knowledge/windows/*
 !knowledge
 !knowledge/oracle/
+!knowledge/oracle/rman.md
 !knowledge/oracle/startup-job.md
 !knowledge/oracle/dataguard-demo.md
 !knowledge/oracle/install-oracle-demo.md
