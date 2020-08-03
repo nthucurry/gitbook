@@ -35,6 +35,7 @@ knowledge/cloud/*
 knowledge/gcp/*
 knowledge/vm/*
 knowledge/windows/*
+knowledge/crawler/*
 !knowledge
 !knowledge/oracle/
 !knowledge/oracle/rman.md
@@ -51,3 +52,5 @@ knowledge/windows/*
 !knowledge/vm/vbx.md
 !knowledge/windows/
 !knowledge/windows/portable.md
+!knowledge/crawler
+!knowledge/crawler/code.md
