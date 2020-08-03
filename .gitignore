@@ -31,7 +31,7 @@ knowledge/*
 knowledge/oracle/*
 knowledge/oracle/note/*
 knowledge/linux/*
-knowledge/netqwork/*
+knowledge/cloud/*
 knowledge/gcp/*
 knowledge/vm/*
 knowledge/windows/*
@@ -44,7 +44,7 @@ knowledge/windows/*
 !knowledge/oracle/note/
 !knowledge/oracle/note/troubleshooting.md
 !knowledge/linux
-!knowledge/netqwork/vpn.md
+!knowledge/cloud/vpn.md
 !knowledge/gcp/
 !knowledge/gcp/script.md
 !knowledge/vm
