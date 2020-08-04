@@ -237,13 +237,14 @@ alter database recover managed standby database cancel;
 -- incremental backup on primary (RMAN)
 backup incremental from scn 12325911764204 database format '/backup_new/resovle-archive-gap/%d_%u.bak';
 
--- create standby controlfile on primary (RMAN)
+-- create standby controlfile on primary (RMAN, option)
 backup format '/backup_new/resovle-archive-gap/%d_%U_stbctl.bak' current controlfile;
 
 -- backup files 複製到 standby
 scp -r -l 30000 /backup_new/resovle-archive-gap/ demo@standby:/backup_new/
 
 -- recover standby (RMAN)
+alter database dismount;
 restore standby controlfile from '/backup_new/resovle-archive-gap/DEMO_71v61r4r_1_1_stbctl.bak';
 alter database mount;
 recover database noredo;
@@ -257,4 +258,17 @@ alter database recover managed standby database disconnect from session;
 
 -- switch redo log (RMAN)
 alter system switch logfile;
+```
+
+### change standby to primary database
+```sql
+-- initiate the failover operation on the target standby database.
+alter database recover managed standby database finish;
+
+-- convert standby database to the primary role.
+alter database commit to switchover to primary;
+
+-- 重啟 the new primary database.
+shutdown immediate;
+startup;
 ```
