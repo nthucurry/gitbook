@@ -261,3 +261,29 @@ GRANT demo_admin TO demo;
     ```txt
 	/swapfile swap  swap  sw  0 0
     ```
+
+## NFS 掛載 disk
+[CentOS 7 下 yum 安装和配置 NFS](https://qizhanming.com/blog/2018/08/08/how-to-install-nfs-on-centos-7)
+- host OS
+    ```bash
+    systemctl enable rpcbind
+    systemctl enable nfs
+    systemctl start rpcbind
+    systemctl start nfs
+
+    # firewall-cmd --zone=public --permanent --add-service={rpc-bind,mountd,nfs}
+    # firewall-cmd --reload
+
+    # vi /etc/exports
+    # systemctl restart nfs
+    # showmount -e localhost
+    ```
+- client OS
+    ```bash
+    systemctl start rpcbind
+    systemctl enable rpcbind
+
+    vi /etc/fstab
+    # 目標主機名稱:/backup_new   /backup_new      nfs     defaults     0 0
+    # autcrptdb1:/backup_new   /backup_new      nfs     defaults     0 0
+    ```
