@@ -182,7 +182,7 @@ alter database recover managed standby database disconnect from session;
 #### Software
 ```sql
 -- 增加視窗寬度
-set linesize 170
+set linesize 200
 
 -- sequence and & applied redo log(standby: redo apply YES)
 select
@@ -192,8 +192,8 @@ select
     creator,
     registrar,
     FAL,
-    to_char(first_time,'mm/dd hh24:mi:ss') as first,
-    to_char(next_time,'mm/dd hh24:mi:ss') next
+    to_char(first_time,'mm/dd hh24:mi') as first,
+    to_char(next_time,'mm/dd hh24:mi') as next
 from v$archived_log
 order by first_time;
 
@@ -215,7 +215,7 @@ traceroute [IP]
 ```
 
 ## Debug
-###  archive gap sequence
+### Archive gap sequence
 ```sql
 -- 確認是否有 gap
 select thread#, low_sequence#, high_sequence# from v$archive_gap;
@@ -260,7 +260,7 @@ alter database recover managed standby database disconnect from session;
 alter system switch logfile;
 ```
 
-### change standby to primary database
+### Change standby to primary database
 ```sql
 -- initiate the failover operation on the target standby database.
 alter database recover managed standby database finish;

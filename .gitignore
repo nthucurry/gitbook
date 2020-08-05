@@ -42,6 +42,7 @@ knowledge/crawler/*
 !knowledge/oracle/startup-job.md
 !knowledge/oracle/dataguard-demo.md
 !knowledge/oracle/install-oracle-demo.md
+!knowledge/oracle/dblink.md
 !knowledge/oracle/note/
 !knowledge/oracle/note/troubleshooting.md
 !knowledge/linux
