@@ -1,8 +1,10 @@
 # DB link
+## SQL
 ```sql
 create public database link DEMO_STB connect to HR identified by hr Using 'DEMO_STB';
 ```
 
+## tnsnames.ora
 ```txt
 DEMO_STB =
     (DESCRIPTION =

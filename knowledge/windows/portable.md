@@ -4,6 +4,7 @@
 - [rapture-2.2.1](http://www.knystudio.net/index.html)
 - [Tablacus Explore](https://tablacus.github.io/explorer_en.html)
 - [FileZilla](https://filezilla-project.org/download.php?show_all=1)
+- [krita](https://krita.org/en/)
 
 ## Terminal
 - [cmder](https://cmder.net/)
