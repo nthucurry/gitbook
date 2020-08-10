@@ -1,4 +1,9 @@
 # DB link
+## 說明
+- 兩個資料庫之間的連結
+- 不侷限於 oracle
+- 每個資料庫需設定連結字串(connection string & tnsnames.ora)
+
 ## SQL
 ```sql
 create public database link DEMO_STB connect to HR identified by hr Using 'DEMO_STB';

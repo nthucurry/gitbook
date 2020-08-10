@@ -3,6 +3,12 @@
 - https://oracle-base.com/articles/misc/materialized-views
 - http://shingdong.blogspot.com/2014/08/materialized-view.html
 
+## 說明
+- oracle 8i 就有 mview
+- 將資料值既存在 view 裡面
+- 提升效能
+- snapshot 的概念
+
 ## Source
 ```sql
 CREATE MATERIALIZED VIEW HR.MV_DEMO_EMPLOYEES
