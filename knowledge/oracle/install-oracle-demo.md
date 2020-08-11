@@ -32,6 +32,35 @@ alias tree='tree --charset ASCII'
 ```
 
 ## 檢查 LVM setting(option)
+```bash
+# 找目標 disk
+fdisk -l
+
+# 檔案格式轉換
+fdisk /dev/sdb
+
+# 建立 PV(Physical Volume)
+pvscan
+pvcreate /dev/sdb1
+
+# 建立 VG(Volume Group)
+vgcreate vg_demo /dev/sdb1
+vgdisplay vg_demo
+
+# 建立 LV(Logical Volume)
+lvcreate -L 50G -n lv_demo vg_demo
+
+# 格式化
+mkfs.xfs /dev/vg_demo/lv_demo
+
+# 掛載
+mount /dev/mapper/vg_demo-lv_u01 /u01/
+
+# 開機掛載
+vi /etc/fstab # mount it
+# /dev/mapper/vg_demo-lv_u01  /u01/        xfs     defaults        0 0
+reboot # test
+```
 
 ## 掛載 NFS(option)
 [CentOS 7 下 yum 安装和配置 NFS](https://qizhanming.com/blog/2018/08/08/how-to-install-nfs-on-centos-7)
