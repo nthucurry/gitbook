@@ -11,6 +11,7 @@ passwd demo
 ```bash
 # User specific environment and startup programs
 export ORACLE_SID=DEMO
+export ORACLE_UNQNAME=$ORACLE_SID
 export ORACLE_BASE=/u01/oracle
 export ORACLE_HOME=$ORACLE_BASE/11204
 export TNS_ADMIN=$ORACLE_HOME/network/admin

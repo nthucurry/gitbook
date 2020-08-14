@@ -46,6 +46,7 @@ knowledge/crawler/*
 !knowledge/oracle/note/
 !knowledge/oracle/note/troubleshooting.md
 !knowledge/oracle/mview.md
+!knowledge/oracle/datapump.md
 !knowledge/linux
 !knowledge/cloud/vpn.md
 !knowledge/gcp/
