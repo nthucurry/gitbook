@@ -19,7 +19,7 @@
     2. 當卷組中的一個磁碟損壞時，整個卷組都會受到影響。
     3. 因為加入了額外的操作，儲存效能受到影響。
 - LVM architecture
-    ![](../../img/linux/lvm/architecture.png?raw=true)
+    - ![](../../img/linux/lvm/architecture.png)
 
 ## 步驟
 ### (1) 分割磁碟 & 選定格式
@@ -105,7 +105,7 @@
     ```
 - 執行放大檔案系統: `xfs_growfs /u01`
 - check: `xfs_info /u01/`
-    ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/linux/lvm/check-xfs-info.png?raw=true)
+    - ![](../../img/linux/lvm/check-xfs-info.png)
 
 ### ~~縮小 LV(xfs無法縮小)~~
 ```bash

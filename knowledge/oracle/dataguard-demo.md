@@ -2,7 +2,7 @@
 ## bash_profile
 ```bash
 export ORACLE_SID=DEMO
-export ORACLE_UNQNAME=DEMO
+export ORACLE_UNQNAME=DEMO # distinguish between primary and standby database
 export ORACLE_BASE=/u01/oracle
 export ORACLE_HOME=$ORACLE_BASE/11204
 export TNS_ADMIN=$ORACLE_HOME/network/admin
@@ -112,6 +112,7 @@ DEMO_STB =
 ## init[DEMO].ora
 ### init[DEMO]_ifile.ora
 ```txt
+##### main config #####
 #*.audit_file_dest='/u01/oracle/admin/DEMO/adump'
 *.audit_trail='db'
 *.compatible='11.2.0.0.0'
@@ -132,9 +133,9 @@ DEMO_STB =
 
 ### primary
 ```txt
-##### config #####
+##### data guard config #####
 *.db_unique_name='DEMO'
-*.fal_server='DEMO'
+#*.fal_server='DEMO' # where to get archived logs
 *.job_queue_processes=1000
 *.log_archive_config='DG_CONFIG=(DEMO,DEMO_STB)'
 *.log_archive_dest_2='SERVICE=DEMO_STB NOAFFIRM ASYNC VALID_FOR=(ALL_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME=DEMO_STB COMPRESSION=ENABLE'
@@ -147,7 +148,7 @@ IFILE=/u01/oracle/11204/dbs/initDEMO_ifile.ora
 
 ### standby
 ```txt
-##### config #####
+##### data guard config #####
 *.db_unique_name='DEMO_STB'
 *.fal_server='DEMO'
 *.job_queue_processes=0
