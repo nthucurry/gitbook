@@ -1,4 +1,4 @@
-# 建置 Data Guard 環境配置
+# Data Guard 環境配置
 ## bash_profile
 ```bash
 export ORACLE_SID=DEMO
@@ -110,7 +110,7 @@ DEMO_STB =
 ```
 
 ## init[DEMO].ora
-### init[DEMO]_ifile.ora
+### init[DEMO].ora
 ```txt
 ##### main config #####
 #*.audit_file_dest='/u01/oracle/admin/DEMO/adump'
@@ -129,9 +129,11 @@ DEMO_STB =
 *.processes=150
 *.remote_login_passwordfile='EXCLUSIVE'
 #*.undo_tablespace='UNDOTBS1'
+
+IFILE=/u01/oracle/11204/dbs/initDEMO_ifile.ora
 ```
 
-### primary
+### primary ifile
 ```txt
 ##### data guard config #####
 *.db_unique_name='DEMO'
@@ -142,11 +144,9 @@ DEMO_STB =
 *.log_archive_dest_state_2='ENABLE'
 *.log_archive_min_succeed_dest=1
 *.standby_file_management='AUTO'
-
-IFILE=/u01/oracle/11204/dbs/initDEMO_ifile.ora
 ```
 
-### standby
+### standby ifile
 ```txt
 ##### data guard config #####
 *.db_unique_name='DEMO_STB'
@@ -158,8 +158,6 @@ IFILE=/u01/oracle/11204/dbs/initDEMO_ifile.ora
 *.log_archive_min_succeed_dest=1
 *.log_file_name_convert='dummy','dummy'
 *.standby_file_management='AUTO'
-
-IFILE=/u01/oracle/11204/dbs/initDEMO_ifile.ora
 ```
 
 ## check command

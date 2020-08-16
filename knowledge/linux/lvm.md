@@ -47,7 +47,9 @@
 - `pvdisplay /dev/sdb1`
 
 ### (3) Volume Group, VG, 捲軸群組
-- `vgcreate vg_demo /dev/sdb1`
+- 調整 VG
+    - `vgcreate vg_demo /dev/sdb1`
+    - `vgextend vg_demo /dev/sdb2`
 - `vgdisplay vg_demo`
     ```txt
     --- Volume group ---
@@ -73,7 +75,7 @@
     ```
 
 ### (4) Logical Volume, LV, 邏輯捲軸
-- 新增 LV
+- 調整 LV
     - 固定大小: `lvcreate -L 50G -n lv_u01 vg_demo`
     - 依照比例: `lvcreate -l +100%FREE -n lv_u01 vg_demo`
 - `lvscan`
@@ -99,10 +101,12 @@
 - 調整大小
     - 增加固定大小: `lvextend -L +4G /dev/mapper/vg_demo-lv_u01`
     - 調整到目標大小: `lvresize -L +20G /dev/testvg/testlv`
-    ```txt
-    Size of logical volume testvg/testlv changed from 20.00 GiB (5120 extents) to 40.00 GiB (10240 extents).
-        Logical volume testvg/testlv successfully resized.
-    ```
+    - 調整到 Max: `lvextend -l +100%FREE /dev/mapper/vg_demo-lv_u01`
+    - 結果
+        ```txt
+        Size of logical volume testvg/testlv changed from 20.00 GiB (5120 extents) to 40.00 GiB (10240 extents).
+            Logical volume testvg/testlv successfully resized.
+        ```
 - 執行放大檔案系統: `xfs_growfs /u01`
 - check: `xfs_info /u01/`
     - ![](../../img/linux/lvm/check-xfs-info.png)
