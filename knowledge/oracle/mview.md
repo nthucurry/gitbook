@@ -22,6 +22,9 @@ SELECT * FROM EMPLOYEES@DL_DEMO_EMPLOYEES;
 ## Target
 ```sql
 -- step 1
+/*
+需注意該 user 是否有 tablespace usage privilege
+*/
 CREATE MATERIALIZED VIEW HR.MV_DEMO_EMPLOYEES
 BUILD IMMEDIATE
 REFRESH FORCE
@@ -32,10 +35,10 @@ SELECT * FROM EMPLOYEES@DL_DEMO_EMPLOYEES;
 -- step 1 (check)
 SELECT * FROM SYS.DBA_MVIEWS;
 
--- step 2
+-- step 2 (update source table)
 BEGIN
 	dbms_mview.refresh('HR.MV_DEMO_EMPLOYEES','C');
-END;
+END; -- ctrl + enter
 
 -- step 3
 SELECT * FROM HR.MV_DEMO_EMPLOYEES;
