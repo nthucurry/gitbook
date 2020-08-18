@@ -1,4 +1,4 @@
-# MView
+# M-View
 - create DB link
 - https://oracle-base.com/articles/misc/materialized-views
 - http://shingdong.blogspot.com/2014/08/materialized-view.html
@@ -9,7 +9,8 @@
 - 提升效能
 - snapshot 的概念
 
-## Source
+## Build M-View
+### Source
 ```sql
 CREATE MATERIALIZED VIEW HR.MV_DEMO_EMPLOYEES
 BUILD IMMEDIATE
@@ -19,7 +20,7 @@ AS
 SELECT * FROM EMPLOYEES@DL_DEMO_EMPLOYEES;
 ```
 
-## Target
+### Target
 ```sql
 -- step 1
 /*
@@ -35,11 +36,27 @@ SELECT * FROM EMPLOYEES@DL_DEMO_EMPLOYEES;
 -- step 1 (check)
 SELECT * FROM SYS.DBA_MVIEWS;
 
--- step 2 (update source table)
+-- step 2 (update source table by PL/SQL)
 BEGIN
 	dbms_mview.refresh('HR.MV_DEMO_EMPLOYEES','C');
 END; -- ctrl + enter
 
 -- step 3
 SELECT * FROM HR.MV_DEMO_EMPLOYEES;
+```
+
+## Generate SQL command(not completed)
+```sql
+-- source
+
+-- target
+SELECT
+	' CREATE MATERIALIZED VIEW '|| OWNER || '.' || MVIEW_NAME ||
+	' BUILD IMMEDIATE ' ||
+	' REFRESH FORCE ' ||
+	' ON DEMAND ' ||
+	' AS ' QUERY
+FROM all_mviews;
+
+-- PL/SQL
 ```
