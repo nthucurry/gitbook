@@ -59,4 +59,5 @@ SELECT
 FROM all_mviews;
 
 -- PL/SQL
+SELECT dbms_metadata.get_ddl( 'MATERIALIZED_VIEW', 'MV_DEMO_EMPLOYEES', 'HR' ) FROM dual;
 ```

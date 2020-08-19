@@ -1,4 +1,4 @@
-# 安裝 Oracle SOP
+# 如何安裝 Oracle ?
 ## 建立帳號、群組
 ```bash
 groupadd -g 501 dba

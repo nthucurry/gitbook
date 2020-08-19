@@ -24,11 +24,8 @@
 ## 步驟
 ### (1) 分割磁碟 & 選定格式
 - `fdisk -l`
-- `fdisk -l /dev/sdb`
+- `fdisk -l /dev/sdb`(不切 partition)
 - `fdisk /dev/sdb`
-    - Command (m for help): n
-        - Select (default p): p
-        - Partition number (1-4, default 1): 1 (切幾次重複做幾次)
     - Command (m for help): t
         - Partition number (1-4, default 4): 1
         - Hex code (type L to list all codes): 8e
@@ -37,47 +34,21 @@
 
 ### (2) Physical Volume, PV, 實體捲軸
 所有的 partition 或 disk 均需要做成 LVM 最底層的實體捲軸
-- `pvscan`(分割前)
-    ```txt
-    PV /dev/sda2   VG ol              lvm2 [<49.00 GiB / 4.00 MiB free]
-    PV /dev/sdb1                      lvm2 [<340.00 GiB]
-    Total: 2 [<389.00 GiB] / in use: 1 [<49.00 GiB] / in no VG: 1 [<340.00 GiB]
-    ```
-- `pvcreate /dev/sdb1`
-- `pvdisplay /dev/sdb1`
+- `pvscan`
+- `pvcreate /dev/sdb`
+- `pvdisplay /dev/sdb`
 
 ### (3) Volume Group, VG, 捲軸群組
 - 調整 VG
-    - `vgcreate vg_demo /dev/sdb1`
-    - `vgextend vg_demo /dev/sdb2`
+    - `vgcreate vg_demo /dev/sdb`
+    - `vgextend vg_demo /dev/sdb`
 - `vgdisplay vg_demo`
-    ```txt
-    --- Volume group ---
-    VG Name               vg_demo
-    System ID
-    Format                lvm2
-    Metadata Areas        1
-    Metadata Sequence No  9
-    VG Access             read/write
-    VG Status             resizable
-    MAX LV                0
-    Cur LV                2
-    Open LV               0
-    Max PV                0
-    Cur PV                1
-    Act PV                1
-    VG Size               <340.00 GiB
-    PE Size()               4.00 MiB (Physical Extent, PE, 實體範圍區塊)
-    Total PE              87039
-    Alloc PE / Size       86784 / 339.00 GiB
-    Free  PE / Size       255 / 1020.00 MiB
-    VG UUID               hf4RJT-l3g3-Q1L4-xJMu-JhI1-0wn9-6zAzq1
-    ```
 
 ### (4) Logical Volume, LV, 邏輯捲軸
 - 調整 LV
     - 固定大小: `lvcreate -L 50G -n lv_u01 vg_demo`
     - 依照比例: `lvcreate -l +100%FREE -n lv_u01 vg_demo`
+    - 依照 PE: `lvcreate -l +{Max PE - 9} -n lv_u01 vg_demo`
 - `lvscan`
 - `ll /dev/vg_demo/lv_*`
         ```txt
@@ -108,7 +79,7 @@
             Logical volume testvg/testlv successfully resized.
         ```
 - 執行放大檔案系統: `xfs_growfs /u01`
-- check: `xfs_info /u01/`
+- check: `xfs_info /u01`
     - ![](../../img/linux/lvm/check-xfs-info.png)
 
 ### ~~縮小 LV(xfs無法縮小)~~
