@@ -38,26 +38,58 @@ SELECT * FROM SYS.DBA_MVIEWS;
 
 -- step 2 (update source table by PL/SQL)
 BEGIN
-	dbms_mview.refresh('HR.MV_DEMO_EMPLOYEES','C');
+    dbms_mview.refresh('HR.MV_DEMO_EMPLOYEES','C');
 END; -- ctrl + enter
 
 -- step 3
 SELECT * FROM HR.MV_DEMO_EMPLOYEES;
 ```
 
-## Generate SQL command(not completed)
+## Generate MView command(not completed)
+### By SQL
 ```sql
 -- source
 
 -- target
 SELECT
-	' CREATE MATERIALIZED VIEW '|| OWNER || '.' || MVIEW_NAME ||
-	' BUILD IMMEDIATE ' ||
-	' REFRESH FORCE ' ||
-	' ON DEMAND ' ||
-	' AS ' QUERY
+    ' CREATE MATERIALIZED VIEW '|| OWNER || '.' || MVIEW_NAME ||
+    ' BUILD IMMEDIATE ' ||
+    ' REFRESH FORCE ' ||
+    ' ON DEMAND ' ||
+    ' AS ' QUERY
 FROM all_mviews;
 
 -- PL/SQL
-SELECT dbms_metadata.get_ddl( 'MATERIALIZED_VIEW', 'MV_DEMO_EMPLOYEES', 'HR' ) FROM dual;
+SELECT dbms_metadata.get_ddl('MATERIALIZED_VIEW','MV_DEMO_EMPLOYEES','HR') FROM dual;
 ```
+
+### By shell
+- `vi sql_gen_mview_log_list.txt`(log list)
+    ```txt
+    #HR MV_DEMO_EMPLOYEES
+    SCM MV_DEMO_PRODUCT
+    ```
+- source
+    ```bash
+    #!/bin/bash
+
+    cat sql_gen_mview_log_list.txt | while read line
+    do
+    check_string=`echo $line | grep '#' | wc -l`
+    if [[ $check_string == "0" ]];then
+        echo "****************************************************************************************"
+        mview_name=$line
+        schema=`echo $line | awk '{FS=" "} {print $1}'`
+        table_name=`echo $line | awk '{FS=" "} {print $2}'`
+        echo "DROP MATERIALIZED VIEW LOG ON $schema.$table_name;"
+        echo "CREATE MATERIALIZED VIEW LOG ON $schema.$table_name WITH ROWID EXCLUDING NEW VALUES;"
+    #    echo "GRANT SELECT ON $schema.$table_name TO $schema;"
+    #    echo "GRANT SELECT ON $schema".MLOG\$_"$table_name TO $schema;"
+        echo "****************************************************************************************"
+    fi
+    done
+    ```
+- target
+    ```bash
+    #!/bin/bash
+    ```
