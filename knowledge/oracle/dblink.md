@@ -1,4 +1,4 @@
-# DB Link
+# Database Link
 ## 說明
 - 兩個資料庫之間的連結
 - 不侷限於 oracle
@@ -6,10 +6,10 @@
 
 ## 範例
 ```sql
-create public database link DEMO_STB connect to HR identified by hr Using 'DEMO_STB';
+create public database link DL_DEMO_EMPLOYEES connect to HR identified by hr Using 'DEMO_STB';
 ```
 
-## 建立現存的 DB Link
+## 建立現存的 DB Link 語法
 ```sql
 select * from
 (

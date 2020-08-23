@@ -92,4 +92,35 @@ SELECT dbms_metadata.get_ddl('MATERIALIZED_VIEW','MV_DEMO_EMPLOYEES','HR') FROM 
 - target
     ```bash
     #!/bin/bash
+
+    dblink=DL_DEMO_EMPLOYEES
+    refresh_group=RG_DEMO_EMPLOYEES
+
+    cat sql_gen_src_mview_log_list.txt | while read line
+    do
+    check_string=`echo $line | grep '#' | wc -l`
+    if [[ $check_string == "0" ]];then
+        mview_name=$line
+        schema=`echo $line | awk '{FS=" "} {print $1}'`
+        table_name=`echo $line | awk '{FS=" "} {print $2}'`
+        sql_output=$schema"_"$table_name".sql"
+        echo "****************************************************************************************"
+    #    echo $sql_output
+    #    rm $sql_output
+    #    echo "DROP MATERIALIZED VIEW $schema.$table_name;" >> sql_output
+        echo "CREATE MATERIALIZED VIEW $schema.$table_name BUILD IMMEDIATE USING INDEX REFRESH FORCE WITH ROWID AS SELECT * FROM $schema.$table_name@$dblink;"
+
+        echo "--BEGIN"
+        echo "--    DBMS_REFRESH.ADD("
+        echo "--        NAME => '$schema."RG_DEMO_EMPLOYEES"',"
+        echo "--        LIST => '"$schema.$table_name"',"
+        echo "--    LAX => TRUE);"
+        echo "--END;"
+        echo "--/"
+        echo "SELECT * FROM dba_mviews WHERE mview_name = '"$table_name"';"
+        echo "SELECT * FROM dba_db_links;"
+        echo "--COMMIT;"
+        echo "****************************************************************************************"
+    fi
+    done
     ```
