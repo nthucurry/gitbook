@@ -1,4 +1,4 @@
-# 如何安裝 Oracle ?
+# 如何安裝 Oracle DB ?
 ## 建立帳號、群組
 ```bash
 groupadd -g 501 dba
@@ -7,8 +7,12 @@ useradd -G 501,502 -u 501 -m demo
 passwd demo
 ```
 
-## 設定環境變數
+## 環境設定
+### 環境變數
 ```bash
+su - demo
+vi ~/.bash_profile
+
 # User specific environment and startup programs
 export ORACLE_SID=DEMO
 export ORACLE_UNQNAME=$ORACLE_SID
@@ -32,7 +36,7 @@ alias tree='tree --charset ASCII'
 #alias bdump="cd /u01/oracle/diag/rdbms/demo_stb/DEMO/trace"
 ```
 
-## 檢查 LVM setting(option)
+### 磁碟格式(LVM)
 ```bash
 # 找目標 disk
 fdisk -l
@@ -42,10 +46,10 @@ fdisk /dev/sdb
 
 # 建立 PV(Physical Volume)
 pvscan
-pvcreate /dev/sdb1
+pvcreate /dev/sdb
 
 # 建立 VG(Volume Group)
-vgcreate vg_demo /dev/sdb1
+vgcreate vg_demo /dev/sdb
 vgdisplay vg_demo
 
 # 建立 LV(Logical Volume)
@@ -55,43 +59,16 @@ lvcreate -L 50G -n lv_demo vg_demo
 mkfs.xfs /dev/vg_demo/lv_demo
 
 # 掛載
-mount /dev/mapper/vg_demo-lv_u01 /u01/
+mount /dev/mapper/vg_demo-lv_u01 /u01
 
 # 開機掛載
 vi /etc/fstab # mount it
-# /dev/mapper/vg_demo-lv_u01  /u01/        xfs     defaults        0 0
+# /dev/mapper/vg_demo-lv_u01  /u01        xfs     defaults        0 0
 reboot # test
 ```
 
-## 掛載 NFS(option)
-[CentOS 7 下 yum 安装和配置 NFS](https://qizhanming.com/blog/2018/08/08/how-to-install-nfs-on-centos-7)
-- host OS
-    ```bash
-    # startup NFS(Network File System)
-    sudo systemctl enable rpcbind
-    sudo systemctl enable nfs
-    systemctl start rpcbind
-    systemctl start nfs
-
-    # firewall setting
-    firewall-cmd --zone=public --permanent --add-service={rpc-bind,mountd,nfs}
-    firewall-cmd --reload
-
-    # check NFS
-    vi /etc/exports
-    showmount -e localhost
-    ```
-- client OS
-    ```bash
-    sudo systemctl start rpcbind
-    sudo systemctl enable rpcbind
-
-    # mount NFS at startup
-    sudo vi /etc/fstab
-        目標主機名稱:/backup_new         /backup_new                   nfs     defaults        0 0
-    ```
-
-## 安裝 VNC server(option)
+### Remote by GUI
+#### 安裝 VNC server(option)
 ```bash
 # 安裝
 yum install tigervnc-server -y
@@ -126,28 +103,43 @@ netstat -tln
 tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
 ```
 
+#### xterm
+```bash
+# 需要直接 login demo
+cd ~
+vi .Xclients
+# xterm &
+# exec /usr/bin/matchbox-window-manager
+
+chmod +x .Xclients
+~/.Xclients # remember open xming
+```
+
 ## Pretreatment(option)
+- 更新 EPEL repository: `yum install epel-release -y`
+    - `wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo`
+    - `wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle`
 - 安裝懶人包
-    1. `yum install epel-release -y`
-    2. `wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo`
-    3. `wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle`
-    4. `yum install oracle-rdbms-server-11gR2-preinstall -y`
-- checking hardware requirements
+    - `yum install oracle-rdbms-server-11gR2-preinstall -y`
+- 確認記憶體是否足夠
     - memory requirements
-        - `grep MemTotal /proc/meminfo`
-        - `grep SwapTotal /proc/meminfo`
+        ```bash
+        grep MemTotal /proc/meminfo
+        grep SwapTotal /proc/meminfo
+        ```
     - automatic memory management
         - `df -h /dev/shm/`
         - 永久有效(7G 的置換空間)
             - `shmfs /dev/shm tmpfs size=7g 0`
+            - `mount -t tmpfs shmfs -o size=7g /dev/shm`
+- `yum install gcc* libaio-devel* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* binutils* compat-libcap1* -y`
 
-## 安裝 oracle database
+## 安裝 oracle
 ### runInstaller(用 oracle 帳號，不能用 root)
 - [x] install database software only
 - [x] single instance database installation
 - [x] enterprise edition(企業版才有 data guard)
 - [x] prerequisite checks
-    - `yum install gcc* libaio-devel* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* binutils* compat-libcap1* -y`
     - `vi /etc/sysctl.conf`(有用懶人包會自動生成)
         ```txt
         fs.file-max = 6815744
@@ -197,7 +189,7 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
         $ORACLE_HOME/root.sh
         ```
 
-## 安裝 listener
+### 安裝 listener
 - 執行 `$ORACLE_HOME/bin/netca`
 - 一直下一步
     - [不容易發現的問題](https://www.itread01.com/content/1549111156.html)
@@ -224,7 +216,7 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
 - http://shinchuan1.blogspot.com/2014/04/oracle-listener.html
 - https://k21academy.com/oracle-apps-dba-r12/solved-ebs-r12-2-tns-12560-tnsprotocol-adapter-error-tns-00584-valid-node-checking-configuration-error/
 
-## 執行 dbca
+### 安裝資料庫
 - Reference
     - [How to Use the Database Configuration Assistant (DBCA) to Create Databases in Oracle 12c](https://www.dummies.com/programming/databases/how-to-use-the-database-configuration-assistant-dbca-to-create-databases-in-oracle-12c/)
 - 執行 `$ORACLE_HOME/bin/dbca`
@@ -253,7 +245,8 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
     - 一直下一步
     - finish
 
-## 檢查 cron jobs(option)
+## 補充
+### 檢查 cron jobs
 開機啟動 listener
 - `crontab -e`
     - `@reboot /home/demo/start-db.sh`
@@ -271,7 +264,7 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
     EOF
     ```
 
-## 建立 account
+### 建立 account
 ```sql
 CREATE USER DEMO IDENTIFIED BY demo DEFAULT tablespace ts_demo;
 GRANT CONNECT TO demo_admin;
@@ -280,40 +273,30 @@ GRANT ALL ON DEMO.TEAM TO demo_admin;
 GRANT demo_admin TO demo;
 ```
 
-## 增加 swap(option)
-- `dd if=/dev/zero of=/swapfile count=4096 bs=1MiB`
-- `chmod 600 /swapfile`
-- `mkswap /swapfile`
-- `swapon /swapfile`
-- `swapon -s`
-- `free -m`
-- `vi /etc/fstab`
-    ```txt
-	/swapfile swap  swap  sw  0 0
-    ```
-
-## NFS 掛載 disk
+### 掛載 disk by NFS
 [CentOS 7 下 yum 安装和配置 NFS](https://qizhanming.com/blog/2018/08/08/how-to-install-nfs-on-centos-7)
-- host OS
+- host
     ```bash
+    # startup NFS(Network File System)
     systemctl enable rpcbind
     systemctl enable nfs
     systemctl start rpcbind
     systemctl start nfs
 
-    # firewall-cmd --zone=public --permanent --add-service={rpc-bind,mountd,nfs}
-    # firewall-cmd --reload
+    # firewall setting
+    firewall-cmd --zone=public --permanent --add-service={rpc-bind,mountd,nfs}
+    firewall-cmd --reload
 
-    # vi /etc/exports
-    # systemctl restart nfs
-    # showmount -e localhost
+    # check NFS
+    vi /etc/exports
+    showmount -e localhost
     ```
-- client OS
+- client
     ```bash
-    systemctl start rpcbind
-    systemctl enable rpcbind
+    sudo systemctl start rpcbind
+    sudo systemctl enable rpcbind
 
-    vi /etc/fstab
-    # 目標主機名稱:/backup_new   /backup_new      nfs     defaults     0 0
-    # autcrptdb1:/backup_new   /backup_new      nfs     defaults     0 0
+    # mount NFS when startup
+    sudo vi /etc/fstab
+    # 目標主機名稱:/backup_new         /backup_new                   nfs     defaults        0 0
     ```
