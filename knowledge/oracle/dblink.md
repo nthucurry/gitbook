@@ -7,6 +7,7 @@
 ## 範例
 ```sql
 create public database link DL_DEMO_EMPLOYEES connect to HR identified by hr Using 'DEMO_STB';
+-- drop database link DL_DEMO_EMPLOYEES;
 ```
 
 ## 建立現存的 DB Link 語法

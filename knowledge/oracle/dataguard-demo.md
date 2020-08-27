@@ -211,6 +211,7 @@ select * from v$archive_gap;
 ping [IP]
 telnet [IP] [port]
 traceroute [IP]
+tnsping [ORACLE_SID]
 ```
 
 ## Debug

@@ -36,6 +36,7 @@ knowledge/gcp/*
 knowledge/vm/*
 knowledge/windows/*
 knowledge/crawler/*
+knowledge/infra/*
 !knowledge
 !knowledge/oracle/
 !knowledge/oracle/rman.md
@@ -58,3 +59,5 @@ knowledge/crawler/*
 !knowledge/windows/portable.md
 !knowledge/crawler
 !knowledge/crawler/code.md
+!knowledge/infra
+!knowledge/infra/proxy.md
