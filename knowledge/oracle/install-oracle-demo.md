@@ -245,6 +245,13 @@ chmod +x .Xclients
     - 一直下一步
     - finish
 
+### 安裝 OEM dbconsole
+```bash
+emca -repos drop
+emca -config dbcontrol db -repos create
+# SYSMAN = SYS password
+```
+
 ## 補充
 ### 檢查 cron jobs
 開機啟動 listener
