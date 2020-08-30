@@ -16,8 +16,6 @@ vi /etc/yum.conf
 yum update -y
 yum install telnet -y
 yum install squid -y
-yum install make -y
-yum install gttpd -y
 ```
 
 ## 啟動步驟
@@ -66,6 +64,9 @@ systemctl restart squid
 ## Squid Analysis Report Generator
 [Squid Analysis ReportGenerator](https://www.tecmint.com/sarg-squid-analysis-report-generator-and-internet-bandwidth-monitoring-tool/)
 ```bash
+# yum
+yum install gcc gd-devel make perl-GD httpd -y
+
 # login root account and yum packages
 su - root
 
@@ -85,6 +86,7 @@ vi /usr/local/etc/sarg.conf
 # date_format e
 
 # startup apache server
+# please check the port 80 should be not use
 systemctl start httpd
 systemctl enable httpd
 netstat -anpt | grep ':80'
