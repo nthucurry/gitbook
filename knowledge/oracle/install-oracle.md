@@ -15,7 +15,7 @@ vi ~/.bash_profile
 
 # User specific environment and startup programs
 export ORACLE_SID=DEMO
-export ORACLE_UNQNAME=$ORACLE_SID
+export ORACLE_UNQNAME=$ORACLE_SID # it is difference between primary and standby database
 export ORACLE_BASE=/u01/oracle
 export ORACLE_HOME=$ORACLE_BASE/11204
 export TNS_ADMIN=$ORACLE_HOME/network/admin
@@ -103,7 +103,7 @@ netstat -tln
 tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
 ```
 
-#### xterm
+#### X Window System
 ```bash
 # 需要直接 login demo
 cd ~
@@ -134,8 +134,13 @@ chmod +x .Xclients
             - `mount -t tmpfs shmfs -o size=7g /dev/shm`
 - `yum install gcc* libaio-devel* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* binutils* compat-libcap1* -y`
 
-## 安裝 oracle
-### runInstaller(用 oracle 帳號，不能用 root)
+## 安裝 Oracle
+`vi ~/database/stage/cvu/cv/admin/cvu_config`
+    ```txt
+    # CV_ASSUME_DISTID=OEL4 (x)
+    CV_ASSUME_DISTID=OEL6 (o)
+    ```
+- `~/database/runInstaller`(用 oracle 帳號，不能用 root)
 - [x] install database software only
 - [x] single instance database installation
 - [x] enterprise edition(企業版才有 data guard)
@@ -189,11 +194,12 @@ chmod +x .Xclients
         $ORACLE_HOME/root.sh
         ```
 
-### 安裝 listener
+### 設定 Listener
+- [Oracle Listener 教學](http://shinchuan1.blogspot.com/2014/04/oracle-listener.html)
 - 執行 `$ORACLE_HOME/bin/netca`
 - 一直下一步
     - [不容易發現的問題](https://www.itread01.com/content/1549111156.html)
-- `vi $ORACLE_HOME/network/admin/listener.ora`(如果沒有就新增)
+- `vi $TNS_ADMIN/listener.ora`(如果沒有就新增)
     ```txt
     LISTENER =
         (DESCRIPTION_LIST =
@@ -213,8 +219,6 @@ chmod +x .Xclients
     # Automatic Diagnostic Repository
     ADR_BASE_LISTENER = /u01/oracle
     ```
-- http://shinchuan1.blogspot.com/2014/04/oracle-listener.html
-- https://k21academy.com/oracle-apps-dba-r12/solved-ebs-r12-2-tns-12560-tnsprotocol-adapter-error-tns-00584-valid-node-checking-configuration-error/
 
 ### 安裝資料庫
 - Reference
@@ -233,7 +237,7 @@ chmod +x .Xclients
         - storage location: use common location for all database files
     - recovery configuration
         - 不用 specify flash recovery area
-        - 檔名: DEMO-%t_%s_%r.dbf
+        - 檔名: `DEMO_%t_%s_%r.dbf`
         - 路徑: `/u01/oraarch/DEMO`
     - database content
         - 僅選 enterprise managerment repository
@@ -252,19 +256,28 @@ emca -config dbcontrol db -repos create
 # SYSMAN = SYS password
 ```
 
-## 補充
-### 檢查 cron jobs
-開機啟動 listener
+## 排程
 - `crontab -e`
-    - `@reboot /home/demo/start-db.sh`
-- `vi start-db.sh`
+    ```txt
+    @reboot /home/demo/scripts/start-lsn.sh
+    @reboot /home/demo/scripts/start-db.sh
+    ```
+- `vi start-lsn.sh`
     ```bash
-    export ORACLE_SID=DEMO
-    export ORACLE_HOME=/u01/oracle/11204
-    export TNS_ADMIN=$ORACLE_HOME/network/admin
+    #/bin/bash
+
+    . ~/.bash_profile
 
     NOW=`date +%Y-%m-%d-%H%M`
     $ORACLE_HOME/bin/lsnrctl start > $HOME/log/lsnrctl-$NOW.log
+    ```
+- `vi start-db.sh`
+    ```bash
+    #/bin/bash
+
+    . ~/.bash_profile
+
+    NOW=`date +%Y-%m-%d-%H%M`
     $ORACLE_HOME/bin/sqlplus / as sysdba > $HOME/log/startup-$NOW.log << EOF
     startup;
     quit;
@@ -280,15 +293,15 @@ GRANT ALL ON DEMO.TEAM TO demo_admin;
 GRANT demo_admin TO demo;
 ```
 
-### 掛載 disk by NFS
+### 掛載 Disk by NFS
 [CentOS 7 下 yum 安装和配置 NFS](https://qizhanming.com/blog/2018/08/08/how-to-install-nfs-on-centos-7)
 - host
     ```bash
     # startup NFS(Network File System)
-    systemctl enable rpcbind
-    systemctl enable nfs
     systemctl start rpcbind
     systemctl start nfs
+    systemctl enable rpcbind
+    systemctl enable nfs
 
     # firewall setting
     firewall-cmd --zone=public --permanent --add-service={rpc-bind,mountd,nfs}
@@ -296,14 +309,20 @@ GRANT demo_admin TO demo;
 
     # check NFS
     vi /etc/exports
+    # /backup    192.168.56.0/224(rw,sync)
+
+    systemctl restart nfs
+
     showmount -e localhost
     ```
 - client
     ```bash
-    sudo systemctl start rpcbind
-    sudo systemctl enable rpcbind
+    systemctl start rpcbind
+    systemctl enable rpcbind
 
     # mount NFS when startup
     sudo vi /etc/fstab
     # 目標主機名稱:/backup_new         /backup_new                   nfs     defaults        0 0
+
+    systemctl daemon-reload
     ```
