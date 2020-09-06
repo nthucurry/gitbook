@@ -272,3 +272,34 @@ alter database commit to switchover to primary;
 shutdown immediate;
 startup;
 ```
+
+## DR SOP
+[Oracle 11gR2 DataGuard switchover 切換的兩個錯誤狀態解決](https://www.twblogs.net/a/5b9581282b717750bda4ecb2)
+### Switchover(not verification)
+1. 在主庫端檢查資料庫可切換狀態: `select switchover_status from v$database;`
+    - TO STANDBY: 可以正常切換
+    - SESSIONS ACTIVE: 當前有會話處於 active 狀態
+2. 開始主庫正常切換
+    - TO STANDBY:      `alter database commit to switchover to physical standby;`
+    - SESSIONS ACTIVE: `alter database commit to switchover to physical standby with session shutdown;`
+3. 重啟先前的主庫:
+    - `shutdown immediate;`
+    - `startup mount;`
+4. 這時候在**備庫**驗證可切換狀態
+    - TO PRIMARY: `select switchover_status from v$database;`
+5. 將目標**備庫**轉換為主庫
+    - TO STANDBY:      `alter database commit to switchover to primary;`
+    - SESSIONS ACTIVE: `alter database commit to switchover to primary with session shutdown;`
+6. 重啟目標**備庫**
+    - `shutdown immediate;`
+    - `startup mount;`
+7. 先前主庫啟動日誌傳送程序: `alter database recover managed standby database disconnect;`
+8. 檢查主、備庫角色狀態: `select switchover_status,database_role from v$database;`
+
+### Failover(not verification)
+此時主庫異常跳電、硬體故障，無法執行資料庫作業，可參考 https://codertw.com/%E8%B3%87%E6%96%99%E5%BA%AB/127062/
+1. 停止**備庫** redo log: `recover managed standby database cancel;`
+2. 結束**備庫** redo log: `alter database recover managed standby database finish [force];`
+3. 進行**備庫** switchover: `alter database commit to switchover to primary with session shutdown;`
+4. 開啟**備庫**: `alter database open;`
+5. undone

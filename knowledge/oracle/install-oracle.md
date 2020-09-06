@@ -284,7 +284,7 @@ emca -config dbcontrol db -repos create
     EOF
     ```
 
-### 建立 account
+### 建立 Account
 ```sql
 CREATE USER DEMO IDENTIFIED BY demo DEFAULT tablespace ts_demo;
 GRANT CONNECT TO demo_admin;
