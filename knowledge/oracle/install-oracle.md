@@ -94,10 +94,6 @@ vncpasswd
 # 重啟
 reboot
 
-# 開機啟動
-crontab -e
-@reboot /bin/vncserver :1
-
 # 檢查
 netstat -tln
 tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
