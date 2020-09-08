@@ -64,7 +64,9 @@ mount /dev/mapper/vg_demo-lv_u01 /u01
 # 開機掛載
 vi /etc/fstab # mount it
 # /dev/mapper/vg_demo-lv_u01  /u01        xfs     defaults        0 0
-reboot # test
+
+# restart
+reboot
 ```
 
 ### Remote by GUI
@@ -80,14 +82,16 @@ cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@:1.servi
 sed -i 's/<USER>/demo/g' /etc/systemd/system/vncserver@:1.service
 
 # 確認 root 的路徑是否正確(option)
-vi vncserver@:1.service
-PIDFile=/root/.vnc/%H%i.pid
+vi /etc/systemd/system/vncserver@:1.service
+PIDFile=/home/demo/.vnc/%H%i.pid
 
 # 登入各個帳號去設定以下(systemctl daemon-reload??)
 systemctl status vncserver@:1.service
+systemctl start vncserver@:1.service
 systemctl enable vncserver@:1.service
 
 # 設定密碼
+vncserver -kill :1
 vncserver(啟動 vnc server，需依照各別 user account)
 vncpasswd
 
@@ -111,6 +115,16 @@ chmod +x .Xclients
 ~/.Xclients # remember open xming
 ```
 
+## 如果 Swap 不足
+- `dd if=/dev/zero of=/swapfile count=4096 bs=1MiB`
+- `chmod 600 /swapfile`
+- `mkswap /swapfile`
+- `swapon /swapfile`
+- `swapon -s`
+- `free -m`
+- `vi /etc/fstab`
+	- /swapfile swap  swap  sw  0 0
+
 ## Pretreatment(option)
 - 更新 EPEL repository: `yum install epel-release -y`
     - `wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo`
@@ -128,7 +142,7 @@ chmod +x .Xclients
         - 永久有效(7G 的置換空間)
             - `shmfs /dev/shm tmpfs size=7g 0`
             - `mount -t tmpfs shmfs -o size=7g /dev/shm`
-- `yum install gcc* libaio-devel* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* binutils* compat-libcap1* -y`
+- `yum install gcc* libaio-devel* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* binutils* compat-libcap1* ksh -y`
 
 ## 安裝 Oracle
 `vi ~/database/stage/cvu/cv/admin/cvu_config`
@@ -317,7 +331,7 @@ GRANT demo_admin TO demo;
     systemctl enable rpcbind
 
     # mount NFS when startup
-    sudo vi /etc/fstab
+    vi /etc/fstab
     # 目標主機名稱:/backup_new         /backup_new                   nfs     defaults        0 0
 
     systemctl daemon-reload
