@@ -15,7 +15,7 @@ vi ~/.bash_profile
 
 # User specific environment and startup programs
 export ORACLE_SID=DEMO
-export ORACLE_UNQNAME=$ORACLE_SID # it is difference between primary and standby database
+export ORACLE_UNQNAME=${ORACLE_SID} # it is difference between primary and standby database
 export ORACLE_BASE=/u01/oracle
 export ORACLE_HOME=$ORACLE_BASE/11204
 export TNS_ADMIN=$ORACLE_HOME/network/admin
@@ -32,8 +32,7 @@ alias rm='rm -i'
 alias vi='vim'
 alias grep='grep --color=always'
 alias tree='tree --charset ASCII'
-#alias bdump="cd /u01/oracle/diag/rdbms/demo/DEMO/trace"
-#alias bdump="cd /u01/oracle/diag/rdbms/demo_stb/DEMO/trace"
+alias bdump="cd $ORACLE_BASE/diag/rdbms/${ORACLE_UNQNAME,,}/$ORACLE_SID/trace"
 ```
 
 ### 磁碟格式(LVM)

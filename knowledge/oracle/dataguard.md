@@ -1,4 +1,55 @@
 # Data Guard 環境配置
+- Maximum Protection: primary 和 standby sync 後，priamry 才能繼續作業
+- Maximum Availability
+- Maximum Performance
+
+## RMAN 前置作業
+### backup on primary
+```bash
+#!/bin/bash
+. ~/.bash_profile
+NOW=`date +%Y-%m-%d-%H%M`
+TODAY=`date +%Y-%m-%d`
+MONTH=`date +%Y-%m`
+BKDIR="/backup/$TODAY"
+mkdir -p $BKDIR
+mkdir -p $LOGDIR
+$ORACLE_HOME/bin/rman target / nocatalog << EOF
+run {
+    # backup database
+    backup as compressed backupset
+    incremental level 0
+    check logical
+        database format '$BKDIR/%d_%s_%p_%t.bak';
+    # backup archive log
+    backup as compressed backupset
+        archivelog all format '$BKDIR/%d_arch_%s_%p_%t.bak';
+    delete force noprompt copy of archivelog all completed before 'sysdate-1';
+    # backup control file
+    allocate channel d1 type disk;
+    backup
+        format '$BKDIR/%d_cntl_%s_%p_%t.bak'
+        current controlfile;
+    release channel d1;
+}
+EOF
+```
+
+### restore on standby
+```bash
+#!/bin/bash
+$ORACLE_HOME/bin/rman target / nocatalog << EOF
+run {
+    startup nomount;
+    restore standby controlfile from '/backup/2020-09-12/DEMO_cntl_4_1_1050942770.bak';
+
+    alter database mount;
+    restore database;
+    restore archivelog all;
+}
+EOF
+```
+
 ## bash_profile
 ```bash
 export ORACLE_SID=DEMO
@@ -174,6 +225,8 @@ alter system switch logfile;
 
 ### Standby
 ```sql
+-- startup nomount;
+-- alter database mount standby database;
 alter database recover managed standby database disconnect from session;
 ```
 
@@ -213,6 +266,12 @@ telnet [IP] [port]
 traceroute [IP]
 tnsping [ORACLE_SID]
 ```
+
+#### Archive log sync success information
+- standby
+  ```txt
+  Media Recovery Log /u01/oraarch/DEMO/DEMO_1_24_1050938955.dbf
+  ```
 
 ## Debug
 ### Archive gap sequence
@@ -297,9 +356,93 @@ startup;
 8. 檢查主、備庫角色狀態: `select switchover_status,database_role from v$database;`
 
 ### Failover(not verification)
-此時主庫異常跳電、硬體故障，無法執行資料庫作業，可參考 https://codertw.com/%E8%B3%87%E6%96%99%E5%BA%AB/127062/
-1. 停止**備庫** redo log: `recover managed standby database cancel;`
-2. 結束**備庫** redo log: `alter database recover managed standby database finish [force];`
-3. 進行**備庫** switchover: `alter database commit to switchover to primary with session shutdown;`
-4. 開啟**備庫**: `alter database open;`
-5. undone
+此時主庫異常跳電、硬體故障，無法執行資料庫作業(可 kill -9 SID 來測試)，可參考 https://codertw.com/%E8%B3%87%E6%96%99%E5%BA%AB/127062/
+```txt
+Sun Sep 13 11:42:49 2020
+RFS[4]: Possible network disconnect with primary database
+Sun Sep 13 11:42:49 2020
+RFS[2]: Possible network disconnect with primary database
+Sun Sep 13 11:42:49 2020
+RFS[3]: Possible network disconnect with primary database
+Sun Sep 13 11:42:49 2020
+RFS[5]: Assigned to RFS process 3207
+RFS[5]: Possible network disconnect with primary database
+Sun Sep 13 11:42:51 2020
+Error 1034 received logging on to the standby
+FAL[client, USER]: Error 1034 connecting to DEMO for fetching gap sequence
+```
+1. 停止**備庫** redo log: `recover managed standby database cancel;`(PHYSICAL STANDBY, NOT ALLOWED)
+    ```txt
+    Sun Sep 13 11:51:47 2020
+    ALTER DATABASE RECOVER  managed standby database cancel
+    Sun Sep 13 11:51:48 2020
+    MRP0: Background Media Recovery cancelled with status 16037
+    Errors in file /u01/oracle/diag/rdbms/demo_stb/DEMO/trace/DEMO_pr00_3277.trc:
+    ORA-16037: user requested cancel of managed recovery operation
+    Recovery interrupted!
+    Sun Sep 13 11:51:48 2020
+    MRP0: Background Media Recovery process shutdown (DEMO)
+    Managed Standby Recovery Canceled (DEMO)
+    Completed: ALTER DATABASE RECOVER  managed standby database cancel
+    ```
+2. 結束**備庫** redo log: `alter database recover managed standby database finish [force];`(PHYSICAL STANDBY, TO PRIMARY)
+    ```txt
+    Sun Sep 13 11:57:56 2020
+    alter database recover managed standby database finish
+    Attempt to do a Terminal Recovery (DEMO)
+    Media Recovery Start: Managed Standby Recovery (DEMO)
+    started logmerger process
+    Sun Sep 13 11:57:56 2020
+    Managed Standby Recovery not using Real Time Apply
+    Parallel Media Recovery started with 2 slaves
+    Media Recovery Waiting for thread 1 sequence 25
+    Begin: Standby Redo Logfile archival
+    End: Standby Redo Logfile archival
+    Terminal Recovery timestamp is '09/13/2020 11:57:57'
+    Terminal Recovery: applying standby redo logs.
+    Terminal Recovery: thread 1 seq# 25 redo required
+    Media Recovery Waiting for thread 1 sequence 25
+    Terminal Recovery: End-Of-Redo log allocation
+    Terminal Recovery: standby redo logfile 4 created '/u01/oraarch/DEMO/DEMO_1_0_1050938955.dbf'
+    This standby redo logfile is being created as part of the
+    failover operation.  This standby redo logfile should be
+    deleted after the switchover to primary operation completes.
+    Media Recovery Log /u01/oraarch/DEMO/DEMO_1_0_1050938955.dbf
+    Terminal Recovery: log 4 reserved for thread 1 sequence 25
+    Recovery of Online Redo Log: Thread 1 Group 4 Seq 25 Reading mem 0
+    Mem# 0: /u01/oraarch/DEMO/DEMO_1_0_1050938955.dbf
+    Identified End-Of-Redo (failover) for thread 1 sequence 25 at SCN 0xffff.ffffffff
+    Incomplete Recovery applied until change 1085255 time 09/13/2020 11:29:49
+    Media Recovery Complete (DEMO)
+    Terminal Recovery: Enabled archive destination LOG_ARCHIVE_DEST_2
+    Terminal Recovery: successful completion
+    Forcing ARSCN to IRSCN for TR 0:1085255
+    Sun Sep 13 11:57:57 2020
+    ARCH: Archival stopped, error occurred. Will continue retrying
+    ORACLE Instance DEMO - Archival Error
+    Attempt to set limbo arscn 0:1085255 irscn 0:1085255
+    ORA-16014: log 4 sequence# 25 not archived, no available destinations
+    ORA-00312: online log 4 thread 1: '/u01/oraarch/DEMO/DEMO_1_0_1050938955.dbf'
+    Resetting standby activation ID 3795058697 (0xe2340009)
+    Completed: alter database recover managed standby database finish
+    ```
+3. 進行**備庫** switchover: `alter database commit to switchover to primary with session shutdown;`(PRIMARY, NOT ALLOWED)
+    ```txt
+    Sun Sep 13 11:59:51 2020
+    alter database commit to switchover to primary with session shutdown
+    ALTER DATABASE SWITCHOVER TO PRIMARY (DEMO)
+    Maximum wait for role transition is 15 minutes.
+    Backup controlfile written to trace file /u01/oracle/diag/rdbms/demo_stb/DEMO/trace/DEMO_ora_7381.trc
+    Standby terminal recovery start SCN: 1085254
+    RESETLOGS after incomplete recovery UNTIL CHANGE 1085255
+    Online log /u01/oradata/DEMO/redo01.log: Thread 1 Group 1 was previously cleared
+    Online log /u01/oradata/DEMO/redo02.log: Thread 1 Group 2 was previously cleared
+    Online log /u01/oradata/DEMO/redo03.log: Thread 1 Group 3 was previously cleared
+    Standby became primary SCN: 1085253
+    Sun Sep 13 11:59:51 2020
+    Setting recovery target incarnation to 3
+    Switchover: Complete - Database mounted as primary
+    Completed: alter database commit to switchover to primary with session shutdown
+    ```
+4. 開啟**備庫**: `alter database open;`(PRIMARY, FAILED DESTINATION)
+5. 此時 standby 還缺少 primary archive log
