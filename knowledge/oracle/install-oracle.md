@@ -258,12 +258,17 @@ chmod +x .Xclients
     - 一直下一步
     - finish
 
-### 安裝 OEM dbconsole
+### 安裝 OEM
+#### dbconsole
 ```bash
 emca -repos drop
 emca -config dbcontrol db -repos create
 # SYSMAN = SYS password
 ```
+
+#### Cloud Control
+- https://www.oracle.com/enterprise-manager/downloads/cloud-control-downloads.html
+- `/usr/bin/make -f ins_sqlplus.mk install ORACLE_HOME=/u01/oracle/11204`
 
 ## 排程
 - `crontab -e`
