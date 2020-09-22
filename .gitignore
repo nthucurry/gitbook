@@ -62,3 +62,4 @@ knowledge/infra/*
 !knowledge/crawler/code.md
 !knowledge/infra
 !knowledge/infra/proxy.md
+!knowledge/infra/zabbix.md
