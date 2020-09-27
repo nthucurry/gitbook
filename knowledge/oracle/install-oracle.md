@@ -85,7 +85,6 @@ vi /etc/systemd/system/vncserver@:1.service
 PIDFile=/home/demo/.vnc/%H%i.pid
 
 # 登入各個帳號去設定以下(systemctl daemon-reload??)
-systemctl status vncserver@:1.service
 systemctl start vncserver@:1.service
 systemctl enable vncserver@:1.service
 
