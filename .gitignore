@@ -42,12 +42,13 @@ knowledge/infra/*
 !knowledge/oracle/rman.md
 !knowledge/oracle/startup-job.md
 !knowledge/oracle/dataguard-demo.md
-!knowledge/oracle/install-oracle-demo.md
+!knowledge/oracle/oracle-db.md
 !knowledge/oracle/dblink.md
 !knowledge/oracle/note/
 !knowledge/oracle/note/troubleshooting.md
 !knowledge/oracle/mview.md
 !knowledge/oracle/datapump.md
+!knowledge/oracle/cloud-control.md
 !knowledge/linux
 !knowledge/linux/initial-status.md
 !knowledge/linux/lvm.md
@@ -61,5 +62,6 @@ knowledge/infra/*
 !knowledge/crawler
 !knowledge/crawler/code.md
 !knowledge/infra
+!knowledge/infra/gitlab.md
 !knowledge/infra/proxy.md
 !knowledge/infra/zabbix.md
