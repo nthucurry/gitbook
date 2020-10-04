@@ -65,3 +65,4 @@ knowledge/infra/*
 !knowledge/infra/gitlab.md
 !knowledge/infra/proxy.md
 !knowledge/infra/zabbix.md
+!knowledge/infra/cloud-control.md
