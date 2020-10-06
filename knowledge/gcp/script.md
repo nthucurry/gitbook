@@ -1,7 +1,7 @@
 # GCP command
 ## 列出專案
 ```bash
-gcloud projects list --format="table(PROJECT_ID)" | grep -v "(PROJECT_ID)" >> gcp-proj-list.txt
+gcloud projects list --format="table(PROJECT_ID)" | grep -v "PROJECT_ID" >> gcp-proj-list.txt
 ```
 
 ## Compute engine
@@ -12,7 +12,7 @@ gcloud projects list --format="table(PROJECT_ID)" | grep -v "(PROJECT_ID)" >> gc
 proj_name="gcp-project-list.txt"
 output_file="gcp-instance-info.csv"
 output_file2="gcp-instance-info2.csv"
-rm $output_file
+[ -e file ] && rm $output_file
 
 echo "project,dirty,name,vCPU,RAM,internal_ip,external_ip,status,licenses,disk0_size_gb,disk1_size_gb,disk2_size_gb,create_time" \
 > $output_file
@@ -136,7 +136,7 @@ done
 
 chmod u+x $script
 ./$script
-rm $script
+[ -e file ] && rm $script
 ```
 
 ### 列出 instance 磁碟大小, 類型
@@ -144,28 +144,31 @@ rm $script
 #!/bin/bash
 
 ### define
-proj_name="gcp-project-list.txt"
-temp_file="gcp-disk-info.tmp"
+project_list="project-list.txt"
+temp_file="disk-info.tmp"
 output_file="gcp-disk-info.csv"
-vm_list="gcp-instances-list.csv"
-vm_list_disk="gcp-instances-list-detail.csv"
 
-rm $temp_file $output_file
+[ -e file ] && rm $temp_file $output_file
 
-cat $proj_name | while read line
+### (1) find all project list
+gcloud projects list --format="table(PROJECT_ID)" | grep -v "PROJECT_ID" >> $project_list
+
+### (2) find instance info in project
+cat $project_list | while read line
 do
-    echo "*********** $line ***********"
-    gcloud config set project=" $line" > /dev/null 2>&1
+#    echo "*********** $line ***********"
+    gcloud config set project="$line" > /dev/null 2>&1
     gcloud compute instances list --project=$line --format="csv(disks[0].source,NAME)" | grep -v "name" >> $temp_file
     gcloud config unset project > /dev/null 2>&1
 done
 
+### (3) exchange content
 sed -i 's/https:\/\/www.googleapis.com\/compute\/v1\/projects\///g' $temp_file
 
-cat $proj_name | while read line
+cat $project_list | while read line
 do
-    proj=`echo $line | awk 'BEGIN {FS="\/"}  {print $1}'`
-    inst=`echo $line | awk 'BEGIN {FS=","}  {print $2}'`
+    proj=`echo $line | awk 'BEGIN {FS="\/"} {print $1}'`
+    inst=`echo $line | awk 'BEGIN {FS=","} {print $2}'`
     echo "*********** $proj ***********" >> $output_file
     gcloud config set project $proj > /dev/null 2>&1
     # gcloud compute disks list --filter="name=($inst)" --format="table(NAME,SIZE_GB,TYPE)" | grep -v "NAME" >> $output_file

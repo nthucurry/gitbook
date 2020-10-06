@@ -62,6 +62,7 @@ knowledge/infra/*
 !knowledge/crawler
 !knowledge/crawler/code.md
 !knowledge/infra
+!knowledge/infra/macos.md
 !knowledge/infra/gitlab.md
 !knowledge/infra/proxy.md
 !knowledge/infra/zabbix.md
