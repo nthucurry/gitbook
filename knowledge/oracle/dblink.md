@@ -6,7 +6,7 @@
 
 ## 範例
 ```sql
-create public database link DL_DEMO_EMPLOYEES connect to HR identified by hr Using 'DEMO_STB';
+create public database link DL_DEMO_EMPLOYEES connect to HR identified by hr using 'DEMO_STB';
 -- drop database link DL_DEMO_EMPLOYEES;
 ```
 

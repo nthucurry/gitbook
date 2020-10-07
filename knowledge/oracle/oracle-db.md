@@ -1,4 +1,4 @@
-# 如何安裝 Oracle DB ?
+# Install Oracle Database
 ## 建立帳號、群組
 ```bash
 groupadd -g 501 dba
