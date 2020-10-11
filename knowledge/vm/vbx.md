@@ -3,7 +3,8 @@
 https://download.virtualbox.org/virtualbox/5.2.18/VirtualBox-5.2.18-124319-OSX.dmg
 
 ## Guest Additions
-直接在選單執行，會掛載在光碟槽
+1. 直接在選單執行(裝置 > 插入 Geust Additions CD 映像..)，會掛載在光碟槽
+2. `sudo ./autorun.sh`
 
 ## Extension Pack
 - https://download.virtualbox.org/virtualbox/5.2.18/Oracle_VM_VirtualBox_Extension_Pack-5.2.18.vbox-extpack
@@ -11,6 +12,7 @@ https://download.virtualbox.org/virtualbox/5.2.18/VirtualBox-5.2.18-124319-OSX.d
 
 ## 改 Mac Addres
 設定 > 網路 > 進階 > MAC 位址，輸入 MAC Address
+- ![](../../img/virtualbox/change-mac-address.png)
 
 ## 主客機連線
 1. 在 Virtual Box 虛擬機新增網卡
@@ -30,3 +32,7 @@ https://download.virtualbox.org/virtualbox/5.2.18/VirtualBox-5.2.18-124319-OSX.d
         ![](../../img/virtualbox/port-forwarding-1.png)
         ![](../../img/virtualbox/port-forwarding-2.png)
         ![](../../img/virtualbox/port-forwarding-3.png)
+- 新增虛擬機器內網卡
+    1. `sudo /Library/Application\ Support/VirtualBox/LaunchDaemons/VirtualBoxStartup.sh restart`
+    2. 建立網卡
+       ![](./img/network-interface-card.png)
