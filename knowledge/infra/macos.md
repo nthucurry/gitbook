@@ -11,6 +11,13 @@
 - [Nally BBS](http://yllan.org/app/Nally/)
 
 ## 環境設定
+### vimrc
+- `vi ~/.vimrc`
+    ```bash
+    syntax enable
+    set background=dark
+    ```
+
 ### bash_profile
 - `vi ~/.bash_profile`
     ```bash

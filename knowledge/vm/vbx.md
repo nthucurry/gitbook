@@ -35,4 +35,4 @@ https://download.virtualbox.org/virtualbox/5.2.18/VirtualBox-5.2.18-124319-OSX.d
 - 新增虛擬機器內網卡
     1. `sudo /Library/Application\ Support/VirtualBox/LaunchDaemons/VirtualBoxStartup.sh restart`
     2. 建立網卡
-       ![](./img/network-interface-card.png)
+       ![](../../img/virtualbox/add-nic.png)

@@ -145,35 +145,44 @@ chmod u+x $script
 
 ### define
 project_list="project-list.txt"
-temp_file="disk-info.tmp"
-output_file="gcp-disk-info.csv"
+instance_info="instance-list.txt"
+result_tmp="disk-info.tmp"
+result="disk-info.csv"
 
-[ -e file ] && rm $temp_file $output_file
+#[ -e file ] && rm $project_list $result_tmp $result
+rm $project_list $result_tmp $result
 
-### (1) find all project list
+echo "### (1) find all project list"
 gcloud projects list --format="table(PROJECT_ID)" | grep -v "PROJECT_ID" >> $project_list
 
-### (2) find instance info in project
-cat $project_list | while read line
-do
-#    echo "*********** $line ***********"
-    gcloud config set project="$line" > /dev/null 2>&1
-    gcloud compute instances list --project=$line --format="csv(disks[0].source,NAME)" | grep -v "name" >> $temp_file
-    gcloud config unset project > /dev/null 2>&1
-done
+#echo "### (2) find instance info in project"
+#cat $project_list | while read line
+#do
+#    #echo "*********** $line ***********"
+#    gcloud config set project="$line" > /dev/null 2>&1
+#    gcloud compute instances list --project=$line --format="csv(disks[0].source,name)" | grep -v "name" >> $instance_info
+#    gcloud config unset project > /dev/null 2>&1
+#done
 
-### (3) exchange content
-sed -i 's/https:\/\/www.googleapis.com\/compute\/v1\/projects\///g' $temp_file
+#echo "### (3) exchange instance info content"
+#sed -i 's/https:\/\/www.googleapis.com\/compute\/v1\/projects\///g' $instance_info
 
+echo "### (4) disk info"
 cat $project_list | while read line
 do
     proj=`echo $line | awk 'BEGIN {FS="\/"} {print $1}'`
     inst=`echo $line | awk 'BEGIN {FS=","} {print $2}'`
-    echo "*********** $proj ***********" >> $output_file
+    #echo "*********** $proj ***********" >> $result_tmp
     gcloud config set project $proj > /dev/null 2>&1
-    # gcloud compute disks list --filter="name=($inst)" --format="table(NAME,SIZE_GB,TYPE)" | grep -v "NAME" >> $output_file
-    gcloud compute disks list --format="table(NAME,SIZE_GB,TYPE)" | grep -v "NAME" >> $output_file
+    #gcloud compute disks list --filter="name=($inst)" --format="table(NAME,SIZE_GB,TYPE)" | grep -v "NAME" >> $output_file
+    gcloud compute disks list --format="csv(users[0],name,size_gb,type,status)" | grep -v "name" >> ${result_tmp}
     gcloud config unset project > /dev/null 2>&1
+done
+
+echo "### (5) exchange disk info content"
+cat $result_tmp | while read line
+do
+    echo $line | awk -F/ '{print $11}' >> ${result}
 done
 ```
 
