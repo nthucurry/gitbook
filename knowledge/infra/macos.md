@@ -26,6 +26,9 @@
     df -h | grep "dev/.*s1" | awk '{print $1 "\t" $2 "\t" $4 "\t" $5}'
 
     #export PS1="\[\e[30;46m\]\u:\W \\$ \[\e[0m\]" # http://xta.github.io/HalloweenBash/
+    PATH=/usr/local/opt/gnu-sed/libexec/gnubin:$PATH
+
+    export PATH
     export CLICOLOR='true'
 
     alias ll='ls -al'
@@ -63,6 +66,13 @@
 - 安裝方式
     - 用一般 User，會一直 key 密碼: `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
     - 安裝好後再 `brew update`
+- 必裝，讓 macOS 有 linux 溫度
+    - `brew install coreutils`
+        ```bash
+        PATH=/usr/local/opt/gnu-sed/libexec/gnubin:$PATH
+        export PATH
+        ```
+    - `brew install gnu-sed`
 
 ## 開發工具
 ### Java
