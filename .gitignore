@@ -30,6 +30,7 @@ office/chipbond/*
 knowledge/*
 knowledge/oracle/*
 knowledge/oracle/note/*
+knowledge/oracle/script/*
 knowledge/linux/*
 knowledge/cloud/*
 knowledge/gcp/*
@@ -49,6 +50,8 @@ knowledge/infra/*
 !knowledge/oracle/mview.md
 !knowledge/oracle/datapump.md
 !knowledge/oracle/cloud-control.md
+!knowledge/oracle/script/
+!knowledge/oracle/script/os-utility.*
 !knowledge/linux
 !knowledge/linux/initial-status.md
 !knowledge/linux/lvm.md
