@@ -1,5 +1,5 @@
 SELECT
-	(SELECT name FROM v$database)||','||
+    (SELECT name FROM v$database)||','||
     instance_number||','||
     to_char(begin_time,'YYYY-MM-DD HH24:MI:SS')||','||
     to_char(end_time,'YYYY-MM-DD HH24:MI:SS')||','||
