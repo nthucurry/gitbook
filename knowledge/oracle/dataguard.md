@@ -34,6 +34,7 @@ run {
 }
 EOF
 ```
+- 保留一天以內的 archive log
 
 ### restore on standby
 ```bash
@@ -46,8 +47,11 @@ run {
     alter database mount;
     restore database;
     restore archivelog all;
+    recover database;
 }
 EOF
+
+# recover database: It it correction when execute recover database.
 ```
 
 ## bash_profile
@@ -72,6 +76,7 @@ alias grep='grep --color=always'
 alias tree='tree --charset ASCII'
 #alias bdump="cd /u01/oracle/diag/rdbms/demo/DEMO/trace"
 #alias bdump="cd /u01/oracle/diag/rdbms/demo_stb/DEMO/trace"
+#alias bdump="cd $ORACLE_BASE/diag/rdbms/${ORACLE_UNQNAME,,}/$ORACLE_SID/trace"
 ```
 
 ## listener.ora
@@ -258,6 +263,7 @@ select name, open_mode, database_role, switchover_status from v$database;
 -- there are missing archive logs on the standby database server(no selected rows is right)
 select * from v$archive_gap;
 ```
+![](../../img/oracle/dg-standby-archived-log-status.png)
 
 #### Hardware
 ```bash

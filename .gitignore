@@ -54,6 +54,7 @@ knowledge/infra/*
 !knowledge/oracle/script/os-utility.*
 !knowledge/linux
 !knowledge/linux/initial-status.md
+!knowledge/linux/required-software.md
 !knowledge/linux/lvm.md
 !knowledge/cloud/vpn.md
 !knowledge/gcp/

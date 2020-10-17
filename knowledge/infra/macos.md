@@ -9,6 +9,7 @@
 - [Mounty for NTFS 讀 NTFS](http://enjoygineering.com/mounty/#FAQs)
 - [KeKa 壓縮工具](http://www.kekaosx.com/zh-tw/)
 - [Nally BBS](http://yllan.org/app/Nally/)
+- [XQuartz](https://www.xquartz.org/)
 
 ## 環境設定
 ### vimrc

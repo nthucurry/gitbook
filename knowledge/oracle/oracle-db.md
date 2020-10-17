@@ -68,51 +68,6 @@ vi /etc/fstab # mount it
 reboot
 ```
 
-### Remote by GUI
-#### 安裝 VNC server(option)
-```bash
-# 安裝
-yum install tigervnc-server -y
-
-# 複製 service config
-cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@:1.service
-
-# 修改 service config
-sed -i 's/<USER>/demo/g' /etc/systemd/system/vncserver@:1.service
-
-# 確認 root 的路徑是否正確(option)
-vi /etc/systemd/system/vncserver@:1.service
-PIDFile=/home/demo/.vnc/%H%i.pid
-
-# 登入各個帳號去設定以下(systemctl daemon-reload??)
-systemctl start vncserver@:1.service
-systemctl enable vncserver@:1.service
-
-# 設定密碼
-vncserver -kill :1
-vncserver(啟動 vnc server，需依照各別 user account)
-vncpasswd
-
-# 重啟
-reboot
-
-# 檢查
-netstat -tln
-tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
-```
-
-#### X Window System
-```bash
-# 需要直接 login demo
-cd ~
-vi .Xclients
-# xterm &
-# exec /usr/bin/matchbox-window-manager
-
-chmod +x .Xclients
-~/.Xclients # remember open xming
-```
-
 ## 如果 Swap 不足
 - `dd if=/dev/zero of=/swapfile count=4096 bs=1MiB`
 - `chmod 600 /swapfile`
@@ -293,37 +248,3 @@ GRANT CREATE SESSION TO demo_admin; -- 必要
 GRANT ALL ON DEMO.TEAM TO demo_admin;
 GRANT demo_admin TO demo;
 ```
-
-### 掛載 Disk by NFS
-[CentOS 7 下 yum 安装和配置 NFS](https://qizhanming.com/blog/2018/08/08/how-to-install-nfs-on-centos-7)
-- host
-    ```bash
-    # startup NFS(Network File System)
-    systemctl start rpcbind
-    systemctl start nfs
-    systemctl enable rpcbind
-    systemctl enable nfs
-
-    # firewall setting
-    firewall-cmd --zone=public --permanent --add-service={rpc-bind,mountd,nfs}
-    firewall-cmd --reload
-
-    # check NFS
-    vi /etc/exports
-    # /backup    192.168.56.0/224(rw,sync)
-
-    systemctl restart nfs
-
-    showmount -e localhost
-    ```
-- client
-    ```bash
-    systemctl start rpcbind
-    systemctl enable rpcbind
-
-    # mount NFS when startup
-    vi /etc/fstab
-    # 目標主機名稱:/backup_new         /backup_new                   nfs     defaults        0 0
-
-    systemctl daemon-reload
-    ```

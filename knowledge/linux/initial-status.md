@@ -1,4 +1,4 @@
-# Linux 初始狀態
+# Linux 基本設定
 ## 安裝套件
 ```bash
 # update
@@ -42,8 +42,8 @@ yum install zip unzip -y
 ```
 
 ## 環境變數
-- `vi /etc/bashrc`
-- `vi ~/.bash_profile`
+- `vi /etc/bashrc`(root)
+- `vi ~/.bash_profile`(user)
     ```bash
     # User specific environment and startup programs
     PATH=$PATH:$HOME/.local/bin:$HOME/bin
@@ -63,6 +63,8 @@ yum install zip unzip -y
 - `vi /etc/ssh/sshd_config`
     ```txt
     PasswordAuthentication yes
+    PermitRootLogin no
+    UseDNS no
     ```
 - `systemctl restart sshd`
 
