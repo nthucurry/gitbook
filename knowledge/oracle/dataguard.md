@@ -165,7 +165,7 @@ DEMO_STB =
   )
 ```
 
-## init[DEMO].ora
+## Parameter
 ### init[DEMO].ora
 ```txt
 ##### main config #####
