@@ -44,19 +44,19 @@ SELECT * FROM dba_hist_snapshot;
 SELECT * FROM DBA_HIST_SGASTAT;
 SELECT * FROM DBA_HIST_PGASTAT;
 SELECT
-	(SELECT name FROM v$database) SID,
-	sn.instance_number,
-	to_char(sn.begin_interval_time,'YYYY-MM-DD HH24:MI:SS') begin_time,
+    (SELECT name FROM v$database) SID,
+    sn.instance_number,
+    to_char(sn.begin_interval_time,'YYYY-MM-DD HH24:MI:SS') begin_time,
     to_char(sn.end_interval_time,'YYYY-MM-DD HH24:MI:SS') end_time,
-	sga.allo SGA,
-	pga.allo PGA,
+    sga.allo SGA,
+    pga.allo PGA,
     (sga.allo + pga.allo) TOT
 FROM
     (SELECT snap_id,instance_number,round(sum(bytes)/1024/1024/1024,3) allo
         FROM DBA_HIST_SGASTAT
         GROUP BY snap_id,instance_number) sga,
     (SELECT snap_id,instance_number,round(sum(value)/1024/1024/1024,3) allo
-        FROM DBA_HIST_PGASTAT 
+        FROM DBA_HIST_PGASTAT
         WHERE name = 'total PGA allocated'
         GROUP BY snap_id,instance_number) pga,
     dba_hist_snapshot sn
@@ -68,24 +68,26 @@ WHERE
 ORDER BY sn.snap_id DESC, sn.instance_number;
 
 SELECT
-	(SELECT name FROM v$database)||','||
-	sn.instance_number||','||
-	to_char(sn.begin_interval_time,'YYYY-MM-DD HH24:MI:SS')||','||
+    (SELECT name FROM v$database)||','||
+    sn.instance_number||','||
+    to_char(sn.begin_interval_time,'YYYY-MM-DD HH24:MI:SS')||','||
     to_char(sn.end_interval_time,'YYYY-MM-DD HH24:MI:SS')||','||
-	/*sga.allo||','||*/
-	/*pga.allo||','||*/
-    (sga.allo + pga.allo)
+    sga.allo||','||
+    pga.allo||','||
+    (sga.allo + pga.allo) AS RAM
 FROM dba_hist_snapshot sn
-INNER JOIN 
-    (SELECT snap_id,instance_number,round(sum(bytes)/1024/1024/1024,3) allo
+INNER JOIN
+    (SELECT snap_id,instance_number,round(sum(bytes)/1024/1024,3) allo
         FROM DBA_HIST_SGASTAT
         GROUP BY snap_id,instance_number) sga ON sga.snap_id = sn.snap_id
-INNER JOIN 
-    (SELECT snap_id,instance_number,round(sum(value)/1024/1024/1024,3) allo
-        FROM DBA_HIST_PGASTAT 
+INNER JOIN
+    (SELECT snap_id,instance_number,round(sum(value)/1024/1024,3) allo
+        FROM DBA_HIST_PGASTAT
         WHERE name = 'total PGA allocated'
         GROUP BY snap_id,instance_number) pga ON pga.snap_id = sn.snap_id
 WHERE
     sn.instance_number = sga.instance_number
     AND sn.instance_number = pga.instance_number
-ORDER BY sn.snap_id desc, sn.instance_number;
+    AND sn.end_interval_time BETWEEN to_date(to_char(sysdate-1,'YYYY-MM-DD'),'YYYY-MM-DD HH24:MI:SS')
+                                 AND to_date(to_char(sysdate-1,'YYYY-MM-DD')||'23:59:59','YYYY-MM-DD HH24:MI:SS')
+ORDER BY sn.end_interval_time;
