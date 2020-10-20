@@ -69,7 +69,7 @@ reboot
 ```
 
 ## 如果 Swap 不足
-- `dd if=/dev/zero of=/swapfile count=4096 bs=1MiB`
+- `dd if=/dev/zero of=/swapfile count=8192 bs=1MiB`
 - `chmod 600 /swapfile`
 - `mkswap /swapfile`
 - `swapon /swapfile`

@@ -10,12 +10,40 @@ emca -config dbcontrol db -repos create
 ## Cloud Control
 ### Reference
 - [Oracle Enterprise Manager Cloud Control 13c Release 1 (13.1.0.0) Installation on Oracle Linux 6 and 7](https://oracle-base.com/articles/13c/cloud-control-13cr1-installation-on-oracle-linux-6-and-7)
+    - 13c 版本需要安裝 [12c 資料庫](https://www.oracle.com/database/technologies/oracle12c-linux-12201-downloads.html#license-lightbox)
 - [Oracle Enterprise Manager Cloud Control 12c Release 2 Installation on Oracle Linux 5.8 and 6.3](https://oracle-base.com/articles/12c/cloud-control-12cr2-installation-on-oracle-linux-5-and-6)
-- 13c 版本需要安裝 [12c 資料庫](https://www.oracle.com/database/technologies/oracle12c-linux-12201-downloads.html#license-lightbox)
+
+### 環境設定
+```bash
+su - oracle
+vi ~/.bash_profile
+
+# User specific environment and startup programs
+export ORACLE_SID=DEMO
+export ORACLE_UNQNAME=${ORACLE_SID} # it is difference between primary and standby database
+export ORACLE_BASE=/u01/oracle
+export ORACLE_HOME=$ORACLE_BASE/12010
+export TNS_ADMIN=$ORACLE_HOME/network/admin
+LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib;
+export LD_LIBRARY_PATH
+CLASSPATH=$ORACLE_HOME/JRE:$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib;
+export CLASSPATH
+PATH=$PATH:$HOME/bin:$ORACLE_HOME/bin
+export PATH
+
+# Alias
+alias sqlp='sqlplus / as sysdba'
+alias rm='rm -i'
+alias vi='vim'
+alias grep='grep --color=always'
+alias tree='tree --charset ASCII'
+alias bdump="cd $ORACLE_BASE/diag/rdbms/${ORACLE_UNQNAME,,}/$ORACLE_SID/trace"
+```
 
 ### Step
 #### Prerequisites
 ```bash
+yum install ksh -y
 yum install make -y
 yum install binutils -y
 yum install gcc -y
@@ -42,21 +70,19 @@ yum install glibc-devel.i686 -y
         ```
     - [Check if all adaptive features parameters are unset](https://support.oracle.com/epmos/faces/DocumentDisplay?_afrLoop=30402886325103&parent=EXTERNAL_SEARCH&sourceId=PROBLEM&id=2635383.1&_afrWindowMode=0&_adf.ctrl-state=ke9nvuv68_4)
         ```sql
-        alter system set "_optimizer_nlj_hj_adaptive_join"= FALSE scope=both sid='*';
-        alter system set "_optimizer_strans_adaptive_pruning" = FALSE scope=both sid='*';
-        alter system set "_px_adaptive_dist_method" = OFF scope=both sid='*';
-        alter system set "_sql_plan_directive_mgmt_control" = 0 scope=both sid='*';
-        alter system set "_optimizer_dsdir_usage_control" = 0 scope=both sid='*';
-        alter system set "_optimizer_use_feedback" = FALSE scope=both sid='*';
-        alter system set "_optimizer_gather_feedback" = FALSE scope=both sid='*';
-        alter system set "_optimizer_performance_feedback" = OFF scope=both sid='*';
+        alter system set "_optimizer_nlj_hj_adaptive_join"=FALSE scope=both sid='*';
+        alter system set "_optimizer_strans_adaptive_pruning"=FALSE scope=both sid='*';
+        alter system set "_px_adaptive_dist_method"=OFF scope=both sid='*';
+        alter system set "_sql_plan_directive_mgmt_control"=0 scope=both sid='*';
+        alter system set "_optimizer_dsdir_usage_control"=0 scope=both sid='*';
+        alter system set "_optimizer_use_feedback"=FALSE scope=both sid='*';
+        alter system set "_optimizer_gather_feedback"=FALSE scope=both sid='*';
+        alter system set "_optimizer_performance_feedback"=OFF scope=both sid='*';
         alter system set session_cached_cursors=200 scope=spfile;
         ```
 
 #### Cloud Control 13c Installation
-- 建立管理資料夾
-    ```bash
-    mkdir -p /oracle/middleware
-    mkdir -p /oracle/agent
-    ```
+- `mkdir /oracle`(建立管理資料夾)
 - `./em13100_linux64.bin`
+    - /oracle/middleware
+    - /oracle/agent
