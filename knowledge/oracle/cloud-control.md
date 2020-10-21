@@ -12,6 +12,7 @@ emca -config dbcontrol db -repos create
 - [Oracle Enterprise Manager Cloud Control 13c Release 1 (13.1.0.0) Installation on Oracle Linux 6 and 7](https://oracle-base.com/articles/13c/cloud-control-13cr1-installation-on-oracle-linux-6-and-7)
     - 13c 版本需要安裝 [12c 資料庫](https://www.oracle.com/database/technologies/oracle12c-linux-12201-downloads.html#license-lightbox)
 - [Oracle Enterprise Manager Cloud Control 12c Release 2 Installation on Oracle Linux 5.8 and 6.3](https://oracle-base.com/articles/12c/cloud-control-12cr2-installation-on-oracle-linux-5-and-6)
+- https://oracledbwr.com/installation-of-oracle-enterprise-manager-13c/
 
 ### 環境設定
 ```bash
@@ -19,7 +20,7 @@ su - oracle
 vi ~/.bash_profile
 
 # User specific environment and startup programs
-export ORACLE_SID=DEMO
+export ORACLE_SID=OCC
 export ORACLE_UNQNAME=${ORACLE_SID} # it is difference between primary and standby database
 export ORACLE_BASE=/u01/oracle
 export ORACLE_HOME=$ORACLE_BASE/12010
@@ -43,6 +44,11 @@ alias bdump="cd $ORACLE_BASE/diag/rdbms/${ORACLE_UNQNAME,,}/$ORACLE_SID/trace"
 ### Step
 #### Prerequisites
 ```bash
+yum groupinstall "GNOME Desktop" -y
+yum install zip unzip -y
+yum install tigervnc-server -y
+yum install dkms gcc make kernel-devel bzip2 binutils patch libgomp glibc-headers glibc-devel kernel-headers -y
+
 yum install ksh -y
 yum install make -y
 yum install binutils -y
