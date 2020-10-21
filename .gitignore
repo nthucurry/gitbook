@@ -38,6 +38,7 @@ knowledge/vm/*
 knowledge/windows/*
 knowledge/crawler/*
 knowledge/infra/*
+knowledge/exam/*
 !knowledge
 !knowledge/oracle/
 !knowledge/oracle/rman.md
@@ -70,3 +71,5 @@ knowledge/infra/*
 !knowledge/infra/gitlab.md
 !knowledge/infra/proxy.md
 !knowledge/infra/zabbix.md
+!knowledge/exam
+!knowledge/exam/oracle-11g.md
