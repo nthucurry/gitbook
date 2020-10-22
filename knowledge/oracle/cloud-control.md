@@ -93,11 +93,20 @@ yum install glibc-devel.i686 -y
 - `./em13100_linux64.bin`
     - /oracle/middleware
     - /oracle/agent
+- agent
+    - 安裝帳號設定 sudo 權限: `visudo`
+        ```txt
+        # Defaults !visiblepw
+        Defaults visiblepw
+
+        oracle ALL=(ALL) ALL
+        ```
+    - `alter user dbsnmp identified by dbsnmp account unlock;`
 
 ### 指令
-```bash
-cd /oracle/middleware/bin
-./emctl stop oms
-./emctl extended oms jvmd stop –all
-./emctl extended oms adp stop -all
-```
+- 站台: https://cloud-control:7803/em
+- 啟動 cloud control
+    - `SQL> startup`
+    - `lsnrctl start`
+    - `cd $OMS_HOME/bin`
+        `./emctl start oms`
