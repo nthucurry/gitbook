@@ -24,6 +24,7 @@ export ORACLE_SID=OCC
 export ORACLE_UNQNAME=${ORACLE_SID} # it is difference between primary and standby database
 export ORACLE_BASE=/u01/oracle
 export ORACLE_HOME=$ORACLE_BASE/12010
+export OMS_HOME=/oracle/middleware
 export TNS_ADMIN=$ORACLE_HOME/network/admin
 LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib;
 export LD_LIBRARY_PATH
@@ -92,3 +93,11 @@ yum install glibc-devel.i686 -y
 - `./em13100_linux64.bin`
     - /oracle/middleware
     - /oracle/agent
+
+### 指令
+```bash
+cd /oracle/middleware/bin
+./emctl stop oms
+./emctl extended oms jvmd stop –all
+./emctl extended oms adp stop -all
+```
