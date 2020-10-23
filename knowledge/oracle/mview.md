@@ -12,37 +12,44 @@
 ## Build M-View
 ### Source
 ```sql
-CREATE MATERIALIZED VIEW HR.MV_DEMO_EMPLOYEES
-BUILD IMMEDIATE
-REFRESH FORCE
-ON DEMAND
-AS
-SELECT * FROM EMPLOYEES@DL_DEMO_EMPLOYEES;
+-- step 1: DB link
+create public database link DL_DEMO connect to HR identified by hr using 'DEMO';
+
+-- step 2: MView log
+create materialized view log on HR.EMPLOYEES
+tablespace ts_hr
+with rowid
+including new values;
+
+-- insert data
+select * from HR.PLAYER;
+insert into HR.PLAYER values (10, '璞園', 649);
+commit;
 ```
 
 ### Target
 ```sql
 -- step 1
 /*
-需注意該 user 是否有 tablespace usage privilege
-*/
-CREATE MATERIALIZED VIEW HR.MV_DEMO_EMPLOYEES
-BUILD IMMEDIATE
-REFRESH FORCE
-ON DEMAND
-AS
-SELECT * FROM EMPLOYEES@DL_DEMO_EMPLOYEES;
+ * 需注意該 user 是否有 tablespace usage privilege
+ */
+create materialized view HR.MV_DEMO_PLAYER;
+build immediate
+refresh force
+on demand
+as
+select * from PLAYER@DL_DEMO;
 
 -- step 1 (check)
-SELECT * FROM SYS.DBA_MVIEWS;
+select * from SYS.DBA_MVIEWS;
 
 -- step 2 (update source table by PL/SQL)
-BEGIN
+begin
     dbms_mview.refresh('HR.MV_DEMO_EMPLOYEES','C');
-END; -- ctrl + enter
+end; -- ctrl + enter
 
 -- step 3
-SELECT * FROM HR.MV_DEMO_EMPLOYEES;
+select * from HR.MV_DEMO_PLAYER;
 ```
 
 ## Generate MView command(not completed)
