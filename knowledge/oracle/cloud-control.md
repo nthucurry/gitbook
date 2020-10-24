@@ -23,7 +23,7 @@ vi ~/.bash_profile
 export ORACLE_SID=OCC
 export ORACLE_UNQNAME=${ORACLE_SID} # it is difference between primary and standby database
 export ORACLE_BASE=/u01/oracle
-export ORACLE_HOME=$ORACLE_BASE/12010
+export ORACLE_HOME=$ORACLE_BASE/12201
 export OMS_HOME=/oracle/middleware
 export TNS_ADMIN=$ORACLE_HOME/network/admin
 LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib;

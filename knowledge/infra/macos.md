@@ -10,6 +10,7 @@
 - [KeKa 壓縮工具](http://www.kekaosx.com/zh-tw/)
 - [Nally BBS](http://yllan.org/app/Nally/)
 - [XQuartz](https://www.xquartz.org/)
+    - `ssh -X user@hostname`
 
 ## 環境設定
 ### vimrc
@@ -62,6 +63,11 @@
     - csrutil disable (開啟: csrutil enable)
 - restrat system
 - `sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist`
+
+### 用 ssh 登入 linux
+- server 端: `vi ~/.ssh/authorized_keys`
+- 將 local 端 public key 加到 server 端的 authorized_keys
+- ok
 
 ### Homebrew
 - 安裝方式
