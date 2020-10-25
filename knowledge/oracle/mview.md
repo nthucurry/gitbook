@@ -10,6 +10,11 @@
 - snapshot 的概念
 
 ## Build M-View
+### Privilege
+```sql
+GRANT CREATE ANY MATERIALIZED VIEW TO SYSTEM;
+```
+
 ### Source
 ```sql
 -- step 1: DB link
