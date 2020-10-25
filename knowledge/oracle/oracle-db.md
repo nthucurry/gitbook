@@ -68,16 +68,6 @@ vi /etc/fstab # mount it
 reboot
 ```
 
-## 如果 Swap 不足
-- `dd if=/dev/zero of=/swapfile count=8192 bs=1MiB`
-- `chmod 600 /swapfile`
-- `mkswap /swapfile`
-- `swapon /swapfile`
-- `swapon -s`
-- `free -m`
-- `vi /etc/fstab`
-	- /swapfile swap  swap  sw  0 0
-
 ## Pretreatment(option)
 - 更新 EPEL repository: `yum install epel-release -y`
     - `wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo`
@@ -211,34 +201,6 @@ reboot
             - use unicode
     - 一直下一步
     - finish
-
-## 排程
-- `crontab -e`
-    ```txt
-    @reboot /home/demo/scripts/start-lsn.sh
-    @reboot /home/demo/scripts/start-db.sh
-    ```
-- `vi start-lsn.sh`
-    ```bash
-    #/bin/bash
-
-    . ~/.bash_profile
-
-    NOW=`date +%Y-%m-%d-%H%M`
-    $ORACLE_HOME/bin/lsnrctl start > $HOME/log/lsnrctl-$NOW.log
-    ```
-- `vi start-db.sh`
-    ```bash
-    #/bin/bash
-
-    . ~/.bash_profile
-
-    NOW=`date +%Y-%m-%d-%H%M`
-    $ORACLE_HOME/bin/sqlplus / as sysdba > $HOME/log/startup-$NOW.log << EOF
-    startup;
-    quit;
-    EOF
-    ```
 
 ### 建立 Account
 ```sql

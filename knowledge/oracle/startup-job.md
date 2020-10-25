@@ -1,28 +1,24 @@
-# Schedule of startup OS
+# 開機時啟動
 ## crontab
 ```txt
 @reboot /bin/vncserver :1
-@reboot /home/oraeship/startup-init.sh
-@reboot /home/oraeship/del_arch.sh # 刪除 archive log
+@reboot /home/oracle/startup.sh
+@reboot /home/oracle/del_arch.sh # 刪除 archive log
 ```
 
 ## Startup DB, listener and EM
 ```bash
 #/bin/bash
 
-export ORACLE_SID=DEMO
-export ORACLE_HOME=/u01/oracle/11204
-export TNS_ADMIN=$ORACLE_HOME/network/admin
-
+. ~/.bash_profile
 NOW=`date +%Y-%m-%d-%H%M`
-$ORACLE_HOME/bin/lsnrctl start > /home/oraeship/log/lsnrctl-$NOW.log
-$ORACLE_HOME/bin/sqlplus / as sysdba > /home/oraeship/log/startup-$NOW.log << EOF
+$ORACLE_HOME/bin/lsnrctl start
+$ORACLE_HOME/bin/sqlplus / as sysdba << EOF
 startup;
 quit;
 EOF
 
-$ORACLE_HOME/bin/emctl start dbconsole > /home/oraeship/log/emctl-$NOW.log
-
+# $ORACLE_HOME/bin/emctl start dbconsole
 # $HOME/fullBackup.sh
 ```
 
@@ -31,7 +27,6 @@ $ORACLE_HOME/bin/emctl start dbconsole > /home/oraeship/log/emctl-$NOW.log
 #!/bin/bash
 
 . ~/.bash_profile
-
 NOW=`date +%Y-%m-%d-%H%M`
 TODAY=`date +%Y-%m-%d`
 MONTH=`date +%Y-%m`
@@ -64,10 +59,11 @@ run {
 EOF
 ```
 
-## Delete archive log
+## Delete archive log (option)
 ```bash
-. ~/.bash_profile # = source ~/.bash_profile
+#/bin/bash
 
+. ~/.bash_profile # = source ~/.bash_profile
 $ORACLE_HOME/bin/rman target / nocatalog << EOF
 run {
     delete force noprompt copy of archivelog all completed before 'sysdate-1';
