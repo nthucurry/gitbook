@@ -53,6 +53,7 @@ knowledge/exam/*
 !knowledge/oracle/cloud-control.md
 !knowledge/oracle/script/
 !knowledge/oracle/script/os-utility.*
+!knowledge/oracle/script/init-sop-for-*
 !knowledge/linux
 !knowledge/linux/initial-status.md
 !knowledge/linux/required-software.md

@@ -15,46 +15,51 @@
 GRANT CREATE ANY MATERIALIZED VIEW TO SYSTEM;
 ```
 
-### Source
+### Source DB
 ```sql
 -- step 1: DB link
-create public database link DL_DEMO connect to HR identified by hr using 'DEMO';
+create public database link DL_ERP connect to HR identified by hr using 'ERP';
+SELECT * FROM dba_db_links;
 
 -- step 2: MView log
-create materialized view log on HR.EMPLOYEES
-tablespace ts_hr
-with rowid
-including new values;
+create materialized view log on HR.PLAYER
+	tablespace ts_hr
+	with rowid
+	including new values;
 
 -- insert data
 select * from HR.PLAYER;
-insert into HR.PLAYER values (10, '璞園', 649);
+insert into HR.PLAYER values (8, 'Bosh', 8);
 commit;
 ```
 
-### Target
+### Target DB
 ```sql
--- step 1
-/*
- * 需注意該 user 是否有 tablespace usage privilege
- */
-create materialized view HR.MV_DEMO_PLAYER;
-build immediate
-refresh force
-on demand
-as
-select * from PLAYER@DL_DEMO;
+-- step 1: 需注意該 user 是否有 tablespace usage privilege
+create materialized view HR.MV_ERP_PLAYER
+	build immediate
+	refresh force
+	with rowid
+	start with sysdate next sysdate + 1/1440 for update
+	as
+	select * from HR.PLAYER@DL_ERP;
 
 -- step 1 (check)
-select * from SYS.DBA_MVIEWS;
+select * from DBA_MVIEWS;
 
 -- step 2 (update source table by PL/SQL)
 begin
-    dbms_mview.refresh('HR.MV_DEMO_EMPLOYEES','C');
+    dbms_mview.refresh('HR.MV_ERP_PLAYER','C');
 end; -- ctrl + enter
 
 -- step 3
-select * from HR.MV_DEMO_PLAYER;
+select * from HR.MV_ERP_PLAYER;
+
+-- job
+select * from dba_jobs;
+
+-- drop
+DROP MATERIALIZED VIEW HR.MV_ERP_PLAYER;
 ```
 
 ## Generate MView command(not completed)
