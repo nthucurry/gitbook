@@ -68,6 +68,14 @@ yum install zip unzip -y
     ```
 - `systemctl restart sshd`
 
+## 透過 Proxy 下載
+- `sudo su`
+- `vi ~/.bashrc`
+    ```bash
+    export http_proxy=http://hostname:80
+    export https_proxy=http://hostname:80
+    ```
+
 ## Option
 ### 增加 History 時間資訊
 - `vi ~/.bashrc`

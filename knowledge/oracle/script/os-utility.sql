@@ -91,3 +91,24 @@ WHERE
     AND sn.end_interval_time BETWEEN to_date(to_char(sysdate-1,'YYYY-MM-DD'),'YYYY-MM-DD HH24:MI:SS')
                                  AND to_date(to_char(sysdate-1,'YYYY-MM-DD')||'23:59:59','YYYY-MM-DD HH24:MI:SS')
 ORDER BY sn.end_interval_time;
+
+-- tablespace size
+SELECT
+    *
+FROM
+(
+    SELECT
+        name,
+        to_char(to_date(rtime,'MM/DD/YYYY HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') AS rtime,
+        ROUND(tablespace_usedsize*8/1024,1) AS tablespace_usedsize
+    FROM v$tablespace tbs
+    INNER JOIN dba_hist_tbspc_space_usage awr ON awr.TABLESPACE_ID = tbs."TS#" ORDER BY rtime,name
+)
+PIVOT (
+    SUM(tablespace_usedsize)
+    FOR name
+    IN ('TS_GBU','TS_ESCPGUI','TS_GPS','TS_PLN','TS_PUR','TS_EQPUR','TS_OM','TS_SCM_ALL','TS_FIN')
+)
+WHERE to_date(rtime,'YYYY-MM-DD HH24:MI:SS') BETWEEN to_date(to_char(sysdate-1,'YYYY-MM-DD'),'YYYY-MM-DD HH24:MI:SS')
+                                 AND to_date(to_char(sysdate-1,'YYYY-MM-DD')||'23:59:59','YYYY-MM-DD HH24:MI:SS')
+ORDER BY rtime;

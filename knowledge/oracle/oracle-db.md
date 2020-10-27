@@ -68,7 +68,7 @@ vi /etc/fstab # mount it
 reboot
 ```
 
-## Pretreatment(option)
+## Prerequisites(option)
 - 更新 EPEL repository: `yum install epel-release -y`
     - `wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo`
     - `wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle`
@@ -209,4 +209,16 @@ GRANT CONNECT TO demo_admin;
 GRANT CREATE SESSION TO demo_admin; -- 必要
 GRANT ALL ON DEMO.TEAM TO demo_admin;
 GRANT demo_admin TO demo;
+```
+
+## RAC
+```bash
+# https://oracle-base.com/articles/11g/oracle-db-11gr2-rac-installation-on-linux-using-nfs#os_installation
+
+wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
+wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+
+yum install oracle-validated
+
+./runInstaller -silent -updateNodeList ORACLE_HOME=$GRID_HOME "CLUSTER_NODES={node1,node2}" CRS=TRUE LOCAL_NODE=node1
 ```

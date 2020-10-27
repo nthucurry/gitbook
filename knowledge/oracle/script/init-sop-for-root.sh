@@ -16,6 +16,7 @@ timedatectl set-timezone Asia/Taipei
 ### update parameter
 echo "alias vi='vim'" >> ~/.bashrc
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+source ~/.bashrc
 
 ### swap
 dd if=/dev/zero of=/swapfile count=8 bs=1GiB
@@ -25,6 +26,6 @@ swapon /swapfile
 swapon -s
 echo "/swapfile swap swap sw 0 0" >> /etc/fstab
 
-###
+### systemctl
 systemctl stop firewalld
 systemctl disable firewalld
