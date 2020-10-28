@@ -1,5 +1,10 @@
 #/bin/bash
 
+### internet connection
+echo "proxy=http://proxy:80" >> /etc/yum.conf
+echo "https_proxy = http://proxy:80/" >> /etc/wgetrc
+echo "http_proxy = http://proxy:80/" >> /etc/wgetrc
+
 ### yum
 yum update -y
 yum install wget -y
@@ -29,3 +34,8 @@ echo "/swapfile swap swap sw 0 0" >> /etc/fstab
 ### systemctl
 systemctl stop firewalld
 systemctl disable firewalld
+
+### oracle prerequisite
+wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
+wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+yum install oracle-rdbms-server-11gR2-preinstall -y
