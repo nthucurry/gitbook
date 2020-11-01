@@ -1,7 +1,7 @@
 # MacOS
 ## 生產工具
 - [PyCharm](https://www.jetbrains.com/pycharm/download/#section=mac)
-- [DBeaver](https://dbeaver.jkiss.org/)
+- [DBeaver](https://dbeaver.io/)
 - [AppCleaner](https://freemacsoft.net/appcleaner/)
 - [VLC](https://www.videolan.org/vlc/download-macosx.zh-TW.html)
     - 可在 preference 轉成 中文
