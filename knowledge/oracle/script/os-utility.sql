@@ -40,9 +40,6 @@ WHERE
 ORDER BY end_time;
 
 -- http://pawaramitdba.blogspot.com/2014/12/how-to-find-history-of-sgapaga-usage.html
-SELECT * FROM dba_hist_snapshot;
-SELECT * FROM DBA_HIST_SGASTAT;
-SELECT * FROM DBA_HIST_PGASTAT;
 SELECT
     (SELECT name FROM v$database) SID,
     sn.instance_number,
@@ -113,7 +110,7 @@ WHERE to_date(rtime,'YYYY-MM-DD HH24:MI:SS') BETWEEN to_date(to_char(sysdate-1,'
                                  AND to_date(to_char(sysdate-1,'YYYY-MM-DD')||'23:59:59','YYYY-MM-DD HH24:MI:SS')
 ORDER BY rtime;
 
--- Shared Pool
+-- shared pool
 SELECT
     (SELECT name FROM v$database)||','||
     instance_number||','||

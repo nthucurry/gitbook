@@ -3,15 +3,16 @@
 ```sql
 -- nls_lang = <language>_<territory>.<charset>
 
-alter session set nls_language='AMERICAN';
-alter session set nls_territory='AMERICA';
-alter session set nls_characterset='AL32UTF8';
+ALTER SESSION SET nls_language='AMERICAN';
+ALTER SESSION SET nls_territory='AMERICA';
+ALTER SESSION SET nls_characterset='AL32UTF8';
+ALTER SESSION SET nls_date_format='"YYYY-MM-DD"';
 
-create or replace procedure update_global_language_to_us is
-begin
+CREATE OR REPLACE PROCEDURE update_global_language IS
+BEGIN
     dbms_session.set_nls('nls_language','AMERICAN');
     dbms_session.set_nls('nls_territory','AMERICA');
-end;
+END;
 
-exec update_global_language_to_us;
+EXEC update_global_language;
 ```
