@@ -54,6 +54,8 @@ knowledge/exam/*
 !knowledge/oracle/script/
 !knowledge/oracle/script/os-utility.*
 !knowledge/oracle/script/init-sop-for-*
+!knowledge/oracle/script/check-dg-status.sql
+!knowledge/oracle/script/mview.sql
 !knowledge/oracle/script/procedure.md
 !knowledge/linux
 !knowledge/linux/initial-status.md

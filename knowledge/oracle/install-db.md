@@ -35,39 +35,6 @@ alias tree='tree --charset ASCII'
 alias bdump="cd $ORACLE_BASE/diag/rdbms/${ORACLE_UNQNAME,,}/$ORACLE_SID/trace"
 ```
 
-### 磁碟格式(LVM)
-```bash
-# 找目標 disk
-fdisk -l
-
-# 檔案格式轉換
-fdisk /dev/sdb
-
-# 建立 PV(Physical Volume)
-pvscan
-pvcreate /dev/sdb
-
-# 建立 VG(Volume Group)
-vgcreate vg_demo /dev/sdb
-vgdisplay vg_demo
-
-# 建立 LV(Logical Volume)
-lvcreate -L 50G -n lv_demo vg_demo
-
-# 格式化
-mkfs.xfs /dev/vg_demo/lv_demo
-
-# 掛載
-mount /dev/mapper/vg_demo-lv_u01 /u01
-
-# 開機掛載
-vi /etc/fstab # mount it
-# /dev/mapper/vg_demo-lv_u01  /u01        xfs     defaults        0 0
-
-# restart
-reboot
-```
-
 ## Prerequisites(option)
 - 更新 EPEL repository: `yum install epel-release -y`
     - `wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo`
@@ -75,16 +42,11 @@ reboot
 - 安裝懶人包
     - `yum install oracle-rdbms-server-11gR2-preinstall -y`
 - 確認記憶體是否足夠
-    - memory requirements
-        ```bash
-        grep MemTotal /proc/meminfo
-        grep SwapTotal /proc/meminfo
-        ```
-    - automatic memory management
-        - `df -h /dev/shm/`
-        - 永久有效(7G 的置換空間)
-            - `shmfs /dev/shm tmpfs size=7g 0`
-            - `mount -t tmpfs shmfs -o size=7g /dev/shm`
+    - automatic memory management(此設定會影響 MEMORY_TARGET)
+    - `df -h /dev/shm/`
+    - 永久有效(7G 的置換空間)
+        - `shmfs /dev/shm tmpfs size=7g 0`
+        - `mount -t tmpfs shmfs -o size=7g /dev/shm`
 - `yum install gcc* libaio-devel* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* binutils* compat-libcap1* ksh -y`
 
 ## 安裝 Oracle
@@ -202,11 +164,7 @@ reboot
     - 一直下一步
     - finish
 
-### 建立 Account
-```sql
-CREATE USER DEMO IDENTIFIED BY demo DEFAULT tablespace ts_demo;
-GRANT CONNECT TO demo_admin;
-GRANT CREATE SESSION TO demo_admin; -- 必要
-GRANT ALL ON DEMO.TEAM TO demo_admin;
-GRANT demo_admin TO demo;
+### Alter Install
+```bash
+mkdir $ORACLE_BASE/admin/$ORACLE_SID/adump
 ```
