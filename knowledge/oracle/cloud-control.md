@@ -66,7 +66,7 @@ yum install glibc-devel.i686 -y
 ```
 
 - https://www.oracle.com/enterprise-manager/downloads/cloud-control-downloads.html
-- `/usr/bin/make -f ins_sqlplus.mk install ORACLE_HOME=/u01/oracle/12010`
+- `/usr/bin/make -f ins_sqlplus.mk install ORACLE_HOME=/u01/oracle/12201`
 - step
     ```bash
     $ORACLE_HOME/middleware/allroot.sh
@@ -99,7 +99,6 @@ yum install glibc-devel.i686 -y
         ```txt
         # Defaults !visiblepw
         Defaults visiblepw
-
         oracle ALL=(ALL) ALL
         ```
     - `alter user dbsnmp identified by dbsnmp account unlock;`
