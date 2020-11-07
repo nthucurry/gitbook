@@ -53,7 +53,7 @@ knowledge/exam/*
 !knowledge/oracle/cloud-control.md
 !knowledge/oracle/script/
 !knowledge/oracle/script/os-utility.*
-!knowledge/oracle/script/init-sop-for-*
+!knowledge/oracle/script/os-init-setting.sh
 !knowledge/oracle/script/check-dg-status.sql
 !knowledge/oracle/script/mview.sql
 !knowledge/oracle/script/procedure.md

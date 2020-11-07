@@ -1,9 +1,11 @@
 #/bin/bash
 
+proxy_server='proxy'
+
 ### internet connection
-echo "proxy=http://proxy:80" >> /etc/yum.conf
-echo "https_proxy = http://proxy:80/" >> /etc/wgetrc
-echo "http_proxy = http://proxy:80/" >> /etc/wgetrc
+echo "proxy=http://$proxy_server:80" >> /etc/yum.conf
+echo "https_proxy = http://$proxy_server:80/" >> /etc/wgetrc
+echo "http_proxy = http://$proxy_server:80/" >> /etc/wgetrc
 
 ### yum
 yum update -y
