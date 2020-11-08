@@ -230,7 +230,7 @@ alter system switch logfile;
 
 ### Standby
 ```sql
--- startup nomount;
+-- startup nomount
 -- alter database mount standby database;
 alter database recover managed standby database disconnect from session;
 ```

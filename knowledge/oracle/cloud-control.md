@@ -108,5 +108,4 @@ yum install glibc-devel.i686 -y
 - 啟動 cloud control
     - `SQL> startup`
     - `lsnrctl start`
-    - `cd $OMS_HOME/bin`
-        `./emctl start oms`
+    - `$OMS_HOME/bin/emctl start oms`
