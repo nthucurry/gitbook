@@ -62,7 +62,7 @@ chmod +x .Xclients
 
     # check NFS
     vi /etc/exports
-    # /backup    192.168.56.0/224(rw,sync)
+    # /backup    192.168.56.0/24(rw,sync)
 
     systemctl restart nfs
 
