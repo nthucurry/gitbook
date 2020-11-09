@@ -48,6 +48,7 @@ yum install zip unzip -y
     # User specific environment and startup programs
     PATH=$PATH:$HOME/.local/bin:$HOME/bin
     export PATH
+    export LANG=en_US.UTF-8
 
     # Terminal color
     export PS1="\[\e[30;42m\]\u@\h:\W \A \\$ \[\e[0m\]"
