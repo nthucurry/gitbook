@@ -41,3 +41,12 @@ systemctl disable firewalld
 wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
 wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
 yum install oracle-rdbms-server-11gR2-preinstall -y
+
+### group
+groupadd -g 501 dba
+groupadd -g 502 oinstall
+
+### directory
+mkdir /u01
+mkdir /oracle
+mkdir /backup
