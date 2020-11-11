@@ -1,5 +1,5 @@
 # GCP command
-## Compute engine
+## Compute Engine
 ### Class
 - 列出專案: `./getProject.sh $1`
     ```bash
