@@ -71,6 +71,7 @@ knowledge/exam/*
 !knowledge/crawler
 !knowledge/crawler/code.md
 !knowledge/infra
+!knowledge/infra/docker.md
 !knowledge/infra/macos.md
 !knowledge/infra/sharepoint.md
 !knowledge/infra/gitlab.md

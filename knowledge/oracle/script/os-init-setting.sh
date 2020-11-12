@@ -43,10 +43,13 @@ wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM
 yum install oracle-rdbms-server-11gR2-preinstall -y
 
 ### group
-groupadd -g 501 dba
-groupadd -g 502 oinstall
+# groupadd -g 501 dba
+# groupadd -g 502 oinstall
 
 ### directory
 mkdir /u01
 mkdir /oracle
 mkdir /backup
+
+### enviromnent variable
+LANG=en_US.UTF-8
