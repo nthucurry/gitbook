@@ -77,7 +77,6 @@
     - Standard View (只能看**非**週期性事件)
     - Standard View, with Expanded Recurring Events (只能看週期性事件)
     - All Events (看所有事件，但是週期性因為時間關係，會怪怪的)
-        - http://auohqspsap02/sites/infra/_layouts/15/start.aspx#/Lists/Webex%20Meeting%20Calendar/AllItems.aspx
 - DB schema
     - dbo.SchedSubscriptions
 - 計算欄位

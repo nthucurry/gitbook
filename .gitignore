@@ -37,6 +37,7 @@ knowledge/gcp/*
 knowledge/vm/*
 knowledge/windows/*
 knowledge/crawler/*
+knowledge/erp/*
 knowledge/infra/*
 knowledge/exam/*
 !knowledge
@@ -49,6 +50,7 @@ knowledge/exam/*
 !knowledge/oracle/note/
 !knowledge/oracle/note/troubleshooting.md
 !knowledge/oracle/mview.md
+!knowledge/oracle/rac.md
 !knowledge/oracle/datapump.md
 !knowledge/oracle/cloud-control.md
 !knowledge/oracle/script/
@@ -70,6 +72,7 @@ knowledge/exam/*
 !knowledge/windows/portable.md
 !knowledge/crawler
 !knowledge/crawler/code.md
+!knowledge/erp
 !knowledge/infra
 !knowledge/infra/docker.md
 !knowledge/infra/macos.md

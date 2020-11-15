@@ -21,6 +21,7 @@ echo "https_proxy = http://$proxy_server:80/" >> /etc/wgetrc
 echo "http_proxy = http://$proxy_server:80/" >> /etc/wgetrc
 
 ### yum
+echo "==== yum... ===="
 yum update -y
 yum install wget -y
 yum install telnet -y
@@ -31,6 +32,7 @@ yum groupinstall "GNOME Desktop" -y
 yum install ksh gcc* libaio* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* libgcc* binutils* compat-libcap1* make* stsstat* -y
 
 ### timezone
+echo "==== timedatectl... ===="
 timedatectl set-timezone Asia/Taipei
 
 ### update parameter
@@ -39,6 +41,7 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 source ~/.bashrc
 
 ### swap
+echo "==== swap... ===="
 dd if=/dev/zero of=/swapfile count=$swap_size bs=1GiB
 chmod 600 /swapfile
 mkswap /swapfile
@@ -47,10 +50,12 @@ swapon -s
 echo "/swapfile swap swap sw 0 0" >> /etc/fstab
 
 ### systemctl
+echo "==== firewalld... ===="
 systemctl stop firewalld
 systemctl disable firewalld
 
 ### oracle prerequisite
+echo "==== oracle package... ===="
 wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
 wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
 if [ "$ora_ver" -eq 11204 ]; then
@@ -60,6 +65,7 @@ else
 fi
 
 ### group
+echo "==== group... ===="
 groupadd -g 54321 oinstall
 groupadd -g 54322 dba
 groupadd -g 54323 oper
@@ -83,6 +89,7 @@ chown -R $user:dba /u01
 LANG=en_US.UTF-8
 
 ### oracle account setting
+echo "==== oracle account... ===="
 cat > /home/$user/$bpfile <<EOF
 export ORACLE_SID=$sid
 export ORACLE_UNQNAME=$uqname # it is difference between primary and standby database
