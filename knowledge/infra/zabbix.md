@@ -62,5 +62,8 @@ yum install php-bcmath php-mbstring php-xml curl curl-devel net-snmp net-snmp-de
     - `systemctl enable zabbix-agent`
     - `systemctl restart zabbix-agent`
 
+## Template
+- SQL Server template: https://share.zabbix.com/databases/microsoft-sql-server/template-for-microsoft-sql-server
+
 ## 如果要修改參數
 http://[zabbix_server_ip]/zabbix/setup.php

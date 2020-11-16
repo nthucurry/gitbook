@@ -13,10 +13,12 @@ SUMMARY.md
 !img/ibm
 !img/windows
 !img/virtualbox
-!img/linux/
+!img/linux
 !img/linux/dataguard
 !img/linux/lvm
-!img/gcp
+!img/cloud
+!img/cloud/azure
+!img/cloud/gcp
 !img/veeam
 !img/moss
 # office
