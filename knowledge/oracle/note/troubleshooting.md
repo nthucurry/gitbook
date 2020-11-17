@@ -1,5 +1,12 @@
 # Troubleshooting
 ## Block sessions
+- 解決語法
+    ```sql
+    select
+        'alter system kill session '||''''||blocker_sid||','||blocker_sess_serial#||''''||' immediate;'
+    from
+        v$session_blockers;
+    ```
 1. user 的 sql GG，執行後 hand 住
     ![](../../../img/oracle/troubleshooting/block-session-cause-reason.png)
 2. 進 OEM 看 top activity，看到紅紅的就不對勁，發現是這個 sql(86nyv6myq09p2)
