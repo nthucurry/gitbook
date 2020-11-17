@@ -76,6 +76,7 @@ groupadd -g 54327 asmdba
 groupadd -g 54328 asmoper
 groupadd -g 54329 asmadmin
 groupadd -g 54330 racdba
+usermod -g oinstall -G dba,oper oracle
 
 ### directory
 mkdir /u01
@@ -84,9 +85,12 @@ mkdir /backup
 
 ### owner
 chown -R $user:dba /u01
+chown -R $user:dba /oracle
+chown -R $user:dba /backup
 
 ### enviromnent variable
 LANG=en_US.UTF-8
+env
 
 ### oracle account setting
 echo "==== oracle account... ===="
