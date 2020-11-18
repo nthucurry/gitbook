@@ -69,6 +69,7 @@ knowledge/exam/*
 !knowledge/gcp/
 !knowledge/gcp/script.md
 !knowledge/vm
+!knowledge/vm/veeam.md
 !knowledge/vm/vbx.md
 !knowledge/windows/
 !knowledge/windows/portable.md

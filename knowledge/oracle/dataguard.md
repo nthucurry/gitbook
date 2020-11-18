@@ -1,9 +1,9 @@
-# Data Guard 環境配置
+# Data Guard
 - Maximum Protection: primary 和 standby sync 後，priamry 才能繼續作業
 - Maximum Availability
 - Maximum Performance
 
-## RMAN 前置作業
+## RMAN
 ### backup on primary
 ```bash
 #!/bin/bash
@@ -57,7 +57,7 @@ EOF
 ## bash_profile
 ```bash
 export ORACLE_SID=DEMO
-export ORACLE_UNQNAME=DEMO # distinguish between primary and standby database
+export ORACLE_UNQNAME=${ORACLE_SID} # distinguish between primary and standby database
 export ORACLE_BASE=/u01/oracle
 export ORACLE_HOME=$ORACLE_BASE/11204
 export TNS_ADMIN=$ORACLE_HOME/network/admin
@@ -74,9 +74,7 @@ alias rm='rm -i'
 alias vi='vim'
 alias grep='grep --color=always'
 alias tree='tree --charset ASCII'
-#alias bdump="cd /u01/oracle/diag/rdbms/demo/DEMO/trace"
-#alias bdump="cd /u01/oracle/diag/rdbms/demo_stb/DEMO/trace"
-#alias bdump="cd $ORACLE_BASE/diag/rdbms/${ORACLE_UNQNAME,,}/$ORACLE_SID/trace"
+alias bdump="cd $ORACLE_BASE/diag/rdbms/${ORACLE_UNQNAME,,}/$ORACLE_SID/trace"
 ```
 
 ## listener.ora

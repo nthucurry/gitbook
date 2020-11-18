@@ -4,12 +4,12 @@
 proxy_server=occ
 proxy_ip="10.140.0.10"
 user=oracle
-sid=RAC
+sid=ERP
 uqname=$sid
 base=/u01/oracle
 ora_ver=12201
 home=$base/$ora_ver
-bpfile=.bash_profile_ora
+bpfile=.bash_profile
 swap_size=8
 
 ### DNS
@@ -94,7 +94,7 @@ env
 
 ### oracle account setting
 echo "==== oracle account... ===="
-cat > /home/$user/$bpfile <<EOF
+cat >> /home/$user/$bpfile <<EOF
 export ORACLE_SID=$sid
 export ORACLE_UNQNAME=$uqname # it is difference between primary and standby database
 export ORACLE_BASE=$base
@@ -111,14 +111,11 @@ export PATH
 alias sqlp='sqlplus / as sysdba'
 alias rm='rm -i'
 alias vi='vim'
+alias ll='ls -lrt'
 alias grep='grep --color=always'
 alias tree='tree --charset ASCII'
 alias bdump="cd $base/diag/rdbms/${uqname,,}/$sid/trace"
 EOF
-
-chown $user:$user /home/$user/$bpfile
-
-echo ". /home/$user/$bpfile" >> /home/$user/.bash_profile
 
 su - $user
 source ~/.bash_profile
