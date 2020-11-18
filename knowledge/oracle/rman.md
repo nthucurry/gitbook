@@ -21,6 +21,18 @@ run {
 }
 EOF
 ```
+- 如果 archive log 有缺
+    ```txt
+    RMAN-00571: ===========================================================
+    RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+    RMAN-00571: ===========================================================
+    RMAN-03002: failure of backup command at 11/18/2020 23:17:32
+    RMAN-06059: expected archived log not found, loss of archived log compromises recoverability
+    ORA-19625: error identifying file /u01/oraarch/ERP/ERP_1_13_1054646243.dbf
+    ORA-27037: unable to obtain file status
+    Linux-x86_64 Error: 2: No such file or directory
+    ```
+    - `RMAN> crosscheck archivelog all;`
 
 ## Restore
 ```bash

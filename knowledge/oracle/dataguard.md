@@ -54,6 +54,21 @@ EOF
 # recover database: It it correction when execute recover database.
 ```
 
+### duplicate from primary to standby
+```bash
+sqlplus / as sysdba << EOF
+startup nomount
+quit
+EOF
+
+rman target sys/oracle@ERP nocatalog auxiliary / log=~/duplicate_20201118.log << EOF
+run {
+    set until time "to_date('2020/11/18 22:00', 'YYYY/MM/DD HH24:MI')";
+    duplicate target database to "ERP" nofilenamecheck;
+}
+EOF
+```
+
 ## bash_profile
 ```bash
 export ORACLE_SID=DEMO
@@ -228,8 +243,8 @@ alter system switch logfile;
 
 ### Standby
 ```sql
--- startup nomount
--- alter database mount standby database;
+startup nomount
+alter database mount standby database;
 alter database recover managed standby database disconnect from session;
 ```
 
@@ -237,7 +252,7 @@ alter database recover managed standby database disconnect from session;
 #### Software
 ```sql
 -- 增加視窗寬度
-set linesize 200
+set columnsize 300
 
 -- sequence and & applied redo log(standby: redo apply YES)
 select
