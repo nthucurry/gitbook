@@ -116,6 +116,3 @@ alias grep='grep --color=always'
 alias tree='tree --charset ASCII'
 alias bdump="cd $base/diag/rdbms/${uqname,,}/$sid/trace"
 EOF
-
-su - $user
-source ~/.bash_profile

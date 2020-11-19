@@ -3,16 +3,13 @@
 ```bash
 groupadd -g 501 dba
 groupadd -g 502 oinstall
-useradd -G 501,502 -u 501 -m demo
-passwd demo
+useradd -G 501,502 -u 501 -m oracle
+passwd oracle
 ```
 
 ## 環境設定
 ### 環境變數
 ```bash
-su - demo
-vi ~/.bash_profile
-
 # User specific environment and startup programs
 export ORACLE_SID=DEMO
 export ORACLE_UNQNAME=${ORACLE_SID} # it is difference between primary and standby database
@@ -25,14 +22,6 @@ CLASSPATH=$ORACLE_HOME/JRE:$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib;
 export CLASSPATH
 PATH=$PATH:$HOME/bin:$ORACLE_HOME/bin
 export PATH
-
-# Alias
-alias sqlp='sqlplus / as sysdba'
-alias rm='rm -i'
-alias vi='vim'
-alias grep='grep --color=always'
-alias tree='tree --charset ASCII'
-alias bdump="cd $ORACLE_BASE/diag/rdbms/${ORACLE_UNQNAME,,}/$ORACLE_SID/trace"
 ```
 
 ## Prerequisites(option)
@@ -166,5 +155,6 @@ alias bdump="cd $ORACLE_BASE/diag/rdbms/${ORACLE_UNQNAME,,}/$ORACLE_SID/trace"
 
 ### Alter Install
 ```bash
+# audit_file_dest
 mkdir $ORACLE_BASE/admin/$ORACLE_SID/adump
 ```

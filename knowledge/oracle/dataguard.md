@@ -13,20 +13,19 @@ TODAY=`date +%Y-%m-%d`
 MONTH=`date +%Y-%m`
 BKDIR="/backup/$TODAY"
 mkdir -p $BKDIR
-mkdir -p $LOGDIR
 $ORACLE_HOME/bin/rman target / nocatalog << EOF
 run {
     # backup database
+    allocate channel d1 type disk;
     backup as compressed backupset
-    incremental level 0
-    check logical
+        incremental level 0
+        check logical
         database format '$BKDIR/%d_%s_%p_%t.bak';
     # backup archive log
     backup as compressed backupset
         archivelog all format '$BKDIR/%d_arch_%s_%p_%t.bak';
-    delete force noprompt copy of archivelog all completed before 'sysdate-1';
+        delete force noprompt copy of archivelog all completed before 'sysdate-1';
     # backup control file
-    allocate channel d1 type disk;
     backup
         format '$BKDIR/%d_cntl_%s_%p_%t.bak'
         current controlfile;
@@ -42,17 +41,14 @@ EOF
 $ORACLE_HOME/bin/rman target / nocatalog << EOF
 run {
     startup nomount;
-    restore standby controlfile from '/backup/2020-09-12/DEMO_cntl_4_1_1050942770.bak';
-
+    restore standby controlfile from '/backup/2020-11-19/ERP_cntl_21_1_1056917987.bak';
     alter database mount;
-    restore database;
-    restore archivelog all;
-    recover database;
+    restore database until time "to_date('2020/11/19 20:20', 'YYYY/MM/DD HH24:MI')";
+    recover database until time "to_date('2020/11/19 20:20', 'YYYY/MM/DD HH24:MI')";
 }
 EOF
-
-# recover database: It it correction when execute recover database.
 ```
+- 注意還原時間
 
 ### duplicate from primary to standby
 ```bash
@@ -69,38 +65,15 @@ run {
 EOF
 ```
 
-## bash_profile
-```bash
-export ORACLE_SID=DEMO
-export ORACLE_UNQNAME=${ORACLE_SID} # distinguish between primary and standby database
-export ORACLE_BASE=/u01/oracle
-export ORACLE_HOME=$ORACLE_BASE/11204
-export TNS_ADMIN=$ORACLE_HOME/network/admin
-LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
-export LD_LIBRARY_PATH
-CLASSPATH=$ORACLE_HOME/JRE:$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib
-export CLASSPATH
-PATH=$PATH:$HOME/bin:$ORACLE_HOME/bin
-export PATH
-
-# Alias
-alias sqlp='sqlplus / as sysdba'
-alias rm='rm -i'
-alias vi='vim'
-alias grep='grep --color=always'
-alias tree='tree --charset ASCII'
-alias bdump="cd $ORACLE_BASE/diag/rdbms/${ORACLE_UNQNAME,,}/$ORACLE_SID/trace"
-```
-
 ## listener.ora
 ### primary
 ```txt
 LISTENER =
-  (DESCRIPTION_LIST =
-    (DESCRIPTION =
-      (ADDRESS = (PROTOCOL = TCP)(HOST = primary)(PORT = 1521))
+    (DESCRIPTION_LIST =
+        (DESCRIPTION =
+            (ADDRESS = (PROTOCOL = TCP)(HOST = primary)(PORT = 1521))
+        )
     )
-  )
 
 SID_LIST_LISTENER =
     (SID_LIST =
@@ -117,11 +90,11 @@ ADR_BASE_LISTENER = /u01/oracle
 ### standby
 ```txt
 LISTENER =
-  (DESCRIPTION_LIST =
-    (DESCRIPTION =
-      (ADDRESS = (PROTOCOL = TCP)(HOST = standby)(PORT = 1521))
+    (DESCRIPTION_LIST =
+        (DESCRIPTION =
+            (ADDRESS = (PROTOCOL = TCP)(HOST = standby)(PORT = 1521))
+        )
     )
-  )
 
 SID_LIST_LISTENER =
     (SID_LIST =
@@ -136,53 +109,36 @@ ADR_BASE_LISTENER = /u01/oracle
 ```
 
 ## tnsname.ora
-### primary
+### primary and standby
 ```txt
 DEMO =
-  (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = primary)(PORT = 1521))
-    (CONNECT_DATA =
-      (SERVER = DEDICATED)
-      (SERVICE_NAME = DEMO)
+    (DESCRIPTION =
+        (ADDRESS =
+            (PROTOCOL = TCP)(HOST = primary)(PORT = 1521)
+        )
+        (CONNECT_DATA =
+            (SERVER = DEDICATED)
+            (SERVICE_NAME = DEMO)
+        )
     )
-  )
 
 DEMO_STB =
-  (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = standby)(PORT = 1521))
-    (CONNECT_DATA =
-      (SERVER = DEDICATED)
-      (SERVICE_NAME = DEMO)
+    (DESCRIPTION =
+        (ADDRESS =
+            (PROTOCOL = TCP)(HOST = standby)(PORT = 1521)
+        )
+        (CONNECT_DATA =
+            (SERVER = DEDICATED)
+            (SERVICE_NAME = DEMO)
+        )
     )
-  )
-```
-
-### standby
-```txt
-DEMO =
-  (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = primary)(PORT = 1521))
-    (CONNECT_DATA =
-      (SERVER = DEDICATED)
-      (SERVICE_NAME = DEMO)
-    )
-  )
-
-DEMO_STB =
-  (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST = standby)(PORT = 1521))
-    (CONNECT_DATA =
-      (SERVER = DEDICATED)
-      (SERVICE_NAME = DEMO)
-    )
-  )
 ```
 
 ## Parameter
 ### init[DEMO].ora
 ```txt
 ##### main config #####
-#*.audit_file_dest='/u01/oracle/admin/DEMO/adump'
+*.audit_file_dest='/u01/oracle/admin/DEMO/adump'
 *.audit_trail='db'
 *.compatible='11.2.0.0.0'
 *.control_files='/u01/oradata/DEMO/control01.ctl','/u01/oradata/DEMO/control02.ctl'
