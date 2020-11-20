@@ -37,7 +37,6 @@ knowledge/linux/*
 knowledge/cloud/*
 knowledge/gcp/*
 knowledge/vm/*
-knowledge/windows/*
 knowledge/crawler/*
 knowledge/erp/*
 knowledge/infra/*
@@ -72,7 +71,6 @@ knowledge/exam/*
 !knowledge/vm/veeam.md
 !knowledge/vm/vbx.md
 !knowledge/windows/
-!knowledge/windows/portable.md
 !knowledge/crawler
 !knowledge/crawler/code.md
 !knowledge/erp
@@ -83,5 +81,6 @@ knowledge/exam/*
 !knowledge/infra/gitlab.md
 !knowledge/infra/proxy.md
 !knowledge/infra/zabbix.md
+!knowledge/infra/windows~.md
 !knowledge/exam
 !knowledge/exam/oracle-11g.md
