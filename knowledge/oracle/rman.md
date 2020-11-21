@@ -1,9 +1,10 @@
 # RMAN script
 ## Backup
 ```bash
+# filename: backup.sh
 #!/bin/bash
-NOW=`date +%Y-%m-%d-%H%M`
-$ORACLE_HOME/bin/rman target / nocatalog log=$HOME/log/rman-backup-$NOW.log << EOF
+NOW=`date +%Y%m%d`
+$ORACLE_HOME/bin/rman target / nocatalog log=$HOME/backup-$NOW.log << EOF
 run {
     sql 'alter system checkpoint';
     allocate channel c1 type disk format '/backup_new/%d_%s_%p_%t.bak';
@@ -36,17 +37,20 @@ EOF
 
 ## Restore
 ```bash
+# filename: restore.sh
 #!/bin/bash
-NOW=`date +%Y-%m-%d-%H%M`
-$ORACLE_HOME/bin/rman target / nocatalog log=$HOME/log/rman-restore-$NOW.log << EOF
+. ~/.bash_profile
+NOW=`date +%Y%m%d`
+$ORACLE_HOME/bin/rman target / nocatalog log=$HOME/restore-$NOW.log << EOF
 run {
     shutdown immediate;
     startup nomount;
-    restore standby controlfile from '/backup_new/2020-06-10/DEMO_cntl_71803_1_1042710468.bak';
+    restore controlfile from '/backup_new/2020-06-10/DEMO_cntl_71803_1_1042710468.bak';
 
     alter database mount;
     restore database;
     restore archivelog all;
+    recover database;
 }
 EOF
 ```

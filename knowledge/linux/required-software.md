@@ -62,7 +62,7 @@ chmod +x .Xclients
 
     # check NFS
     vi /etc/exports
-    # /backup    192.168.56.0/24(rw,sync)
+    # /backup 192.168.56.0/24(rw,sync)
 
     systemctl restart nfs
 
@@ -75,7 +75,7 @@ chmod +x .Xclients
 
     # mount NFS when startup
     vi /etc/fstab
-    # 目標主機名稱:/backup_new         /backup_new                   nfs     defaults        0 0
+    # 目標主機名稱:/backup /backup nfs defaults 0 0
 
     # 重新載入 systemd 的腳本設定檔內容
     systemctl daemon-reload

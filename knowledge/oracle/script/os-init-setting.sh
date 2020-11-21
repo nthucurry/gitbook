@@ -40,6 +40,9 @@ echo "alias vi='vim'" >> ~/.bashrc
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 source ~/.bashrc
 
+### user privilege
+echo "$user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 ### swap
 echo "==== swap... ===="
 dd if=/dev/zero of=/swapfile count=$swap_size bs=1GiB
@@ -55,31 +58,32 @@ systemctl stop firewalld
 systemctl disable firewalld
 
 ### oracle prerequisite
-echo "==== oracle package... ===="
-wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
-wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
-if [ "$ora_ver" -eq 11204 ]; then
-    yum install oracle-rdbms-server-11gR2-preinstall -y
-else
-    yum install oracle-database-server-12cR2-preinstall -y
-fi
+# echo "==== oracle package... ===="
+# wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
+# wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+# if [ "$ora_ver" -eq 11204 ]; then
+#     yum install oracle-rdbms-server-11gR2-preinstall -y
+# else
+#     yum install oracle-database-server-12cR2-preinstall -y
+# fi
 
 ### group
 echo "==== group... ===="
 groupadd -g 54321 oinstall
 groupadd -g 54322 dba
 groupadd -g 54323 oper
-groupadd -g 54324 backupdba
-groupadd -g 54325 dgdba
-groupadd -g 54326 kmdba
-groupadd -g 54327 asmdba
-groupadd -g 54328 asmoper
-groupadd -g 54329 asmadmin
-groupadd -g 54330 racdba
+# groupadd -g 54324 backupdba
+# groupadd -g 54325 dgdba
+# groupadd -g 54326 kmdba
+# groupadd -g 54327 asmdba
+# groupadd -g 54328 asmoper
+# groupadd -g 54329 asmadmin
+# groupadd -g 54330 racdba
 usermod -g oinstall -G dba,oper oracle
 
 ### directory
-mkdir /u01
+mkdir -p /u01/oraarch/$sid
+mkdir -p /u01/oradata/$sid
 mkdir /oracle
 mkdir /backup
 
@@ -90,7 +94,6 @@ chown -R $user:dba /backup
 
 ### enviromnent variable
 LANG=en_US.UTF-8
-env
 
 ### oracle account setting
 echo "==== oracle account... ===="
@@ -111,7 +114,7 @@ export PATH
 alias sqlp='sqlplus / as sysdba'
 alias rm='rm -i'
 alias vi='vim'
-alias ll='ls -lrt'
+alias ll='ls -l'
 alias grep='grep --color=always'
 alias tree='tree --charset ASCII'
 alias bdump="cd $base/diag/rdbms/${uqname,,}/$sid/trace"
