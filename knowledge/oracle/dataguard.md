@@ -244,9 +244,9 @@ tnsping [ORACLE_SID]
 
 #### Archive log sync success information
 - standby
-  ```txt
-  Media Recovery Log /u01/oraarch/DEMO/DEMO_1_24_1050938955.dbf
-  ```
+    ```txt
+    Media Recovery Log /u01/oraarch/DEMO/DEMO_1_24_1050938955.dbf
+    ```
 
 ## Debug
 ### Archive gap sequence
@@ -278,14 +278,14 @@ backup format '/backup_new/resovle-archive-gap/%d_%U_stbctl.bak' current control
 scp -r -l 30000 /backup_new/resovle-archive-gap/ demo@standby:/backup_new/
 
 -- recover standby (RMAN)
-alter database dismount;
+startup nomount
 restore standby controlfile from '/backup_new/resovle-archive-gap/DEMO_71v61r4r_1_1_stbctl.bak';
 alter database mount;
-recover database noredo;
+recover database noredo; -- because the online redo logs are lost, you must specify the NOREDO option in the RECOVER command.
 
 -- 重開 DB
-shutdown immediate;
-startup mount;
+shutdown immediate
+startup mount
 
 -- 執行 redo apply on standby (RMAN)
 alter database recover managed standby database disconnect from session;
@@ -303,8 +303,8 @@ alter database recover managed standby database finish;
 alter database commit to switchover to primary;
 
 -- 重啟 the new primary database.
-shutdown immediate;
-startup;
+shutdown immediate
+startup
 ```
 
 ## DR SOP

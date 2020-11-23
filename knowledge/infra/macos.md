@@ -33,7 +33,7 @@
     export PATH
     export CLICOLOR='true'
 
-    alias ll='ls -al'
+    alias ll='ls -a'
     alias vi='vim'
     alias grep='grep --color=auto'
     alias tree='tree -N'

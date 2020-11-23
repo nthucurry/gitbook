@@ -156,5 +156,5 @@ export PATH
 ### Alter Install
 ```bash
 # audit_file_dest
-mkdir $ORACLE_BASE/admin/$ORACLE_SID/adump
+mkdir -p $ORACLE_BASE/admin/$ORACLE_SID/adump
 ```

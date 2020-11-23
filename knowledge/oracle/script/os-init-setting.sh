@@ -114,7 +114,7 @@ export PATH
 alias sqlp='sqlplus / as sysdba'
 alias rm='rm -i'
 alias vi='vim'
-alias ll='ls -l'
+alias ll='ls -a'
 alias grep='grep --color=always'
 alias tree='tree --charset ASCII'
 alias bdump="cd $base/diag/rdbms/${uqname,,}/$sid/trace"
