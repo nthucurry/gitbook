@@ -269,7 +269,7 @@ select file#,name from v$datafile where creation_change# >= XXXXXXXX;
 alter database recover managed standby database cancel;
 
 -- incremental backup on primary (RMAN)
-backup incremental from scn 12325911764204 database format '/backup_new/resovle-archive-gap/%d_%u.bak';
+backup incremental from scn XXXXXXXX database format '/backup_new/resovle-archive-gap/%d_%u.bak';
 
 -- create standby controlfile on primary (RMAN, option)
 backup format '/backup_new/resovle-archive-gap/%d_%U_stbctl.bak' current controlfile;
@@ -281,7 +281,7 @@ scp -r -l 30000 /backup_new/resovle-archive-gap/ demo@standby:/backup_new/
 startup nomount
 restore standby controlfile from '/backup_new/resovle-archive-gap/DEMO_71v61r4r_1_1_stbctl.bak';
 alter database mount;
-recover database noredo; -- because the online redo logs are lost, you must specify the NOREDO option in the RECOVER command.
+recover database noredo; -- because the online redo logs are lost, you must specify the NOREDO option in the RECOVER command
 
 -- 重開 DB
 shutdown immediate
