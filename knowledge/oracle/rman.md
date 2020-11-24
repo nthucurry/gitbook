@@ -1,7 +1,7 @@
 # RMAN script
 ## Backup
 ```bash
-# filename: backup.sh
+#### filename: backup.sh
 #!/bin/bash
 NOW=`date +%Y%m%d`
 $ORACLE_HOME/bin/rman target / nocatalog log=$HOME/backup-$NOW.log << EOF
@@ -37,13 +37,12 @@ EOF
 
 ## Restore
 ```bash
-# filename: restore.sh
+#### filename: restore.sh
 #!/bin/bash
 . ~/.bash_profile
 NOW=`date +%Y%m%d`
 $ORACLE_HOME/bin/rman target / nocatalog log=$HOME/restore-$NOW.log << EOF
 run {
-    shutdown immediate;
     startup nomount;
     restore controlfile from '/backup_new/2020-06-10/DEMO_cntl_71803_1_1042710468.bak';
 
@@ -54,3 +53,7 @@ run {
 }
 EOF
 ```
+
+## Troubleshooting
+### Control file 太新
+### Control file 是 standby 模式

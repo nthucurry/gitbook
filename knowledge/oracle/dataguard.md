@@ -6,11 +6,20 @@
 ## RMAN
 ### backup on primary
 ```bash
+#### filename: restart_pri.sh
+#/bin/bash
+. ~/.bash_profile
+$ORACLE_HOME/bin/sqlplus / as sysdba << EOF
+shutdown immediate
+startup
+quit
+EOF
+```
+```bash
 #!/bin/bash
 . ~/.bash_profile
 NOW=`date +%Y-%m-%d-%H%M`
 TODAY=`date +%Y-%m-%d`
-MONTH=`date +%Y-%m`
 BKDIR="/backup/$TODAY"
 mkdir -p $BKDIR
 $ORACLE_HOME/bin/rman target / nocatalog << EOF
@@ -37,6 +46,19 @@ EOF
 
 ### restore on standby
 ```bash
+#### filename: open_stb.sh
+#/bin/bash
+. ~/.bash_profile
+$ORACLE_HOME/bin/sqlplus / as sysdba << EOF
+shutdown immediate
+create spfile from pfile;
+startup mount
+alter database recover managed standby database disconnect from session;
+quit
+EOF
+```
+```bash
+#### filename: restore.sh
 #!/bin/bash
 $ORACLE_HOME/bin/rman target / nocatalog << EOF
 run {
@@ -52,11 +74,6 @@ EOF
 
 ### duplicate from primary to standby
 ```bash
-sqlplus / as sysdba << EOF
-startup nomount
-quit
-EOF
-
 rman target sys/oracle@ERP nocatalog auxiliary / log=~/duplicate_20201118.log << EOF
 run {
     set until time "to_date('2020/11/18 22:00', 'YYYY/MM/DD HH24:MI')";
@@ -283,14 +300,12 @@ restore standby controlfile from '/backup_new/resovle-archive-gap/DEMO_71v61r4r_
 alter database mount;
 recover database noredo; -- because the online redo logs are lost, you must specify the NOREDO option in the RECOVER command
 
--- 重開 DB
+-- 重開 DB，執行 redo apply on standby (RMAN)
 shutdown immediate
 startup mount
-
--- 執行 redo apply on standby (RMAN)
 alter database recover managed standby database disconnect from session;
 
--- switch redo log (RMAN)
+-- switch redo log on primary (RMAN)
 alter system switch logfile;
 ```
 
@@ -317,16 +332,16 @@ startup
     - TO STANDBY:      `alter database commit to switchover to physical standby;`
     - SESSIONS ACTIVE: `alter database commit to switchover to physical standby with session shutdown;`
 3. 重啟先前的主庫:
-    - `shutdown immediate;`
-    - `startup mount;`
+    - `shutdown immediate`
+    - `startup mount`
 4. 這時候在**備庫**驗證可切換狀態
     - TO PRIMARY: `select switchover_status from v$database;`
 5. 將目標**備庫**轉換為主庫
     - TO STANDBY:      `alter database commit to switchover to primary;`
     - SESSIONS ACTIVE: `alter database commit to switchover to primary with session shutdown;`
 6. 重啟目標**備庫**
-    - `shutdown immediate;`
-    - `startup mount;`
+    - `shutdown immediate`
+    - `startup mount`
 7. 先前主庫啟動日誌傳送程序: `alter database recover managed standby database disconnect;`
 8. 檢查主、備庫角色狀態: `select switchover_status,database_role from v$database;`
 
