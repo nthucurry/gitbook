@@ -58,6 +58,18 @@ quit
 EOF
 ```
 ```bash
+#### filename: restart_stb.sh
+#/bin/bash
+. ~/.bash_profile
+$ORACLE_HOME/bin/sqlplus / as sysdba << EOF
+alter database recover managed standby database cancel;
+shutdown immediate
+startup mount
+alter database recover managed standby database disconnect;
+quit
+EOF
+```
+```bash
 #### filename: restore.sh
 #!/bin/bash
 $ORACLE_HOME/bin/rman target / nocatalog << EOF
@@ -263,6 +275,7 @@ tnsping [ORACLE_SID]
 - standby
     ```txt
     Media Recovery Log /u01/oraarch/DEMO/DEMO_1_24_1050938955.dbf
+    RFS[29]: Selected log 4 for thread 1 sequence 11574 dbid 244859031 branch 1034179942
     ```
 
 ## Debug
@@ -342,7 +355,7 @@ startup
 6. 重啟目標**備庫**
     - `shutdown immediate`
     - `startup mount`
-7. 先前主庫啟動日誌傳送程序: `alter database recover managed standby database disconnect;`
+7. 主庫啟動日誌傳送程序: `alter database recover managed standby database disconnect;`(啟動MRP，sync 機制)
 8. 檢查主、備庫角色狀態: `select switchover_status,database_role from v$database;`
 
 ### Failover(not verification)
