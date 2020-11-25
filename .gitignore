@@ -1,10 +1,21 @@
-### blacklist everything
+### block everything
 */
 README.md
 SUMMARY.md
 .DS_Store
+office/chipbond/*
+knowledge/*
+knowledge/oracle/*
+knowledge/oracle/note/*
+knowledge/oracle/script/*
+knowledge/linux/*
+knowledge/vm/*
+knowledge/crawler/*
+knowledge/erp/*
+knowledge/infra/*
+knowledge/exam/*
 
-### whitelist directories of interest and their contents
+### open directories of interest and their contents
 # img
 !img
 !img/oracle
@@ -22,25 +33,12 @@ SUMMARY.md
 !img/veeam
 !img/moss
 # office
-office/chipbond/*
 !office
 !office/chipbond
 !office/chipbond/cb-2018.md
 !office/chipbond/cb-2019.md
 !office/chipbond/km.md
 # knowledge
-knowledge/*
-knowledge/oracle/*
-knowledge/oracle/note/*
-knowledge/oracle/script/*
-knowledge/linux/*
-knowledge/cloud/*
-knowledge/gcp/*
-knowledge/vm/*
-knowledge/crawler/*
-knowledge/erp/*
-knowledge/infra/*
-knowledge/exam/*
 !knowledge
 !knowledge/oracle/
 !knowledge/oracle/rman.md
@@ -64,9 +62,13 @@ knowledge/exam/*
 !knowledge/linux/initial-status.md
 !knowledge/linux/required-software.md
 !knowledge/linux/lvm.md
+!knowledge/cloud
 !knowledge/cloud/vpn.md
-!knowledge/gcp/
-!knowledge/gcp/script.md
+!knowledge/cloud/azure
+!knowledge/cloud/azure/script.md
+!knowledge/cloud/gcp
+!knowledge/cloud/gcp/script.md
+!knowledge/cloud/gcp/map-api.md
 !knowledge/vm
 !knowledge/vm/veeam.md
 !knowledge/vm/vbx.md
@@ -81,6 +83,6 @@ knowledge/exam/*
 !knowledge/infra/gitlab.md
 !knowledge/infra/proxy.md
 !knowledge/infra/zabbix.md
-!knowledge/infra/windows~.md
+!knowledge/infra/windows.md
 !knowledge/exam
 !knowledge/exam/oracle-11g.md
