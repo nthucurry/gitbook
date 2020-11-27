@@ -1,8 +1,9 @@
 #/bin/bash
 
 ### define
-proxy_server=occ
+proxy_server=proxy
 proxy_ip="10.140.0.10"
+proxy_port=80
 user=oracle
 sid=ERP
 uqname=$sid
@@ -16,9 +17,9 @@ swap_size=8
 echo "$proxy_ip $proxy_server" >> /etc/hosts
 
 ### internet connection
-echo "proxy=http://$proxy_server:80" >> /etc/yum.conf
-echo "https_proxy = http://$proxy_server:80/" >> /etc/wgetrc
-echo "http_proxy = http://$proxy_server:80/" >> /etc/wgetrc
+echo "proxy=http://$proxy_server:$proxy_port" >> /etc/yum.conf
+echo "https_proxy = http://$proxy_server:$proxy_port" >> /etc/wgetrc
+echo "http_proxy = http://$proxy_server:$proxy_port" >> /etc/wgetrc
 
 ### yum
 echo "==== yum... ===="
@@ -79,6 +80,7 @@ groupadd -g 54323 oper
 # groupadd -g 54328 asmoper
 # groupadd -g 54329 asmadmin
 # groupadd -g 54330 racdba
+useradd -m oracle
 usermod -g oinstall -G dba,oper oracle
 
 ### directory
