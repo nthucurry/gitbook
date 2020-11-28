@@ -29,7 +29,7 @@ yum install telnet -y
 yum install traceroute -y
 yum install nfs-utils -y
 yum install zip unzip -y
-yum groupinstall "GNOME Desktop" -y
+yum groupinstall "GNOME Desktop" -y > /dev/null 2>&1
 yum install ksh gcc* libaio* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* libgcc* binutils* compat-libcap1* make* stsstat* -y
 
 ### timezone
