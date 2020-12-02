@@ -84,5 +84,6 @@ knowledge/exam/*
 !knowledge/infra/proxy.md
 !knowledge/infra/zabbix.md
 !knowledge/infra/windows.md
+!knowledge/infra/k8s.md
 !knowledge/exam
 !knowledge/exam/oracle-11g.md
