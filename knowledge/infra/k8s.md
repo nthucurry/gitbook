@@ -83,6 +83,8 @@ systemctl enable kubelet && systemctl start kubelet
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
     ```
 - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml`
+    - 出現錯誤: The connection to the server localhost:8080 was refused - did you specify the right host or port?
+        - [權限不足](https://developer.aliyun.com/article/652961): `echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bash_profile && . ~/.bash_profile`
 
 ## Node
 - 加入 cluster
