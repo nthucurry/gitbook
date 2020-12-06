@@ -18,8 +18,6 @@ C -->|One| D[Laptop]
 C -->|Two| E[iPhone]
 C -->|Three| F[Car]
 ```
-DevOps
-
 
 ## Master
 ### Installing kubeadm on your hosts
@@ -46,33 +44,10 @@ DevOps
     kube-system   kube-proxy-nqgbz                     1/1     Running   0          3h12m
     kube-system   kube-scheduler-k8s-master            1/1     Running   0          3h12m
     ```
-- node 加入 cluster 後，檢查看看: `kubectl get nodes`
-    ```txt
-    NAME         STATUS     ROLES    AGE     VERSION
-    k8s-master   NotReady   master   4h24m   v1.19.4
-    k8s-node1    NotReady   <none>   18s     v1.19.4
-    ```
 
 ## Node
 - 加入 cluster
     ```bash
     kubeadm join 10.0.0.5:6443 --token qowet6.ymjikzk5nvk1i3g7 \
     --discovery-token-ca-cert-hash sha256:7d831165f775e27bb6b0cf2c193e867c50ffe12f093f7261650d0b5699ea30d8
-    ```
-- output log
-    ```txt
-    [preflight] Running pre-flight checks
-	[WARNING FileExisting-tc]: tc not found in system path
-    [preflight] Reading configuration from the cluster...
-    [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
-    [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
-    [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
-    [kubelet-start] Starting the kubelet
-    [kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
-
-    This node has joined the cluster:
-    * Certificate signing request was sent to apiserver and a response was received.
-    * The Kubelet was informed of the new secure connection details.
-
-    Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
     ```
