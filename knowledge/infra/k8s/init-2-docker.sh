@@ -42,9 +42,11 @@ cat << EOF | tee /etc/docker/daemon.json
 EOF
 
 # 5. Create /etc/systemd/system/docker.service.d
-mkdir -p /etc/systemd/system/docker.service.d
+# echo "==== Create /etc/systemd/system/docker.service.d"
+# mkdir -p /etc/systemd/system/docker.service.d
 
 # 6. Restart Docker
+echo "==== Restart Docker"
 systemctl daemon-reload
 systemctl restart docker
 systemctl enable docker
