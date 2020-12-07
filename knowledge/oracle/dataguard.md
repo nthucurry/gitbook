@@ -5,94 +5,95 @@
 
 ## RMAN
 ### backup on primary
-```bash
-#### filename: restart_pri.sh
-#/bin/bash
-. ~/.bash_profile
-$ORACLE_HOME/bin/sqlplus / as sysdba << EOF
-shutdown immediate
-startup
-quit
-EOF
-```
-```bash
-#!/bin/bash
-. ~/.bash_profile
-NOW=`date +%Y-%m-%d-%H%M`
-TODAY=`date +%Y-%m-%d`
-BKDIR="/backup/$TODAY"
-mkdir -p $BKDIR
-$ORACLE_HOME/bin/rman target / nocatalog << EOF
-run {
-    # backup database
-    allocate channel d1 type disk;
-    backup as compressed backupset
-        incremental level 0
-        check logical
-        database format '$BKDIR/%d_%s_%p_%t.bak';
-    # backup archive log
-    backup as compressed backupset
-        archivelog all format '$BKDIR/%d_arch_%s_%p_%t.bak';
-        delete force noprompt copy of archivelog all completed before 'sysdate-1';
-    # backup control file
-    backup
-        format '$BKDIR/%d_cntl_%s_%p_%t.bak'
-        current controlfile;
-    release channel d1;
-}
-EOF
-```
-- 保留一天以內的 archive log
+- `vi restart_primary.sh`
+    ```bash
+    #/bin/bash
+    $ORACLE_HOME/bin/sqlplus / as sysdba << EOF
+    shutdown immediate
+    startup
+    quit
+    EOF
+    ```
+- `vi backup_primary.sh`
+    ```bash
+    #!/bin/bash
+    source ~/.bash_profile
+    TODAY=`date +%Y-%m-%d`
+    BKDIR="/backup/$TODAY"
+    mkdir -p $BKDIR
+    $ORACLE_HOME/bin/rman target / nocatalog << EOF
+    run {
+        #-- backup database
+        allocate channel d1 type disk;
+        backup as compressed backupset
+            incremental level 0
+            check logical
+            database format '$BKDIR/%d_%s_%p_%t.bak';
+
+        #-- backup archive log
+        backup as compressed backupset
+            archivelog all format '$BKDIR/%d_arch_%s_%p_%t.bak';
+            delete force noprompt copy of archivelog all completed before 'sysdate-1';
+
+        #-- backup control file
+        backup
+            format '$BKDIR/%d_cntl_%s_%p_%t.bak'
+            current controlfile;
+        release channel d1;
+    }
+    EOF
+    ```
+    - 保留一天以內的 archive log
 
 ### restore on standby
-```bash
-#### filename: open_stb.sh
-#/bin/bash
-. ~/.bash_profile
-$ORACLE_HOME/bin/sqlplus / as sysdba << EOF
-shutdown immediate
-create spfile from pfile;
-startup mount
-alter database recover managed standby database disconnect from session;
-quit
-EOF
-```
-```bash
-#### filename: restart_stb.sh
-#/bin/bash
-. ~/.bash_profile
-$ORACLE_HOME/bin/sqlplus / as sysdba << EOF
-alter database recover managed standby database cancel;
-shutdown immediate
-startup mount
-alter database recover managed standby database disconnect;
-quit
-EOF
-```
-```bash
-#### filename: restore.sh
-#!/bin/bash
-$ORACLE_HOME/bin/rman target / nocatalog << EOF
-run {
-    startup nomount;
-    restore standby controlfile from '/backup/2020-11-19/ERP_cntl_21_1_1056917987.bak';
-    alter database mount;
-    restore database until time "to_date('2020/11/19 20:20', 'YYYY/MM/DD HH24:MI')";
-    recover database until time "to_date('2020/11/19 20:20', 'YYYY/MM/DD HH24:MI')";
-}
-EOF
-```
-- 注意還原時間
+- `vi open_stb.sh`
+    ```bash
+    #/bin/bash
+    $ORACLE_HOME/bin/sqlplus / as sysdba << EOF
+    shutdown immediate
+    create spfile from pfile;
+    startup mount
+    alter database recover managed standby database disconnect from session;
+    quit
+    EOF
+    ```
+- `vi restart_stb.sh`
+    ```bash
+    #/bin/bash
+    $ORACLE_HOME/bin/sqlplus / as sysdba << EOF
+    alter database recover managed standby database cancel;
+    shutdown immediate
+    startup mount
+    alter database recover managed standby database disconnect;
+    quit
+    EOF
+    ```
+- `vi restore.sh`
+    ```bash
+    #!/bin/bash
+    $ORACLE_HOME/bin/rman target / nocatalog << EOF
+    run {
+        startup nomount;
+        restore standby controlfile from '/backup/2020-11-19/ERP_cntl_21_1_1056917987.bak';
+        alter database mount;
+        restore database until time "to_date('2020/11/19 20:20', 'YYYY/MM/DD HH24:MI')";
+        recover database until time "to_date('2020/11/19 20:20', 'YYYY/MM/DD HH24:MI')";
+    }
+    EOF
+    ```
+    - 注意還原時間
 
 ### duplicate from primary to standby
-```bash
-rman target sys/oracle@ERP nocatalog auxiliary / log=~/duplicate_20201118.log << EOF
-run {
-    set until time "to_date('2020/11/18 22:00', 'YYYY/MM/DD HH24:MI')";
-    duplicate target database to "ERP" nofilenamecheck;
-}
-EOF
-```
+- `vi duplicate.sh`
+    ```bash
+    #!/bin/bash
+    $ORACLE_HOME/bin/rman target sys/oracle@ERP nocatalog auxiliary / log=~/duplicate_20201118.log << EOF
+    run {
+        set until time "to_date('2020/11/18 22:00', 'YYYY/MM/DD HH24:MI')";
+        duplicate target database to "ERP" nofilenamecheck;
+    }
+    EOF
+    ```
 
 ## listener.ora
 ### primary
@@ -237,6 +238,7 @@ alter database recover managed standby database disconnect from session;
 #### Software
 ```sql
 -- 增加視窗寬度
+set linesize 120
 set columnsize 300
 
 -- sequence and & applied redo log(standby: redo apply YES)
