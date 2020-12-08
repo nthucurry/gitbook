@@ -11,7 +11,7 @@ base=/u01/oracle
 ora_ver=12201
 home=$base/$ora_ver
 bpfile=.bash_profile
-swap_size=8
+swap_size=4
 
 ### DNS
 echo "$proxy_ip $proxy_server" >> /etc/hosts
