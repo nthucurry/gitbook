@@ -61,7 +61,36 @@
     EOF
     ```
 
+## Check
+### 清除人工刪除的檔案，但還留在 control file 的檔案
+- `delete backup;`
+- `crosscheck database;`
+- `delete expired backup;`
+- `report backup;`
+
 ## Troubleshooting
+### inconsist restore 還原失敗
+```txt
+archived log for thread 1 with sequence 62 is already on disk as file /u01/oraarch/ERP/ERP_1_62_1054646243.dbf
+archived log file name=/u01/oraarch/ERP/ERP_1_62_1054646243.dbf thread=1 sequence=62
+archived log file name=/u01/oraarch/ERP/ERP_1_63_1054646243.dbf thread=1 sequence=63
+unable to find archived log
+archived log thread=1 sequence=64
+RMAN-00571: ===========================================================
+RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+RMAN-00571: ===========================================================
+RMAN-03002: failure of recover command at 12/09/2020 23:21:13
+RMAN-06054: media recovery requesting unknown archived log for thread 1 with sequence 64 and starting SCN of 3522838
+```
+- 執行
+    ```txt
+    RMAN> run {
+    2> set until sequence 63 thread 1;
+    3> restore database;
+    4> recover database;
+    5> }
+    ```
+
 ### Control file 太新
 - 執行此動作後出現錯誤: `recover database;`
 ```txt

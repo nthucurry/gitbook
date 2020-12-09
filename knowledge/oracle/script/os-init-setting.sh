@@ -111,12 +111,13 @@ CLASSPATH=$home/JRE:$home/jlib:$home/rdbms/jlib;
 export CLASSPATH
 PATH=$PATH:$home/bin:$home/bin
 export PATH
+export NLS_DATE_FORMAT=YYYY-MM-DD HH24:MI:SS
 
 # Alias
 alias sqlp='sqlplus / as sysdba'
 alias rm='rm -i'
 alias vi='vim'
-alias ll='ls -a'
+alias ll='ls -l'
 alias grep='grep --color=always'
 alias tree='tree --charset ASCII'
 alias bdump="cd $base/diag/rdbms/${uqname,,}/$sid/trace"

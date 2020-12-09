@@ -337,6 +337,9 @@ shutdown immediate
 startup
 ```
 
+## Simulation
+- 交易: `alter system archive log current;`
+
 ## DR SOP
 [Oracle 11gR2 DataGuard switchover 切換的兩個錯誤狀態解決](https://www.twblogs.net/a/5b9581282b717750bda4ecb2)
 ### Switchover(not verification)

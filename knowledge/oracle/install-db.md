@@ -1,4 +1,7 @@
 # Install Oracle Database
+## Download
+- [p13390677_112040_Linux-x86-64](https://updates.oracle.com/Orion/PatchDetails/process_form?patch_num=13390677&aru=16716375&release=80112040&plat_lang=226P&patch_num_id=1730815&)
+
 ## 建立帳號、群組
 ```bash
 groupadd -g 501 dba
