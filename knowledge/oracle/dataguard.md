@@ -23,8 +23,9 @@
     mkdir -p $BKDIR
     $ORACLE_HOME/bin/rman target / nocatalog << EOF
     run {
-        #-- backup database
         allocate channel d1 type disk;
+
+        #-- backup database
         backup as compressed backupset
             incremental level 0
             check logical
@@ -39,6 +40,7 @@
         backup
             format '$BKDIR/%d_cntl_%s_%p_%t.bak'
             current controlfile;
+
         release channel d1;
     }
     EOF

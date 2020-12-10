@@ -2,6 +2,7 @@
 ## Prompt
 - control file 一定要最後，不然不會記錄到 datafile、archivelog 的資訊
 - [大補帖](https://kknews.cc/code/ky5jo2b.html)
+- https://docs.oracle.com/cd/B19306_01/backup.102/b14194/rcmsynta033.htm
 
 ## Backup
 - `vi backup.sh`
@@ -12,7 +13,6 @@
     BKDIR="/backup/$TODAY"
     $ORACLE_HOME/bin/rman target / nocatalog log=$HOME/backup-$TODAY.log << EOF
     run {
-        sql 'alter system checkpoint';
         allocate channel c1 type disk format '/backup_new/%d_%s_%p_%t.bak';
         backup database;
         release channel c1;
@@ -50,7 +50,7 @@
     TODAY=`date +%Y-%m-%d`
     $ORACLE_HOME/bin/rman target / nocatalog log=$HOME/restore-$TODAY.log << EOF
     run {
-        startup nomount;
+        startup nomount
         restore controlfile from '/backup_new/2020-06-10/DEMO_cntl_71803_1_1042710468.bak';
 
         alter database mount;
@@ -60,6 +60,19 @@
     }
     EOF
     ```
+
+## Delete
+- `vi delete_archive_log.sh`
+    ```bash
+    #/bin/bash
+    source ~/.bash_profile # = source ~/.bash_profile
+    $ORACLE_HOME/bin/rman target / nocatalog << EOF
+    run {
+        delete force noprompt copy of archivelog all completed before 'sysdate-1';
+    }
+    EOF
+    ```
+    - 只刪除一天以前的 archive log
 
 ## Check
 ### 清除人工刪除的檔案，但還留在 control file 的檔案

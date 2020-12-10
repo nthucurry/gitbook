@@ -14,7 +14,7 @@
 NOW=`date +%Y-%m-%d-%H%M`
 $ORACLE_HOME/bin/lsnrctl start
 $ORACLE_HOME/bin/sqlplus / as sysdba << EOF
-startup;
+startup
 quit;
 EOF
 
@@ -55,18 +55,6 @@ run {
         format '$BKDIR/%d_cntl_%s_%p_%t.bak'
         current controlfile;
     release channel d1;
-}
-EOF
-```
-
-## Delete archive log (option)
-```bash
-#/bin/bash
-
-. ~/.bash_profile # = source ~/.bash_profile
-$ORACLE_HOME/bin/rman target / nocatalog << EOF
-run {
-    delete force noprompt copy of archivelog all completed before 'sysdate-1';
 }
 EOF
 ```
