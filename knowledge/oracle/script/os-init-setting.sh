@@ -4,6 +4,7 @@
 proxy_server=proxy
 proxy_ip="10.140.0.10"
 proxy_port=80
+ip="10.140.15.228"
 user=oracle
 sid=ERP
 uqname=$sid
@@ -29,6 +30,7 @@ yum install telnet -y
 yum install traceroute -y
 yum install nfs-utils -y
 yum install zip unzip -y
+echo "==== yum(GNOME Desktop)... ===="
 yum groupinstall "GNOME Desktop" -y > /dev/null 2>&1
 yum install ksh gcc* libaio* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* libgcc* binutils* compat-libcap1* make* stsstat* -y
 
@@ -111,7 +113,8 @@ CLASSPATH=$home/JRE:$home/jlib:$home/rdbms/jlib;
 export CLASSPATH
 PATH=$PATH:$home/bin:$home/bin
 export PATH
-export NLS_DATE_FORMAT=YYYY-MM-DD HH24:MI:SS
+export NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'
+export DISPLAY=$ip:0.0
 
 # Alias
 alias sqlp='sqlplus / as sysdba'

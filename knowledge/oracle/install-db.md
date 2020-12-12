@@ -42,10 +42,9 @@ export PATH
 - `yum install gcc* libaio-devel* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* binutils* compat-libcap1* ksh -y`
 
 ## 安裝 Oracle
-`vi ~/database/stage/cvu/cv/admin/cvu_config`
-    ```txt
-    # CV_ASSUME_DISTID=OEL4 (x)
-    CV_ASSUME_DISTID=OEL6 (o)
+- 改參數
+    ```bash
+    sed -i 's/CV_ASSUME_DISTID=OEL4/CV_ASSUME_DISTID=OEL6/g' ~/database/stage/cvu/cv/admin/cvu_config
     ```
 - `~/database/runInstaller`(用 oracle 帳號，不能用 root)
 - [x] install database software only
