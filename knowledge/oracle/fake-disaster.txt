@@ -1,0 +1,50 @@
+------------------ 製造檔案損毀
+SQL> show user;
+SQL> select name from v$database;
+SQL> alter user hr identified by hr account unlock;
+SQL> select table_name from user_tables;
+SQL> select * from player;
+SQL> select dbms_rowid.rowid_relative_fno(rowid) rfile#,dbms_rowid.rowid_block_number(rowid) block#,name from player;
+        RFILE#     BLOCK# NAME
+    ---------- ---------- ----------------------------------------
+        5	  131 Kobe
+        5	  132 James
+        5	  132 Wade
+        5	  132 Bosh
+        5	  133 Tom
+        5	  133 Adam
+        5	  134 Tony
+        5	  135 Tim
+SQL> select name from v$datafile where file#=5;
+dd of=/u01/oradata/ERP/ts_hr.dbf bs=8192 conv=notrunc seek=134
+ctrl+d
+SQL> alter system flush buffer_cache;
+SQL> select count(*) from hr.player;
+    select count(*) from hr.player
+        *
+    ERROR at line 1:
+    ORA-01578: ORACLE data block corrupted (file # 5, block # 134)
+    ORA-01110: data file 5: '/u01/oradata/ERP/ts_hr.dbf'
+RMAN> list failure;
+RMAN> advise failure;
+RMAN> repair failure;
+
+------------------ tablespace full
+SQL> sqlplus hr/hr
+SQL> select * from user_tables;
+SQL> create table tablespace_full (ID int);
+SQL>
+begin
+  for i in 1..100000000 loop
+    insert into tablespace_full
+    values (i);
+    commit;
+  end loop;
+end;
+/
+
+------------------ block sessions
+
+
+
+------------------ primary critical failure

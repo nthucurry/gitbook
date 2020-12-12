@@ -52,6 +52,7 @@ knowledge/exam/*
 !knowledge/oracle/rac.md
 !knowledge/oracle/datapump.md
 !knowledge/oracle/cloud-control.md
+!knowledge/oracle/fake-disaster.txt
 !knowledge/oracle/script/
 !knowledge/oracle/script/os-utility.*
 !knowledge/oracle/script/os-init-setting.sh
