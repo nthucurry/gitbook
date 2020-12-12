@@ -61,10 +61,7 @@
 ### (6) 掛載
 - `mkdir /u01`
 - `mount /dev/mapper/vg_demo-lv_u01 /u01/`
-- `vi /etc/fstab`(開機自動執行)
-    ```txt
-    /dev/mapper/vg_demo-lv_u01      /u01/                   xfs     defaults        0 0
-    ```
+- `echo "/dev/mapper/vg_demo-lv_u01 /u01/ xfs defaults 0 0" > /etc/fstab`(開機自動執行)
 - `reboot`(check again)
 
 ## 情境

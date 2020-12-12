@@ -6,21 +6,16 @@ yum install tigervnc-server -y
 
 # 複製 service config
 cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@:1.service
-cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@:2.service
 
 # 修改 service config
-sed -i 's/<USER>/root/g' /etc/systemd/system/vncserver@:1.service
-sed -i 's/<USER>/demo/g' /etc/systemd/system/vncserver@:2.service
+sed -i 's/<USER>/oracle/g' /etc/systemd/system/vncserver@:1.service
 
 # 確認 root 的路徑是否正確(option)
 vi /etc/systemd/system/vncserver@:1.service
-PIDFile=/root/.vnc/%H%i.pid
-vi /etc/systemd/system/vncserver@:2.service
-PIDFile=/home/demo/.vnc/%H%i.pid
+PIDFile=/home/oracle/.vnc/%H%i.pid
 
 # 登入各個帳號去設定以下(systemctl daemon-reload??)
-systemctl start vncserver@:1.service vncserver@:2.service
-systemctl enable vncserver@:1.service vncserver@:2.service
+systemctl start vncserver@:1.service && systemctl enable vncserver@:1.service
 
 # 設定密碼
 vncserver(啟動 vnc server，需依照各別 user account)
@@ -39,10 +34,8 @@ tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
 ```bash
 # 需要直接 login demo
 cd ~
-vi .Xclients
-# xterm &
-# exec /usr/bin/matchbox-window-manager
-
+echo "xterm &" >> .Xclients
+echo "exec /usr/bin/matchbox-window-manager" >> .Xclients
 chmod +x .Xclients
 ~/.Xclients # remember open xming
 ```
