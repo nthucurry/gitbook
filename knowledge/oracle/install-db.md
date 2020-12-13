@@ -48,6 +48,7 @@ export PATH
     sed -i 's/CV_ASSUME_DISTID=OEL4/CV_ASSUME_DISTID=OEL6/g' ~/database/stage/cvu/cv/admin/cvu_config
     ```
 - `~/database/runInstaller`(用 oracle 帳號，不能用 root)
+    - 遇到 xdpyinfo 問題的解決方法: https://support.oracle.com/epmos/faces/SearchDocDisplay?_adf.ctrl-state=m8p0v6j86_4&_afrLoop=63722001626700
 - [x] install database software only
 - [x] single instance database installation
 - [x] enterprise edition(企業版才有 data guard)

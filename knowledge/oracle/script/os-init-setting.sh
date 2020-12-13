@@ -15,14 +15,15 @@ swap_size=4
 ### enviroment
 timedatectl set-timezone Asia/Taipei
 LANG=en_US.UTF-8
+NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'
 
 ### internet connection
-echo "proxy=http://$proxy_hostname:$proxy_port" >> /etc/yum.conf
-echo "https_proxy = http://$proxy_server:$proxy_port" >> /etc/wgetrc
-echo "http_proxy = http://$proxy_server:$proxy_port" >> /etc/wgetrc
+# echo "proxy=http://$proxy_hostname:$proxy_port" >> /etc/yum.conf
+# echo "https_proxy = http://$proxy_server:$proxy_port" >> /etc/wgetrc
+# echo "http_proxy = http://$proxy_server:$proxy_port" >> /etc/wgetrc
 
 ### DNS
-echo "$proxy_ip $proxy_hostname" >> /etc/hosts
+# echo "$proxy_ip $proxy_hostname" >> /etc/hosts
 
 ### update parameter
 echo "alias vi='vim'" >> ~/.bashrc
@@ -58,21 +59,11 @@ yum groupinstall "GNOME Desktop" -y > /dev/null 2>&1 && echo "==== yum(GNOME Des
 yum install ksh gcc* libaio* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* libgcc* binutils* compat-libcap1* make* stsstat* -y
 yum clean all
 
-### oracle prerequisite
-echo "==== oracle package... ===="
-wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
-wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
-if [ "$ora_ver" -eq 11204 ]; then
-    yum install oracle-rdbms-server-11gR2-preinstall -y
-else
-    yum install oracle-database-server-12cR2-preinstall -y
-fi
-
 ### group
-# echo "==== group... ===="
-# groupadd -g 54321 oinstall
-# groupadd -g 54322 dba
-# groupadd -g 54323 oper
+echo "==== group... ===="
+groupadd -g 54321 oinstall
+groupadd -g 54322 dba
+groupadd -g 54323 oper
 # groupadd -g 54324 backupdba
 # groupadd -g 54325 dgdba
 # groupadd -g 54326 kmdba
@@ -93,6 +84,16 @@ mkdir /backup
 chown -R $user:dba /u01
 chown -R $user:dba /oracle
 chown -R $user:dba /backup
+
+### oracle prerequisite
+echo "==== oracle package... ===="
+wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
+wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+if [ "$ora_ver" -eq 11204 ]; then
+    yum install oracle-rdbms-server-11gR2-preinstall -y
+else
+    yum install oracle-database-server-12cR2-preinstall -y
+fi
 
 ### oracle account setting
 echo "==== oracle account... ===="
