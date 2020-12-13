@@ -3,6 +3,7 @@
 ### define
 proxy_ip="10.0.0.4" && proxy_hostname="squid" && proxy_port=80
 host_ip=`cat /etc/hosts | grep \`hostname\` | awk '{print $1}'`
+os_name=`cat /etc/os-release | head -1`
 user=oracle
 sid=ERP
 uqname=$sid
@@ -53,9 +54,16 @@ yum install telnet -y
 yum install traceroute -y
 yum install nfs-utils -y
 yum install zip unzip -y
-echo "==== yum(GNOME Desktop)... ===="
-yum groupinstall "GNOME Desktop" -y > /dev/null 2>&1 && echo "==== yum(GNOME Desktop end)... ===="
 # yum install matchbox-window-manager xterm -y
+if [[ "$os_name" == *"Oracle Linux Server"* ]]; then
+    echo "==== yum(Server with GUI)... ===="
+    yum groupinstall "Server with GUI" -y > /dev/null 2>&1
+    echo "==== yum(Server with GUI end)... ===="
+else
+    echo "==== yum(GNOME Desktop)... ===="
+    yum groupinstall "GNOME Desktop" -y > /dev/null 2>&1
+    echo "==== yum(GNOME Desktop end)... ===="
+fi
 yum install ksh gcc* libaio* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* libgcc* binutils* compat-libcap1* make* stsstat* -y
 yum clean all
 
@@ -110,7 +118,6 @@ export CLASSPATH
 PATH=$PATH:$home/bin:$home/bin
 export PATH
 export NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'
-export DISPLAY=$host_ip:0.0
 
 # Alias
 alias sqlp='sqlplus / as sysdba'

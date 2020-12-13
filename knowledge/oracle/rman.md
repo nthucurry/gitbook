@@ -1,4 +1,4 @@
-# RMAN script
+# Recovery Manager (RMAN)
 ## Prompt
 - control file 一定要最後，不然不會記錄到 datafile、archivelog 的資訊
 - [大補帖](https://kknews.cc/code/ky5jo2b.html)
@@ -75,7 +75,7 @@
     - 只刪除一天以前的 archive log
 
 ## Check
-### 清除人工刪除的檔案，但還留在 control file 的檔案
+### 清除人工刪除的檔案，但還留在 control file 的檔案(仍保留 metadata)
 - `delete backup;`
 - `crosscheck database;`
 - `delete expired backup;`

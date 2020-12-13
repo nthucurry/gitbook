@@ -1,6 +1,7 @@
 #/bin/bash
 
 ### define
+os_name=`cat /etc/os-release | head -1`
 user=poc
 master_ip="10.0.0.5" && master_hostname="k8s-master"
 node1_ip="10.0.0.6" && node1_hostname="k8s-node1"
