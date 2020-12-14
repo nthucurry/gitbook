@@ -15,8 +15,15 @@
 傳統虛擬化技術如 vSphere 或 Hyper-V 是以作業系統為中心，而 container 技術則是一種以應用程式為中心的虛擬化技術。
 
 ## 安裝 Docker
-- 安裝 curl：`sudo apt install curl`
-- 安裝 docker：`curl -sSL https://get.docker.com/ubuntu/ | sudo sh`
+- Ubuntu
+    - 安裝 curl：`sudo apt install curl`
+    - 安裝 docker：`curl -sSL https://get.docker.com/ubuntu/ | sudo sh`
+- CentOS
+    - `yum install yum-utils device-mapper-persistent-data lvm2 -y`
+    - `yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo`
+    - `yum install docker-ce -y`
+    - `systemctl start docker && systemctl enable docker`
+    - `sudo usermod -aG docker USERNAME`
 
 ## 指令
 - 啟動 docker：`docker start`

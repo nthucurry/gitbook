@@ -54,10 +54,21 @@ systemctl restart squid
     #
     # INSERT YOUR OWN RULE(S) HERE TO ALLOW ACCESS FROM YOUR CLIENTS
     #
+    acl allowurl url_regex -i "/etc/squid/allow_url.lst" # whitelist
     acl iconnect src 10.251.12.0/22
+    http_access deny !allowurl
+    http_access deny !iconnect
+    http_access allow allowurl
+    http_access allow iconnect
 
     # Squid normally listens to port 3128
     http_port 80
+    ```
+- `vi /etc/squid/allow_url.lst`
+    ```txt
+    mirrorlist.centos.org
+    yum.mariadb.org
+    ftp.twaren.net
     ```
 - check: `netstat -tulnp | grep squid`
 
