@@ -3,10 +3,10 @@
 ### define
 os_name=`cat /etc/os-release | head -1`
 user=poc
-master_ip="10.0.0.5" && master_hostname="k8s-master"
-node1_ip="10.0.0.6" && node1_hostname="k8s-node1"
-node2_ip="10.0.0.7" && node2_hostname="k8s-node2"
-proxy_ip="10.0.0.4" && proxy_hostname="squid" && proxy_port=80
+master_ip="10.140.0.4" && master_hostname="k8s-master"
+node1_ip="10.140.15.231" && node1_hostname="k8s-node1"
+node2_ip="10.140.15.232" && node2_hostname="k8s-node2"
+proxy_ip="10.140.0.4" && proxy_hostname="k8s-master" && proxy_port=3128
 
 ### enviroment
 timedatectl set-timezone Asia/Taipei

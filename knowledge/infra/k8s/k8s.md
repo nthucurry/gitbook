@@ -20,7 +20,7 @@ C -->|Three| F[Car]
 ```
 
 ## Master
-### Installing kubeadm on your hosts
+### 1. Installing kubeadm on your hosts
 - `kubeadm init --pod-network-cidr=10.244.0.0/16`
     - 使用 Flannel CNI
 - 用 non-root user 執行
@@ -29,8 +29,18 @@ C -->|Three| F[Car]
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
     ```
-### Installing a Pod network add-on
+
+### 2. Installing a Pod network add-on
 - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml`
+    ```txt
+    Warning: rbac.authorization.k8s.io/v1beta1 ClusterRole is deprecated in v1.17+, unavailable in v1.22+; use rbac.authorization.k8s.io/v1 ClusterRole
+    clusterrole.rbac.authorization.k8s.io/flannel created
+    Warning: rbac.authorization.k8s.io/v1beta1 ClusterRoleBinding is deprecated in v1.17+, unavailable in v1.22+; use rbac.authorization.k8s.io/v1 ClusterRoleBinding
+    clusterrolebinding.rbac.authorization.k8s.io/flannel created
+    serviceaccount/flannel created
+    configmap/kube-flannel-cfg created
+    error: unable to recognize "https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml": no matches for kind "DaemonSet" in version "extensions/v1beta1"
+    ```
     - 出現錯誤: The connection to the server localhost:8080 was refused - did you specify the right host or port?
         - [權限不足](https://developer.aliyun.com/article/652961): `echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bash_profile && . ~/.bash_profile`
 - `kubectl get pods --all-namespaces`
@@ -48,6 +58,8 @@ C -->|Three| F[Car]
 ## Node
 - 加入 cluster
     ```bash
-    kubeadm join 10.0.0.5:6443 --token qowet6.ymjikzk5nvk1i3g7 \
-    --discovery-token-ca-cert-hash sha256:7d831165f775e27bb6b0cf2c193e867c50ffe12f093f7261650d0b5699ea30d8
+    kubeadm join 10.140.0.4:6443 --token 1das02.s6wivqluldzn4jn6 \
+    --discovery-token-ca-cert-hash sha256:5d3cc5d02eee6446b10547ea2ad12ab364c249a9fdc7884d3309fccb6d03c42f
     ```
+    - 失敗的話: https://stackoverflow.com/questions/55531834/kubeadm-fails-to-initialize-when-kubeadm-init-is-called
+        - `echo 1 > /proc/sys/net/ipv4/ip_forward`
