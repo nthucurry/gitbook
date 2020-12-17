@@ -30,6 +30,7 @@ knowledge/exam/*
 !img/cloud
 !img/cloud/azure
 !img/cloud/gcp
+!img/docker
 !img/veeam
 !img/moss
 # office
