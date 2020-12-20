@@ -21,3 +21,7 @@
 
 ###
 管理 web app 流量(traffic)的網路流量負載平衡器(load balancer)，可針對特定協定來控管，例如 http or image...etc，也稱為 OSI Lev 7 負載平衡
+
+### Small steps to big savings
+- CRT + KEY --> PFX
+    - http://dog0416.blogspot.com/2017/08/opensslwindows-crt-key-pfx.html
