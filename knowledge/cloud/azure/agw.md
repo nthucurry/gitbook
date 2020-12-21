@@ -1,6 +1,8 @@
 # Application Gateway
 ## Reference
 - [Azure - Difference between Azure Load Balancer and Application Gateway](https://medium.com/awesome-azure/azure-difference-between-azure-load-balancer-and-application-gateway-9a6019c23840)
+- [如何在 IIS7 / IIS7.5 安裝 SSL 憑證(含 IIS7 匯入憑證的 Bug)](https://blog.miniasp.com/post/2011/08/14/How-to-import-SSL-certificate-to-IIS7-without-any-problem)
+- [如何在收到 PFX 或 CER 憑證檔之後使用 OpenSSL 進行常見的格式轉換](https://blog.miniasp.com/post/2019/04/17/Convert-PFX-and-CER-format-using-OpenSSL)
 
 ## 架構
 - OSI

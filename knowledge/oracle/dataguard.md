@@ -254,6 +254,7 @@ select
     to_char(first_time,'mm/dd hh24:mi') as first,
     to_char(next_time,'mm/dd hh24:mi') as next
 from v$archived_log
+--where first_time >= to_date('2020-12-20 12:00','yyyy-mm-dd hh24:mi')
 order by first_time;
 
 -- primary DB archive status
