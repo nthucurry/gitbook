@@ -3,6 +3,7 @@
 README.md
 SUMMARY.md
 .DS_Store
+office/*
 office/chipbond/*
 knowledge/*
 knowledge/oracle/*
@@ -41,22 +42,21 @@ knowledge/exam/*
 !office/chipbond/km.md
 # knowledge
 !knowledge
-!knowledge/oracle/
+!knowledge/oracle
 !knowledge/oracle/rman.md
 !knowledge/oracle/startup-job.md
 !knowledge/oracle/dataguard-demo.md
 !knowledge/oracle/oracle-db.md
 !knowledge/oracle/dblink.md
-!knowledge/oracle/note/
-!knowledge/oracle/note/troubleshooting.md
 !knowledge/oracle/mview.md
 !knowledge/oracle/rac.md
 !knowledge/oracle/datapump.md
 !knowledge/oracle/cloud-control.md
 !knowledge/oracle/fake-disaster.txt
-!knowledge/oracle/script/
+!knowledge/oracle/note
+!knowledge/oracle/note/troubleshooting.md
+!knowledge/oracle/script
 !knowledge/oracle/script/os-utility.*
-!knowledge/oracle/script/os-init-setting.sh
 !knowledge/oracle/script/check-dg-status.sql
 !knowledge/oracle/script/mview.sql
 !knowledge/oracle/script/procedure.md
