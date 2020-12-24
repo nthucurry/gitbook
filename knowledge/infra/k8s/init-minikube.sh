@@ -55,3 +55,13 @@ usermod -aG docker $user
 echo "==== 4. Install minikube"
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
 rpm -ivh minikube-latest.x86_64.rpm
+
+### Install perl
+echo "==== 4. Install perl"
+wget https://download-ib01.fedoraproject.org/pub/epel/7/aarch64/Packages/p/perl-File-BaseDir-0.03-14.el7.noarch.rpm
+wget https://download-ib01.fedoraproject.org/pub/epel/7/aarch64/Packages/p/perl-File-DesktopEntry-0.08-1.el7.noarch.rpm
+wget https://armv7.dev.centos.org/repodir/epel-pass-1/_imported_noarch_pkgs_from_epel/epel/Packages/p/perl-File-MimeInfo-0.21-1.el7.noarch.rpm
+rpm -Uvh perl-File-BaseDir-0.03-14.el7.noarch.rpm
+rpm -Uvh perl-File-DesktopEntry-0.08-1.el7.noarch.rpm
+rpm -Uvh perl-File-MimeInfo-0.21-1.el7.noarch.rpm
+yum install perl-File-MimeInfo
