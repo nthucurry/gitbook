@@ -34,6 +34,7 @@ knowledge/exam/*
 !img/docker
 !img/veeam
 !img/moss
+!img/kubernetes
 # office
 !office
 !office/chipbond
