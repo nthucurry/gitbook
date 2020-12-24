@@ -140,7 +140,7 @@ Recovery Manager complete.
 - startup nomount
 - @cr.sql
 - alter database open resetlogs;
-- select name, open_mode, database_role, switchover_status from v$database
+- select name, open_mode, database_role, switchover_status from v$database;
     ```txt
     NAME      OPEN_MODE            DATABASE_ROLE    SWITCHOVER_STATUS
     --------- -------------------- ---------------- --------------------
