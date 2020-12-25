@@ -3,10 +3,10 @@
 ### define
 os_name=`cat /etc/os-release | head -1`
 user=poc
-master_ip="10.140.0.4" && master_hostname="k8s-master"
-node1_ip="10.140.15.231" && node1_hostname="k8s-node1"
-node2_ip="10.140.15.232" && node2_hostname="k8s-node2"
-proxy_ip="10.140.0.4" && proxy_hostname="k8s-master" && proxy_port=3128
+master_ip="10.1.1.5" && master_hostname="k8s-master"
+node1_ip="10.1.1.6" && node1_hostname="k8s-node1"
+node2_ip="10.1.1.7" && node2_hostname="k8s-node2"
+proxy_ip="10.1.1.5" && proxy_hostname="k8s-master" && proxy_port=3128
 
 ### enviroment
 timedatectl set-timezone Asia/Taipei
@@ -14,8 +14,8 @@ LANG=en_US.UTF-8
 
 ### internet connection
 echo "proxy=http://$proxy_hostname:$proxy_port" >> /etc/yum.conf
-echo "https_proxy = http://$proxy_server:$proxy_port" >> /etc/wgetrc
-echo "http_proxy = http://$proxy_server:$proxy_port" >> /etc/wgetrc
+echo "https_proxy = http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
+echo "http_proxy = http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
 
 ### update parameter
 echo "alias vi='vim'" >> ~/.bashrc
