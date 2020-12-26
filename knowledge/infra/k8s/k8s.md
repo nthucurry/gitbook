@@ -8,9 +8,8 @@
 
 ## Information
 一個可以幫助我們管理微服務(microservices)的系統，他可以自動化地部署及管理多台機器上的多個容器(container)。Kubernetes 想解決的問題是：「手動部署多個容器到多台機器上並監測管理這些容器的狀態非常麻煩。」而 Kubernetes 要提供的解法： 提供一個平台以較高層次的抽象化去自動化操作與管理容器們。
-![](../../../img/kubernetes/k8s-architecture.png)
-![](../../../img/kubernetes/k8s-vs-app-diff.png)
-
+    - <img src="../../../img/kubernetes/k8s-architecture.png" alt="drawing" width="800" board="1"/>
+    - <img src="../../../img/kubernetes/k8s-vs-app-diff.png" alt="drawing" width="800" board="1"/>
 
 ## Know docker
 ```mermaid
@@ -23,6 +22,7 @@ C -->|Three| F[Car]
 ```
 
 ## Minikube
+- [Hello Minikube](https://kubernetes.io/docs/tutorials/hello-minikube/)
 - Minikube 是由 Google 發布的一個輕量級工具
 - 可在本機上輕易架設一個 Kubernetes Cluster
 - Minikube 會在本機上跑起一個 virtual machine，並且在這 VM 裡建立一個 signle-node Kubernetes Cluster
@@ -31,6 +31,7 @@ C -->|Three| F[Car]
     - https://minikube.sigs.k8s.io/docs/start/
 - demo
     - <img src="../../../img/kubernetes/hello-minikube.png" alt="drawing" width="700"/>
+    - `kubectl get pods --all-namespaces`
 
 ## Master
 ### 1. Installing kubeadm on your hosts

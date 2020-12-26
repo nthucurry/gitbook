@@ -102,6 +102,13 @@
     - 登入啟動：[https://n.sfs.tw/content/index/11776](https://n.sfs.tw/content/index/11776)
 - 登入測試：`mysql -u root`
 
+### VirtualBox
+- `brew install --cask virtualbox`
+- `sudo install minikube-darwin-amd64 /usr/local/bin/minikube`
+
+### Minikube
+- `curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64`
+
 ## Troubleshooting
 ### [【教學】重灌 Mac 機必用！教你以 Terminal 製作 macOS Sierra 安裝手指！](https://ppt.cc/f0O1lx)
 ```bash

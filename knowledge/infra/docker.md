@@ -24,6 +24,9 @@
     - `yum install docker-ce -y`
     - `systemctl start docker && systemctl enable docker`
     - `sudo usermod -aG docker USERNAME`
+- macOS
+早期的 Windows Docker 是使用 VirtualBox 的虛擬機實現的，但是新版的 Docker for Windows 直接使用 Hyper-V
+    - 版本需大於 10.14
 
 ## 指令
 - 啟動 docker：`docker start`

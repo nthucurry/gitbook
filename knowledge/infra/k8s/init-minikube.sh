@@ -43,7 +43,7 @@ curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s ht
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin
 
-### Install docker
+### Install docker (you can use virtualbox)
 echo "==== 3. Install docker"
 yum install yum-utils device-mapper-persistent-data lvm2 -y
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
