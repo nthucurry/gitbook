@@ -2,7 +2,7 @@
 
 ### define
 os_name=`cat /etc/os-release | head -1`
-user=poc
+user=tonylee
 master_ip="10.1.1.5" && master_hostname="k8s-master"
 node1_ip="10.1.1.6" && node1_hostname="k8s-node1"
 node2_ip="10.1.1.7" && node2_hostname="k8s-node2"
@@ -32,6 +32,7 @@ echo "$node2_ip $node2_hostname" >> /etc/hosts
 
 ### systemctl
 echo "==== systemctl... ===="
+systemctl restart sshd
 systemctl stop firewalld && systemctl disable firewalld
 
 ### yum default

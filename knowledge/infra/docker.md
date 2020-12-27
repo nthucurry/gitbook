@@ -28,9 +28,30 @@
 早期的 Windows Docker 是使用 VirtualBox 的虛擬機實現的，但是新版的 Docker for Windows 直接使用 Hyper-V
     - 版本需大於 10.14
 
+## 名詞解釋
+- image: 首先類似 VM 的映像檔
+- docker hub: 像是大家會把 Python 套件丟上 pip、JS 套件丟上 npm 一樣，大家寫好的 Docker Image 都會丟到 Docker Hub 上
+
+Type           | 虛擬機  | docker | java |
+---|---|----|---|
+底層環境    | hypervisor | host OS | host OS |
+核心    | 映像檔 | image | jre|
+建立環境|OS|container| jvm |
+repo    | 無 |  docker hub | 無 |
+共通性    | 無 | dockerfile | xxx.java |
+
+<div>
+<img src="https://blog.gtwang.org/wp-content/uploads/2017/06/virtual-machine-20170625-1.png" alt="drawing" width="300" board="1"/>
+<img src="https://blog.gtwang.org/wp-content/uploads/2017/06/docker-container-20170625-1.png" alt="drawing" width="300" board="1"/>
+</div>
+
+
+
 ## 指令
 - 啟動 docker：`docker start`
 - 關閉 docker：`docker stop`
+- 取得 ubuntu 14.04 版本的 image: `docker pull ubuntu:14.04`
+- 透過 iamge 執行並產生一個新的 container: `docker run ubuntu:14.04 /bin/echo "example 2 - ubuntu:14.04"`
 
 ## 操作步驟
 1. `sudo docker run hello-world`

@@ -49,7 +49,7 @@ yum install yum-utils device-mapper-persistent-data lvm2 -y
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 yum install docker-ce -y
 systemctl start docker && systemctl enable docker
-usermod -aG docker $user
+usermod -aG docker $user # it can use docker command in non root role
 
 ### Install minikube
 echo "==== 4. Install minikube"
