@@ -5,7 +5,7 @@ proxy_ip="10.0.0.4" && proxy_hostname="squid" && proxy_port=80
 host_ip=`cat /etc/hosts | grep \`hostname\` | awk '{print $1}'`
 os_name=`cat /etc/os-release | head -1`
 user=oracle
-sid=ERP
+sid=oracle1
 uqname=$sid
 base=/u01/oracle
 ora_ver=11204
@@ -64,7 +64,7 @@ else
     yum groupinstall "GNOME Desktop" -y > /dev/null 2>&1
     echo "==== yum(GNOME Desktop end)... ===="
 fi
-yum install ksh gcc* libaio* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* libgcc* binutils* compat-libcap1* make* stsstat* -y
+yum install ksh gcc* libaio* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* libgcc* binutils* compat-libcap1* make* stsstat* -y > /dev/null 2>&1
 yum clean all
 
 ### group
