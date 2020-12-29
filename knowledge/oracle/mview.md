@@ -5,9 +5,10 @@
 
 ## 說明
 - oracle 8i 就有 mview
-- 將資料值既存在 view 裡面
+- 將資料值存在 view 裡面(實體 table)
 - 提升效能
-- snapshot 的概念
+- snapshot 概念
+- 同步資料、傳輸資料
 
 ## Build M-View
 ### Privilege
