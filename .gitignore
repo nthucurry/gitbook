@@ -47,6 +47,7 @@ knowledge/exam/*
 !knowledge/oracle/rman.md
 !knowledge/oracle/startup-job.md
 !knowledge/oracle/dataguard-demo.md
+!knowledge/oracle/clone-db.md
 !knowledge/oracle/oracle-db.md
 !knowledge/oracle/dblink.md
 !knowledge/oracle/mview.md

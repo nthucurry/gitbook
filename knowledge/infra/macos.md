@@ -125,3 +125,6 @@ sudo /Users/fool/Downloads/Install\ macOS\ Sierra.app/Contents/Resources/createi
 
 ### 休眠耗電的解決辦法
 [https://udn.com/news/story/11017/3433052](https://udn.com/news/story/11017/3433052)
+
+### 出現 xcrun: error
+- 安裝 xcode: `xcode-select --install`
