@@ -109,6 +109,25 @@
 ### Minikube
 - `curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64`
 
+### Docker
+- `brew install --cask docker`
+
+### VSCode
+```json
+{
+    "workbench.startupEditor": "newUntitledFile",
+    "files.trimTrailingWhitespace": true,
+    "editor.fontSize": 14,
+    "files.autoSave": "onFocusChange",
+    "extensions.ignoreRecommendations": true,
+    "workbench.iconTheme": "vscode-icons",
+    "terminal.integrated.automationShell.linux": "",
+    "terminal.integrated.fontSize": 16,
+    "git.ignoreMissingGitWarning": true,
+    "git.path": "/usr/bin/git"
+}
+```
+
 ## Troubleshooting
 ### [【教學】重灌 Mac 機必用！教你以 Terminal 製作 macOS Sierra 安裝手指！](https://ppt.cc/f0O1lx)
 ```bash
