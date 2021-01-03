@@ -33,7 +33,7 @@
     export PATH
     export CLICOLOR='true'
 
-    alias ll='ls -a'
+    alias ll='ls -l'
     alias vi='vim'
     alias grep='grep --color=auto'
     alias tree='tree -N'
@@ -110,6 +110,7 @@
 - `curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64`
 
 ### Docker
+- `brew tap caskroom/cask`
 - `brew install --cask docker`
 
 ### VSCode
