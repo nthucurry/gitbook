@@ -147,3 +147,32 @@ sudo /Users/fool/Downloads/Install\ macOS\ Sierra.app/Contents/Resources/createi
 
 ### 出現 xcrun: error
 - 安裝 xcode: `xcode-select --install`
+
+### macOS 還原問題
+- reference
+    - https://rizonjet.com/how-to-fix-macbook-error-code-2003f/
+- 指令
+    - Command（⌘）-R ：安裝 Mac 上所安裝的最新版 macOS。
+    - Option-⌘-R ：升級到與 Mac 相容的最新 macOS。
+    - Shift-Option-⌘-R ：安裝 Mac 隨附的 macOS，或仍提供使用的最接近版本。
+- [如何重新安裝 macOS](https://support.apple.com/zh-tw/HT204904)
+    - 您可以使用「macOS 復原」來重新安裝 Mac 作業系統。
+    - 確認 Mac 有 Internet 連線，然後將 Mac 開機，並立即按住 Command（⌘）-R，直到您看到 Apple 標誌或其他影像為止。
+    - ![重新安裝 macOS](https://support.apple.com/library/content/dam/edam/applecare/images/en_US/macos/Big-Sur/macos-big-sur-recovery-reinstall-macos.jpg)
+- 2003f
+    - MacBook error code 2003f is a critical error code that can occur due to a problem with its system files. This error can occur in any version of the Mac Operating System. Generally, this error is faced by users while trying to boot in internet recovery mode.
+    - [如何重置 Mac 的 SMC](https://support.apple.com/zh-tw/HT201295): 重置系統管理控制器（SMC）可解決某些與電源、電池、風扇和其他功能相關的問題
+        - ![按住這三個按鍵時，也同時按住電源按鈕](https://support.apple.com/library/content/dam/edam/applecare/images/en_US/mac/2016-macbook-keyboard-diagram-smc.png)
+        - 同時按住這四個按鈕不放 10 秒
+        - 放開所有按鍵，然後按住電源按鈕來啟動 Mac
+- 1008f: 你的 Mac 嘗試透過互聯網從「macOS 還原」啟動，但不成功
+    - [如果 Mac 啟動後顯示 -1008F 錯誤](https://support.apple.com/zh-hk/HT206989)
+    - 使用 Option-Command-R 啟動
+    - 或停用「啟用鎖」
+        1. 將 Mac 關掉。
+        1. 使用另一部裝置前往 iCloud.com，並以 Apple ID 登入。
+        1. 按一下「尋找 iPhone」。
+        1. 從裝置列表中選擇你的 Mac。如果看不到裝置列表，請從頁頂的裝置選單中選擇 Mac。
+        1. 等待幾秒鐘，直至「尋找」完成更新 Mac 的最後一個已知位置。
+        1. 按一下「從帳戶移除」。如果看不到該選項，請返回頁頂的裝置選單，然後點擊 Mac 名稱旁邊的移除按鈕 。
+        1. 系統提示時，按一下「移除」確認操作。
