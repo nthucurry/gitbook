@@ -29,7 +29,7 @@
     - 版本需大於 10.14
 
 ## 名詞解釋
-- image: 首先類似 VM 的映像檔
+- image: 首先類似 VM 的映像檔，打包 python 直譯器、函式庫等元件
 - docker hub: 像是大家會把 Python 套件丟上 pip、JS 套件丟上 npm 一樣，大家寫好的 Docker Image 都會丟到 Docker Hub 上
 
 Type           | 虛擬機  | docker | java |
