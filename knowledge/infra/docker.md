@@ -5,6 +5,8 @@
     ```txt
     docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案架構。要建立一個可提供應用程式完整執行環境的 container 映象檔，要先從一個基礎映象檔(base image)開始疊起，一層層將不同 stack 的 docker 映象檔疊加上去，最後組合成一個應用程式所需 container 執行環境的映象檔，而每一個 stack 也都是可以會匯出成(docker commit指令)一個映象檔。
     ```
+- 如何運作
+    - <img src="https://miro.medium.com/max/1146/1*yt8ZJdhZ5n6OJAWDUyZS6w.png" alt="drawing" width="700" board="1"/>
 - 舉例(undone)
     1. `docker pull ubuntu`
     2. `docker pull httpd`
@@ -44,8 +46,6 @@ repo    | 無 |  docker hub | 無 |
 <img src="https://blog.gtwang.org/wp-content/uploads/2017/06/virtual-machine-20170625-1.png" alt="drawing" width="300" board="1"/>
 <img src="https://blog.gtwang.org/wp-content/uploads/2017/06/docker-container-20170625-1.png" alt="drawing" width="300" board="1"/>
 </div>
-
-
 
 ## 指令
 - 啟動 docker：`docker start`

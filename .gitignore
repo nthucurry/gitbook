@@ -76,6 +76,7 @@ knowledge/exam/*
 !knowledge/cloud/gcp/map-api.md
 !knowledge/vm
 !knowledge/vm/veeam.md
+!knowledge/vm/vmware.md
 !knowledge/vm/vbx.md
 !knowledge/windows/
 !knowledge/crawler
@@ -92,5 +93,6 @@ knowledge/exam/*
 !knowledge/infra/network.md
 !knowledge/infra/k8s
 !knowledge/infra/k8s/*.md
+!knowledge/infra/docker
 !knowledge/exam
 !knowledge/exam/oracle-11g.md
