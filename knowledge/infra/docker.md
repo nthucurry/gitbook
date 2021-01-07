@@ -1,4 +1,7 @@
 # Docker
+## Referfence
+- [用 30 天來介紹和使用 Docker 系列](https://ithelp.ithome.com.tw/users/20103456/ironman/1320)
+
 ## 秒懂架構
 ![](https://s4.itho.me/sites/default/files/styles/picture_size_large/public/field/image/683-封面故事-P34-%28960%29.png?itok=ODsaV2LW)
 ![](https://ithelp.ithome.com.tw/upload/images/20171205/20103456jl9BuRvKSl.png)
@@ -61,6 +64,7 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 - 關閉 docker：`docker stop`
 - 取得 ubuntu 14.04 版本的 image: `docker pull ubuntu:14.04`
 - 透過 iamge 執行並產生一個新的 container: `docker run ubuntu:14.04 /bin/echo "example 2 - ubuntu:14.04"`
+- 刪除已停止的 containers: `docker rm $(docker ps -aq)`
 
 ## 操作步驟
 1. `sudo docker run hello-world`
@@ -102,5 +106,29 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     CMD ["/apache-tomcat-7.0.107/bin/catalina.sh", "run"]
     ```
 - `docker build -t mytomcat . --no-cache`
+    - http://172.17.0.1
+- `docker run -p 8080:8080 mytomcat`
 - `docker ps -a`
 - `docker exec -it a2294eea8345 /bin/bash`
+
+### Resolve dockerfile
+- FROM centos:7
+    - 使用到的 Docker Image 名稱，今天使用 CentOS
+- MAINTAINER jack
+    - 用來說明，撰寫和維護這個 Dockerfile 的人是誰，也可以給 E-mail 的資訊
+- RUN yum install -y wget
+- RUN cd /
+    - RUN 指令後面放 Linux 指令，用來執行安裝和設定這個 Image 需要的東西
+- ADD jdk-8u152-linux-x64.tar.gz /
+    - 把 Local 的檔案複製到 Image 裡，如果是 tar.gz 檔複製進去 Image 時會順便自動解壓縮
+    - Dockerfile 另外還有一個複製檔案的指令 COPY 未來還會再介紹
+- RUN wget http://apache.stu.edu.tw/tomcat/tomcat-7/v7.0.107/bin/apache-tomcat-7.0.107.tar.gz
+- RUN tar zxvf apache-tomcat-7.0.107.tar.gz
+- ENV JAVA_HOME=/jdk1.8.0_152
+- ENV PATH=$PATH:/jdk1.8.0_152/bin
+    - 用來設定環境變數
+- CMD ["/apache-tomcat-7.0.107/bin/catalina.sh", "run"]
+    - 在指行 docker run 的指令時會直接呼叫開啟 Tomcat Service
+
+## Docker Network
+<img src="https://ithelp.ithome.com.tw/upload/images/20171223/20103456bATaXz4Pcl.png" board="1" />

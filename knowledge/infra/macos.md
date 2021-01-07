@@ -21,7 +21,7 @@
     ```
 
 ### bash_profile
-- `vi ~/.bash_profile`
+- `vi ~/.bash_profile`(bash) or `vi ~/.zshrc`(zsh)
     ```bash
     cd /Users/tony/Documents
     #df -h | grep "/dev/disk2s1"; df -h | grep "/dev/disk3s1";
