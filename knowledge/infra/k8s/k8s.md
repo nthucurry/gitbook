@@ -1,4 +1,6 @@
 # Kubernetes
+<img src="https://d33wubrfki0l68.cloudfront.net/26a177ede4d7b032362289c6fccd448fc4a91174/eb693/images/docs/container_evolution.svg" alt="drawing" width="800" board="1"/><br>
+Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available.
 ## Reference
 - [Installing Docker on CentOS 7 With Yum](https://phoenixnap.com/kb/how-to-install-docker-centos-7)
 - [Steps for Installing Kubernetes on CentOS 7](https://phoenixnap.com/kb/how-to-install-kubernetes-on-centos)
@@ -12,14 +14,10 @@
     - <img src="../../../img/kubernetes/k8s-vs-app-diff.png" alt="drawing" width="800" board="1"/>
 
 ## Know docker
-```mermaid
-graph LR
-A[DevOps] -->|Get money| B(Go shopping)
-B --> C{Let me think}
-C -->|One| D[Laptop]
-C -->|Two| E[iPhone]
-C -->|Three| F[Car]
-```
+差異就在: https://nakivo.medium.com/kubernetes-vs-docker-what-is-the-difference-3b0c6cce97d3
+- 網路
+- use cases
+- cluster
 
 ## Minikube
 - [Hello Minikube](https://kubernetes.io/docs/tutorials/hello-minikube/)
@@ -70,6 +68,7 @@ C -->|Three| F[Car]
     ```
 
 ## Node
+<img src="https://www.ovh.com/blog/wp-content/uploads/2019/03/IMG_0135.jpg" alt="drawing" width="800" board="1"/><br>
 - 加入 cluster
     ```bash
     kubeadm join 10.140.0.4:6443 --token 1das02.s6wivqluldzn4jn6 \
