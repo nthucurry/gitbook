@@ -18,6 +18,9 @@ Kubernetes is a portable, extensible, open-source platform for managing containe
 - 網路
 - use cases
 - cluster
+| Type                     | docker       | k8s |
+| ------------------------ | ------------ | --- |w
+| orchestration technology | docker swarm |     |
 
 ## Minikube
 - [Hello Minikube](https://kubernetes.io/docs/tutorials/hello-minikube/)

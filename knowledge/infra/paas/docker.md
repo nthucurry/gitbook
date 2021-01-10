@@ -46,13 +46,13 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 - image: 首先類似 VM 的映像檔，打包 python 直譯器、函式庫等元件
 - docker hub: 像是大家會把 Python 套件丟上 pip、JS 套件丟上 npm 一樣，大家寫好的 Docker Image 都會丟到 Docker Hub 上
 
-| Type | 虛擬機        | docker     | java     |
-|------|------------|------------|----------|
+| Type     | 虛擬機     | docker     | java     |
+|----------|------------|------------|----------|
 | 底層環境 | hypervisor | host OS    | host OS  |
-| 核心   | 映像檔        | image      | jre      |
+| 核心     | 映像檔     | image      | jre      |
 | 建立環境 | OS         | container  | jvm      |
-| repo | 無          | docker hub | 無        |
-| 共通性  | 無          | dockerfile | xxx.java |
+| repo     | 無         | docker hub | 無       |
+| 共通性   | 無         | dockerfile | xxx.java |
 
 <div>
 <img src="https://blog.gtwang.org/wp-content/uploads/2017/06/virtual-machine-20170625-1.png" alt="drawing" width="300" board="1"/>
@@ -60,8 +60,6 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 </div>
 
 ## 指令
-- 啟動 docker：`docker start`
-- 關閉 docker：`docker stop`
 - 取得 ubuntu 14.04 版本的 image: `docker pull ubuntu:14.04`
 - 透過 iamge 執行並產生一個新的 container: `docker run ubuntu:14.04 /bin/echo "example 2 - ubuntu:14.04"`
 - 刪除已停止的 containers: `docker rm $(docker ps -aq)`
@@ -82,6 +80,10 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     - ![](../../img/docker/get-password.png)
     - ![](../../img/docker/copy-password.png)
     - ![](../../img/docker/finish.png)
+
+## Run MariaDB
+- `docker run --name scm-mariadb -e MYSQL_ROOT_PASSWORD=ncu5540 -d mariadb`
+- `docker run -itd --name scm-mariadb -p 3306:3306 -e MYSQL_ROOT_PASSWORD=ncu5540 mariadb`
 
 ## Run service by dockerfile
 - https://ithelp.ithome.com.tw/articles/10191016?sc=hot

@@ -20,7 +20,7 @@
     set background=dark
     ```
 
-### bash_profile
+### Profile
 - `vi ~/.bash_profile`(bash) or `vi ~/.zshrc`(zsh)
     ```bash
     cd /Users/tony/Documents
@@ -84,9 +84,10 @@
 ## 開發工具
 ### Java
 - oracle: [JDK 8](https://ppt.cc/f0NTMx)，注意！！Netbeans 須和 JDK 版本一致
+- 假如想開發，可參考: https://ithelp.ithome.com.tw/articles/10227841
 - openJDK
     - 下載 IDE
-        - 此處下載需先安裝 java
+        - 此處下載需先安裝 java: https://adoptopenjdk.net
         - https://www.apache.org/dyn/closer.cgi/netbeans/netbeans/12.0/Apache-NetBeans-12.0-bin-macosx.dmg
         - https://www.apache.org/dyn/closer.cgi/netbeans/netbeans/11.2/
         - 更改 Code Templates：Preferences > Editor > Code Templates
@@ -128,6 +129,25 @@
     "git.path": "/usr/bin/git"
 }
 ```
+
+### NVM
+```txt
+zsh compinit: insecure directories, run compaudit for list.
+Ignore insecure directories and continue [y] or abort compinit [n]?
+```
+- `compaudit`
+    ```txt
+    There are insecure directories:
+    /usr/local/share/zsh/site-functions
+    /usr/local/share/zsh
+    ```
+- 修改權限
+    ```bash
+    sudo chmod -R 755 /usr/local/share/zsh/site-functions
+    sudo chown -R docker:root /usr/local/share/zsh/site-functions
+    sudo chmod -R 755 /usr/local/share/zsh
+    sudo chown -R root:staff /usr/local/share/zsh
+    ```
 
 ## Troubleshooting
 ### [【教學】重灌 Mac 機必用！教你以 Terminal 製作 macOS Sierra 安裝手指！](https://ppt.cc/f0O1lx)
