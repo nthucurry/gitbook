@@ -52,6 +52,7 @@ knowledge/exam/*
 !knowledge/oracle/dblink.md
 !knowledge/oracle/mview.md
 !knowledge/oracle/rac.md
+!knowledge/oracle/partition.md
 !knowledge/oracle/parameter.md
 !knowledge/oracle/datapump.md
 !knowledge/oracle/cloud-control.md
