@@ -71,8 +71,11 @@
 
 ### Homebrew
 - 安裝方式
-    - 用一般 User，會一直 key 密碼: `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
-    - 安裝好後再 `brew update`
+    - 用一般 User，會一直 key 密碼
+        ```bash
+        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        ```
+    - 安裝好後再: `brew update`
 - 必裝，讓 macOS 有 linux 溫度
     - `brew install coreutils`
         ```bash
