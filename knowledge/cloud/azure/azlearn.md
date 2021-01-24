@@ -10,6 +10,7 @@
     - NSG 設定權責?
     - 控制 subscription 最高權限 -- Daivd
 - policy
+    - 不能違反的事項
     - assign policy
         - Not allowed resource types
             1. microsoft.network/virtualnetworks
