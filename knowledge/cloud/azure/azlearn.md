@@ -5,11 +5,9 @@
         - https://github.com/MicrosoftLearning/Lab-Demo-Recordings/blob/master/AZ-104.md
 
 ## EDA POC
-- 如何跨 subscription migration
-- 權限
-    - NSG 設定權責?
-    - 控制 subscription 最高權限 -- Daivd
-- policy
+- role (assigned roles)
+    - global administrators: 管理 AAD，可以管理 user
+- azure policy
     - 不能違反的事項
     - assign policy
         - Not allowed resource types
@@ -19,69 +17,55 @@
         - Allowed locations
             1. southeastasia
         - 注意 policy 連最高的 owner 都會被管理到，所以需要視情況放行(enable -> disable)，完事後再啟動 policy
-- IAM
-    - 用這個來控制 end-user 權限
-    - deny 讀寫，read 視情況
-        - Microsoft.Authorization
-        - Microsoft.Network/networkSecurityGroups
-        - Microsoft.Network/azurefirewalls
-        - Microsoft.Network/applicationGateways
-        ```json
-        "permissions": [
-            {
-                "actions": [
-                    "*"
-                ],
-                "notActions": [
-                    "Microsoft.Authorization/elevateAccess/action",
-                    "Microsoft.Authorization/classicAdministrators/write",
-                    "Microsoft.Authorization/classicAdministrators/delete",
-                    "Microsoft.Authorization/classicAdministrators/operationstatuses/read",
-                    "Microsoft.Authorization/denyAssignments/write",
-                    "Microsoft.Authorization/denyAssignments/delete",
-                    "Microsoft.Authorization/policyAssignments/write",
-                    "Microsoft.Authorization/policyAssignments/delete",
-                    "Microsoft.Authorization/policyAssignments/exempt/action",
-                    "Microsoft.Authorization/policyAssignments/privateLinkAssociations/write",
-                    "Microsoft.Authorization/policyAssignments/privateLinkAssociations/delete",
-                    "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/write",
-                    "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/delete",
-                    "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnections/write",
-                    "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnections/delete",
-                    "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnectionProxies/write",
-                    "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnectionProxies/delete",
-                    "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnectionProxies/validate/action",
-                    "Microsoft.Authorization/policyDefinitions/write",
-                    "Microsoft.Authorization/policyDefinitions/delete",
-                    "Microsoft.Authorization/policies/audit/action",
-                    "Microsoft.Authorization/policies/auditIfNotExists/action",
-                    "Microsoft.Authorization/policies/deny/action",
-                    "Microsoft.Authorization/policies/deployIfNotExists/action",
-                    "Microsoft.Authorization/policyExemptions/write",
-                    "Microsoft.Authorization/policyExemptions/delete",
-                    "Microsoft.Authorization/policySetDefinitions/write",
-                    "Microsoft.Authorization/policySetDefinitions/delete",
-                    "Microsoft.Authorization/roleAssignments/write",
-                    "Microsoft.Authorization/roleAssignments/delete",
-                    "Microsoft.Authorization/roleDefinitions/write",
-                    "Microsoft.Authorization/roleDefinitions/delete",
-                    "Microsoft.Network/networkSecurityGroups/write",
-                    "Microsoft.Network/networkSecurityGroups/delete",
-                    "Microsoft.Network/networkSecurityGroups/securityRules/write",
-                    "Microsoft.Network/networkSecurityGroups/securityRules/delete"
-                ],
-                "dataActions": [],
-                "notDataActions": []
-            }
-        ]
-        ```
-- 不同 vNet 可以跨 subscription 互相連線
-    - network peering: 跨 vNet 設定後可以連
-    - peering
-- SOP
-    1. 建立 resource group
-    2. 建立 policy
-    3. 建立 NSG
+- access control (IAM): 用這個來控制 end-user 權限，分為 owner, contributor, end-user
+    ```json
+    "permissions": [
+        {
+            "actions": [
+                "*"
+            ],
+            "notActions": [
+                "Microsoft.Authorization/elevateAccess/action",
+                "Microsoft.Authorization/classicAdministrators/write",
+                "Microsoft.Authorization/classicAdministrators/delete",
+                "Microsoft.Authorization/policyAssignments/write",
+                "Microsoft.Authorization/policyAssignments/delete",
+                "Microsoft.Authorization/policyAssignments/exempt/action",
+                "Microsoft.Authorization/policyAssignments/privateLinkAssociations/write",
+                "Microsoft.Authorization/policyAssignments/privateLinkAssociations/delete",
+                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/write",
+                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/delete",
+                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnections/write",
+                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnections/delete",
+                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnectionProxies/write",
+                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnectionProxies/delete",
+                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnectionProxies/validate/action",
+                "Microsoft.Authorization/policyDefinitions/write",
+                "Microsoft.Authorization/policyDefinitions/delete",
+                "Microsoft.Authorization/policies/audit/action",
+                "Microsoft.Authorization/policies/auditIfNotExists/action",
+                "Microsoft.Authorization/policies/deny/action",
+                "Microsoft.Authorization/policies/deployIfNotExists/action",
+                "Microsoft.Authorization/policyExemptions/write",
+                "Microsoft.Authorization/policyExemptions/delete",
+                "Microsoft.Authorization/policySetDefinitions/write",
+                "Microsoft.Authorization/policySetDefinitions/delete",
+                "Microsoft.Network/networkSecurityGroups/write",
+                "Microsoft.Network/networkSecurityGroups/delete",
+                "Microsoft.Network/networkSecurityGroups/securityRules/write",
+                "Microsoft.Network/networkSecurityGroups/securityRules/delete",
+                "Microsoft.Network/applicationGateways/*",
+                "Microsoft.Network/azurefirewalls/*",
+                "Microsoft.Network/publicIPAddresses/write",
+                "Microsoft.Network/publicIPAddresses/delete",
+                "Microsoft.Network/publicIPAddresses/join/action"
+            ],
+            "dataActions": [],
+            "notDataActions": []
+        }
+    ]
+    ```
+- 不同 VNet 可以跨 subscription 互相連線: network peering
 
 ## 1. Identity
 ### Azure Active Directory (建帳號)
@@ -139,6 +123,20 @@ RBAC helps you manage who has access to Azure resources, what they can do with t
     ```powershell
     Get-AzRoleDefinition -name reader | convertto-json
     ```
+
+### Azure RBAC Roles vs Azure AD Roles
+| Azure RBAC roles                                                            | Azure AD roles                  |
+|-----------------------------------------------------------------------------|---------------------------------|
+| Manage access to Azure resources.                                           | Manage access to AAD resources. |
+| Scope can be specified at multiple levels (MG, subscription, RG, resource). | Scope is at the tenant level.   |
+
+### RBAC Authentication
+<img src="https://docs.microsoft.com/en-us/azure/role-based-access-control/media/rbac-and-directory-admin-roles/rbac-admin-roles.png">
+
+## 3. Azure Administration
+### Resource Manager
+Azure Resource Manager enables you to work with the resources in your solution as a group. You can deploy, update, or delete all the resources for your solution in a single, coordinated operation.
+
 ### Group
 - dynamic group: 可依據條件來設定群組，例如 job title = XXX
 - 在同一個 AAD 下，可跨 subscription 做管理
@@ -158,13 +156,12 @@ RBAC helps you manage who has access to Azure resources, what they can do with t
 ## Template
 https://github.com/Azure/azure-quickstart-templates
 
-## Migrate to another subscription
+## Moving Resources
 <img src="../../../img/cloud/azure/migratie-to-new-subscription.png" width=700><br>
 https://medium.com/@calloncampbell/moving-your-azure-resources-to-another-subscription-or-resource-group-1644f43d2e07
 
-
 ## 4. Virtual Networking
-## Public IP
+### Public IP
 - basic vs standard
     - basic
         - 動態、靜態 IP
@@ -174,46 +171,60 @@ https://medium.com/@calloncampbell/moving-your-azure-resources-to-another-subscr
         - 預設需有 NSG
         - 支援高可用性
 
-## NSG
+### Network Security Groups (NSG)
+NSG contains a list of security rules that allow or deny inbound or outbound network traffic. NSG can be associated to a subnet or a network interface. NSG can be associated multiple times.
 - azure firewall 要錢
 - 要 same region 才有作用
 
-## Private DNS Zone
+### Azure Firewall
+<img src="https://docs.microsoft.com/zh-tw/azure/firewall/media/overview/firewall-threat.png"><br>
+- features
+    - built-in high availability
+    - availability zones
+    - unrestricted cloud scalability.
+    - application fqdn filtering rules
 
-## vNet Peering
+### Private DNS Zone
+
+### VNet Peering
 Perhaps the simplest and quickest way to connect your VNets is to use VNet peering. Virtual network peering enables you to seamlessly (無縫地) connect two Azure virtual networks. Once peered, the virtual networks appear as one, for connectivity purposes.
-<br><img src='../../../img/cloud/azure/vnet-peering.png'>
+<br><img src='../../../img/cloud/azure/VNet-peering.png'>
 <br><img src="https://miro.medium.com/max/505/1*3tQlWO0d82Vt6oO0G7jbmA.png">
 - 軟體定義網路
 - 可跨 region, subscription and tenant
 - 資料流出 data center 才要費用
 
-## VPN Gateway
+### Gateway Transit and Connectivity
+When virtual networks are peered, you can configure a VPN gateway in the peered virtual network as a transit point. In this case, a peered virtual network can use the remote gateway to gain access to other resources. A virtual network can have only one gateway. Gateway transit is supported for both VNet Peering and Global VNet Peering.
+<br><img src="https://docs.microsoft.com/en-us/azure/virtual-network/media/virtual-networks-peering-overview/local-or-remote-gateway-in-peered-virual-network.png">
+
+### VPN Gateway
 A VPN gateway is a specific type of virtual network gateway that is used to send encrypted traffic between an Azure virtual network and an on-premises location over the public Internet. You can also use a VPN gateway to send encrypted traffic between Azure virtual networks over the Microsoft network. Each virtual network can have only one VPN gateway. However, you can create multiple connections to the same VPN gateway. When you create multiple connections to the same VPN gateway, all VPN tunnels share the available gateway bandwidth.
 <br><img src='https://docs.microsoft.com/zh-tw/azure/vpn-gateway/media/tutorial-site-to-site-portal/diagram.png'>
 - 要建立 route table
 - 當要使用 S2S VPN 時，與地端連
 - 預設都用 route-based
 
-## ExpressRoute
+### ExpressRoute (專線)
 Azure ExpressRoute lets you extend your on-premises networks into the Microsoft cloud over a dedicated private connection facilitated by a connectivity provider. With ExpressRoute, you can establish connections to Microsoft cloud services, such as Microsoft Azure, Microsoft 365, and CRM Online.
 <br><img src='https://docs.microsoft.com/zh-tw/azure/expressroute/media/expressroute-introduction/expressroute-connection-overview.png'>
 <br><img src="https://i.pinimg.com/originals/26/79/a3/2679a35f8b6838776609b0563eb7b85c.png">
 
-## Route Table
+## 6. Network Traffic Management
+### Route Table
 - 需同 region 才可適用
 
-## Service Endpoint
+### Service Endpoint
 - 針對 PaaS 服務建立連線，不需走 VPN gateway
 
-## Private Link (Private Endpoint)
+### Private Link (Private Endpoint)
 
-## Azure Load Balancer (Lev 4)
+### Azure Load Balancer (Lev 4)
 <img src="https://docs.microsoft.com/zh-tw/azure/load-balancer/media/load-balancer-distribution-mode/load-balancer-distribution.png">
 
-## Session Persistence
+### Session Persistence
 
-## Application Gateway (Lev 7)
+### Application Gateway (Lev 7)
 Application Gateway manages the requests that client applications can send to a web app. Application Gateway routes traffic to a pool of web servers based on the URL of a request. This is known as application layer routing. The pool of web servers can be Azure virtual machines, Azure virtual machine scale sets, Azure App Service, and even on-premises servers.
 <br><img src="https://docs.microsoft.com/zh-tw/azure/application-gateway/media/overview/figure1-720.png">
 <br><img src="https://docs.microsoft.com/zh-tw/azure/application-gateway/media/application-gateway-components/application-gateway-components.png">
