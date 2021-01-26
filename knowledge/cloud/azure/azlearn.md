@@ -66,6 +66,7 @@
     ]
     ```
 - 不同 VNet 可以跨 subscription 互相連線: network peering
+- service endpoint
 
 ## 1. Identity
 ### Azure Active Directory (建帳號)
@@ -83,12 +84,12 @@ AAD enables SSO to devices, apps, and services from anywhere. The proliferation 
 
 ## 2. Governance And Compliance (治理與合規)
 ### Azure Subscriptions
-<img src="https://cloudinfrastructureservices.co.uk/wp-content/uploads/2018/06/Multi-Subscription-Model.png">
+<img src="https://cloudinfrastructureservices.co.uk/wp-content/uploads/2018/06/Multi-Subscription-Model.png"><br>
 - subscription usage
     - free
     - pay-as-you-go
     - enterprise agreement
-    - Student
+    - student
 - cost savings
     - reservations (保留)
         <br>It helps you save money by pre-paying for one-year or three-years of Azure resources.
@@ -192,6 +193,7 @@ Perhaps the simplest and quickest way to connect your VNets is to use VNet peeri
 <br><img src="https://miro.medium.com/max/505/1*3tQlWO0d82Vt6oO0G7jbmA.png">
 - 軟體定義網路
 - 可跨 region, subscription and tenant
+    - https://docs.microsoft.com/en-us/azure/virtual-network/create-peering-different-deployment-models-subscriptions
 - 資料流出 data center 才要費用
 
 ### Gateway Transit and Connectivity
@@ -214,10 +216,21 @@ Azure ExpressRoute lets you extend your on-premises networks into the Microsoft 
 ### Route Table
 - 需同 region 才可適用
 
-### Service Endpoint
-- 針對 PaaS 服務建立連線，不需走 VPN gateway
+### Service Endpoint (VNet Service Endpoints)
+A VNet service endpoint provides the identity of your virtual network to the Azure service. Once service endpoints are enabled in your virtual network, you can secure Azure service resources to your VNet by adding a VNet rule to the resources.
+- 針對 PaaS 服務建立連線，不需走 VPN gateway，即對外不需有 public IP
 
 ### Private Link (Private Endpoint)
+Azure Private Link provides private connectivity from a VNet to Azure PaaS, customer-owned, or Microsoft partner services. It simplifies the network architecture and secures the connection between endpoints in Azure by eliminating (消除) data exposure to the public internet.
+- integration with on-premises and peered networks.​
+    <br>Access private endpoints over private peering or VPN tunnels from on-premises or peered VNet. Microsoft hosts the traffic, so you don’t need to set up public peering or use the internet to migrate your workloads to the cloud.
+- 設定方式，會產生 NIC
+    ```mermaid
+    graph LR
+        A(App Service) -->|Settings| B(Networking)
+        B --> C(Private Endpoint connections)
+        C --> D(Virtual Network)
+    ```
 
 ### Azure Load Balancer (Lev 4)
 <img src="https://docs.microsoft.com/zh-tw/azure/load-balancer/media/load-balancer-distribution-mode/load-balancer-distribution.png">
