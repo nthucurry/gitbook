@@ -218,24 +218,32 @@ Azure ExpressRoute lets you extend your on-premises networks into the Microsoft 
 
 ### Service Endpoint (VNet Service Endpoints)
 A VNet service endpoint provides the identity of your virtual network to the Azure service. Once service endpoints are enabled in your virtual network, you can secure Azure service resources to your VNet by adding a VNet rule to the resources.
-- 針對 PaaS 服務建立連線，不需走 VPN gateway，即對外不需有 public IP
+- 針對 PaaS 服務建立連線，等於微軟幫忙建立 VPN gateway
+- 可以對外連線
+- 把 VNet 放到 PaaS 內
 
-### Private Link (Private Endpoint)
+### Private Link (Private Endpoint，強化安全版 Service Endpoint)
 Azure Private Link provides private connectivity from a VNet to Azure PaaS, customer-owned, or Microsoft partner services. It simplifies the network architecture and secures the connection between endpoints in Azure by eliminating (消除) data exposure to the public internet.
 - integration with on-premises and peered networks.​
     <br>Access private endpoints over private peering or VPN tunnels from on-premises or peered VNet. Microsoft hosts the traffic, so you don’t need to set up public peering or use the internet to migrate your workloads to the cloud.
-- 設定方式，會產生 NIC
+- 把 PaaS 放到 VNet 內
+- 設定方式，會產生 VNet NIC
     ```mermaid
     graph LR
         A(App Service) -->|Settings| B(Networking)
         B --> C(Private Endpoint connections)
         C --> D(Virtual Network)
     ```
+- 不會與外界連線
+- https://acloud.guru/forums/az-500-microsoft-azure-security-technologies/discussion/-M5IkN1SzQcDUNRyvaVL/Service%20endpoints%20vs.%20Private%20Endpoints%3F
 
 ### Azure Load Balancer (Lev 4)
 <img src="https://docs.microsoft.com/zh-tw/azure/load-balancer/media/load-balancer-distribution-mode/load-balancer-distribution.png">
 
 ### Session Persistence
+By default, Azure Load Balancer distributes network traffic equally among multiple VM instances. The load balancer uses a 5-tuple (source IP, source port, destination IP, destination port, and protocol type) hash to map traffic to available servers. It provides stickiness only within a transport session.
+
+Session persistence specifies how traffic from a client should be handled. The default behavior (None) is that successive requests from a client may be handled by any virtual machine. You can change this behavior.
 
 ### Application Gateway (Lev 7)
 Application Gateway manages the requests that client applications can send to a web app. Application Gateway routes traffic to a pool of web servers based on the URL of a request. This is known as application layer routing. The pool of web servers can be Azure virtual machines, Azure virtual machine scale sets, Azure App Service, and even on-premises servers.
@@ -249,6 +257,10 @@ Application Gateway manages the requests that client applications can send to a 
 - Azure Files: Managed file shares for cloud or on-premises deployments.
 - Azure Queues: A messaging store for reliable messaging between application components.
 - Azure Tables: A NoSQL store for schemaless storage of structured data.
+
+### Securing Storage Endpoints
+- firewalls and VNet restricts access to the storage account from specific subnets on VNet or public ip’s.
+- subnets and VNet must exist in the same azure region or region pair as the storage account.
 
 ### Blob Storage
 A service that stores **unstructured data** in the cloud as objects/blobs. Blob storage can store any type of text or binary data, such as a document, media file, or application installer. Blob storage is also referred to as object storage.
@@ -320,3 +332,8 @@ Azure Backup is the Azure-based service you can use to back up (or protect) and 
 - managed disk snapshots
 
 ## 11. Monitoring
+
+## 高階版
+### Azure Databricks SCIM Provisioning Connector
+Azure Databricks SCIM Connector allows you to enable Users and Groups synchronization to a Databricks Workspace from Azure AD.
+Use Azure AD to manage user access, provision user accounts, and enable SSO with Azure Databricks SCIM Provisioning Connector. Requires an existing Azure Databricks SCIM Provisioning Connector subscription.
