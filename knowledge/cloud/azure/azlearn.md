@@ -174,6 +174,7 @@ https://medium.com/@calloncampbell/moving-your-azure-resources-to-another-subscr
 
 ### Network Security Groups (NSG)
 NSG contains a list of security rules that allow or deny inbound or outbound network traffic. NSG can be associated to a subnet or a network interface. NSG can be associated multiple times.
+<br><img src="https://docs.microsoft.com/en-us/azure/virtual-network/media/network-security-group-how-it-works/network-security-group-interaction.png">
 - azure firewall 要錢
 - 要 same region 才有作用
 
@@ -185,7 +186,14 @@ NSG contains a list of security rules that allow or deny inbound or outbound net
     - unrestricted cloud scalability.
     - application fqdn filtering rules
 
-### Private DNS Zone
+### Azure DNS Zones
+
+### DNS Record Sets
+It's important to understand the difference between DNS record sets and individual DNS records. A record set is a collection of records in a zone that have the same name and are the same type.
+A record set cannot contain two identical records. Empty record sets (with zero records) can be created, but do not appear on the Azure DNS name servers. Record sets of type CNAME can contain one record at most.
+
+### DNS for Private Domains
+<img src="https://docs.microsoft.com/zh-tw/azure/dns/media/private-dns-overview/scenario.png">
 
 ### VNet Peering
 Perhaps the simplest and quickest way to connect your VNets is to use VNet peering. Virtual network peering enables you to seamlessly (無縫地) connect two Azure virtual networks. Once peered, the virtual networks appear as one, for connectivity purposes.
@@ -336,4 +344,4 @@ Azure Backup is the Azure-based service you can use to back up (or protect) and 
 ## 高階版
 ### Azure Databricks SCIM Provisioning Connector
 Azure Databricks SCIM Connector allows you to enable Users and Groups synchronization to a Databricks Workspace from Azure AD.
-Use Azure AD to manage user access, provision user accounts, and enable SSO with Azure Databricks SCIM Provisioning Connector. Requires an existing Azure Databricks SCIM Provisioning Connector subscription.
+* Use Azure AD to manage user access, provision user accounts, and enable SSO with Azure Databricks SCIM Provisioning Connector. Requires an existing Azure Databricks SCIM Provisioning Connector subscription.
