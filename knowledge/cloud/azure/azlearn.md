@@ -69,9 +69,9 @@
 - service endpoint
 
 ## 1. Identity
-### Azure Active Directory (建帳號)
+### Azure Active Directory (建帳a號)
 AAD is Microsoft’s multi-tenant cloud-based directory and identity management service. For IT Admins, AAD provides an affordable (可負擔的), easy to use solution to give employees and business partners single sign-on (SSO) access to thousands of cloud SaaS Applications like Microsoft 365, Salesforce, DropBox, and Concur.
-<br><img src="https://www.synacktiv.com/sites/default/files/inline-images/app-management-overview.png">
+<br><img src="https://www.synacktiv.com/sites/default/files/inline-images/app-management-overview.png" boarder="1">
 <br><img src="https://strongsecurity.co.za/wp-content/uploads/2020/04/Diagram-Azure-AD-for-Apps-1.png">
 
 ### Azure AD Join
@@ -315,7 +315,7 @@ A HA offering that protects your applications and data from datacenter failures.
     - all VM instances are created from the same base OS image and configuration.
     - 是以 VM 為單位來增加/減少資源
 - autoscale
-    <img src="https://docs.microsoft.com/zh-tw/azure/azure-monitor/platform/media/autoscale-overview/autoscale_overview_v4.png">
+    <br><img src="https://docs.microsoft.com/zh-tw/azure/azure-monitor/platform/media/autoscale-overview/autoscale_overview_v4.png">
 
 ### Virtual Machine Extensions
 Azure virtual machine extensions are small applications that provide post-deployment configuration and automation tasks on Azure VMs. For example, if a virtual machine requires software installation, anti-virus protection, or a configuration script inside, a VM extension can be used. Extensions are all about managing your virtual machines.
