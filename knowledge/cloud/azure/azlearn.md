@@ -101,6 +101,7 @@ AAD enables SSO to devices, apps, and services from anywhere. The proliferation 
 
 ### Management Groups
 If your organization has several subscriptions, you may need a way to efficiently manage access, policies, and compliance for those subscriptions. Azure management groups provide a level of scope above subscriptions. You organize subscriptions into containers called management groups and apply your governance conditions to the management groups.
+<br><img src="https://docs.microsoft.com/zh-tw/azure/governance/management-groups/media/tree.png">
 
 ### Azure Policy
 Azure Policy is a service in Azure that you use to create, assign and manage policies. These policies enforce different rules over your resources, so those resources stay compliant with (符合) your corporate standards and service level agreements. Azure Policy does this by running evaluations of your resources and scanning for those not compliant with the policies you have created.
@@ -171,10 +172,10 @@ https://medium.com/@calloncampbell/moving-your-azure-resources-to-another-subscr
         - 靜態
         - 預設需有 NSG
         - 支援高可用性
+        - public load balancer
 
 ### Network Security Groups (NSG)
 NSG contains a list of security rules that allow or deny inbound or outbound network traffic. NSG can be associated to a subnet or a network interface. NSG can be associated multiple times.
-<br><img src="https://docs.microsoft.com/en-us/azure/virtual-network/media/network-security-group-how-it-works/network-security-group-interaction.png">
 - azure firewall 要錢
 - 要 same region 才有作用
 
