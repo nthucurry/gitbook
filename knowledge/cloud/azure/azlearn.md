@@ -3,6 +3,14 @@
     - 104
         - https://microsoftlearning.github.io/AZ-104-MicrosoftAzureAdministrator/
         - https://github.com/MicrosoftLearning/Lab-Demo-Recordings/blob/master/AZ-104.md
+- https://imgur.com/ZQKMS42
+- https://imgur.com/6X9Jv5b
+- https://imgur.com/XNIgTLF
+- https://imgur.com/s5qVWRt
+- https://imgur.com/GPkmUUN
+- https://imgur.com/crQDULD
+- https://imgur.com/gsa8Cij
+- https://imgur.com/wCtaGzM
 
 ## EDA POC
 - role (assigned roles)
@@ -262,10 +270,23 @@ Application Gateway manages the requests that client applications can send to a 
 
 ## 7. Azure Storage
 ### Azure Storage Services
-- Azure Containers (Blobs): A massively scalable object store for text and binary data.
-- Azure Files: Managed file shares for cloud or on-premises deployments.
-- Azure Queues: A messaging store for reliable messaging between application components.
-- Azure Tables: A NoSQL store for schemaless storage of structured data.
+- 屬於 IaaS: https://azure.microsoft.com/en-us/overview/what-is-azure/iaas/
+- 類型(不可中途改變類型)
+    - standard
+        <br>They are best for applications that require **bulk storage** or where data is accessed infrequently
+    - premium
+        <br>They can only be used with Azure virtual machine disks and are best for I/O-intensive applications, like databases
+- Azure Containers (Blobs)
+    - A massively scalable object store for text and binary data(unstructured data)
+    - Objects in Blob storage can be accessed from anywhere in the world via HTTP or HTTPS
+- Azure Files
+    - Managed file shares for cloud or on-premises deployments.
+    - Accessed by using the standard Server Message Block (SMB) protocol
+    - Active Directory-based authentication and access control lists (ACLs) are not supported
+- Azure Queues
+    - Queue service is used to store and retrieve messages
+- Azure Tables
+    - Table storage is now part of Azure Cosmos DB.
 
 ### Securing Storage Endpoints
 - firewalls and VNet restricts access to the storage account from specific subnets on VNet or public ip’s.
