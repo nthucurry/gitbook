@@ -69,9 +69,9 @@
 - service endpoint
 
 ## 1. Identity
-### Azure Active Directory (建帳a號)
+### Azure Active Directory (建帳號)
 AAD is Microsoft’s multi-tenant cloud-based directory and identity management service. For IT Admins, AAD provides an affordable (可負擔的), easy to use solution to give employees and business partners single sign-on (SSO) access to thousands of cloud SaaS Applications like Microsoft 365, Salesforce, DropBox, and Concur.
-<br><img src="https://www.synacktiv.com/sites/default/files/inline-images/app-management-overview.png" boarder="1">
+<br><img src="https://www.synacktiv.com/sites/default/files/inline-images/app-management-overview.png" boarder='1'>
 <br><img src="https://strongsecurity.co.za/wp-content/uploads/2020/04/Diagram-Azure-AD-for-Apps-1.png">
 
 ### Azure AD Join
