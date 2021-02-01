@@ -188,7 +188,8 @@ NSG contains a list of security rules that allow or deny inbound or outbound net
 - 要 same region 才有作用
 
 ### Azure Firewall
-<img src="https://docs.microsoft.com/zh-tw/azure/firewall/media/overview/firewall-threat.png"><br>
+You can centrally create, enforce, and log application and network connectivity policies across subscriptions and virtual networks.
+<br><img src="https://docs.microsoft.com/zh-tw/azure/firewall/media/overview/firewall-threat.png"><br>
 - features
     - built-in high availability
     - availability zones
@@ -367,3 +368,9 @@ Azure Backup is the Azure-based service you can use to back up (or protect) and 
 ### Azure Databricks SCIM Provisioning Connector
 Azure Databricks SCIM Connector allows you to enable Users and Groups synchronization to a Databricks Workspace from Azure AD.
 * Use Azure AD to manage user access, provision user accounts, and enable SSO with Azure Databricks SCIM Provisioning Connector. Requires an existing Azure Databricks SCIM Provisioning Connector subscription.
+
+### Azure Databricks
+Azure Databricks is a **data analytics** platform optimized for the Microsoft Azure cloud services platform. Azure Databricks offers two environments for developing data intensive applications: Azure Databricks SQL Analytics and Azure Databricks Workspace.
+- Azure Databricks SQL Analytics provides an easy-to-use platform for analysts who want to run SQL queries on their data lake, create multiple visualization types to explore query results from different perspectives, and build and share dashboards.
+- Azure Databricks Workspace provides an interactive workspace that enables collaboration between data engineers, data scientists, and machine learning engineers. For a big data pipeline, the data (raw or structured) is ingested into Azure through Azure Data Factory in batches, or streamed near real-time using Apache Kafka, Event Hub, or IoT Hub. This data lands in a data lake for long term persisted storage, in Azure Blob Storage or Azure Data Lake Storage. As part of your analytics workflow, use Azure Databricks to read data from multiple data sources and turn it into breakthrough insights using Spark.
+- [Deploy Azure Databricks in your Azure virtual network (VNet injection)](https://docs.microsoft.com/zh-tw/azure/databricks/administration-guide/cloud-configurations/azure/vnet-inject)
