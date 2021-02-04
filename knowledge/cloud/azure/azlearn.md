@@ -34,39 +34,17 @@
             ],
             "notActions": [
                 "Microsoft.Authorization/elevateAccess/action",
-                "Microsoft.Authorization/classicAdministrators/write",
-                "Microsoft.Authorization/classicAdministrators/delete",
-                "Microsoft.Authorization/policyAssignments/write",
-                "Microsoft.Authorization/policyAssignments/delete",
-                "Microsoft.Authorization/policyAssignments/exempt/action",
-                "Microsoft.Authorization/policyAssignments/privateLinkAssociations/write",
-                "Microsoft.Authorization/policyAssignments/privateLinkAssociations/delete",
-                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/write",
-                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/delete",
-                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnections/write",
-                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnections/delete",
-                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnectionProxies/write",
-                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnectionProxies/delete",
-                "Microsoft.Authorization/policyAssignments/resourceManagementPrivateLinks/privateEndpointConnectionProxies/validate/action",
-                "Microsoft.Authorization/policyDefinitions/write",
-                "Microsoft.Authorization/policyDefinitions/delete",
-                "Microsoft.Authorization/policies/audit/action",
-                "Microsoft.Authorization/policies/auditIfNotExists/action",
-                "Microsoft.Authorization/policies/deny/action",
-                "Microsoft.Authorization/policies/deployIfNotExists/action",
-                "Microsoft.Authorization/policyExemptions/write",
-                "Microsoft.Authorization/policyExemptions/delete",
-                "Microsoft.Authorization/policySetDefinitions/write",
-                "Microsoft.Authorization/policySetDefinitions/delete",
-                "Microsoft.Network/networkSecurityGroups/write",
-                "Microsoft.Network/networkSecurityGroups/delete",
-                "Microsoft.Network/networkSecurityGroups/securityRules/write",
-                "Microsoft.Network/networkSecurityGroups/securityRules/delete",
+                "Microsoft.Authorization/classicAdministrators/*",
+                "Microsoft.Authorization/policyAssignments/*",
+                "Microsoft.Authorization/policyDefinitions/*",
+                "Microsoft.Authorization/policies/*",
+                "Microsoft.Authorization/policyExemptions/*",
+                "Microsoft.Authorization/policySetDefinitions/*",
+                "Microsoft.Network/networkSecurityGroups/*",
+                "Microsoft.Network/networkSecurityGroups/securityRules/*",
                 "Microsoft.Network/applicationGateways/*",
                 "Microsoft.Network/azurefirewalls/*",
-                "Microsoft.Network/publicIPAddresses/write",
-                "Microsoft.Network/publicIPAddresses/delete",
-                "Microsoft.Network/publicIPAddresses/join/action"
+                "Microsoft.Network/publicIPAddresses/*"
             ],
             "dataActions": [],
             "notDataActions": []
@@ -189,12 +167,28 @@ NSG contains a list of security rules that allow or deny inbound or outbound net
 
 ### Azure Firewall
 You can centrally create, enforce, and log application and network connectivity policies across subscriptions and virtual networks.
-<br><img src="https://docs.microsoft.com/zh-tw/azure/firewall/media/overview/firewall-threat.png"><br>
+<br><img src="https://docs.microsoft.com/zh-tw/azure/firewall/media/overview/firewall-threat.png">
+- AzureFirewallSubnet - the firewall is in this subnet.
+- Workload-SN - the workload server is in this subnet. This subnet's network traffic goes through the firewall.
+<br><img src="https://docs.microsoft.com/zh-tw/azure/firewall/media/tutorial-firewall-deploy-portal/tutorial-network.png">
 - features
     - built-in high availability
     - availability zones
     - unrestricted cloud scalability.
     - application fqdn filtering rules
+- application rules
+    <br>define fully qualified domain names (FQDNs) that can be accessed from a subnet (內網能夠存取的外部網址)
+- network rules
+    <br>define source address, protocol, destination port, and destination address (通常用在設定 DNS)
+- [subnet size: /26](https://docs.microsoft.com/zh-tw/azure/firewall/firewall-faq#why-does-azure-firewall-need-a--26-subnet-size)
+- 步驟
+    1. NSG 設定阻擋 VNet 往外部的連線，內部互聯則開通
+    2. 建立 firewall
+        - 設定 application rule collection 指定 FQDNs 可存取
+        - 設定指定的 DNS 可解析 FQDNs
+    3. 建立 route table
+        - 將目標 subnet 放於內
+        - 將 0.0.0.0/0 都需經過 firewall (IP binding)
 
 ### Azure DNS Zones
 
@@ -371,6 +365,5 @@ Azure Databricks SCIM Connector allows you to enable Users and Groups synchroniz
 
 ### Azure Databricks
 Azure Databricks is a **data analytics** platform optimized for the Microsoft Azure cloud services platform. Azure Databricks offers two environments for developing data intensive applications: Azure Databricks SQL Analytics and Azure Databricks Workspace.
-- Azure Databricks SQL Analytics provides an easy-to-use platform for analysts who want to run SQL queries on their data lake, create multiple visualization types to explore query results from different perspectives, and build and share dashboards.
-- Azure Databricks Workspace provides an interactive workspace that enables collaboration between data engineers, data scientists, and machine learning engineers. For a big data pipeline, the data (raw or structured) is ingested into Azure through Azure Data Factory in batches, or streamed near real-time using Apache Kafka, Event Hub, or IoT Hub. This data lands in a data lake for long term persisted storage, in Azure Blob Storage or Azure Data Lake Storage. As part of your analytics workflow, use Azure Databricks to read data from multiple data sources and turn it into breakthrough insights using Spark.
-- [Deploy Azure Databricks in your Azure virtual network (VNet injection)](https://docs.microsoft.com/zh-tw/azure/databricks/administration-guide/cloud-configurations/azure/vnet-inject)
+- 網段不能先建立?
+    - [Deploy Azure Databricks in your Azure virtual network (VNet injection)](https://docs.microsoft.com/zh-tw/azure/databricks/administration-guide/cloud-configurations/azure/vnet-inject)
