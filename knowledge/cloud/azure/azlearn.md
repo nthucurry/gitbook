@@ -162,8 +162,8 @@ https://medium.com/@calloncampbell/moving-your-azure-resources-to-another-subscr
 
 ### Network Security Groups (NSG)
 NSG contains a list of security rules that allow or deny inbound or outbound network traffic. NSG can be associated to a subnet or a network interface. NSG can be associated multiple times.
-- azure firewall 要錢
-- 要 same region 才有作用
+<img src="https://docs.microsoft.com/zh-tw/azure/virtual-network/media/network-security-group-how-it-works/network-security-group-interaction.png">
+- VM4: Traffic is allowed to VM4, because a network security group isn't associated to Subnet3, or the network interface in the virtual machine. All network traffic is allowed through a subnet and network interface if they don't have a network security group associated to them.
 
 ### Azure Firewall
 You can centrally create, enforce, and log application and network connectivity policies across subscriptions and virtual networks.
