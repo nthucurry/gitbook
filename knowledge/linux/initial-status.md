@@ -146,35 +146,3 @@ yum install zip unzip -y
     enabled=0
     gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
     ```
-
-### Mail relay
-```bash
-vi /etc/postfix/main.cf
-relayhost = domain.com
-```
-```sql
-BEGIN
-    DBMS_NETWORK_ACL_ADMIN.CREATE_ACL(
-        acl => 'XXX_ACL.xml',
-        description => 'Permissions for smtp gate',
-        principal => 'XXX', -- schema account
-        is_grant => TRUE,
-        privilege => 'resolve');
-    COMMIT;
-END;
-BEGIN
-    DBMS_NETWORK_ACL_ADMIN.ADD_PRIVILEGE(
-        acl => 'XXX_ACL.xml',
-        principal => 'XXX', -- schema account
-        is_grant => TRUE,
-        privilege => 'connect');
-    COMMIT;
-END;
-BEGIN
-    DBMS_NETWORK_ACL_ADMIN.ASSIGN_ACL(
-        acl => 'XXX_ACL.xml',
-        host => '*');
-    COMMIT;
-END;
-COMMIT;
-```
