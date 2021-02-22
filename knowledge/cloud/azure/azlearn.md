@@ -321,6 +321,41 @@ Azure virtual machine extensions are small applications that provide post-deploy
 ### Container Service
 - containers vs virtual machines
 
+### Azure Kubernetes Service
+Kubernetes is a rapidly evolving platform that manages container-based applications and their associated networking and storage components. The focus is on the application workloads (工作量), not the underlying (淺在的) infrastructure components. Kubernetes provides a declarative approach to deployments, backed by a robust (強壯的) set of APIs for management operations.
+
+You can build and run modern, portable, microservices-based applications that benefit from Kubernetes orchestrating and managing the availability of those application components. Kubernetes supports both stateless and stateful applications as teams progress through the adoption of microservices-based applications.
+
+As an open platform, Kubernetes allows you to build your applications with your preferred programming language, OS, libraries, or messaging bus. Existing continuous integration and continuous delivery (CI/CD) tools can integrate with Kubernetes to schedule and deploy releases.
+
+AKS provides a managed Kubernetes service that reduces the complexity for deployment and core management tasks, including coordinating upgrades. The AKS cluster is managed by the Azure platform, and you **only pay for the AKS nodes** that run your applications. AKS is built on top of the open-source Azure Container Service Engine (acs-engine).
+
+AKS makes it simple to deploy a managed Kubernetes cluster in Azure. AKS reduces the complexity and operational overhead of managing Kubernetes by offloading (分流) much of that responsibility to Azure. As a hosted Kubernetes service, Azure handles critical tasks like health monitoring and maintenance for you. In addition, the service is free, you only **pay for the agent nodes** within your clusters.
+<br><img src="../../../img/kubernetes/aks-terminology.png" width=500 />
+- Pools are groups of nodes with identical configurations.
+- Nodes are individual virtual machines running containerized applications.
+- Pods are a single instance of an application. A pod can contain multiple containers.
+- Container is a lightweight and portable executable image that contains software and all of its dependencies.
+- Deployment has one or more identical pods managed by Kubernetes​.
+- Manifest (清單文件) is the YAML file describing a deployment.
+
+#### AKS Clusters and Nodes
+A Kubernetes cluster is divided into two components:
+- Azure-managed nodes, which provide the core Kubernetes services and orchestration (編排) of application workloads.
+    <br>When you create an AKS cluster, a cluster node is **automatically** created and configured. This node is provided as a managed Azure resource abstracted from the user. You pay only for running agent nodes.
+- Customer-managed nodes that run your application workloads.
+
+#### Nodes and node pools
+To run your applications and supporting services, you need a Kubernetes node. An AKS cluster contains one or more nodes (Azure Virtual Machines) that run the Kubernetes node components and the container runtime.
+- The kubelet is the Kubernetes agent that processes the orchestration (編排) requests from the Azure-managed node , and scheduling of running the requested containers.
+- VNet **is handled by the kube-proxy** on each node. The proxy routes network traffic and manages IP addressing for services and pods.
+- The container runtime is the component that allows containerized applications to run and interact with additional resources such as the VNet and storage. In AKS, Docker is used as the container runtime.
+
+#### AKS Networking
+#### AKS Storage
+#### AKS Service Security
+#### AKS Scaling
+
 ## 10. Data Protection
 ### Azure Backup
 Azure Backup is the Azure-based service you can use to back up (or protect) and restore your data in the Microsoft cloud. Azure Backup replaces your existing on-premises or off-site backup solution with a cloud-based solution that is reliable, secure, and cost-competitive.
