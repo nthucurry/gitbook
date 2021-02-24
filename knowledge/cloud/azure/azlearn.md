@@ -224,6 +224,18 @@ Azure Private Link provides private connectivity from a VNet to Azure PaaS, cust
 - 不會與外界連線
 - https://acloud.guru/forums/az-500-microsoft-azure-security-technologies/discussion/-M5IkN1SzQcDUNRyvaVL/Service%20endpoints%20vs.%20Private%20Endpoints%3F
 
+### Azure Private Endpoint DNS configuration
+#### On-premises workloads using a DNS forwarder
+For on-premises workloads to resolve the FQDN of a private endpoint, use a DNS forwarder to resolve the Azure service public DNS zone in Azure.
+To configure properly, you need the following resources:
+- On-premises network
+- Virtual network connected to on-premises (VPN)
+- DNS forwarder deployed in Azure (建立一台 VM)
+- Private DNS zones privatelink.database.windows.net with type A record (設定 PaaS 的 FQDN)
+- Private endpoint information (FQDN record name and private IP address)
+<br><img src="https://docs.microsoft.com/zh-tw/azure/private-link/media/private-endpoint-dns/on-premises-using-azure-dns.png">
+
+
 ### Azure Load Balancer (Lev 4)
 <img src="https://docs.microsoft.com/zh-tw/azure/load-balancer/media/load-balancer-distribution-mode/load-balancer-distribution.png">
 
@@ -321,7 +333,7 @@ Azure virtual machine extensions are small applications that provide post-deploy
 ### Container Service
 - containers vs virtual machines
 
-### Azure Kubernetes Service
+### [Azure Kubernetes Service](https://github.com/MicrosoftLearning/AZ-104-MicrosoftAzureAdministrator/blob/master/Instructions/Labs/LAB_09c-Implement_Azure_Kubernetes_Service.md)
 Kubernetes is a rapidly evolving platform that manages container-based applications and their associated networking and storage components. The focus is on the application workloads (工作量), not the underlying (淺在的) infrastructure components. Kubernetes provides a declarative approach to deployments, backed by a robust (強壯的) set of APIs for management operations.
 
 You can build and run modern, portable, microservices-based applications that benefit from Kubernetes orchestrating and managing the availability of those application components. Kubernetes supports both stateless and stateful applications as teams progress through the adoption of microservices-based applications.
