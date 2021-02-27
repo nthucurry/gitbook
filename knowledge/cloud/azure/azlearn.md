@@ -165,14 +165,13 @@ You can centrally create, enforce, and log application and network connectivity 
         - 將目標 subnet 放於內
         - 將 0.0.0.0/0 都需經過 firewall (IP binding)
 
-### Azure DNS Zones
-
 ### DNS Record Sets
 It's important to understand the difference between DNS record sets and individual DNS records. A record set is a collection of records in a zone that have the same name and are the same type.
 A record set cannot contain two identical records. Empty record sets (with zero records) can be created, but do not appear on the Azure DNS name servers. Record sets of type CNAME can contain one record at most.
 
 ### DNS for Private Domains
 <img src="https://docs.microsoft.com/zh-tw/azure/dns/media/private-dns-overview/scenario.png">
+- 設定後可由 <app-name>.azurewebsites.net 連到該 app
 
 ### VNet Peering
 Perhaps the simplest and quickest way to connect your VNets is to use VNet peering. Virtual network peering enables you to seamlessly (無縫地) connect two Azure virtual networks. Once peered, the virtual networks appear as one, for connectivity purposes.
@@ -221,7 +220,6 @@ Azure Private Link provides private connectivity from a VNet to Azure PaaS, cust
         B --> C(Private Endpoint connections)
         C --> D(Virtual Network)
     ```
-- 不會與外界連線
 - https://acloud.guru/forums/az-500-microsoft-azure-security-technologies/discussion/-M5IkN1SzQcDUNRyvaVL/Service%20endpoints%20vs.%20Private%20Endpoints%3F
 
 ### Azure Private Endpoint DNS configuration
