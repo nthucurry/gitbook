@@ -1,4 +1,8 @@
 ## 高階版
+### Azure SQL Database
+- Firewall settings
+    <br><img src="../../../img/cloud/azure/sql-firewall-settings.png">
+
 ### Azure Databricks SCIM Provisioning Connector
 Azure Databricks SCIM Connector allows you to enable Users and Groups synchronization to a Databricks Workspace from Azure AD.
 * Use Azure AD to manage user access, provision user accounts, and enable SSO with Azure Databricks SCIM Provisioning Connector. Requires an existing Azure Databricks SCIM Provisioning Connector subscription.
