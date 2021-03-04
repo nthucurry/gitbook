@@ -42,58 +42,9 @@ az network nic delete -g $resource_group -n $nic
 az disk delete -g $resource_group -n $disk_name --yes
 
 ### 建 Subnet
-
 echo "AKS,10.248.0.0/21" >> ~/temp.txt
 echo "PrivateEndpoint,10.248.8.0/22" >> ~/temp.txt
 echo "VM,10.248.12.0/23" >> ~/temp.txt
-echo "C4A-Databricks-Private,10.248.14.0"/25 >> ~/temp.txt
-echo "C4A-Databricks-Public,10.248.14.128"/25 >> ~/temp.txt
-echo "C5D-Databricks-Private,10.248.15.0"/25 >> ~/temp.txt
-echo "C5D-Databricks-Public,10.248.15.128"/25 >> ~/temp.txt
-echo "C5E-Databricks-Private,10.248.16.0"/25 >> ~/temp.txt
-echo "C5E-Databricks-Public,10.248.16.128"/25 >> ~/temp.txt
-echo "C6B-Databricks-Private,10.248.17.0"/25 >> ~/temp.txt
-echo "C6B-Databricks-Public,10.248.17.128"/25 >> ~/temp.txt
-echo "C6C-Databricks-Private,10.248.18.0"/25 >> ~/temp.txt
-echo "C6C-Databricks-Public,10.248.18.128"/25 >> ~/temp.txt
-echo "FE-Databricks-Private,10.248.19.0"/25 >> ~/temp.txt
-echo "FE-Databricks-Public,10.248.19.128"/25 >> ~/temp.txt
-echo "ITDEV-Databricks-Private,10.248.20.0"/25 >> ~/temp.txt
-echo "ITDEV-Databricks-Public,10.248.20.128"/25 >> ~/temp.txt
-echo "ITPOC-Databricks-Private,10.248.21.0"/25 >> ~/temp.txt
-echo "ITPOC-Databricks-Public,10.248.21.128"/25 >> ~/temp.txt
-echo "L3C-Databricks-Private,10.248.22.0"/25 >> ~/temp.txt
-echo "L3C-Databricks-Public,10.248.22.128"/25 >> ~/temp.txt
-echo "L3D-Databricks-Private,10.248.23.0"/25 >> ~/temp.txt
-echo "L3D-Databricks-Public,10.248.23.128"/25 >> ~/temp.txt
-echo "L4A-Databricks-Private,10.248.24.0"/25 >> ~/temp.txt
-echo "L4A-Databricks-Public,10.248.24.128"/25 >> ~/temp.txt
-echo "L4B-Databricks-Private,10.248.25.0"/25 >> ~/temp.txt
-echo "L4B-Databricks-Public,10.248.25.128"/25 >> ~/temp.txt
-echo "L5AB-Databricks-Private,10.248.26.0"/25 >> ~/temp.txt
-echo "L5AB-Databricks-Public,10.248.26.128"/25 >> ~/temp.txt
-echo "L5C-Databricks-Private,10.248.27.0"/25 >> ~/temp.txt
-echo "L5C-Databricks-Public,10.248.27.128"/25 >> ~/temp.txt
-echo "L5D-Databricks-Private,10.248.28.0"/25 >> ~/temp.txt
-echo "L5D-Databricks-Public,10.248.28.128"/25 >> ~/temp.txt
-echo "L6A-Databricks-Private,10.248.29.0"/25 >> ~/temp.txt
-echo "L6A-Databricks-Public,10.248.29.128"/25 >> ~/temp.txt
-echo "L6B-Databricks-Private,10.248.30.0"/25 >> ~/temp.txt
-echo "L6B-Databricks-Public,10.248.30.128"/25 >> ~/temp.txt
-echo "L6K-Databricks-Private,10.248.31.0"/25 >> ~/temp.txt
-echo "L6K-Databricks-Public,10.248.31.128"/25 >> ~/temp.txt
-echo "L7A-Databricks-Private,10.248.32.0"/25 >> ~/temp.txt
-echo "L7A-Databricks-Public,10.248.32.128"/25 >> ~/temp.txt
-echo "L7B-Databricks-Private,10.248.33.0"/25 >> ~/temp.txt
-echo "L7B-Databricks-Public,10.248.33.128"/25 >> ~/temp.txt
-echo "L8A-Databricks-Private,10.248.34.0"/25 >> ~/temp.txt
-echo "L8A-Databricks-Public,10.248.34.128"/25 >> ~/temp.txt
-echo "L8B-Databricks-Private,10.248.35.0"/25 >> ~/temp.txt
-echo "L8B-Databricks-Public,10.248.35.128"/25 >> ~/temp.txt
-echo "MMFA-Databricks-Private,10.248.36.0"/25 >> ~/temp.txt
-echo "MMFA-Databricks-Public,10.248.36.128"/25 >> ~/temp.txt
-echo "QA-Databricks-Private,10.248.37.0"/25 >> ~/temp.txt
-echo "QA-Databricks-Public,10.248.37.128"/25 >> ~/temp.txt
 
 subscription="auobigdata"
 resource_group="Global"
@@ -125,7 +76,19 @@ az feature register --name AllowNfsFileShares \
                     --subscription $subscription
 az provider register --namespace Microsoft.Storage
 
-###
-az vm list -g EDA -d
+### NSG
+# auobigdata
+# Azure EA (AUO): de61f224-9a69-4ede-8273-5bcef854dc20
 
-reg add "HKLM\SYSTEM\CurrentControlSet\Services\TermService\Parameters" /v SpecifiedLicenseServers /t REG_MULTI_SZ /d "10.250.12.172"
+subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
+resource_group="Global"
+az network nsg list -g $resource_group --subscription $subscription
+
+subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
+resource_group="Global"
+nsg_name="AUO_Azure_Default"
+az network nsg show --subscription $subscription \
+                    -g $resource_group \
+                    -n $nsg_name \
+                    --query "securityRules[]" \
+                    -o table > ~/table.txt
