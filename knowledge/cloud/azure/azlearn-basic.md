@@ -12,23 +12,6 @@
 - https://imgur.com/gsa8Cij
 - https://imgur.com/wCtaGzM
 
-## EDA POC
-- role (assigned roles)
-    - global administrators: 管理 AAD，可以管理 user
-- azure policy
-    - 不能違反的事項
-    - assign policy
-        - Not allowed resource types
-            1. microsoft.network/virtualnetworks
-            3. microsoft.network/virtualnetworks/virtualnetworkpeerings
-            2. microsoft.network/networksecuritygroups
-        - Allowed locations
-            1. southeastasia
-        - 注意 policy 連最高的 owner 都會被管理到，所以需要視情況放行(enable -> disable)，完事後再啟動 policy
-- access control (IAM): 用這個來控制 end-user 權限，分為 owner, contributor, end-user
-- 不同 VNet 可以跨 subscription 互相連線: network peering
-- service endpoint
-
 ## 1. Identity
 ### Azure Active Directory (建帳號)
 AAD is Microsoft’s multi-tenant cloud-based directory and identity management service. For IT Admins, AAD provides an affordable (可負擔的), easy to use solution to give employees and business partners single sign-on (SSO) access to thousands of cloud SaaS Applications like Microsoft 365, Salesforce, DropBox, and Concur.
@@ -244,6 +227,10 @@ Session persistence specifies how traffic from a client should be handled. The d
 
 ### Application Gateway (Lev 7)
 Application Gateway manages the requests that client applications can send to a web app. Application Gateway routes traffic to a pool of web servers based on the URL of a request. This is known as application layer routing. The pool of web servers can be Azure virtual machines, Azure virtual machine scale sets, Azure App Service, and even on-premises servers.
+
+Traditional load balancers operate at the transport layer (OSI layer 4 - TCP and UDP) and route traffic based on source IP address and port, to a destination IP address and port.
+
+The Application Gateway will **automatically load balance** requests sent to the servers in each back-end pool using a round-robin mechanism. However, you can configure session stickiness, if you need to ensure that all requests for a client in the same session are routed to the same server in a back-end pool.
 <br><img src="https://docs.microsoft.com/zh-tw/azure/application-gateway/media/overview/figure1-720.png">
 <br><img src="https://docs.microsoft.com/zh-tw/azure/application-gateway/media/application-gateway-components/application-gateway-components.png">
 <br><img src="https://miro.medium.com/max/1400/0*X38oEgWmuKHRAqVP.png">
