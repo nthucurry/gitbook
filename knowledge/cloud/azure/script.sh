@@ -41,6 +41,14 @@ az vm delete -g $resource_group -n $vm_name --yes
 az network nic delete -g $resource_group -n $nic
 az disk delete -g $resource_group -n $disk_name --yes
 
+### 查詢 VM
+subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
+resource_group="EDA"
+vm_name="maz-jiratest"
+az account set -s $subscription
+az vm show -g $resource_group -n $vm_name -d
+# az vm list -g $resource_group -d
+
 ### 建 Subnet
 echo "AKS,10.248.0.0/21" >> ~/temp.txt
 echo "PrivateEndpoint,10.248.8.0/22" >> ~/temp.txt
@@ -76,6 +84,9 @@ az feature register --name AllowNfsFileShares \
                     --subscription $subscription
 az provider register --namespace Microsoft.Storage
 
+###
+az vm list -g EDA -d
+
 ### NSG
 # auobigdata
 # Azure EA (AUO): de61f224-9a69-4ede-8273-5bcef854dc20
@@ -92,3 +103,10 @@ az network nsg show --subscription $subscription \
                     -n $nsg_name \
                     --query "securityRules[]" \
                     -o table > ~/table.txt
+
+### Application Gateway
+$context = Get-AzSubscription -SubscriptionId a7bdf2e3-b855-4dda-ac93-047ff722cbbd
+Set-AzContext $context
+
+$vnet = Get-AzVirtualNetwork -Name VNetTEST -ResourceGroupName DBA_Test
+Get-AzVirtualNetworkSubnetConfig -Name MyAGSubnet -VirtualNetwork $vnet

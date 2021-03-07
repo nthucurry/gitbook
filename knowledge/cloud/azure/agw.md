@@ -8,6 +8,8 @@
 - OSI
     - ![](https://img-blog.csdnimg.cn/20181228120335803.jpg)
     - ![](https://img-en.fs.com/community/wp-content/uploads/2017/11/seven-layers-of-OSI-model.png)
+- application gateway subnet
+    <br>The application gateway subnet can contain only application gateways. No other resources are allowed.
 
 ## 原理
 ### Beforehand
@@ -27,3 +29,11 @@
 ### Small steps to big savings
 - CRT + KEY --> PFX
     - http://dog0416.blogspot.com/2017/08/opensslwindows-crt-key-pfx.html
+
+## Troubleshooting bad gateway errors in Application Gateway
+- NSG, UDR, or Custom DNS is blocking access to backend pool members.
+- ~~Back-end VMs or instances of virtual machine scale set aren't responding to the default health probe.~~
+- Invalid or improper (不當的) configuration of custom health probes.
+- ~~Azure Application Gateway's back-end pool isn't configured or empty.~~
+- None of the VMs or instances in virtual machine scale set are healthy.
+- Request time-out or connectivity issues with user requests.
