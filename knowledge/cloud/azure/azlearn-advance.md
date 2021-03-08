@@ -19,7 +19,7 @@ Plan smarter, collaborate better, and ship faster with a set of modern (現代�
     <br>Build, test, and deploy with **CI/CD** that works with any language, platform, and cloud. Connect to GitHub or any other Git provider and deploy continuously.
 - Azure Repos
 - Azure Test Plans
-- Azure Artifacts~
+- Azure Artifacts
 
 ## Azure Machine Learning
 ### Virtual network isolation and privacy overview
