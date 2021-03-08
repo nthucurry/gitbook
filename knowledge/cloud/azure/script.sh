@@ -31,11 +31,11 @@ done
 # auobigdata
 # Azure EA (AUO): de61f224-9a69-4ede-8273-5bcef854dc20
 
-subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
-resource_group="DBA-K8S"
-vm_name="auo-linux-oa-dnssrv"
-nic="auo-linux-oa-dnssrv451"
-disk_name="auo-linux-oa-dnssrv_OsDisk_1_ff7df6451d654443adddd1b51093bba1"
+subscription="auobigdata"
+resource_group="DBA_Test"
+vm_name="ApacheVMTEST"
+nic="apachevmtest320"
+disk_name="ApacheVMTEST_OsDisk_1_2abc53cd182b483bb86e47b699975c63"
 az account set -s $subscription
 az vm delete -g $resource_group -n $vm_name --yes
 az network nic delete -g $resource_group -n $nic
@@ -70,7 +70,6 @@ do
 done
 rm ~/temp.txt
 
-
 cat temp.txt | while read line;
 do
     subnet_name=`echo $line | awk 'BEGIN {FS=","} {print $1}'`
@@ -83,9 +82,6 @@ az feature register --name AllowNfsFileShares \
                     --namespace Microsoft.Storage \
                     --subscription $subscription
 az provider register --namespace Microsoft.Storage
-
-###
-az vm list -g EDA -d
 
 ### NSG
 # auobigdata
