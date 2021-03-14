@@ -5,11 +5,32 @@
 - [如何在收到 PFX 或 CER 憑證檔之後使用 OpenSSL 進行常見的格式轉換](https://blog.miniasp.com/post/2019/04/17/Convert-PFX-and-CER-format-using-OpenSSL)
 
 ## 架構
+管理 web app 流量(traffic)的網路流量負載平衡器(load balancer)，可針對特定協定來控管，例如 http or image...etc，也稱為 OSI Lev 7 負載平衡
 - OSI
-    - ![](https://img-blog.csdnimg.cn/20181228120335803.jpg)
-    - ![](https://img-en.fs.com/community/wp-content/uploads/2017/11/seven-layers-of-OSI-model.png)
+    <br><img src="https://img-blog.csdnimg.cn/20181228120335803.jpg">
+    <br><img src="https://img-en.fs.com/community/wp-content/uploads/2017/11/seven-layers-of-OSI-model.png">
 - application gateway subnet
     <br>The application gateway subnet can contain only application gateways. No other resources are allowed.
+
+## 設定步驟
+### Configuration
+<br><img src="../../../img/cloud/azure/agw-configuration.png">
+
+### Web application firewall
+<br><img src="../../../img/cloud/azure/agw-waf.png">
+
+### Backend pools
+<br><img src="../../../img/cloud/azure/agw-backend-pool.png">
+
+### HTTP settings
+### Listeners
+<br><img src="../../../img/cloud/azure/agw-listener.png">
+
+### Rules
+<br><img src="../../../img/cloud/azure/agw-rule-listener.png">
+<br><img src="../../../img/cloud/azure/agw-rule-backend-target.png">
+
+### Health probes
 
 ## 原理
 ### Beforehand
@@ -22,9 +43,6 @@
         - 來自於公認可靠的政府機關、軟體公司、憑證頒發機構公司...等
         - 部署程序複雜費時，需要行政人員的授權及機構法人身分的核認，一張根憑證有效期可能長達十年以上
     - 中介憑證
-
-###
-管理 web app 流量(traffic)的網路流量負載平衡器(load balancer)，可針對特定協定來控管，例如 http or image...etc，也稱為 OSI Lev 7 負載平衡
 
 ### Small steps to big savings
 - CRT + KEY --> PFX
