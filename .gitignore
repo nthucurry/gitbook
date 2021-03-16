@@ -96,6 +96,7 @@ knowledge/exam/*
 !knowledge/infra/veeam.md
 !knowledge/infra/k8s
 !knowledge/infra/k8s/*.md
+!knowledge/infra/openshift.md
 !knowledge/infra/docker
 !knowledge/exam
 !knowledge/exam/oracle-11g.md

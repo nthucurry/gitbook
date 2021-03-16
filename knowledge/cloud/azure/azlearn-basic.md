@@ -106,7 +106,7 @@ https://github.com/Azure/azure-quickstart-templates
 <img src="../../../img/cloud/azure/migratie-to-new-subscription.png" width=700><br>
 https://medium.com/@calloncampbell/moving-your-azure-resources-to-another-subscription-or-resource-group-1644f43d2e07
 
-## 4. Virtual Networking
+## 4. Virtual Networking (VNets are Layer-3 overlays)
 ### Public IP
 - basic vs standard
     - basic
@@ -206,6 +206,8 @@ Azure Private Link provides private connectivity from a VNet to Azure PaaS, cust
 - https://acloud.guru/forums/az-500-microsoft-azure-security-technologies/discussion/-M5IkN1SzQcDUNRyvaVL/Service%20endpoints%20vs.%20Private%20Endpoints%3F
 
 ### Azure Private Endpoint DNS configuration
+可跨 subnet 設定 FQDN
+
 #### On-premises workloads using a DNS forwarder
 For on-premises workloads to resolve the FQDN of a private endpoint, use a DNS forwarder to resolve the Azure service public DNS zone in Azure.
 To configure properly, you need the following resources:
@@ -215,7 +217,6 @@ To configure properly, you need the following resources:
 - Private DNS zones privatelink.database.windows.net with type A record (設定 PaaS 的 FQDN)
 - Private endpoint information (FQDN record name and private IP address)
 <br><img src="https://docs.microsoft.com/zh-tw/azure/private-link/media/private-endpoint-dns/on-premises-using-azure-dns.png">
-
 
 ### Azure Load Balancer (Lev 4)
 <img src="https://docs.microsoft.com/zh-tw/azure/load-balancer/media/load-balancer-distribution-mode/load-balancer-distribution.png">

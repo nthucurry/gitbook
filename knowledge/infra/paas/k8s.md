@@ -1,6 +1,7 @@
 # Kubernetes
 <img src="https://d33wubrfki0l68.cloudfront.net/26a177ede4d7b032362289c6fccd448fc4a91174/eb693/images/docs/container_evolution.svg" alt="drawing" width="800" board="1"/><br>
 Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available.
+
 ## Reference
 - [Installing Docker on CentOS 7 With Yum](https://phoenixnap.com/kb/how-to-install-docker-centos-7)
 - [Steps for Installing Kubernetes on CentOS 7](https://phoenixnap.com/kb/how-to-install-kubernetes-on-centos)
@@ -10,8 +11,8 @@ Kubernetes is a portable, extensible, open-source platform for managing containe
 
 ## Information
 一個可以幫助我們管理微服務(microservices)的系統，他可以自動化地部署及管理多台機器上的多個容器(container)。Kubernetes 想解決的問題是：「手動部署多個容器到多台機器上並監測管理這些容器的狀態非常麻煩。」而 Kubernetes 要提供的解法： 提供一個平台以較高層次的抽象化去自動化操作與管理容器們。
-    - <img src="../../../img/kubernetes/k8s-architecture.png" alt="drawing" width="800" board="1"/>
-    - <img src="../../../img/kubernetes/k8s-vs-app-diff.png" alt="drawing" width="800" board="1"/>
+    <br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/k8s-architecture.png?raw=true" alt="drawing" width="800" board="1"/>
+    <br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/k8s-vs-app-diff?raw=true" alt="drawing" width="800" board="1"/>
 
 ## Know docker
 差異就在: https://nakivo.medium.com/kubernetes-vs-docker-what-is-the-difference-3b0c6cce97d3
@@ -19,7 +20,7 @@ Kubernetes is a portable, extensible, open-source platform for managing containe
 - use cases
 - cluster
 | Type                     | docker       | k8s |
-| ------------------------ | ------------ | --- |w
+| ------------------------ | ------------ | --- |
 | orchestration technology | docker swarm |     |
 
 ## Minikube
@@ -31,7 +32,7 @@ Kubernetes is a portable, extensible, open-source platform for managing containe
 - 範例
     - https://minikube.sigs.k8s.io/docs/start/
 - demo
-    - <img src="../../../img/kubernetes/hello-minikube.png" alt="drawing" width="700"/>
+    - <img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/hello-minikube.png?raw=true" alt="drawing" width="700"/>
     - `kubectl get pods --all-namespaces`
 
 ## Master

@@ -14,23 +14,23 @@
 
 ## 設定步驟
 ### Configuration
-<br><img src="../../../img/cloud/azure/agw-configuration.png">
+<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-configuration.png?raw=true"">
 
-### Web application firewall
-<br><img src="../../../img/cloud/azure/agw-waf.png">
+### Web Application Firewall
+<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-waf.png?raw=true">
 
-### Backend pools
-<br><img src="../../../img/cloud/azure/agw-backend-pool.png">
+### Backend Pools
+<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-backend-pool.png?raw=true">
 
-### HTTP settings
+### HTTP Settings
 ### Listeners
-<br><img src="../../../img/cloud/azure/agw-listener.png">
+<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-listener.png?raw=true">
 
 ### Rules
-<br><img src="../../../img/cloud/azure/agw-rule-listener.png">
-<br><img src="../../../img/cloud/azure/agw-rule-backend-target.png">
+<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-rule-listener.png?raw=true">
+<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-rule-backend-target.png?raw=true">
 
-### Health probes
+### Health Probes
 
 ## 原理
 ### Beforehand

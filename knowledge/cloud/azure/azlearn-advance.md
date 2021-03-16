@@ -1,4 +1,10 @@
 # 高階版
+## Enterprise applications
+AAD is an IAM system. It provides a single place to store information about digital identities. You can configure your software applications to use Azure AD as the place where user information is stored.
+
+AAD must be configured to integrate with an application. In other words, it needs to know what apps are using it for identities (身份). Making AAD aware of these apps, and how it should handle them, is known as application management.
+<br><img src="https://docs.microsoft.com/zh-tw/azure/active-directory/manage-apps/media/what-is-application-management/app-management-overview.png">
+
 ## Azure SQL Database
 - Firewall settings
     <br><img src="../../../img/cloud/azure/sql-firewall-settings.png">
