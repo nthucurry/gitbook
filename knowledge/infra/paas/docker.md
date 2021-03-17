@@ -140,7 +140,7 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     - 在指行 docker run 的指令時會直接呼叫開啟 Tomcat Service
 
 ## Docker Network
-<img src="https://ithelp.ithome.com.tw/upload/images/20171223/20103456bATaXz4Pcl.png" board="1" />
+<br><img src="https://ithelp.ithome.com.tw/upload/images/20171223/20103456bATaXz4Pcl.png" board="1" />
 - [兩種對外服務連線方式](https://kknews.cc/zh-tw/news/9n9z5z8.html)
     - NAT port forwarding: 讓 Host2 的 Port 對應到 Container1 的 Port，然後 Host1 會先連到 Host2 實體主機的 Port，然後就會對應到 Container1 的 Port
     - bridge(橋接): 讓 Container 橋接到實體主機網路卡

@@ -37,7 +37,8 @@ Kubernetes is a portable, extensible, open-source platform for managing containe
 
 ## Master
 ### 1. Installing kubeadm on your hosts
-- `kubeadm init --pod-network-cidr=10.244.0.0/16`
+- `sudo kubeadm config images pull`(option)
+- `sudo kubeadm init --pod-network-cidr=10.244.0.0/16`(~ 4 min)
     - 使用 Flannel CNI
 - 用 non-root user 執行
     ```bash
@@ -45,38 +46,54 @@ Kubernetes is a portable, extensible, open-source platform for managing containe
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
     ```
+- `sudo export KUBECONFIG=/etc/kubernetes/admin.conf`
+- `sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
 
 ### 2. Installing a Pod network add-on
 - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml`
-    ```txt
-    Warning: rbac.authorization.k8s.io/v1beta1 ClusterRole is deprecated in v1.17+, unavailable in v1.22+; use rbac.authorization.k8s.io/v1 ClusterRole
-    clusterrole.rbac.authorization.k8s.io/flannel created
-    Warning: rbac.authorization.k8s.io/v1beta1 ClusterRoleBinding is deprecated in v1.17+, unavailable in v1.22+; use rbac.authorization.k8s.io/v1 ClusterRoleBinding
-    clusterrolebinding.rbac.authorization.k8s.io/flannel created
-    serviceaccount/flannel created
-    configmap/kube-flannel-cfg created
-    error: unable to recognize "https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml": no matches for kind "DaemonSet" in version "extensions/v1beta1"
-    ```
-    - 出現錯誤: The connection to the server localhost:8080 was refused - did you specify the right host or port?
-        - [權限不足](https://developer.aliyun.com/article/652961): `echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bash_profile && . ~/.bash_profile`
 - `kubectl get pods --all-namespaces`
     ```txt
-    NAMESPACE     NAME                                 READY   STATUS    RESTARTS   AGE
-    kube-system   coredns-f9fd979d6-sdb6d              0/1     Pending   0          3h12m
-    kube-system   coredns-f9fd979d6-vzwpg              0/1     Pending   0          3h12m
-    kube-system   etcd-k8s-master                      1/1     Running   0          3h12m
-    kube-system   kube-apiserver-k8s-master            1/1     Running   0          3h12m
-    kube-system   kube-controller-manager-k8s-master   1/1     Running   0          3h12m
-    kube-system   kube-proxy-nqgbz                     1/1     Running   0          3h12m
-    kube-system   kube-scheduler-k8s-master            1/1     Running   0          3h12m
+    NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
+    kube-system   coredns-74ff55c5b-5zbrf                   1/1     Running   0          6m43s
+    kube-system   coredns-74ff55c5b-92k2z                   1/1     Running   0          6m43s
+    kube-system   etcd-vm-t-k8s-master                      1/1     Running   0          7m
+    kube-system   kube-apiserver-vm-t-k8s-master            1/1     Running   0          7m
+    kube-system   kube-controller-manager-vm-t-k8s-master   1/1     Running   0          7m
+    kube-system   kube-flannel-ds-sqw42                     1/1     Running   0          2m3s
+    kube-system   kube-proxy-hjkxk                          1/1     Running   0          6m44s
+    kube-system   kube-scheduler-vm-t-k8s-master            1/1     Running   0          6m59s
     ```
 
 ## Node
-<img src="https://www.ovh.com/blog/wp-content/uploads/2019/03/IMG_0135.jpg" alt="drawing" width="800" board="1"/><br>
+至兩台 node 輸入上一節 worker nodes 欲加入叢集所需輸入的指令，就是這麼簡單！
+<br><img src="https://www.ovh.com/blog/wp-content/uploads/2019/03/IMG_0135.jpg" alt="drawing" width="800" board="1"/>
+
 - 加入 cluster
     ```bash
-    kubeadm join 10.140.0.4:6443 --token 1das02.s6wivqluldzn4jn6 \
-    --discovery-token-ca-cert-hash sha256:5d3cc5d02eee6446b10547ea2ad12ab364c249a9fdc7884d3309fccb6d03c42f
+    kubeadm join 10.0.8.4:6443 --token en163q.jnaymtqn4wb5ayn1 \
+    --discovery-token-ca-cert-hash sha256:e42cdcef67760de708d98fdaa9f9420f0f38fddf7e2dae94f06f5a77262d0251
     ```
     - 失敗的話: https://stackoverflow.com/questions/55531834/kubeadm-fails-to-initialize-when-kubeadm-init-is-called
         - `echo 1 > /proc/sys/net/ipv4/ip_forward`
+    - `kubectl get nodes`(可到 master 確認)
+        ```txt
+        NAME              STATUS   ROLES                  AGE     VERSION
+        vm-t-k8s-master   Ready    control-plane,master   17m     v1.20.4
+        vm-t-k8s-node1    Ready    <none>                 8m38s   v1.20.4
+        vm-t-k8s-node2    Ready    <none>                 91s     v1.20.4
+        ```
+- 部署 container
+    - `kubectl create deployment nginx --image=nginx`
+        - 佈署名為 nginx 的容器，映像檔名稱為 nginx，透過參數 deployment 會自動幫你創建好 k8s 中的最小管理邏輯單位 pod 與容器
+    - `kubectl create service nodeport nginx --tcp=80:80`
+        - 替容器建立一個 port mapping 的 service，讓 nginx 服務可以被外部存取
+    - `kubectl get pods`、`kubectl get services`(查詢 service mapping 的情況)
+        ```txt
+        NAME                     READY   STATUS    RESTARTS   AGE
+        nginx-6799fc88d8-4bkb8   1/1     Running   0          3m36s
+
+        NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+        kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        23m
+        nginx        NodePort    10.103.227.82   <none>        80:32300/TCP   89s
+        ```
+    - http://40.65.128.100:32300

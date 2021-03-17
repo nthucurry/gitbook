@@ -33,6 +33,7 @@ echo "==== 1. Install default package ===="
 yum update -y
 yum install telnet -y > /dev/null 2>&1
 yum install traceroute -y > /dev/null 2>&1
+yum install nc -y > /dev/null 2>&1
 
 ### 2. Install kubectl
 echo "==== 2. Install kubectl"
