@@ -8,6 +8,7 @@ Kubernetes is a portable, extensible, open-source platform for managing containe
 - https://blog.tomy168.com/2019/08/centos-76-kubernetes.html
 - https://blog.johnwu.cc/article/kubernetes-exercise.html
 - https://ithelp.ithome.com.tw/articles/10235069?sc=iThomeR
+- http://www.manongjc.com/detail/9-pbmajemrfahtfpl.html
 
 ## Information
 一個可以幫助我們管理微服務(microservices)的系統，他可以自動化地部署及管理多台機器上的多個容器(container)。Kubernetes 想解決的問題是：「手動部署多個容器到多台機器上並監測管理這些容器的狀態非常麻煩。」而 Kubernetes 要提供的解法： 提供一個平台以較高層次的抽象化去自動化操作與管理容器們。

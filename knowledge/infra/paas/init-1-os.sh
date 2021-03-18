@@ -11,11 +11,20 @@ node2_ip="10.0.8.6" && node2_hostname="k8s-node2"
 ### enviroment
 timedatectl set-timezone Asia/Taipei
 LANG=en_US.UTF-8
+swapoff -a
 
 ### internet connection
+echo "==== proxy ===="
 # echo "proxy=http://$proxy_hostname:$proxy_port" >> /etc/yum.conf
-# echo "https_proxy = http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
-# echo "http_proxy = http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
+# echo "https_proxy=http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
+# echo "http_proxy=http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
+
+### user account setting
+echo "==== user account setting ===="
+cat >> /home/$user/.bash_profile << EOF
+export http_proxy=http://$proxy_hostname:$proxy_port
+export https_proxy=https://$proxy_hostname:$proxy_port
+EOF
 
 ### update parameter
 echo "alias vi='vim'" >> ~/.bashrc
@@ -24,20 +33,21 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 source ~/.bashrc
 
 ## DNS
-echo "==== DNS... ===="
+echo "==== DNS ===="
 # echo "$proxy_ip $proxy_hostname" >> /etc/hosts
 echo "$master_ip $master_hostname" >> /etc/hosts
 echo "$node1_ip $node1_hostname" >> /etc/hosts
 echo "$node2_ip $node2_hostname" >> /etc/hosts
 
 ### systemctl
-echo "==== systemctl... ===="
+echo "==== systemctl ===="
 systemctl restart sshd
 systemctl stop firewalld && systemctl disable firewalld
 
-### yum default
-echo "==== yum default... ===="
+### yum
+echo "==== yum ===="
 yum update -y > /dev/null 2>&1
+yum install epel-release -y
 yum install telnet -y > /dev/null 2>&1
 yum install traceroute -y > /dev/null 2>&1
 yum install nc -y > /dev/null 2>&1
