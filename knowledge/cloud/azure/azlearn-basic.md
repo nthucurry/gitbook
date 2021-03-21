@@ -153,7 +153,7 @@ It's important to understand the difference between DNS record sets and individu
 A record set cannot contain two identical records. Empty record sets (with zero records) can be created, but do not appear on the Azure DNS name servers. Record sets of type CNAME can contain one record at most.
 
 ### DNS for Private Domains
-<img src="https://docs.microsoft.com/zh-tw/azure/dns/media/private-dns-overview/scenario.png">
+<br><img src="https://docs.microsoft.com/zh-tw/azure/dns/media/private-dns-overview/scenario.png">
 - 設定後可由 <app-name>.azurewebsites.net 連到該 app
 
 ### VNet Peering
@@ -182,6 +182,12 @@ Azure ExpressRoute lets you extend your on-premises networks into the Microsoft 
 <br><img src="https://i.pinimg.com/originals/26/79/a3/2679a35f8b6838776609b0563eb7b85c.png">
 
 ## 6. Network Traffic Management
+### System Routes
+### User Defined Routes
+<br><img src="https://wasimbloch.files.wordpress.com/2015/12/120815_0519_userdefined1.png?w=383">
+<br><img src="https://mykloud.files.wordpress.com/2019/02/udr.png?w=685">
+<br><img src="https://petri.com/wp-content/uploads/sites/3/2015/05/User-DefinedRouting.png">
+
 ### Route Table
 - 需同 region 才可適用
 

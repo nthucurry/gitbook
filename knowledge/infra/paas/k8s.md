@@ -20,9 +20,9 @@ Kubernetes is a portable, extensible, open-source platform for managing containe
 - 網路
 - use cases
 - cluster
-| Type                     | docker       | k8s |
-| ------------------------ | ------------ | --- |
-| orchestration technology | docker swarm |     |
+    | Type                     | docker       | k8s |
+    | ------------------------ | ------------ | --- |
+    | orchestration technology | docker swarm |     |
 
 ## Minikube
 - [Hello Minikube](https://kubernetes.io/docs/tutorials/hello-minikube/)
@@ -49,6 +49,13 @@ Kubernetes is a portable, extensible, open-source platform for managing containe
     ```
 - `sudo export KUBECONFIG=/etc/kubernetes/admin.conf`
 - `sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
+- `kubectl get nodes`(not-root)
+    ```txt
+    NAME              STATUS   ROLES                  AGE    VERSION
+    vm-t-k8s-master   Ready    control-plane,master   3d1h   v1.20.4
+    vm-t-k8s-node1    Ready    <none>                 3d1h   v1.20.4
+    vm-t-k8s-node2    Ready    <none>                 3d     v1.20.4
+    ```
 
 ### 2. Installing a Pod network add-on
 - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml`
@@ -64,6 +71,12 @@ Kubernetes is a portable, extensible, open-source platform for managing containe
     kube-system   kube-proxy-hjkxk                          1/1     Running   0          6m44s
     kube-system   kube-scheduler-vm-t-k8s-master            1/1     Running   0          6m59s
     ```
+### 3. Verify kubectl configuration
+- `kubectl cluster-info`(not-root)
+    ```txt
+    Kubernetes control plane is running at https://10.0.8.4:6443
+    KubeDNS is running at https://10.0.8.4:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+    ```
 
 ## Node
 至兩台 node 輸入上一節 worker nodes 欲加入叢集所需輸入的指令，就是這麼簡單！
@@ -71,18 +84,20 @@ Kubernetes is a portable, extensible, open-source platform for managing containe
 
 - 加入 cluster
     ```bash
-    kubeadm join 10.0.8.4:6443 --token en163q.jnaymtqn4wb5ayn1 \
+    sudo kubeadm join 10.0.8.4:6443 --token b0rc1c.u04ozj7z4390dpv7 \
     --discovery-token-ca-cert-hash sha256:e42cdcef67760de708d98fdaa9f9420f0f38fddf7e2dae94f06f5a77262d0251
     ```
     - 失敗的話: https://stackoverflow.com/questions/55531834/kubeadm-fails-to-initialize-when-kubeadm-init-is-called
         - `echo 1 > /proc/sys/net/ipv4/ip_forward`
-    - `kubectl get nodes`(可到 master 確認)
-        ```txt
-        NAME              STATUS   ROLES                  AGE     VERSION
-        vm-t-k8s-master   Ready    control-plane,master   17m     v1.20.4
-        vm-t-k8s-node1    Ready    <none>                 8m38s   v1.20.4
-        vm-t-k8s-node2    Ready    <none>                 91s     v1.20.4
-        ```
+    - 當 OS 重開後
+        - `kubeadm token create`(??)
+        - the value of --discovery-token-ca-cert-hash
+            ```bash
+            openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
+            openssl dgst -sha256 -hex | sed 's/^.* //'
+            ```
+        - `kubectl config delete-cluster`
+        - `sudo kubeadm reset`
 - 部署 container
     - `kubectl create deployment nginx --image=nginx`
         - 佈署名為 nginx 的容器，映像檔名稱為 nginx，透過參數 deployment 會自動幫你創建好 k8s 中的最小管理邏輯單位 pod 與容器

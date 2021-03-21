@@ -1,15 +1,15 @@
 #/bin/bash
 
-# 1. Check network adapters
-echo "==== Check network adapters"
+# 1. Letting (allow) iptables see bridged traffic
+echo "==== 1. Letting iptables see bridged traffic"
 cat << EOF | tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
 sudo sysctl --system
 
-# 2. Installing kubeadm, kubelet and kubectl
-echo "==== Installing kubeadm, kubelet and kubectl"
+# 2. Install using native package management
+echo "==== 2. Install using native package management"
 cat << EOF | tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes

@@ -1,5 +1,9 @@
 #/bin/bash
 
+#### necessary
+
+where_am_i=home
+
 ### define
 os_name=`cat /etc/os-release | head -1`
 user=azadmin
@@ -13,31 +17,12 @@ timedatectl set-timezone Asia/Taipei
 LANG=en_US.UTF-8
 swapoff -a
 
-### internet connection
-echo "==== proxy ===="
-# echo "proxy=http://$proxy_hostname:$proxy_port" >> /etc/yum.conf
-# echo "https_proxy=http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
-# echo "http_proxy=http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
-
-### user account setting
-echo "==== user account setting ===="
-cat >> /home/$user/.bash_profile << EOF
-export http_proxy=http://$proxy_hostname:$proxy_port
-export https_proxy=https://$proxy_hostname:$proxy_port
-EOF
-
 ### update parameter
 echo "alias vi='vim'" >> ~/.bashrc
+echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 echo "$user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 source ~/.bashrc
-
-## DNS
-echo "==== DNS ===="
-# echo "$proxy_ip $proxy_hostname" >> /etc/hosts
-echo "$master_ip $master_hostname" >> /etc/hosts
-echo "$node1_ip $node1_hostname" >> /etc/hosts
-echo "$node2_ip $node2_hostname" >> /etc/hosts
 
 ### systemctl
 echo "==== systemctl ===="
@@ -51,3 +36,28 @@ yum install epel-release -y
 yum install telnet -y > /dev/null 2>&1
 yum install traceroute -y > /dev/null 2>&1
 yum install nc -y > /dev/null 2>&1
+
+#### option
+if [ "$where_am_i" -eq "auo" ]; then
+    ### DNS
+    echo "==== DNS ===="
+    echo "$proxy_ip $proxy_hostname" >> /etc/hosts
+    echo "$master_ip $master_hostname" >> /etc/hosts
+    echo "$node1_ip $node1_hostname" >> /etc/hosts
+    echo "$node2_ip $node2_hostname" >> /etc/hosts
+
+    ### user account setting
+    echo "==== user account setting ===="
+    cat >> /home/$user/.bash_profile << EOF
+    export http_proxy=http://$proxy_hostname:$proxy_port
+    export https_proxy=https://$proxy_hostname:$proxy_port
+    EOF
+
+    ### internet connection
+    echo "==== proxy ===="
+    echo "proxy=http://$proxy_hostname:$proxy_port" >> /etc/yum.conf
+    echo "https_proxy=http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
+    echo "http_proxy=http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
+else
+    echo "not action"
+fi
