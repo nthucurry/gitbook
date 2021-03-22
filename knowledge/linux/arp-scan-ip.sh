@@ -7,3 +7,5 @@ do
 done
 wait
 arp -na | grep -v "incomplete"
+
+nmap -sP 192.168.1.0/24
