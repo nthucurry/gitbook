@@ -46,12 +46,37 @@ Requirements:
 - Cloud Pak for Data v3.5.0 API Key
 
 ## Issue
-討論的問題點為：
-1. 安裝是由 IBM 於雲端安裝完成嗎? AUO 只需要維運即可? 或還需要作業那些內容?
-2. IBM 提到使用代理商跟我們合作軟體服務，AUO先前是跟恆鼎代理商合作，但因為合作狀況不是很好，有更佳推薦代理商嗎?
-3. 合約的部份可以增加下圖一第七點異常與備援機制(或原本已含)?
-4. 目前有其他導入 WKC 並連線至阿里雲的經驗嗎? 可提供 AUO 參考與建議嗎?
-<img src="../../img/wkc/wkc-list.gif">
+- [3/25]
+    1. 建立 azure domain name
+    2. 建立 resource-group
+    3. ~~建立 vnet wkc-vnet~~
+    4. 建立 vnet subnet
+    5. 建立 network security group (WKC-MASTER-NSG / WKC-WORK-NSG)
+            - 在 WKC-MASTER-NSG 加上 80, 443, 6443, 22623
+            - 在 WKC-WORK-NSG 加上  6443, 22623
+    6. ~~雲對地 VPN 網路設定~~
+    7. ~~地端對 WKC DNS 設定~~
+    8. vnet 中各 Node 需能存取 Internet 連線
+- [3/17] 討論的問題點為：
+    1. 安裝是由 IBM 於雲端安裝完成嗎? AUO 只需要維運即可? 或還需要作業那些內容?
+    2. IBM 提到使用代理商跟我們合作軟體服務，AUO先前是跟恆鼎代理商合作，但因為合作狀況不是很好，有更佳推薦代理商嗎?
+    3. 合約的部份可以增加下圖一第七點異常與備援機制(或原本已含)?
+    4. 目前有其他導入 WKC 並連線至阿里雲的經驗嗎? 可提供 AUO 參考與建議嗎?
+    <br><img src="../../img/wkc/wkc-list.gif">
+
+## Firewall Activation
+- Azure
+    - VNet: /24 即可
+        - wkc-bootnode-subnet: 10.30.124.0/27
+        - wkc-master-subnet: 10.30.124.64/26
+        - wkc-worker-subnet: 10.30.124.128/26
+    - NSG
+        - WKC-MASTER-NSG: 80, 443, 6443, 22623
+        - WKC-WORK-NSG: 6443, 22623
+- Azure to On-Premises
+- Securing communication ports
+    - Cluster ports
+    - Ports for services
 
 ## 參考
 - [因應多雲資料處理分析需求，IBM提供專屬預先整合套件](https://www.ithome.com.tw/review/134115)
@@ -60,3 +85,5 @@ Requirements:
     - [Cloud deployment environments](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_latest/cpd/plan/deployment-environments.html)
     - [Storage considerations](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_latest/cpd/plan/storage_considerations.html)
 - [Red Hat OpenShift Container Platform 容器應用平台](https://www.sysage.com.tw/Solution/Detail?solutionid=114)
+- [Cloud Pak for Data 3.5 on OCP 4.5 on Azure](https://github.com/IBM/cp4d-deployment/blob/master/selfmanaged-openshift/azure/README.md#deployment-topology)
+- [在 Microsoft Azure 上使用 Terraform 安装 Cloud Pak for Data](https://www.ibm.com/support/knowledgecenter/zh/SSQNUZ_2.1.0/com.ibm.icpdata.doc/zen/install/terraformazure.html?view=embed)
