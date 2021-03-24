@@ -56,7 +56,7 @@ Requirements:
             - 在 WKC-WORK-NSG 加上  6443, 22623
     6. ~~雲對地 VPN 網路設定~~
     7. ~~地端對 WKC DNS 設定~~
-    8. vnet 中各 Node 需能存取 Internet 連線
+    8. vnet 中各 Node 需能存取 Internet 連線: 是指初期需要能用外網建置?
 - [3/17] 討論的問題點為：
     1. 安裝是由 IBM 於雲端安裝完成嗎? AUO 只需要維運即可? 或還需要作業那些內容?
     2. IBM 提到使用代理商跟我們合作軟體服務，AUO先前是跟恆鼎代理商合作，但因為合作狀況不是很好，有更佳推薦代理商嗎?
@@ -73,10 +73,13 @@ Requirements:
     - NSG
         - WKC-MASTER-NSG: 80, 443, 6443, 22623
         - WKC-WORK-NSG: 6443, 22623
+    <br><ing src="https://github.com/IBM/cp4d-deployment/blob/master/selfmanaged-openshift/azure/images/AzureCPD-Arch.png?raw=true">
 - Azure to On-Premises
 - Securing communication ports
     - Cluster ports
     - Ports for services
+- storage
+    <br><img src="https://docs.microsoft.com/en-us/azure/virtual-network/media/network-isolation/service-tags.png">
 
 ## 參考
 - [因應多雲資料處理分析需求，IBM提供專屬預先整合套件](https://www.ithome.com.tw/review/134115)

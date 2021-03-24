@@ -13,3 +13,15 @@
         User git
         IdentityFile ~/.ssh/id_rsa_gitlab
         ```
+
+## 上傳 Repo
+```bash
+# 在 Github 建立 Repo
+git init
+git add .
+git ci -m "first commit"
+git remote add origin https://github.com/ShaqtinAFool/Fabmedical.git
+git push -u origin master
+```
+
+## Secret

@@ -26,6 +26,7 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     - 安裝 or 啟動服務
     - 以上可以用 Dockerfile 作為 script 處理
 - 執行時，可以用 build image by Dockerfile，服務就啟動了
+- build image 如果資料夾內有 Dockerfile，就會成功
 
 ## 安裝 Docker
 - Ubuntu
@@ -141,6 +142,8 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 
 ## Docker Network
 <br><img src="https://ithelp.ithome.com.tw/upload/images/20171223/20103456bATaXz4Pcl.png" board="1" />
+
+- `docker network ls`
 - [兩種對外服務連線方式](https://kknews.cc/zh-tw/news/9n9z5z8.html)
     - NAT port forwarding: 讓 Host2 的 Port 對應到 Container1 的 Port，然後 Host1 會先連到 Host2 實體主機的 Port，然後就會對應到 Container1 的 Port
     - bridge(橋接): 讓 Container 橋接到實體主機網路卡
