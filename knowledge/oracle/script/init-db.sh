@@ -1,8 +1,6 @@
 #/bin/bash
 
 ### define
-proxy_ip="10.0.0.4" && proxy_hostname="squid" && proxy_port=80
-host_ip=`cat /etc/hosts | grep \`hostname\` | awk '{print $1}'`
 os_name=`cat /etc/os-release | head -1`
 user=oracle
 sid=oracle1
@@ -10,21 +8,12 @@ uqname=$sid
 base=/u01/oracle
 ora_ver=11204
 home=$base/$ora_ver
-bpfile=.bash_profile
 swap_size=4
 
 ### enviroment
 timedatectl set-timezone Asia/Taipei
 LANG=en_US.UTF-8
 NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'
-
-### internet connection
-# echo "proxy=http://$proxy_hostname:$proxy_port" >> /etc/yum.conf
-# echo "https_proxy = http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
-# echo "http_proxy = http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
-
-### DNS
-# echo "$proxy_ip $proxy_hostname" >> /etc/hosts
 
 ### update parameter
 echo "alias vi='vim'" >> ~/.bashrc
@@ -33,11 +22,12 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 source ~/.bashrc
 
 ### systemctl
-echo "==== systemctl... ===="
+echo "==== systemctl ===="
+systemctl restart sshd
 systemctl stop firewalld && systemctl disable firewalld
 
 ### swap
-echo "==== swap... ===="
+echo "==== swap ===="
 dd if=/dev/zero of=/swapfile count=$swap_size bs=1GiB
 chmod 600 /swapfile
 mkswap /swapfile
@@ -46,29 +36,29 @@ swapon -s
 echo "/swapfile swap swap sw 0 0" >> /etc/fstab
 
 ### yum
-echo "==== yum... ===="
-echo "==== yum(update)... ===="
-yum update -y > /dev/null 2>&1 && echo "==== yum(update end)... ===="
-yum install wget -y
+echo "==== yum ===="
+yum update -y > /dev/null 2>&1
+yum install epel-release -y
 yum install telnet -y
 yum install traceroute -y
 yum install nfs-utils -y
 yum install zip unzip -y
+yum install nc -y
 # yum install matchbox-window-manager xterm -y
 if [[ "$os_name" == *"Oracle Linux Server"* ]]; then
-    echo "==== yum(Server with GUI)... ===="
+    echo "==== yum(Server with GUI) ===="
     yum groupinstall "Server with GUI" -y > /dev/null 2>&1
-    echo "==== yum(Server with GUI end)... ===="
+    echo "==== yum(Server with GUI end) ===="
 else
-    echo "==== yum(GNOME Desktop)... ===="
+    echo "==== yum(GNOME Desktop) ===="
     yum groupinstall "GNOME Desktop" -y > /dev/null 2>&1
-    echo "==== yum(GNOME Desktop end)... ===="
+    echo "==== yum(GNOME Desktop end) ===="
 fi
 yum install ksh gcc* libaio* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* libgcc* binutils* compat-libcap1* make* stsstat* -y > /dev/null 2>&1
 yum clean all
 
 ### group
-echo "==== group... ===="
+echo "==== group ===="
 groupadd -g 54321 oinstall
 groupadd -g 54322 dba
 groupadd -g 54323 oper
@@ -94,7 +84,7 @@ chown -R $user:dba /oracle
 chown -R $user:dba /backup
 
 ### oracle prerequisite
-echo "==== oracle package... ===="
+echo "==== oracle package ===="
 wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
 wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
 if [ "$ora_ver" -eq 11204 ]; then
@@ -104,8 +94,8 @@ else
 fi
 
 ### oracle account setting
-echo "==== oracle account... ===="
-cat >> /home/$user/$bpfile << EOF
+echo "==== oracle account ===="
+cat >> /home/$user/.bash_profile << EOF
 export ORACLE_SID=$sid
 export ORACLE_UNQNAME=$uqname # it is difference between primary and standby database
 export ORACLE_BASE=$base

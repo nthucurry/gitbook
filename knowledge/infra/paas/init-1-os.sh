@@ -19,9 +19,9 @@ swapoff -a
 
 ### update parameter
 echo "alias vi='vim'" >> ~/.bashrc
-echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 echo "$user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 source ~/.bashrc
 
 ### systemctl
