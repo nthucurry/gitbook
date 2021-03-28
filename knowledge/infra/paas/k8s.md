@@ -140,5 +140,5 @@ K8S is a portable, extensible, open-source platform for managing containerized w
             kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        23m
             nginx        NodePort    10.103.227.82   <none>        80:32300/TCP   89s
             ```
-    - 顯示 container 服務: http://<public-ip>:31550
+    - 顯示 container 服務: http://public-ip:31550
         <br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/k8s-container-example.png?raw=true">
