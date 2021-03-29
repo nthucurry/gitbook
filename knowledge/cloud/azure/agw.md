@@ -14,7 +14,7 @@
 
 ## 設定步驟
 ### Configuration
-<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-configuration.png?raw=true"">
+<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-configuration.png?raw=true">
 
 ### Web Application Firewall
 <br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-waf.png?raw=true">

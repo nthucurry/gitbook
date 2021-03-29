@@ -28,18 +28,6 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     | ------------------------ | ------------ | --- |
     | orchestration technology | docker swarm |     |
 
-## Minikube
-- [Hello Minikube](https://kubernetes.io/docs/tutorials/hello-minikube/)
-- Minikube 是由 Google 發布的一個輕量級工具
-- 可在本機上輕易架設一個 K8S Cluster
-- Minikube 會在本機上跑起一個 virtual machine，並且在這 VM 裡建立一個 signle-node K8S Cluster
-- 本身並不支援 HA (High availability)，也不推薦在實際應用上運行
-- 範例
-    - https://minikube.sigs.k8s.io/docs/start/
-- demo
-    - <img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/hello-minikube.png?raw=true" alt="drawing" width="700"/>
-    - `kubectl get pods --all-namespaces`
-
 ## Master
 ### 1. Installing kubeadm on your hosts
 - `sudo kubeadm config images pull`(option)

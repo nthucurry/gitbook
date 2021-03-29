@@ -1,12 +1,10 @@
 #/bin/bash
 
 #### necessary
-
 where_am_i=home
 
 ### define
 os_name=`cat /etc/os-release | head -1`
-user=azadmin
 master_ip="10.0.8.4" && master_hostname="k8s-master"
 node1_ip="10.0.8.5" && node1_hostname="k8s-node1"
 node2_ip="10.0.8.6" && node2_hostname="k8s-node2"
@@ -19,7 +17,7 @@ swapoff -a
 
 ### update parameter
 echo "alias vi='vim'" >> ~/.bashrc
-echo "$user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 source ~/.bashrc
@@ -48,7 +46,7 @@ if [ "$where_am_i" -eq "auo" ]; then
 
     ### user account setting
     echo "==== user account setting ===="
-    cat >> /home/$user/.bash_profile << EOF
+    cat >> /home/$USER/.bash_profile << EOF
     export http_proxy=http://$proxy_hostname:$proxy_port
     export https_proxy=https://$proxy_hostname:$proxy_port
     EOF
