@@ -34,6 +34,7 @@ yum install epel-release -y
 yum install telnet -y > /dev/null 2>&1
 yum install traceroute -y > /dev/null 2>&1
 yum install nc -y > /dev/null 2>&1
+yum install nmap -y > /dev/null 2>&1
 
 #### option
 if [ "$where_am_i" -eq "auo" ]; then
