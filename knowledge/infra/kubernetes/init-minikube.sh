@@ -9,9 +9,9 @@ LANG=en_US.UTF-8
 
 ### update parameter
 echo "alias vi='vim'" >> ~/.bashrc
+source ~/.bashrc
 echo "$user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
-source ~/.bashrc
 
 ### systemctl
 echo "==== systemctl ===="
