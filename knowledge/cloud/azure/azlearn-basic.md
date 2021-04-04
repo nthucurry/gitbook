@@ -318,6 +318,15 @@ Azure virtual machine extensions are small applications that provide post-deploy
 ## 9. Serverless Computing (無伺服器運算)
 ### App Service Overview
 - 不能換 region
+- Connections to SaaS platforms and on-premises data.
+    - Choose from more than 50 connectors for enterprise systems (such as SAP), SaaS services (such as Salesforce), and internet services (such as Facebook). Access on-premises data using Hybrid Connections and Azure Virtual Networks.
+
+#### Hybrid Connections
+<br><img src="https://www.emtec.digital/wp-content/uploads/2020/07/Azure-VNet-alternate-approach.png">
+<br><img src="https://docs.microsoft.com/zh-tw/azure/app-service/media/app-service-hybrid-connections/hybridconn-connectiondiagram.png">
+<br><img src="https://i.imgur.com/7srzaYr.png">
+- https://devblogs.microsoft.com/premier-developer/using-azure-app-services-with-hybrid-connections/
+- [使用 Hybrid Connection 連接 Azure VM 與地端伺服器](https://blog.poychang.net/use-hybrid-connection-connect-azure-vm-and-on-premises)
 
 ### Backup an App Service
 備份到 storage account 轉為 blob，此時可以換 region
