@@ -1,0 +1,21 @@
+# Network
+## VPN (Virtual Network Gateway)
+- SKU: VpnGw2
+- Gateway type: VPN
+- VPN type: Route-based
+- Virtual network: vnet-test
+- Public IP address: 104.215.159.133
+- Connections
+    - Local network gateway: 35.247.152.118
+        - IP address: 35.247.152.118
+        - Address space: 10.148.0.0/20
+    - Shared key (PSK): IKE Key
+- Configuration
+    - Use Azure Private IP Address: Disabled
+    - BGP: Disabled
+    - IPsec / IKE policy: Default
+    - Use policy based traffic selector: Disabled
+    - Connection Mode: Default
+    - IKE Protocol: IKEv2
+- Properties
+    - Connection type: Site-to-site (IPsec)

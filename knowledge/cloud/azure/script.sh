@@ -31,11 +31,11 @@ done
 # auobigdata
 # Azure EA (AUO): de61f224-9a69-4ede-8273-5bcef854dc20
 
-subscription="auobigdata"
-resource_group="DBA_Test"
-vm_name="ApacheVMTEST"
-nic="apachevmtest320"
-disk_name="ApacheVMTEST_OsDisk_1_2abc53cd182b483bb86e47b699975c63"
+subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
+resource_group="DBA-K8S"
+vm_name="vm-k8s-node3"
+nic="vm-k8s-node3545"
+disk_name="vm-k8s-node3_disk1_71f2a92cda394cf3a0145c1e29085be3"
 az account set -s $subscription
 az vm delete -g $resource_group -n $vm_name --yes
 az network nic delete -g $resource_group -n $nic
