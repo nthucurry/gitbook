@@ -321,6 +321,11 @@ Azure virtual machine extensions are small applications that provide post-deploy
 - Connections to SaaS platforms and on-premises data.
     - Choose from more than 50 connectors for enterprise systems (such as SAP), SaaS services (such as Salesforce), and internet services (such as Facebook). Access on-premises data using Hybrid Connections and Azure Virtual Networks.
 
+#### App Service Plan
+In App Service (Web Apps, API Apps, or Mobile Apps), an app always runs in an App Service plan
+
+#### VNet Integration
+
 #### Hybrid Connections
 <br><img src="https://www.emtec.digital/wp-content/uploads/2020/07/Azure-VNet-alternate-approach.png">
 <br><img src="https://docs.microsoft.com/zh-tw/azure/app-service/media/app-service-hybrid-connections/hybridconn-connectiondiagram.png">
