@@ -322,9 +322,12 @@ Azure virtual machine extensions are small applications that provide post-deploy
     - Choose from more than 50 connectors for enterprise systems (such as SAP), SaaS services (such as Salesforce), and internet services (such as Facebook). Access on-premises data using Hybrid Connections and Azure Virtual Networks.
 
 #### App Service Plan
-In App Service (Web Apps, API Apps, or Mobile Apps), an app always runs in an App Service plan
+In App Service (Web Apps, API Apps, or Mobile Apps), an app always runs in an App Service plan.
 
 #### VNet Integration
+<br><img src="https://docs.microsoft.com/zh-tw/azure/app-service/media/web-sites-integrate-with-vnet/vnetint-regionalworks.png">
+
+Apps in App Service are hosted on worker roles. The Basic and higher pricing plans are dedicated hosting plans where there are no other customers' workloads running on the same workers. Regional VNet Integration works by mounting virtual interfaces with addresses in the delegated subnet. Because the from address is in your VNet, it can access most things in or through your VNet like a VM in your VNet would. The networking implementation is **different than running a VM in your VNet**. That's why some networking features aren't yet available for this feature.
 
 #### Hybrid Connections
 <br><img src="https://www.emtec.digital/wp-content/uploads/2020/07/Azure-VNet-alternate-approach.png">
