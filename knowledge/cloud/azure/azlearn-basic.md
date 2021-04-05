@@ -277,6 +277,12 @@ A service that stores **unstructured data** in the cloud as objects/blobs. Blob 
 - 可覆寫 container 內容
 - files vs blobs
 
+### Storage Security
+Azure Storage provides a comprehensive (綜合的) set of security capabilities that together enable developers to build secure applications.
+
+#### Shared Access Signatures (SAS)
+A shared access signature (SAS) is a URI that grants restricted access rights to Azure Storage resources. You can provide a SAS to clients who shouldn't have access to your storage account key. By distributing a SAS URI to these clients, you grant them access to a resource for a specified period of time. SAS is a secure way to share your storage resources without compromising (妥協) your account keys.
+
 ### File Sync
 
 ## 8. Azure Virtual Machine
@@ -388,3 +394,5 @@ Azure Backup is the Azure-based service you can use to back up (or protect) and 
 - managed disk snapshots
 
 ## 11. Monitoring
+### Log Analytics
+### Network Watcher

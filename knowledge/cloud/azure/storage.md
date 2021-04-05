@@ -3,9 +3,9 @@
 - https://docs.microsoft.com/zh-tw/azure/storage/files/storage-troubleshooting-files-nfs
 
 ## How to mount it?
-- ![](../../../img/cloud/azure/storage-file-shared-url.png)
-- ![](../../../img/cloud/azure/storage-mount-on-macos.png)
-- ![](../../../img/cloud/azure/storage-login-info.png)
+<br><img src="../../../img/cloud/azure/storage-file-shared-url.png">
+<br><img src="../../../img/cloud/azure/storage-mount-on-macos.png">
+<br><img src="../../../img/cloud/azure/storage-login-info.png">
 
 ## Create an NFS share
 ```powershell
