@@ -46,7 +46,68 @@ Requirements:
 - Cloud Pak for Data v3.5.0 API Key
 
 ## Issue
+- [4/1]
+    ```txt
+    CR:
+    建置 WKC 專案，預計會於 Azure 新建以下資源:
+    1. Resource Group: WKC
+    2. 8 台 RedHat VM (bastion*1, master*3, worker*4), 1 台 CentOS/Ubuntu VM (NFS Server)
+    3. Azure NSG:
+        InBound, OutBound: 22, 80, 443, 6443, 22623
+    4. Azure subnet:
+        IP: 10.250.101.0/26 (master subnet), 10.250.101.64/26 (worker subnet)
+        以上 subnet 需開通以下連線:
+        (1) internet 連線, by azure proxy (VM)
+            - 建置時開放對外連線以下載安裝程式 (80, 443)
+            - 建置完畢後，對外連線僅開放必要 Repo (如 quay.io) 更新 packages
+        (2) intranet 連線
+            a. 開放 80, 443, 6443 ports for 新竹 OA 網段
+            b. 開放 22 port for 新竹跳板機
+            c. 開放新竹 server farm 網段的 1433, 1521-1530 ports
+    5. DNS Forwarder:
+        將 domain name = azure.corpnet.auo.com 導到 Azure DNS Forwarder VM (10.248.15.4, 10.248.15.5)
+    Attach: 架構圖
+    ```
 - [3/25]
+    - [AUO 需提供相關資訊]
+        1. domain name ===> azure.dg.auo.com
+            - 名稱可以改成 dg.corpnet.auo.com 嗎?
+            - 可以
+        2. cluster name        ===> cpd-prd
+        3. DNS sample         ===> zen-cpd-zen.apps.[cluster name].[domain name]
+        4.            ===> zen-cpd-zen.apps.cpd-prd.azure.dg.auo.com
+        5. OCP 帳號名稱(cpdadm) ==> Bastion 機上的帳號
+        6. NFS 帳號名稱
+            - NFS 可以使用 Azure Storage Service 嗎？
+            - NFS Server 將使用 Azure VM，使用 managed disks (LSR - Locally Redundant Premium)
+            - 參考資訊：https://docs.microsoft.com/zh-tw/azure/storage/common/storage-introduction
+        7. LDAP 連線使用者帳號/密碼
+        8. Root_CA.cer (TLS設定用)
+        9. wildcard_certificate (.cer / .key) ===> Domain Name Https 使用
+        10. azure-subscription-id
+        11. azure-client-id
+        12. azure-client-secret
+        13. azure-tenant-id
+        14. 預計使用 Region
+        15. 預計使用的 AZ
+        - 我們將到廠安裝，這個需要在安裝 OCP 之前需要準備好就可以了
+    - [AUO 需協助事項]
+        - [ ] ~~建立 azure domain name~~
+            - 指的是什麼？
+        - [x] 建立 resource-group
+        - [ ] 建立 vnet wkc-vnet 10.30.124.0/24
+            - 建立 vnet wkc-vnet 的網段的 IP Range 是可以調整的嗎？該網段應該是 Private Net，所以應該不會需要跟 AUO Network 互通是嗎？
+            - IP Range /24 就 ok 了嗎?
+        - [ ] 建立 vnet subnet ( wkc-bootnode-subnet 10.30.124.0/27 | wkc-master-subnet 10.30.124.64/26 | wkc-worker-subnet 10.30.124.128/26 )
+            - 不太懂建立 wkc-bootnode-subnet, wkc-master-subnet, wkc-worker-subnet 的用意
+        - [x] 建立network security group (WKC-MASTER-NSG / WKC-WORK-NSG)
+            - 在 WKC-MASTER-NSG 加上80, 443, 6443, 22623
+            - 在 WKC-WORK-NSG 加上 6443, 22623
+        - [x] 雲對地 VPN 網路設定
+        - [x] 地端對 WKC DNS 設定(需設定，用 DNS Forwarder 方法)
+        - [ ] vnet 中各 Node 需能存取 Internet 連線
+            - 這個連接外網的動作是否安裝時開通即可??
+- [3/23]
     1. 建立 azure domain name
     2. 建立 resource-group
     3. ~~建立 vnet wkc-vnet~~
@@ -62,7 +123,6 @@ Requirements:
     2. IBM 提到使用代理商跟我們合作軟體服務，AUO先前是跟恆鼎代理商合作，但因為合作狀況不是很好，有更佳推薦代理商嗎?
     3. 合約的部份可以增加下圖一第七點異常與備援機制(或原本已含)?
     4. 目前有其他導入 WKC 並連線至阿里雲的經驗嗎? 可提供 AUO 參考與建議嗎?
-    <br><img src="../../img/wkc/wkc-list.gif">
 
 ## Firewall Activation
 - Azure
@@ -73,7 +133,7 @@ Requirements:
     - NSG
         - WKC-MASTER-NSG: 80, 443, 6443, 22623
         - WKC-WORK-NSG: 6443, 22623
-    <br><ing src="https://github.com/IBM/cp4d-deployment/blob/master/selfmanaged-openshift/azure/images/AzureCPD-Arch.png?raw=true">
+    <br><ing src="https://github.com/IBM/cp4d-deployment/blob/master/selfmanaged-openshift/azure/images/AzureCPD-Arch.png">
 - Azure to On-Premises
 - Securing communication ports
     - Cluster ports
@@ -90,3 +150,4 @@ Requirements:
 - [Red Hat OpenShift Container Platform 容器應用平台](https://www.sysage.com.tw/Solution/Detail?solutionid=114)
 - [Cloud Pak for Data 3.5 on OCP 4.5 on Azure](https://github.com/IBM/cp4d-deployment/blob/master/selfmanaged-openshift/azure/README.md#deployment-topology)
 - [在 Microsoft Azure 上使用 Terraform 安装 Cloud Pak for Data](https://www.ibm.com/support/knowledgecenter/zh/SSQNUZ_2.1.0/com.ibm.icpdata.doc/zen/install/terraformazure.html?view=embed)
+- [Installing on Azure](https://docs.openshift.com/container-platform/4.5/installing/installing_azure)

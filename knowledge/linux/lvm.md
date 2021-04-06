@@ -19,13 +19,13 @@
     2. 當卷組中的一個磁碟損壞時，整個卷組都會受到影響。
     3. 因為加入了額外的操作，儲存效能受到影響。
 - LVM architecture
-    - ![](../../img/linux/lvm/architecture.png)
+    <br><img src="https://github.com/ShaqtinAFool/gitbook/raw/master/img/linux/lvm/architecture.png">
 
 ## 步驟
 ### (1) 分割磁碟 & 選定格式
 - `fdisk -l`
-- `fdisk -l /dev/sdb`(不切 partition)
-- `fdisk /dev/sdb`
+- `fdisk -l /dev/sdb`(建議不切 partition)
+- `fdisk /dev/sdb`(這樣就是會切 partition)
     - Command (m for help): t
         - Partition number (1-4, default 4): 1
         - Hex code (type L to list all codes): 8e
@@ -50,10 +50,6 @@
     - 依照比例: `lvcreate -l +100%FREE -n lv_u01 vg_demo`
     - 依照 PE: `lvcreate -l +{Max PE - 9} -n lv_u01 vg_demo`
 - `lvscan`
-- `ll /dev/vg_demo/lv_*`
-        ```txt
-        lrwxrwxrwx. 1 root root 7 Apr 15 14:52 /dev/vg_demo/lv_u01 -> ../dm-3
-        ```
 
 ### (5) 磁碟格式化
 - `mkfs.xfs /dev/vg_demo/lv_u01`
@@ -67,17 +63,21 @@
 ## 情境
 ### 增加 LV
 - 調整大小
-    - 增加固定大小: `lvextend -L +4G /dev/mapper/vg_demo-lv_u01`
-    - 調整到目標大小: `lvresize -L +20G /dev/testvg/testlv`
-    - 調整到 Max: `lvextend -l +100%FREE /dev/mapper/vg_demo-lv_u01`
+    - 增加固定大小
+        - `lvextend -L +4G /dev/mapper/vg_demo-lv_u01`
+        - `lvextend -l 204790 /dev/mapper/vg_demo-lv_u01`
+    - 調整到目標大小
+        - `lvresize -L +20G /dev/testvg/testlv`
+    - 調整到 Max
+        - `lvextend -l +100%FREE /dev/mapper/vg_demo-lv_u01`
     - 結果
-        ```txt
         Size of logical volume testvg/testlv changed from 20.00 GiB (5120 extents) to 40.00 GiB (10240 extents).
             Logical volume testvg/testlv successfully resized.
-        ```
-- 執行放大檔案系統: `xfs_growfs /u01`
+- 執行放大檔案系統
+    - xfs: `xfs_growfs /u01`
+    - ext: `resize2fs /dev/mapper/vg_demo-lv_u01`
 - check: `xfs_info /u01`
-    - ![](../../img/linux/lvm/check-xfs-info.png)
+    <br><img src="https://github.com/ShaqtinAFool/gitbook/raw/master/img/linux/lvm/check-xfs-info.png">
 
 ### ~~縮小 LV(xfs無法縮小)~~
 ```bash
