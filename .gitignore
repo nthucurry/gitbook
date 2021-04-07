@@ -99,5 +99,6 @@ knowledge/exam/*
 !knowledge/infra/openshift.md
 !knowledge/infra/docker
 !knowledge/infra/paas
+!knowledge/infra/web.md
 !knowledge/exam
 !knowledge/exam/oracle-11g.md
