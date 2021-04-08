@@ -14,3 +14,10 @@ API Management helps organizations publish APIs to external, partner, and intern
 This article provides an overview of common scenarios that involve APIM. It also gives a brief overview of the APIM system's main components. The article, then, gives a more detailed overview of each component.
 
 <br><img src="https://docs.microsoft.com/en-us/azure/api-management/media/api-management-using-with-vnet/api-management-vnet-internal.png">
+
+## Integration Service Environments (ISE)
+ISE is a fully isolated and dedicated environment for all enterprise-scale integration needs. When you create a new ISE, it’s injected into your Azure Virtual Network allowing you to deploy Logic Apps as a service in your VNET.
+
+With the general availability of the ISE, we’ve made several improvements from preview giving your Logic Apps more power when running in an ISE.
+
+Since an ISE provides a private execution environment for executing your Logic Apps where you can take advantage of more deployed resources, many of the limits have also been increased.
