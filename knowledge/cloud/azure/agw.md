@@ -15,35 +15,43 @@
 
 ## 設定步驟
 ### Configuration
-<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-configuration.png?raw=true" width="500">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-waf.png" width="500">
 
 ### Web Application Firewall
-<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-waf.png?raw=true">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-waf.png" width="500">
 
 ### Backend Pools
-<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-backend-pool.png?raw=true">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-backend-pool.png" width="500">
 
 ### HTTP Settings
 ### Listeners
-<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-listener.png?raw=true">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-listener.png" height="500">
 
 ### Rules
-<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-rule-listener.png?raw=true">
-<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-rule-backend-target.png?raw=true">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-rule-listener.png" width="500">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-rule-backend-target.png" width="500">
 
 ### Health Probes
-<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-health-probes.png?raw=true">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-health-probes.png" width="500">
 
 ### Backend Health
 Gets the backend health of the specified application gateway in a resource group.
+
+## 設定結果
+- topology
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-topology.png" width="500">
+- listener
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-listener-list.png">
+- rule
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-rule-list.png">
+- http setting
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-http-setting-list.png">
 
 ## 原理
 ### Beforehand
 - SSL: HTTP (瀏覽器) 和 TCP (Server) 之間的加密方式
 - 數位憑證
-    ```txt
-    數位憑證 (Digital ID) 係結合一對可以用來加密及簽章的電子金鑰。簡單的說，數位憑證可以用來核驗宣稱擁有金鑰使用權者的身分，並且可以避免第三者使用偽造的金鑰來頂替真正的合法使用者。數位憑證與加密的技術相結合後，可以提供更高等級的安全性，進而保障進行線上交易的每一方。
-    ```
+    <br>數位憑證 (Digital ID) 係結合一對可以用來加密及簽章的電子金鑰。簡單的說，數位憑證可以用來核驗宣稱擁有金鑰使用權者的身分，並且可以避免第三者使用偽造的金鑰來頂替真正的合法使用者。數位憑證與加密的技術相結合後，可以提供更高等級的安全性，進而保障進行線上交易的每一方。
     - 根憑證 (root certificate)
         - 來自於公認可靠的政府機關、軟體公司、憑證頒發機構公司...等
         - 部署程序複雜費時，需要行政人員的授權及機構法人身分的核認，一張根憑證有效期可能長達十年以上
@@ -53,14 +61,31 @@ Gets the backend health of the specified application gateway in a resource group
 - CRT + KEY --> PFX
     - http://dog0416.blogspot.com/2017/08/opensslwindows-crt-key-pfx.html
 
+### 憑證設定
+- Tomcat
+    ```txt
+    [azadmin@vm-tomcat ~]$ ls
+    apache-tomcat-9.0.44.zip  apache-tomcat-9.0.44.zip.sha512  auoca2021.key  auoca2021.pem
+    [azadmin@vm-tomcat ~]$ openssl pkcs12 -export -in auoca2021.pem -out auoca2021.pfx
+    Enter Export Password:
+    Verifying - Enter Export Password:
+    [azadmin@vm-tomcat ~]$ ls
+    apache-tomcat-9.0.44.zip  apache-tomcat-9.0.44.zip.sha512  auoca2021.key  auoca2021.pem  auoca2021.pfx
+    [azadmin@vm-tomcat ~]$ sudo cp auoca2021.pfx /usr/share/tomcat/conf/
+    [azadmin@vm-tomcat conf]$ sudo vim server.xml
+    [azadmin@vm-tomcat conf]$ sudo systemctl stop tomcat.service
+    [azadmin@vm-tomcat conf]$ sudo systemctl start tomcat.service
+    [azadmin@vm-tomcat conf]$ sudo systemctl status tomcat.service
+    ```
+
 ## Troubleshooting bad gateway errors in Application Gateway
 - NSG, UDR, or Custom DNS is blocking access to backend pool members.
     <br>The NSG on the Application Gateway subnet is blocking inbound access to ports 65503-65534 (v1 SKU) or 65200-65535 (v2 SKU) from Internet.
-        | Type                    | port        | protocol | source   | destination |
-        |-------------------------|-------------|----------|----------|-------------|
-        | inbound                 | 80,443      | TCP      | internet | VNet        |
-        | inbound (health status) | 65503-65534 | TCP      | internet | VNet        |
-        <br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/cloud/azure/agw-nsg-deny-80443.png?raw=true">
+    | Type                    | port        | protocol | source   | destination |
+    |-------------------------|-------------|----------|----------|-------------|
+    | inbound                 | 80,443      | TCP      | internet | VNet        |
+    | inbound (health status) | 65503-65534 | TCP      | internet | VNet        |
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-nsg-deny-80443.png" width="500">
 - ~~Back-end VMs or instances of virtual machine scale set aren't responding to the default health probe.~~
 - Invalid or improper (不當的) configuration of custom health probes.
 - ~~Azure Application Gateway's back-end pool isn't configured or empty.~~
