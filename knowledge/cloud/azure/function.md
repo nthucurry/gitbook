@@ -21,3 +21,6 @@ ISE is a fully isolated and dedicated environment for all enterprise-scale integ
 With the general availability of the ISE, we’ve made several improvements from preview giving your Logic Apps more power when running in an ISE.
 
 Since an ISE provides a private execution environment for executing your Logic Apps where you can take advantage of more deployed resources, many of the limits have also been increased.
+
+## JIRA SAML SSO by Microsoft
+- https://docs.microsoft.com/zh-tw/azure/active-directory/saas-apps/jiramicrosoft-tutorial
