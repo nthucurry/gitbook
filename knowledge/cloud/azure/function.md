@@ -24,3 +24,11 @@ Since an ISE provides a private execution environment for executing your Logic A
 
 ## JIRA SAML SSO by Microsoft
 - https://docs.microsoft.com/zh-tw/azure/active-directory/saas-apps/jiramicrosoft-tutorial
+
+### Security Assertion Markup Language (SAML)
+安全宣告標記語言 (SAML) 是一種 XML 標準，可讓安全的網域互相交換使用者驗證與使用者授權資料。線上服務供應商可以使用 SAML 與個別線上識別資訊提供者聯絡，對嘗試存取安全內容的使用者加以驗證。
+<br><img src="https://docs.microsoft.com/zh-tw/azure/active-directory/develop/media/single-sign-on-saml-protocol/active-directory-saml-single-sign-on-workflow.png">
+<br><img src="https://lh3.googleusercontent.com/ijxXNNLYFPLlMEjBf5yWS2xRiLDRRXUcYyX8mY61dPa1wfxpWExmdMazM7kEWWVjf6s=w661">
+
+### Active Directory Federation Services (ADFS)
+識別身分同盟的組織也就是 Active Directory Federation Services (ADFS) 是一種可以讓特定 Active Directory (AD) 加入的服務。一旦任何的 AD 加入了這個同盟組織，ADFS 伺服器可以立刻的知道。而這樣的特性剛好可以跟單一認證系統 SSO 做互相的整合與應用，讓之後陸續加入的 AD (或跨網域 AD) 可以做為單一認證系統 SSO 的諮詢對象，進而逹到跨網域的控管。
