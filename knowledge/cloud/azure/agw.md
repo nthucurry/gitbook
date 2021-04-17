@@ -13,6 +13,9 @@
 - application gateway subnet
     <br>The application gateway subnet can contain **only** application gateways. **No other resources** are allowed.
 
+## Application Gateway Multiple Site Hosting
+<br><img src="https://docs.microsoft.com/zh-tw/azure/application-gateway/media/multiple-site-overview/multisite.png">
+
 ## 設定步驟
 ### Configuration
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-waf.png" width="500">
