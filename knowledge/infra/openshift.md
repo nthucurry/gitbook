@@ -1,7 +1,4 @@
 # Watson Knowledge Catalog (WKC)
-## 目的
-資料治理平台 - IBM Cloud Pack for Data 評估與導入
-
 ## 產品特色
 透過可在任何雲端上執行的開放式可延伸資料與 AI 平台，來加速您邁向 AI 的旅程，藉此改變您的業務運作方式
 
@@ -9,21 +6,7 @@ IBM Cloud Pak® for Data 是一種完全整合的資料與 AI 平台，它將企
 
 以 Red Hat® OpenShift® 精簡混合雲做為建置基礎的 IBM Cloud Pak for Data，它充分利用基礎資源以及基礎架構優化與管理。此解決方案完全支援多雲端環境，例如 Amazon Web Services (AWS)、Azure、Google Cloud、IBM Cloud® 及私有雲部署。瞭解 IBM Cloud Pak for Data 如何能降低您的總擁有成本並加速創新。
 
-## Cluster Architecture
-- multi-node cluster
-- load balancer = three master + infra nodes
-- minimum recommended
-<br><img src="https://www.ibm.com/support/knowledgecenter/SSQNUZ_latest/cpd/plan/images/cluster-arch.png">
-
-## Storage Architecture
-It supports NFS, Portworx, Red Hat OpenShift Container Storage, and IBM Cloud File Storage. Your cluster can contain a mix of storage types. However, each service can target **only one type** of storage.
-| Type                 | OpenShift Container Storage | NFS             | Portworx   | IBM Cloud File Storage |
-|----------------------|-----------------------------|-----------------|------------|------------------------|
-| Backup and Restore   | snapshots and clones        | limited support |            |                        |
-| HA                   |                             |                 |            |                        |
-| License              | yes                         | no              | it depends |                        |
-| Network Requirements | 10 Gbps                     |                 |            |                        |
-
+<br><img src="https://www.ibm.com/support/knowledgecenter/SSQNUZ_latest/cpd/plan/images/cluster-arch.png" width="500">
 
 ## Relationship with Azure
 **IBM Cloud Pak for Data** is an analytics platform that helps you prepare your data for AI. It enables data engineers, data steward (管家), data scientists, and business analysts to collaborate using an integrated multiple-cloud platform.
@@ -46,83 +29,27 @@ Requirements:
 - Cloud Pak for Data v3.5.0 API Key
 
 ## Issue
-- [4/1]
-    ```txt
-    CR:
-    建置 WKC 專案，預計會於 Azure 新建以下資源:
-    1. Resource Group: WKC
-    2. 8 台 RedHat VM (bastion*1, master*3, worker*4), 1 台 CentOS/Ubuntu VM (NFS Server)
-    3. Azure NSG:
-        InBound, OutBound: 22, 80, 443, 6443, 22623
-    4. Azure subnet:
-        IP: 10.250.101.0/26 (master subnet), 10.250.101.64/26 (worker subnet)
-        以上 subnet 需開通以下連線:
-        (1) internet 連線, by azure proxy (VM)
-            - 建置時開放對外連線以下載安裝程式 (80, 443)
-            - 建置完畢後，對外連線僅開放必要 Repo (如 quay.io) 更新 packages
-        (2) intranet 連線
-            a. 開放 80, 443, 6443 ports for 新竹 OA 網段
-            b. 開放 22 port for 新竹跳板機
-            c. 開放新竹 server farm 網段的 1433, 1521-1530 ports
-    5. DNS Forwarder:
-        將 domain name = azure.corpnet.auo.com 導到 Azure DNS Forwarder VM (10.248.15.4, 10.248.15.5)
-    Attach: 架構圖
-    ```
-- [3/25]
-    - [AUO 需提供相關資訊]
-        1. domain name ===> azure.dg.auo.com
-            - 名稱可以改成 dg.corpnet.auo.com 嗎?
-            - 可以
-        2. cluster name        ===> cpd-prd
-        3. DNS sample         ===> zen-cpd-zen.apps.[cluster name].[domain name]
-        4.            ===> zen-cpd-zen.apps.cpd-prd.azure.dg.auo.com
-        5. OCP 帳號名稱(cpdadm) ==> Bastion 機上的帳號
-        6. NFS 帳號名稱
-            - NFS 可以使用 Azure Storage Service 嗎？
-            - NFS Server 將使用 Azure VM，使用 managed disks (LSR - Locally Redundant Premium)
-            - 參考資訊：https://docs.microsoft.com/zh-tw/azure/storage/common/storage-introduction
-        7. LDAP 連線使用者帳號/密碼
-        8. Root_CA.cer (TLS設定用)
-        9. wildcard_certificate (.cer / .key) ===> Domain Name Https 使用
-        10. azure-subscription-id
-        11. azure-client-id
-        12. azure-client-secret
-        13. azure-tenant-id
-        14. 預計使用 Region
-        15. 預計使用的 AZ
-        - 我們將到廠安裝，這個需要在安裝 OCP 之前需要準備好就可以了
-    - [AUO 需協助事項]
-        - [ ] ~~建立 azure domain name~~
-            - 指的是什麼？
-        - [x] 建立 resource-group
-        - [ ] 建立 vnet wkc-vnet 10.30.124.0/24
-            - 建立 vnet wkc-vnet 的網段的 IP Range 是可以調整的嗎？該網段應該是 Private Net，所以應該不會需要跟 AUO Network 互通是嗎？
-            - IP Range /24 就 ok 了嗎?
-        - [ ] 建立 vnet subnet ( wkc-bootnode-subnet 10.30.124.0/27 | wkc-master-subnet 10.30.124.64/26 | wkc-worker-subnet 10.30.124.128/26 )
-            - 不太懂建立 wkc-bootnode-subnet, wkc-master-subnet, wkc-worker-subnet 的用意
-        - [x] 建立network security group (WKC-MASTER-NSG / WKC-WORK-NSG)
-            - 在 WKC-MASTER-NSG 加上80, 443, 6443, 22623
-            - 在 WKC-WORK-NSG 加上 6443, 22623
-        - [x] 雲對地 VPN 網路設定
-        - [x] 地端對 WKC DNS 設定(需設定，用 DNS Forwarder 方法)
-        - [ ] vnet 中各 Node 需能存取 Internet 連線
-            - 這個連接外網的動作是否安裝時開通即可??
-- [3/23]
-    1. 建立 azure domain name
-    2. 建立 resource-group
-    3. ~~建立 vnet wkc-vnet~~
-    4. 建立 vnet subnet
-    5. 建立 network security group (WKC-MASTER-NSG / WKC-WORK-NSG)
-            - 在 WKC-MASTER-NSG 加上 80, 443, 6443, 22623
-            - 在 WKC-WORK-NSG 加上  6443, 22623
-    6. ~~雲對地 VPN 網路設定~~
-    7. ~~地端對 WKC DNS 設定~~
-    8. vnet 中各 Node 需能存取 Internet 連線: 是指初期需要能用外網建置?
-- [3/17] 討論的問題點為：
-    1. 安裝是由 IBM 於雲端安裝完成嗎? AUO 只需要維運即可? 或還需要作業那些內容?
-    2. IBM 提到使用代理商跟我們合作軟體服務，AUO先前是跟恆鼎代理商合作，但因為合作狀況不是很好，有更佳推薦代理商嗎?
-    3. 合約的部份可以增加下圖一第七點異常與備援機制(或原本已含)?
-    4. 目前有其他導入 WKC 並連線至阿里雲的經驗嗎? 可提供 AUO 參考與建議嗎?
+```txt
+CR:
+建置 WKC 專案，預計會於 Azure 新建以下資源:
+1. Resource Group: WKC
+2. 8 台 RedHat VM (bastion*1, master*3, worker*4), 1 台 CentOS/Ubuntu VM (NFS Server)
+3. Azure NSG:
+    InBound, OutBound: 22, 80, 443, 6443, 22623
+4. Azure subnet:
+    IP: 10.250.101.0/26 (master subnet), 10.250.101.64/26 (worker subnet)
+    以上 subnet 需開通以下連線:
+    (1) internet 連線, by azure proxy (VM)
+        - 建置時開放對外連線以下載安裝程式 (80, 443)
+        - 建置完畢後，對外連線僅開放必要 Repo (如 quay.io) 更新 packages
+    (2) intranet 連線
+        a. 開放 80, 443, 6443 ports for 新竹 OA 網段
+        b. 開放 22 port for 新竹跳板機
+        c. 開放新竹 server farm 網段的 1433, 1521-1530 ports
+5. DNS Forwarder:
+    將 domain name = azure.corpnet.auo.com 導到 Azure DNS Forwarder VM (10.248.15.4, 10.248.15.5)
+Attach: 架構圖
+```
 
 ## Firewall Activation
 - Azure
@@ -140,6 +67,26 @@ Requirements:
     - Ports for services
 - storage
     <br><img src="https://docs.microsoft.com/en-us/azure/virtual-network/media/network-isolation/service-tags.png">
+
+## 指令
+```bash
+cd ~
+mkdir ocp4.5_inst
+cd ocp4.5_inst
+wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-install-linux-4.5.36.tar.gz
+tar xvf openshift-install-linux-4.5.36.tar.gz
+./openshift-install create install-config --dir=/home/cpdadmin/ocp4.5_cust
+# ? azure subscription id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+# ? azure tenant id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+# ? azure service principal client id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+# ? azure service principal client secret [? for help] **********************************
+./openshift-install --dir=/home/cpdadmin/ocp4.5_cust create cluster --log-level=info
+./openshift-install --dir=/home/cpdadmin/ocp4.5_cust create cluster --log-level=debug
+./openshift-install --dir=/home/cpdadmin/ocp4.5_cust wait-for bootstrap-complete --log-level=info
+# INFO Credentials loaded from file “/home/cpdadmin/.azure/osServicePrincipal.json”
+# INFO Consuming Install Config from target directory
+# INFO Creating infrastructure resources…
+```
 
 ## 參考
 - [因應多雲資料處理分析需求，IBM提供專屬預先整合套件](https://www.ithome.com.tw/review/134115)
