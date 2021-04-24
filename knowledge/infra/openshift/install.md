@@ -11,7 +11,7 @@
     }
     ```
 - `az ad sp list --filter "appId eq 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'"`
-- `az role assignment create --role "User Access Administrator" --assignee-object-id "a2181275-XXXX-XXXX-XXXX-afa4e6afd3e7"`
+- `az role assignment create --role "User Access Administrator" --assignee-object-id "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
 
 ## 設定 Install Config
 ```yaml
@@ -83,6 +83,8 @@ sshKey: |
     - 設定 config
         - `./ocp4.5_inst/openshift-install create install-config --dir=/home/azadmin/ocp4.5_cust`
             ```txt
+            ? SSH Public Key /home/azadmin/.ssh/id_rsa.pub
+            ? Platform azure
             ? azure subscription id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
             ? azure tenant id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
             ? azure service principal client id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
@@ -173,7 +175,7 @@ sshKey: |
         >/data *(rw,sync,no_root_squash)
 - 重啟 NFS
     - `systemctl restart nfs-server`
-- 安裝 OpenShift Container Plaform
+- 安裝 OpenShift Container Platform
     ```bash
     cd ~
     mkdir ocp4.5_client
@@ -182,178 +184,172 @@ sshKey: |
     tar xvfz openshift-client-linux-4.5.36.tar.gz
     sudo cp ./oc /usr/bin
     ```
+- 安裝 k8s incubator
+    ```bash
+    curl -L -o kubernetes-incubator.zip https://github.com/kubernetes-incubator/external-storage/archive/master.zip
+    unzip kubernetes-incubator.zip
+    cd external-storage-master/nfs-client/
+    ```
+- 建立 OpenShift storage (在 container 內的 storage ?)
+    ```bash
+    oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX
+    oc create namespace openshift-nfs-storage
+    oc label namespace openshift-nfs-storage "openshift.io/cluster-monitoring=true"
+    oc project openshift-nfs-storage
+    NAMESPACE=`oc project -q`
+    echo $NAMESPACE
+    sudo sed -i'' "s/namespace:.*/namespace: $NAMESPACE/g" ./deploy/rbac.yaml
+    sudo sed -i'' "s/namespace:.*/namespace: $NAMESPACE/g" ./deploy/deployment.yaml
+    ```
+- 建立 OpenShift RBAC
+    ```bash
+    oc create -f deploy/rbac.yaml
+    oc adm policy add-scc-to-user hostmount-anyuid system:serviceaccount:$NAMESPACE:nfs-client-provisioner
+    ```
+    ```bash
+    cd deploy/
+    vi deployment.yaml
+    #  env:
+    #    - name: PROVISIONER_NAME
+    #    value: storage.io/nfs
+    #    - name: NFS_SERVER
+    #    value: 10.250.101.6
+    #    - name: NFS_PATH
+    #    value: /data
+    #
+    #  volumes:
+    #    - name: nfs-client-root
+    #    nfs:
+    #      server: 10.250.101.6
+    #      path: /data
+    ```
+    ```bash
+    vi class.yaml
+    #  apiVersion: storage.k8s.io/v1
+    #  kind: StorageClass
+    #  metadata:
+    #    name: managed-nfs-storage
+    #  provisioner: storage.io/nfs # or choose another name, must match deployment's env PROVISIONER_NAME'
+    #  parameters:
+    #    archiveOnDelete: "false"
+    ```
+- oc
+    ```bash
+    oc create -f deploy/class.yaml
+    oc create -f deploy/deployment.yaml
+    oc create -f deploy/test-claim.yaml
 
+    oc get pods
+    oc get pvc
+    ```
+- 安裝 podman (redhad 取代 docker tool)
+    - `yum install podman -y`
+- 建立 Namespace
+    ```bash
+    oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX
+    oc new-project zen
+    ```
+- 產生 image registry 的 default route
+    ```bash
+    cd ~/ibm/v3.5.3
+    oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
+    ```
+- 登入 docker registry
+    ```bash
+    export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
+    sudo podman login -u kubeadmin -p $(oc whoami -t) --tls-verify=false $REGISTRY
+    ```
+- 安裝 lite
+    - 設定環境變數
+        ```bash
+        export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
+        export NAMESPACE=zen
+        export STORAGE_CLASS=managed-nfs-storage
+        export IMAGE_REGISTRY_USER=$(oc whoami)
+        export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
+        export ASSEMBLY=lite
+        export VERSION=3.5.3
+        export LOAD_FROM=./v3.5.3/lite
+        ```
+    - 執行 cpd cli
+        ```bash
+        ./cpd-cli preload-images \
+        --assembly $ASSEMBLY \
+        --action push \
+        --target-registry-username kubeadmin \
+        --target-registry-password $IMAGE_REGISTRY_PASSWORD \
+        --load-from $LOAD_FROM \
+        --transfer-image-to $REGISTRY/$NAMESPACE \
+        --insecure-skip-tls-verify \
+        --accept-all-licenses
 
-$ curl -L -o kubernetes-incubator.zip https://github.com/kubernetes-incubator/external-storage/archive/master.zip
+        ./cpd-cli adm \
+        --assembly $ASSEMBLY \
+        --latest-dependency \
+        --namespace $NAMESPACE \
+        --load-from $LOAD_FROM \
+        --apply \
+        --verbose \
+        --accept-all-licenses
 
-$ unzip kubernetes-incubator.zip
+        ./cpd-cli install \
+        --assembly $ASSEMBLY \
+        --namespace $NAMESPACE \
+        --storageclass $STORAGE_CLASS \
+        --load-from $LOAD_FROM \
+        --cluster-pull-username=kubeadmin \
+        --cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
+        --cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
+        --latest-dependency \
+        --accept-all-licenses \
+        --verbose \
+        --insecure-skip-tls-verify
+        ```
+    - 確認狀態
+        - `./cpd-cli status --assembly $ASSEMBLY --namespace $NAMESPACE`
+- 安裝 WKC
+    - 設定環境變數
+        ```bash
+        export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
+        export NAMESPACE=zen
+        export STORAGE_CLASS=managed-nfs-storage
+        export IMAGE_REGISTRY_USER=kubeadmin
+        export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
+        export ASSEMBLY=wkc
+        export VERSION=3.5.3
+        export LOAD_FROM=./v3.5.3/wkc/
+        ```
+    - 執行 cpd cli
+        ```bash
+        ./cpd-cli preload-images \
+        --assembly $ASSEMBLY \
+        --action push \
+        --target-registry-username $IMAGE_REGISTRY_USER \
+        --target-registry-password $IMAGE_REGISTRY_PASSWORD \
+        --load-from $LOAD_FROM \
+        --transfer-image-to $REGISTRY/$NAMESPACE \
+        --insecure-skip-tls-verify \
+        --accept-all-licenses
 
-$ cd external-storage-master/nfs-client/
+        ./cpd-cli adm \
+        --assembly $ASSEMBLY \
+        --latest-dependency \
+        --namespace $NAMESPACE \
+        --load-from $LOAD_FROM \
+        --apply \
+        --verbose \
+        --accept-all-licenses
 
-
-
-oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX
-oc create namespace openshift-nfs-storage
-oc label namespace openshift-nfs-storage "openshift.io/cluster-monitoring=true"
-oc project openshift-nfs-storage
-NAMESPACE=`oc project -q`
-echo $NAMESPACE
-sudo sed -i'' "s/namespace:.*/namespace: $NAMESPACE/g" ./deploy/rbac.yaml
-sudo sed -i'' "s/namespace:.*/namespace: $NAMESPACE/g" ./deploy/deployment.yaml
-
-oc create -f deploy/rbac.yaml
-oc adm policy add-scc-to-user hostmount-anyuid system:serviceaccount:$NAMESPACE:nfs-client-provisioner
-
-cd deploy/
-vi deployment.yaml
-	  env:
-		- name: PROVISIONER_NAME
-		  value: storage.io/nfs
-		- name: NFS_SERVER
-		  value: 10.250.101.6
-		- name: NFS_PATH
-		  value: /data
-
-      volumes:
-        - name: nfs-client-root
-          nfs:
-            server: 10.250.101.6
-            path: /data
-
-vi class.yaml
-	apiVersion: storage.k8s.io/v1
-	kind: StorageClass
-	metadata:
-	  name: managed-nfs-storage
-	provisioner: storage.io/nfs # or choose another name, must match deployment's env PROVISIONER_NAME'
-	parameters:
-	  archiveOnDelete: "false"
-
-
-
-
-oc create -f deploy/class.yaml
-oc create -f deploy/deployment.yaml
-
-oc get pods
-
-oc create -f deploy/test-claim.yaml
-
-oc get pvc
-
-
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-yum install containerd.io docker-ce docker-ce-cli -y
-
-
-
-# 安裝 podman (redhad 取代 docker tool)
-$ sudo yum module enable -y container-tools:1.0
-$ sudo yum module install -y container-tools:1.0
-
-# 切工作目錄
-cd ~/ibm/v3.5.3
-
-# 建立 Namespace
-oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX
-oc new-project zen
-
-# 產生image registry的default route
-oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
-
-# 登入 docker registry
-export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
-yum install podman -y
-sudo podman login -u kubeadmin -p $(oc whoami -t) --tls-verify=false $REGISTRY
-
-
-export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
-export NAMESPACE=zen
-export STORAGE_CLASS=managed-nfs-storage
-export IMAGE_REGISTRY_USER=$(oc whoami)
-export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
-export ASSEMBLY=lite
-export VERSION=3.5.3
-export LOAD_FROM=./v3.5.3/lite
-
-
-
-./cpd-cli preload-images \
---assembly $ASSEMBLY \
---action push \
---target-registry-username kubeadmin \
---target-registry-password $IMAGE_REGISTRY_PASSWORD \
---load-from $LOAD_FROM \
---transfer-image-to $REGISTRY/$NAMESPACE \
---insecure-skip-tls-verify \
---accept-all-licenses
-
-./cpd-cli adm \
---assembly $ASSEMBLY \
---latest-dependency \
---namespace $NAMESPACE \
---load-from $LOAD_FROM \
---apply \
---verbose \
---accept-all-licenses
-
-./cpd-cli install \
---assembly $ASSEMBLY \
---namespace $NAMESPACE \
---storageclass $STORAGE_CLASS \
---load-from $LOAD_FROM \
---cluster-pull-username=kubeadmin \
---cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
---cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
---latest-dependency \
---accept-all-licenses \
---verbose \
---insecure-skip-tls-verify
-
-./cpd-cli status --assembly $ASSEMBLY --namespace $NAMESPACE
-
-
-export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
-export NAMESPACE=zen
-export STORAGE_CLASS=managed-nfs-storage
-export IMAGE_REGISTRY_USER=kubeadmin
-export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
-export ASSEMBLY=wkc
-export VERSION=3.5.3
-export LOAD_FROM=./v3.5.3/wkc/
-
-
-
-./cpd-cli preload-images \
---assembly $ASSEMBLY \
---action push \
---target-registry-username $IMAGE_REGISTRY_USER \
---target-registry-password $IMAGE_REGISTRY_PASSWORD \
---load-from $LOAD_FROM \
---transfer-image-to $REGISTRY/$NAMESPACE \
---insecure-skip-tls-verify \
---accept-all-licenses
-
-./cpd-cli adm \
---assembly $ASSEMBLY \
---latest-dependency \
---namespace $NAMESPACE \
---load-from $LOAD_FROM \
---apply \
---verbose \
---accept-all-licenses
-
-
-
-./cpd-cli install \
---assembly $ASSEMBLY \
---namespace $NAMESPACE \
---storageclass $STORAGE_CLASS \
---load-from $LOAD_FROM \
---cluster-pull-username=$IMAGE_REGISTRY_USER \
---cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
---cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
---latest-dependency \
---accept-all-licenses \
---verbose \
---insecure-skip-tls-verify
+        ./cpd-cli install \
+        --assembly $ASSEMBLY \
+        --namespace $NAMESPACE \
+        --storageclass $STORAGE_CLASS \
+        --load-from $LOAD_FROM \
+        --cluster-pull-username=$IMAGE_REGISTRY_USER \
+        --cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
+        --cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
+        --latest-dependency \
+        --accept-all-licenses \
+        --verbose \
+        --insecure-skip-tls-verify
+        ```
