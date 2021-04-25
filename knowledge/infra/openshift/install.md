@@ -1,13 +1,20 @@
 # WKC Install SOP
+## Azure 架構
+<br><img src="../../../img/openshift/azure-insights-overall.png" width="500">
+<br><img src="../../../img/openshift/azure-insights-vm.png">
+<br><img src="../../../img/openshift/azure-insights-network.png">
+<br><img src="../../../img/openshift/azure-insights-storage.png">
+<br><img src="../../../img/openshift/azure-insights-other.png">
+
 ## 到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password
 - `az ad sp create-for-rbac --role="Contributor" --name="http://corpnet.auo.com" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
     ```json
     {
-    "appId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-    "displayName": "corpnet.auo.com",
-    "name": "http://corpnet.auo.com",
-    "password": "**********************************",
-    "tenant": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+        "appId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+        "displayName": "corpnet.auo.com",
+        "name": "http://corpnet.auo.com",
+        "password": "**********************************",
+        "tenant": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
     }
     ```
 - `az ad sp list --filter "appId eq 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'"`
@@ -353,3 +360,20 @@ sshKey: |
         --verbose \
         --insecure-skip-tls-verify
         ```
+
+## 設定 Proxy
+- 設定 NSG
+    <br><img src="../../../img/openshift/azure-nsg.png">
+- 編輯 Proxy object
+    - `oc edit proxy/cluster`
+        ```yaml
+        apiVersion: config.openshift.io/v1
+        kind: Proxy
+        metadata:
+            name: cluster
+        spec:
+            httpProxy: http://10.250.12.5:3128
+            httpsProxy: http://10.250.12.5:3128
+        ```
+- 確認 pods 狀態
+    - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`

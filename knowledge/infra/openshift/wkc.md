@@ -69,7 +69,7 @@ status:
 - Prerequisites
 - Procedure
     1. Create a ConfigMap that contains any additional CA certificates required for proxying HTTPS connections.
-    2. Use the `oc edit` command to modify the Proxy object:
+    2. Use the `oc edit` command to **modify the Proxy object**:
         ```bash
         oc edit proxy/cluster
         ```
