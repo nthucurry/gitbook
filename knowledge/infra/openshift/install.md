@@ -1,10 +1,15 @@
 # WKC Install SOP
 ## Azure 架構
-<br><img src="../../../img/openshift/azure-insights-overall.png" width="500">
-<br><img src="../../../img/openshift/azure-insights-vm.png">
-<br><img src="../../../img/openshift/azure-insights-network.png">
-<br><img src="../../../img/openshift/azure-insights-storage.png">
-<br><img src="../../../img/openshift/azure-insights-other.png">
+- resource group
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-insights-overall.png" width="300">
+- VM
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-insights-vm.png" width="300">
+- network
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-insights-network.png" width="300">
+- storage
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-insights-storage.png" width="300">
+- other
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-insights-other.png" width="300">
 
 ## 到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password
 - `az ad sp create-for-rbac --role="Contributor" --name="http://corpnet.auo.com" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
@@ -101,6 +106,8 @@ sshKey: |
         - `./ocp4.5_inst/openshift-install create cluster --dir=/home/azadmin/ocp4.5_cust --log-level=info`
         - check installing status
             - `tail -f ./ocp4.5_inst/.openshift_install.log`
+        - 如果不是使用 Azure DNS，需動態改 IP
+            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-dns.png">
     - 確認 OpenShift Status
         - 從 web
             - https://console-openshift-console.apps.wkc.corpnet.auo.com
@@ -120,7 +127,7 @@ sshKey: |
 ## 安裝 OpenShift Client on NFS VM
 - 修改 repo
     ```bash
-    export registry_key="<key>"
+    export registry_key="<cpd_key>"
     sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
     ```
 - 下載 OpenShift 檔案
@@ -240,7 +247,7 @@ sshKey: |
     #  parameters:
     #    archiveOnDelete: "false"
     ```
-- oc
+- 建立 deploy resource
     ```bash
     oc create -f deploy/class.yaml
     oc create -f deploy/deployment.yaml
@@ -249,9 +256,9 @@ sshKey: |
     oc get pods
     oc get pvc
     ```
-- 安裝 podman (redhad 取代 docker tool)
+- 安裝 podman (redhad 用來取代 docker tool 的工具)
     - `yum install podman -y`
-- 建立 Namespace
+- 建立 namespace
     ```bash
     oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX
     oc new-project zen
@@ -360,11 +367,89 @@ sshKey: |
         --verbose \
         --insecure-skip-tls-verify
         ```
+- WKC portal
+    - https://zen-cpd-zen.apps.wkc.corpnet.auo.com
+
+## 設定 Machine Config
+- https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=tasks-changing-required-node-settings#node-settings__crio
+- 安裝 python 3
+    - `yum install python3 -y`
+- 設定 CRI-O container
+    - 複製 worker 的 crio.conf 到 bastion
+        - `scp core@$(oc get nodes | grep worker | head -1 | awk '{print $1}'):/etc/crio/crio.conf /tmp/crio.conf`
+    - 編輯 /tmp/crio.conf
+        ```txt
+        default_ulimits = [
+                "nofile=66560:66560"
+        ]
+        pids_limit = 12288
+        ```
+    - 設定環境變數
+        - `crio_conf=$(cat /tmp/crio.conf | python3 -c "import sys, urllib.parse; print(urllib.parse.quote(''.join(sys.stdin.readlines())))")`
+    - 建立 machine config
+        ```yaml
+        cat << EOF > /tmp/51-worker-cp4d-crio-conf.yaml
+        apiVersion: machineconfiguration.openshift.io/v1
+        kind: MachineConfig
+        metadata:
+         labels:
+           machineconfiguration.openshift.io/role: worker
+         name: 51-worker-cp4d-crio-conf
+        spec:
+         config:
+           ignition:
+             version: 2.2.0
+           storage:
+             files:
+             - contents:
+                 source: data:,${crio_conf}
+               filesystem: root
+               mode: 0644
+               path: /etc/crio/crio.conf
+        EOF
+        ```
+    - 執行 oc 使參數生效，此時 worker 會重啟，約花 30 分鐘
+        - `oc create -f /tmp/51-worker-cp4d-crio-conf.yaml`
+        - 確認執行進度
+            - `watch "oc get nodes"`
+    - 檢查參數
+        - `oc exec is-en-conductor-0 -- bash -c "cat /sys/fs/cgroup/pids/pids.max"`
+- 設定 kernel parameter
+    - 編輯 yaml
+        ```yaml
+        apiVersion: tuned.openshift.io/v1
+        kind: Tuned
+        metadata:
+          name: cp4d-wkc-ipc
+          namespace: openshift-cluster-node-tuning-operator
+        spec:
+          profile:
+          - name: cp4d-wkc-ipc
+            data: |
+              [main]
+              summary=Tune IPC Kernel parameters on OpenShift Worker Nodes running WKC Pods
+              [sysctl]
+              kernel.shmall = 33554432
+              kernel.shmmax = 68719476736
+              kernel.shmmni = 32768
+              kernel.sem = 250 1024000 100 32768
+              kernel.msgmax = 65536
+              kernel.msgmnb = 65536
+              kernel.msgmni = 32768
+              vm.max_map_count = 262144
+          recommend:
+          - match:
+            - label: node-role.kubernetes.io/worker
+            priority: 10
+            profile: cp4d-wkc-ipc
+        ```
+    - 執行 oc 使參數生效
+        - `oc create -f 42-cp4d.yaml`
 
 ## 設定 Proxy
 - 設定 NSG
-    <br><img src="../../../img/openshift/azure-nsg.png">
-- 編輯 Proxy object
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-nsg.png">
+- 編輯 proxy object
     - `oc edit proxy/cluster`
         ```yaml
         apiVersion: config.openshift.io/v1
@@ -377,3 +462,11 @@ sshKey: |
         ```
 - 確認 pods 狀態
     - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
+
+## 設定 User Managerment
+- https://docs.microsoft.com/zh-tw/system-center/scsm/ad-ds-attribs?view=sc-sm-2019
+- sn: 王大明
+- givenname: 1312032
+- displayName: DM Wang 王大明
+- sAMAccountName: dmwang
+- department: I200
