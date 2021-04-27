@@ -21,27 +21,36 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 
 ## Know docker
 差異就在: https://nakivo.medium.com/kubernetes-vs-docker-what-is-the-difference-3b0c6cce97d3
-- 網路
-- use cases
-- cluster
-    | Type                     | docker       | k8s |
-    | ------------------------ | ------------ | --- |
-    | orchestration technology | docker swarm |     |
 
 ## Master
-### 1. Installing kubeadm on your hosts
-- `sudo kubeadm config images pull`(option)
+### (1)
+ 安裝 kubeadm
+- 找出 kubeadmin 需要的 images (option)
+    - `sudo kubeadm config images pull`
 - 使用 flannel CNI
     - `sudo kubeadm init --pod-network-cidr=10.244.0.0/16`(~ 4 min)
-- 用 non-root user 執行
+        ```txt
+        [init] Using Kubernetes version: v1.21.0
+        [preflight] Running pre-flight checks
+        [preflight] Pulling images required for setting up a Kubernetes cluster
+        [preflight] This might take a minute or two, depending on the speed of your internet connection
+        [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
+        ...
+        ```
+- 設定 config
     ```bash
     mkdir -p $HOME/.kube
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    export KUBECONFIG=$HOME/.kube/config
     ```
-    - `sudo export KUBECONFIG=/etc/kubernetes/admin.conf`
+    ```bash
+    sudo su
+    export KUBECONFIG=/etc/kubernetes/admin.conf
+    ```
 - 定義 flannel config (f: file, k: directory)
-    - `sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
+    - `sudo su`
+    - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
         ```txt
         podsecuritypolicy.policy/psp.flannel.unprivileged created
         clusterrole.rbac.authorization.k8s.io/flannel created
@@ -59,7 +68,7 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     vm-t-k8s-node2    Ready    <none>                 3d     v1.20.4
     ```
 
-### 2. Installing a Pod network add-on (添加物)
+### (2) 安裝 Pod network add-on (添加物)
 - 定義 flannel config (option)
     - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml`
 - 確認 nodes 狀態
@@ -76,15 +85,15 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     kube-system   kube-scheduler-vm-t-k8s-master            1/1     Running   0          6m59s
     ```
 
-### 3. Verify kubectl configuration
-- cluster 狀態
-    - `kubectl cluster-info`(not-root)
+### (3) 驗證 kubectl configuration
+- cluster 狀態，用 not-root
+    - `kubectl cluster-info`
     ```txt
     Kubernetes control plane is running at https://10.0.8.4:6443
     KubeDNS is running at https://10.0.8.4:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
     ```
 
-### Remove the node
+### (4) 移除 Node
 - `sudo kubeadm reset`
 - `rm -fr $HOME/.kube`
 
@@ -92,10 +101,9 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 至兩台 node 輸入上一節 worker nodes 欲加入叢集所需輸入的指令，就是這麼簡單！
 <br><img src="https://www.ovh.com/blog/wp-content/uploads/2019/03/IMG_0135.jpg" alt="drawing" width="800" board="1"/>
 
-- 加入 cluster
+- 加入 cluster，該 token 24 小時以內才有效
     ```bash
-    sudo kubeadm join 10.0.8.4:6443 --token b0rc1c.u04ozj7z4390dpv7 \
-    --discovery-token-ca-cert-hash sha256:e42cdcef67760de708d98fdaa9f9420f0f38fddf7e2dae94f06f5a77262d0251
+    kubeadm join 10.0.8.4:6443 --token 3to8hs.43xze7y3jaq29ysr --discovery-token-ca-cert-hash sha256:c3aa0c9848582ddb2332bae80e054c12868fc1d33f8023558921c014ec3c9ed1
     ```
 - Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 - 失敗的話: https://stackoverflow.com/questions/55531834/kubeadm-fails-to-initialize-when-kubeadm-init-is-called
@@ -110,7 +118,8 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     - `kubectl config delete-cluster`
     - 將有關 K8S 的東西刪除
     - `sudo kubeadm reset`
-- 部署 container
+
+## 部署 Container (try it!)
     - 部署名為 nginx 的容器，映像檔名稱為 nginx，透過參數 deployment 會自動幫你創建好 k8s 中的最小管理邏輯單位 pod 與容器
         - `kubectl create deployment nginx --image=nginx`
     - 替容器建立一個 port mapping 的 service，讓 nginx 服務可以被外部存取

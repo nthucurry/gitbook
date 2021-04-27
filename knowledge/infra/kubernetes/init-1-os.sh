@@ -1,15 +1,15 @@
 #/bin/bash
 
 #### necessary
-where_am_i=home
+where_am_i="home"
 
 ### define
 os_name=`cat /etc/os-release | head -1`
-#USER=azadmin
-master_ip=`ip a | grep inet | grep -v 127 | awk '{print $2}' | awk -F '/' ' {print $1}'` && master_hostname="k8s-master"
-node1_ip="10.0.8.5" && node1_hostname="k8s-node1"
-node2_ip="10.0.8.6" && node2_hostname="k8s-node2"
-# proxy_ip="10.1.1.5" && proxy_hostname="k8s-master" && proxy_port=3128
+USER=azadmin
+k8s_ip=`ifconfig | grep inet | awk '{print $2}' | head -1`
+# proxy_ip="10.1.1.5"
+# proxy_hostname="proxy"
+# proxy_port=3128
 
 ### enviroment
 timedatectl set-timezone Asia/Taipei
@@ -26,30 +26,24 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 ### systemctl
 echo "==== systemctl ===="
 systemctl restart sshd
-systemctl stop firewalld && systemctl disable firewalld
+systemctl stop firewalld
+systemctl disable firewalld
 
 #### option
-if [[ $where_am_i -eq "auo" ]]; then
-    ### DNS
-    echo "==== DNS ===="
-    echo "$proxy_ip $proxy_hostname" >> /etc/hosts
-    echo "$master_ip $master_hostname" >> /etc/hosts
-    echo "$node1_ip $node1_hostname" >> /etc/hosts
-    echo "$node2_ip $node2_hostname" >> /etc/hosts
-
+echo "The VMs is in" $where_am_i
+if [ $where_am_i == "auo" ]; then
     ### user account setting
     echo "==== user account setting ===="
 cat >> /home/$USER/.bash_profile << EOF
-    export http_proxy=http://$proxy_hostname:$proxy_port
-    export https_proxy=https://$proxy_hostname:$proxy_port
-    export DISPLAY=$master_ip:0.0
+export http_proxy=http://$proxy_hostname:$proxy_port
+export https_proxy=https://$proxy_hostname:$proxy_port
+export DISPLAY=$k8s_ip:0.0
 EOF
-
     ### internet connection
     echo "==== proxy ===="
-    echo "proxy=http://$proxy_hostname:$proxy_port" >> /etc/yum.conf
-    echo "https_proxy=http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
-    echo "http_proxy=http://$proxy_hostname:$proxy_port" >> /etc/wgetrc
+    echo "proxy=http://$proxy_ip:$proxy_port" >> /etc/yum.conf
+    echo "https_proxy=http://$proxy_ip:$proxy_port" >> /etc/wgetrc
+    echo "http_proxy=http://$proxy_ip:$proxy_port" >> /etc/wgetrc
 else
     echo "not action"
 fi
@@ -61,4 +55,4 @@ yum install epel-release -y
 yum install telnet -y > /dev/null 2>&1
 yum install traceroute -y > /dev/null 2>&1
 yum install nc -y > /dev/null 2>&1
-yum install firefox -y > /dev/null 2>&1
+yum install nmap -y > /dev/nuvill 2>&1

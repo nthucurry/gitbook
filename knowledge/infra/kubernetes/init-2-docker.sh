@@ -12,14 +12,14 @@ yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce
 
 # 3. Install Docker CE
 echo "==== Install Docker CE"
-yum update -y && yum install -y \
-  containerd.io-1.2.13 \
-  docker-ce-19.03.11 \
-  docker-ce-cli-19.03.11
 # yum update -y && yum install -y \
-#   containerd.io \
-#   docker-ce \
-#   docker-ce-cli
+#   containerd.io-1.2.13 \
+#   docker-ce-19.03.11 \
+#   docker-ce-cli-19.03.11
+yum update -y && yum install -y \
+  containerd.io \
+  docker-ce \
+  docker-ce-cli
 # echo "==== If necessary, remove it"
 # yum remove containerd.io && yum remove docker
 

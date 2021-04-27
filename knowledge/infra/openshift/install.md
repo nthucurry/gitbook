@@ -204,7 +204,7 @@ sshKey: |
     unzip kubernetes-incubator.zip
     cd external-storage-master/nfs-client/
     ```
-- 建立 OpenShift storage (在 container 內的 storage ?)
+- 建立 OpenShift storage (在 container 內的 storage)
     ```bash
     oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX
     oc create namespace openshift-nfs-storage
@@ -462,6 +462,20 @@ sshKey: |
         ```
 - 確認 pods 狀態
     - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
+- proxy 連線清單
+    ```txt
+    mirror.openshift.com
+    quay.io
+    stry.redhat.io
+    sso.redhat.com
+    openshift.org
+    cert-api.access.redhat.com
+    api.access.redhat.com
+    api.openshift.com
+    infogw.api.openshift.com
+    cloud.redhat.com
+    management.azure.com
+    ```
 
 ## 設定 User Managerment
 - https://docs.microsoft.com/zh-tw/system-center/scsm/ad-ds-attribs?view=sc-sm-2019
