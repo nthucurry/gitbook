@@ -1,15 +1,12 @@
 #/bin/bash
 
 #### necessary
-where_am_i="home"
+where_am_i="home" # home, auo250, auo248
 
 ### define
 os_name=`cat /etc/os-release | head -1`
 USER=azadmin
 k8s_ip=`ifconfig | grep inet | awk '{print $2}' | head -1`
-# proxy_ip="10.1.1.5"
-# proxy_hostname="proxy"
-# proxy_port=3128
 
 ### enviroment
 timedatectl set-timezone Asia/Taipei
@@ -30,20 +27,25 @@ systemctl stop firewalld
 systemctl disable firewalld
 
 #### option
-echo "The VMs is in" $where_am_i
-if [ $where_am_i == "auo" ]; then
-    ### user account setting
-    echo "==== user account setting ===="
-cat >> /home/$USER/.bash_profile << EOF
-export http_proxy=http://$proxy_hostname:$proxy_port
-export https_proxy=https://$proxy_hostname:$proxy_port
-export DISPLAY=$k8s_ip:0.0
+echo "The VM is in" $where_am_i
+if [ $where_am_i == "auo250" ]; then
+    echo "set proxy"
+cat >> /root/.bashrc << EOF
+export http_proxy=http://10.250.12.5:3128
+export https_proxy=https://10.250.12.5:3128
 EOF
-    ### internet connection
-    echo "==== proxy ===="
-    echo "proxy=http://$proxy_ip:$proxy_port" >> /etc/yum.conf
-    echo "https_proxy=http://$proxy_ip:$proxy_port" >> /etc/wgetrc
-    echo "http_proxy=http://$proxy_ip:$proxy_port" >> /etc/wgetrc
+
+    mkdir -p /etc/systemd/system/docker.service.d
+    touch /etc/systemd/system/docker.service.d/proxy.conf
+    sudo echo '
+    [Service]
+    Environment="HTTP_PROXY=http://10.250.12.5:3128"
+    Environment="HTTPS_PROXY=http://10.250.12.5:3128"
+    ' >> /etc/systemd/system/docker.service.d/proxy.conf
+
+    echo "proxy=http://10.250.12.5:3128" >> /etc/yum.conf
+    echo "https_proxy=http://10.250.12.5:3128" >> /etc/wgetrc
+    echo "http_proxy=http://10.250.12.5:3128" >> /etc/wgetrc
 else
     echo "not action"
 fi

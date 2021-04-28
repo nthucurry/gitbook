@@ -23,8 +23,8 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 差異就在: https://nakivo.medium.com/kubernetes-vs-docker-what-is-the-difference-3b0c6cce97d3
 
 ## Master
-### (1)
- 安裝 kubeadm
+### 一、Master of Single VM
+#### (1) 安裝 kubeadm
 - 找出 kubeadmin 需要的 images (option)
     - `sudo kubeadm config images pull`
 - 使用 flannel CNI
@@ -61,14 +61,18 @@ K8S is a portable, extensible, open-source platform for managing containerized w
         ```
 - 確認 nodes 狀態 (not-root)
     - `kubectl get nodes`
-    ```txt
-    NAME              STATUS   ROLES                  AGE    VERSION
-    vm-t-k8s-master   Ready    control-plane,master   3d1h   v1.20.4
-    vm-t-k8s-node1    Ready    <none>                 3d1h   v1.20.4
-    vm-t-k8s-node2    Ready    <none>                 3d     v1.20.4
-    ```
+        ```txt
+        NAME              STATUS   ROLES                  AGE    VERSION
+        vm-t-k8s-master   Ready    control-plane,master   3d1h   v1.20.4
+        vm-t-k8s-node1    Ready    <none>                 3d1h   v1.20.4
+        vm-t-k8s-node2    Ready    <none>                 3d     v1.20.4
+        ```
+     如果 NotReady
 
-### (2) 安裝 Pod network add-on (添加物)
+- 安裝 Dashboard
+    - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.1/aio/deploy/recommended.yaml`
+
+#### (2) 安裝 Pod network add-on (添加物)
 - 定義 flannel config (option)
     - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml`
 - 確認 nodes 狀態
@@ -85,7 +89,7 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     kube-system   kube-scheduler-vm-t-k8s-master            1/1     Running   0          6m59s
     ```
 
-### (3) 驗證 kubectl configuration
+#### (3) 驗證 kubectl configuration
 - cluster 狀態，用 not-root
     - `kubectl cluster-info`
     ```txt
@@ -93,9 +97,14 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     KubeDNS is running at https://10.0.8.4:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
     ```
 
-### (4) 移除 Node
+#### (4) 移除 Node
 - `sudo kubeadm reset`
 - `rm -fr $HOME/.kube`
+
+### 二、Masters of HA
+- https://brobridge.com/bdsres/2019/08/30/%E6%9C%AC%E7%AF%87%E7%9B%AE%E6%A8%99%E6%98%AF%E9%87%9D%E5%B0%8D%E5%A6%82%E4%BD%95%E8%87%AA%E5%AD%B8%E5%BB%BA%E7%AB%8Bk8s%E6%9E%B6%E6%A7%8B/
+<br><img src="https://brobridge.com/bdsres/wp-content/uploads/2019/08/image-1024x769.png">
+- kubeadm init --config=kubeadm-config.yaml --upload-certs
 
 ## Node
 至兩台 node 輸入上一節 worker nodes 欲加入叢集所需輸入的指令，就是這麼簡單！

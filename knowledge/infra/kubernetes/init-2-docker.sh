@@ -4,7 +4,7 @@
 echo "==== Install Docker CE"
 ## Set up the repository
 ### Install required packages
-yum install -y yum-utils device-mapper-persistent-data lvm2
+yum install yum-utils device-mapper-persistent-data lvm2 -y
 
 # 2. Add the Docker repository
 echo "==== Add the Docker repository"
@@ -12,14 +12,8 @@ yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce
 
 # 3. Install Docker CE
 echo "==== Install Docker CE"
-# yum update -y && yum install -y \
-#   containerd.io-1.2.13 \
-#   docker-ce-19.03.11 \
-#   docker-ce-cli-19.03.11
-yum update -y && yum install -y \
-  containerd.io \
-  docker-ce \
-  docker-ce-cli
+# yum install containerd.io-1.2.13 docker-ce-19.03.11 docker-ce-cli-19.03.11 -y
+yum install containerd.io docker-ce docker-ce-cli -y
 # echo "==== If necessary, remove it"
 # yum remove containerd.io && yum remove docker
 
@@ -34,11 +28,11 @@ cat << EOF | tee /etc/docker/daemon.json
     "exec-opts": ["native.cgroupdriver=systemd"],
     "log-driver": "json-file",
     "log-opts": {
-      "max-size": "100m"
+        "max-size": "100m"
     },
     "storage-driver": "overlay2",
     "storage-opts": [
-      "overlay2.override_kernel_check=true"
+        "overlay2.override_kernel_check=true"
     ]
 }
 EOF
