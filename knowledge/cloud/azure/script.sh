@@ -33,18 +33,27 @@ done
 
 subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
 resource_group="DBA-K8S"
-vm_name="vm-k8s-node3"
-nic="vm-k8s-node3545"
-disk_name="vm-k8s-node3_disk1_71f2a92cda394cf3a0145c1e29085be3"
+vm_name="vm-k8s-m2"
+nic="vm-k8s-m2588"
+disk_name="vm-k8s-m2_OsDisk_1_ad4bedb368b647aba5ef2bfeacf4a7a1"
 az account set -s $subscription
 az vm delete -g $resource_group -n $vm_name --yes
 az network nic delete -g $resource_group -n $nic
 az disk delete -g $resource_group -n $disk_name --yes
 
-### 查詢 VM
+### 開機 VM
 subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
-resource_group="EDA"
-vm_name="maz-jiratest"
+myResourceGroupVM="DBA-K8S"
+az account set -s $subscription
+az vm start --resource-group $myResourceGroupVM --name t-k8s-m1
+az vm start --resource-group $myResourceGroupVM --name t-k8s-m2
+az vm start --resource-group $myResourceGroupVM --name t-k8s-n1
+az vm start --resource-group $myResourceGroupVM --name t-k8s-n2
+
+### 查詢 VM
+subscription="a7bdf2e3-b855-4dda-ac93-047ff722cbbd"
+resource_group="ITDEV_RG"
+vm_name="maz-tbltest01"
 az account set -s $subscription
 az vm show -g $resource_group -n $vm_name -d
 # az vm list -g $resource_group -d

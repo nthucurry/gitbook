@@ -22,14 +22,37 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 ## Know docker
 差異就在: https://nakivo.medium.com/kubernetes-vs-docker-what-is-the-difference-3b0c6cce97d3
 
+## Load Balancer for HA
+- 安裝 HAProxy
+    - `yum install haproxy -y`
+- 設定 config
+    ```
+    frontend kubernetes
+        bind 10.0.8.4:6443
+        option tcplog
+        mode tcp
+        default_backend kubernetes-master-nodes
+    backend kubernetes-master-nodes
+        mode tcp
+        balance roundrobin
+        option tcp-check
+        server t-k8s-m1.portal.org 10.0.8.5:6443 check fall 3 rise 2
+        server t-k8s-m2.portal.org 10.0.8.6:6443 check fall 3 rise 2
+    ```
+- 啟動
+    ```bash
+    systemctl enable haproxy
+    systemctl start haproxy
+    ```
+
 ## Master
 ### 一、Master of Single VM
 #### (1) 安裝 kubeadm
 - 找出 kubeadmin 需要的 images (option)
     - `sudo kubeadm config images pull`
-- 使用 flannel CNI
+- 使用 flannel CNI，如果沒有 CNI，請參考 [Kubernetes - Nodes NotReady](https://blog.johnwu.cc/article/kubernetes-nodes-notready.html)
     - `sudo kubeadm init --pod-network-cidr=10.244.0.0/16`(~ 4 min)
-        ```txt
+        ```
         [init] Using Kubernetes version: v1.21.0
         [preflight] Running pre-flight checks
         [preflight] Pulling images required for setting up a Kubernetes cluster
@@ -51,7 +74,7 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 - 定義 flannel config (f: file, k: directory)
     - `sudo su`
     - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
-        ```txt
+        ```
         podsecuritypolicy.policy/psp.flannel.unprivileged created
         clusterrole.rbac.authorization.k8s.io/flannel created
         clusterrolebinding.rbac.authorization.k8s.io/flannel created
@@ -61,7 +84,7 @@ K8S is a portable, extensible, open-source platform for managing containerized w
         ```
 - 確認 nodes 狀態 (not-root)
     - `kubectl get nodes`
-        ```txt
+        ```
         NAME              STATUS   ROLES                  AGE    VERSION
         vm-t-k8s-master   Ready    control-plane,master   3d1h   v1.20.4
         vm-t-k8s-node1    Ready    <none>                 3d1h   v1.20.4
@@ -77,7 +100,7 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml`
 - 確認 nodes 狀態
     - `kubectl get pods --all-namespaces`
-    ```txt
+    ```
     NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
     kube-system   coredns-74ff55c5b-5zbrf                   1/1     Running   0          6m43s
     kube-system   coredns-74ff55c5b-92k2z                   1/1     Running   0          6m43s
@@ -92,7 +115,7 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 #### (3) 驗證 kubectl configuration
 - cluster 狀態，用 not-root
     - `kubectl cluster-info`
-    ```txt
+    ```
     Kubernetes control plane is running at https://10.0.8.4:6443
     KubeDNS is running at https://10.0.8.4:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
     ```
@@ -101,10 +124,30 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 - `sudo kubeadm reset`
 - `rm -fr $HOME/.kube`
 
+#### (5) 安裝 K8S Portal
+- `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml`
+- `kubectl proxy`
+- 確認安裝狀態
+    - `kubectl get deployment -n kube-system | grep dashboard`
+
 ### 二、Masters of HA
 - https://brobridge.com/bdsres/2019/08/30/%E6%9C%AC%E7%AF%87%E7%9B%AE%E6%A8%99%E6%98%AF%E9%87%9D%E5%B0%8D%E5%A6%82%E4%BD%95%E8%87%AA%E5%AD%B8%E5%BB%BA%E7%AB%8Bk8s%E6%9E%B6%E6%A7%8B/
 <br><img src="https://brobridge.com/bdsres/wp-content/uploads/2019/08/image-1024x769.png">
-- kubeadm init --config=kubeadm-config.yaml --upload-certs
+
+- 設定 config on vm-k8s-m1
+    ```bash
+    cat > kubeadm-config.yaml << END
+    apiVersion: kubeadm.k8s.io/v1beta1
+    kind: ClusterConfiguration
+    kubernetesVersion: stable
+    controlPlaneEndpoint: "vm-k8s-lb:6443"
+    END
+    ```
+- kubeadmin join
+    - `kubeadm init --config=kubeadm-config.yaml --upload-certs`
+    - `kubeadm init --config=kubeadm-config.yaml --upload-certs --ignore-preflight-errors=all`
+- 重新產生新的 key
+    - `kubeadm init phase upload-certs --experimental-upload-certs`
 
 ## Node
 至兩台 node 輸入上一節 worker nodes 欲加入叢集所需輸入的指令，就是這麼簡單！
@@ -129,22 +172,23 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     - `sudo kubeadm reset`
 
 ## 部署 Container (try it!)
-    - 部署名為 nginx 的容器，映像檔名稱為 nginx，透過參數 deployment 會自動幫你創建好 k8s 中的最小管理邏輯單位 pod 與容器
-        - `kubectl create deployment nginx --image=nginx`
-    - 替容器建立一個 port mapping 的 service，讓 nginx 服務可以被外部存取
-        - `kubectl create service nodeport nginx --tcp=80:80`
-        - 如果 ContainerCreating 太久，先停掉 service 再重新執行一次
-            - `kubectl delete pod nginx-6799fc88d8-h2m6h`
-    - 查詢 service mapping 的情況
-        - `kubectl get pods`
-        - `kubectl get services`
-            ```txt
-            NAME                     READY   STATUS    RESTARTS   AGE
-            nginx-6799fc88d8-4bkb8   1/1     Running   0          3m36s
-
-            NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
-            kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        23m
-            nginx        NodePort    10.103.227.82   <none>        80:32300/TCP   89s
-            ```
-    - 顯示 container 服務: http://public-ip:31550
-        <br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/k8s-container-example.png?raw=true">
+- 部署名為 nginx 的容器，映像檔名稱為 nginx，透過參數 deployment 會自動幫你創建好 k8s 中的最小管理邏輯單位 pod 與容器
+    - `kubectl create deployment nginx --image=nginx`
+- 替容器建立一個 port mapping 的 service，讓 nginx 服務可以被外部存取
+    - `kubectl create service nodeport nginx --tcp=80:80`
+    - 如果 ContainerCreating 太久，先停掉 service 再重新執行一次
+        - `kubectl delete pod nginx-6799fc88d8-h2m6h`
+- 查詢 service mapping 的情況
+    - `kubectl get pods`
+        ```
+        READY   STATUS    RESTARTS   AGE
+        nginx-6799fc88d8-4bkb8   1/1     Running   0          3m36s
+        ```
+    - `kubectl get services`
+        ```
+        NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+        kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        23m
+        nginx        NodePort    10.103.227.82   <none>        80:32300/TCP   89s
+        ```
+- 顯示 container 服務: http://public-ip:31550
+    <br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/k8s-container-example.png?raw=true">

@@ -1,3 +1,19 @@
+<!-- TOC -->
+
+- [WKC Install SOP](#wkc-install-sop)
+    - [Azure 架構](#azure-架構)
+    - [到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password](#到-azure-portal-進-console-找出-subscription-tenant-client-appid-client-password)
+    - [設定 Install Config](#設定-install-config)
+    - [安裝 Bastion VM](#安裝-bastion-vm)
+    - [安裝 OpenShift on Bastion VM](#安裝-openshift-on-bastion-vm)
+    - [安裝 NFS VM](#安裝-nfs-vm)
+    - [安裝 OpenShift Client on NFS VM](#安裝-openshift-client-on-nfs-vm)
+    - [設定 Machine Config](#設定-machine-config)
+    - [設定 Proxy](#設定-proxy)
+    - [設定 User Managerment](#設定-user-managerment)
+
+<!-- /TOC -->
+
 # WKC Install SOP
 ## Azure 架構
 - resource group
@@ -79,6 +95,11 @@ sshKey: |
   ssh-rsa XXX azadmin@maz-bastion
 ```
 
+## 安裝 Bastion VM
+- disk: 256G
+- CPU: 4C
+- RAM: 16G
+
 ## 安裝 OpenShift on Bastion VM
 - 下載 OpenShift 檔案
     ```bash
@@ -91,10 +112,10 @@ sshKey: |
     mkdir ocp4.5_cust
     cp ./install-config.yaml ./ocp4.5_cust
     ```
-- 安裝 WKC 所有環境
+- 安裝 OpenShift 所有環境
     - 設定 config
         - `./ocp4.5_inst/openshift-install create install-config --dir=/home/azadmin/ocp4.5_cust`
-            ```txt
+            ```
             ? SSH Public Key /home/azadmin/.ssh/id_rsa.pub
             ? Platform azure
             ? azure subscription id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
@@ -102,7 +123,7 @@ sshKey: |
             ? azure service principal client id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
             ? azure service principal client secret [? for help] **********************************
             ```
-    - 安裝 WKC (約一小時，若自行設定 DNS，VM 建立時需注意名稱解析)
+    - 安裝 OpenShift (約一小時，若自行設定 DNS，VM 建立時需注意名稱解析)
         - `./ocp4.5_inst/openshift-install create cluster --dir=/home/azadmin/ocp4.5_cust --log-level=info`
         - check installing status
             - `tail -f ./ocp4.5_inst/.openshift_install.log`
@@ -114,6 +135,8 @@ sshKey: |
         - 從 terminal
             - `oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX`
             - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
+        - 查詢 kubeadmin 密碼
+            - `cat ~/ocp4.5_cust/auth/kubeadmin-password`
 - 下載 OpenShift 檔案
     ```bash
     cd ~
@@ -123,6 +146,37 @@ sshKey: |
     tar xvfz openshift-client-linux-4.5.36.tar.gz
     sudo cp ./oc /usr/bin
     ```
+
+## 安裝 NFS VM
+- 掛載大容量 disk
+    ```bash
+    sudo su
+    fdisk -l
+    pvcreate /dev/sdc
+    vgcreate vg /dev/sdc
+    vgdisplay vg
+    lvcreate -l 262130 -n lv vg
+    lvscan
+    mkfs.xfs /dev/vg/lv
+    fdisk -l
+    mkdir /data
+    mount /dev/mapper/vg-lv /data
+    vi /etc/fstab
+    chown azadmin:azadmin /data
+    ```
+- 安裝 NFS
+    ```bash
+    sudo yum install -y nfs-utils
+    sudo systemctl enable rpcbind
+    sudo systemctl enable nfs-server
+    sudo systemctl start rpcbind
+    sudo systemctl start nfs-server
+    ```
+- 設定 NFS config
+    - `sudo vi /etc/exports`
+        >/data *(rw,sync,no_root_squash)
+- 重啟 NFS
+    - `systemctl restart nfs-server`
 
 ## 安裝 OpenShift Client on NFS VM
 - 修改 repo
@@ -160,35 +214,6 @@ sshKey: |
     export ASSEMBLY=wkc
     ./cpd-cli preload-images --repo ./repo.yaml --assembly $ASSEMBLY --download-path=$DOWNLOAD_FOLDER --action download --accept-all-licenses
     ```
-- 掛載大容量 disk
-    ```bash
-    sudo su
-    fdisk -l
-    pvcreate /dev/sdc
-    vgcreate vg /dev/sdc
-    vgdisplay vg
-    lvcreate -l 262130 -n lv vg
-    lvscan
-    mkfs.xfs /dev/vg/lv
-    fdisk -l
-    mkdir /data
-    mount /dev/mapper/vg-lv /data
-    vi /etc/fstab
-    chown azadmin:azadmin /data
-    ```
-- 安裝 NFS
-    ```bash
-    sudo yum install -y nfs-utils
-    sudo systemctl enable rpcbind
-    sudo systemctl enable nfs-server
-    sudo systemctl start rpcbind
-    sudo systemctl start nfs-server
-    ```
-- 設定 NFS config
-    - `sudo vi /etc/exports`
-        >/data *(rw,sync,no_root_squash)
-- 重啟 NFS
-    - `systemctl restart nfs-server`
 - 安裝 OpenShift Container Platform
     ```bash
     cd ~
@@ -378,7 +403,7 @@ sshKey: |
     - 複製 worker 的 crio.conf 到 bastion
         - `scp core@$(oc get nodes | grep worker | head -1 | awk '{print $1}'):/etc/crio/crio.conf /tmp/crio.conf`
     - 編輯 /tmp/crio.conf
-        ```txt
+        ```
         default_ulimits = [
                 "nofile=66560:66560"
         ]
@@ -463,7 +488,7 @@ sshKey: |
 - 確認 pods 狀態
     - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
 - proxy 連線清單
-    ```txt
+    ```
     mirror.openshift.com
     quay.io
     stry.redhat.io
