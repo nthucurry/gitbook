@@ -12,7 +12,9 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 - https://blog.tomy168.com/2019/08/centos-76-kubernetes.html
 - https://blog.johnwu.cc/article/kubernetes-exercise.html
 - https://ithelp.ithome.com.tw/articles/10235069?sc=iThomeR
-- http://www.manongjc.com/detail/9-pbmajemrfahtfpl.html
+- 不錯的說明
+    - [使用kubeadm 安装 kubernetes 1.15.1](http://www.manongjc.com/detail/9-pbmajemrfahtfpl.html)
+    - [實現 Kubernetes 高可靠架構部署](https://k2r2bai.com/2019/09/20/ironman2020/day05/)
 
 ## Information
 一個可以幫助我們管理 microservices 的系統，他可以自動化地部署及管理多台機器上的多個 container。K8S 想解決的問題是：「手動部署多個容器到多台機器上並監測管理這些容器的狀態非常麻煩。」而 K8S 要提供的解法： 提供一個平台以較高層次的抽象化去自動化操作與管理容器們。
@@ -22,7 +24,7 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 ## Know docker
 差異就在: https://nakivo.medium.com/kubernetes-vs-docker-what-is-the-difference-3b0c6cce97d3
 
-## Load Balancer for HA
+## Load Balancer for HA (option)
 - 安裝 HAProxy
     - `yum install haproxy -y`
 - 設定 config
@@ -48,7 +50,7 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 ## Master
 ### 一、Master of Single VM
 #### (1) 安裝 kubeadm
-- 找出 kubeadmin 需要的 images (option)
+- 預先找出 kubeadmin 需要的 images (option, check internet connection)
     - `sudo kubeadm config images pull`
 - 使用 flannel CNI，如果沒有 CNI，請參考 [Kubernetes - Nodes NotReady](https://blog.johnwu.cc/article/kubernetes-nodes-notready.html)
     - `sudo kubeadm init --pod-network-cidr=10.244.0.0/16`(~ 4 min)
@@ -60,6 +62,10 @@ K8S is a portable, extensible, open-source platform for managing containerized w
         [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
         ...
         ```
+    - 如果 init 有問題，就重置它
+        - `kubeadm reset`
+        - 都無解，就執行它
+            - `kubeadm init`
 - 設定 config
     ```bash
     mkdir -p $HOME/.kube
@@ -82,18 +88,6 @@ K8S is a portable, extensible, open-source platform for managing containerized w
         configmap/kube-flannel-cfg created
         daemonset.apps/kube-flannel-ds created
         ```
-- 確認 nodes 狀態 (not-root)
-    - `kubectl get nodes`
-        ```
-        NAME              STATUS   ROLES                  AGE    VERSION
-        vm-t-k8s-master   Ready    control-plane,master   3d1h   v1.20.4
-        vm-t-k8s-node1    Ready    <none>                 3d1h   v1.20.4
-        vm-t-k8s-node2    Ready    <none>                 3d     v1.20.4
-        ```
-     如果 NotReady
-
-- 安裝 Dashboard
-    - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.1/aio/deploy/recommended.yaml`
 
 #### (2) 安裝 Pod network add-on (添加物)
 - 定義 flannel config (option)
@@ -120,27 +114,36 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     KubeDNS is running at https://10.0.8.4:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
     ```
 
-#### (4) 移除 Node
-- `sudo kubeadm reset`
-- `rm -fr $HOME/.kube`
-
-#### (5) 安裝 K8S Portal
-- `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml`
+#### (4) 安裝 K8S Portal
+- `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.1/aio/deploy/recommended.yaml`
 - `kubectl proxy`
 - 確認安裝狀態
     - `kubectl get deployment -n kube-system | grep dashboard`
 
-### 二、Masters of HA
+#### (5) 檢查
+- nodes 都要是 Ready，NotReady 解法: [移除 CNI 參數](https://blog.johnwu.cc/article/kubernetes-nodes-notready.html)
+    - `kubectl get nodes`
+- 集群都要是 Healthy，Unhealthy 解法: [修改 port 值](https://blog.csdn.net/xiaobao7865/article/details/107513957)
+    - `kubectl get cs`
+- 檢查 pods
+    - `kubectl get pods -A`
+- pods pending
+    - `kubectl describe pods`
+
+### 二、Masters of HA (option)
 - https://brobridge.com/bdsres/2019/08/30/%E6%9C%AC%E7%AF%87%E7%9B%AE%E6%A8%99%E6%98%AF%E9%87%9D%E5%B0%8D%E5%A6%82%E4%BD%95%E8%87%AA%E5%AD%B8%E5%BB%BA%E7%AB%8Bk8s%E6%9E%B6%E6%A7%8B/
 <br><img src="https://brobridge.com/bdsres/wp-content/uploads/2019/08/image-1024x769.png">
 
-- 設定 config on vm-k8s-m1
+- 設定 config on master1
     ```bash
     cat > kubeadm-config.yaml << END
     apiVersion: kubeadm.k8s.io/v1beta1
     kind: ClusterConfiguration
     kubernetesVersion: stable
-    controlPlaneEndpoint: "vm-k8s-lb:6443"
+    controlPlaneEndpoint: "t-k8s-lb:6443"
+    networking:
+      podSubnet: "10.244.0.0/16"
+    EOF
     END
     ```
 - kubeadmin join
