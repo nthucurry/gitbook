@@ -66,6 +66,9 @@ K8S is a portable, extensible, open-source platform for managing containerized w
         - `kubeadm reset`
         - 都無解，就執行它
             - `kubeadm init`
+        - `kubectl cordon t-k8s-m1`
+        - `kubectl drain t-k8s-m1 --ignore-daemonsets --force=true --delete-local-data=true`
+        - `kubectl delete node t-k8s-m1`
 - 設定 config
     ```bash
     mkdir -p $HOME/.kube
@@ -151,6 +154,9 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     - `kubeadm init --config=kubeadm-config.yaml --upload-certs --ignore-preflight-errors=all`
 - 重新產生新的 key
     - `kubeadm init phase upload-certs --experimental-upload-certs`
+- 同步 ~/.kube
+    - `rsync -av t-k8s-m1:~/.kube ~/`
+    - `cp /home/docker/.kube/config /etc/kubernetes/admin.conf`
 
 ## Node
 至兩台 node 輸入上一節 worker nodes 欲加入叢集所需輸入的指令，就是這麼簡單！
