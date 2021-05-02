@@ -1,13 +1,14 @@
 # Kubernetes
-<img src="https://d33wubrfki0l68.cloudfront.net/26a177ede4d7b032362289c6fccd448fc4a91174/eb693/images/docs/container_evolution.svg" alt="drawing" width="800" board="1"/><br>
 K8S is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. K8S services, support, and tools are widely available.
 - kubelet: node 用來 master 溝通的內部元件
-- kubectl: 開發者用來控制
+- kubectl: 控制 K8S
+    - `kubectl cluster-info`
+    - `kubectl get pods`
+    - `kubectl get service`
 - helm: 實作部屬的工具
-- kubeadm K8S 部屬工具
+- kubeadm K8S deploy 工具
 
 ## Reference
-- [Installing Docker on CentOS 7 With Yum](https://phoenixnap.com/kb/how-to-install-docker-centos-7)
 - [Steps for Installing Kubernetes on CentOS 7](https://phoenixnap.com/kb/how-to-install-kubernetes-on-centos)
 - https://blog.tomy168.com/2019/08/centos-76-kubernetes.html
 - https://blog.johnwu.cc/article/kubernetes-exercise.html
@@ -15,6 +16,7 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 - 不錯的說明
     - [使用kubeadm 安装 kubernetes 1.15.1](http://www.manongjc.com/detail/9-pbmajemrfahtfpl.html)
     - [實現 Kubernetes 高可靠架構部署](https://k2r2bai.com/2019/09/20/ironman2020/day05/)
+    - [如何自建 K8S HA Cluster](https://brobridge.com/bdsres/2019/08/30/本篇目標是針對如何自學建立k8s架構/)
 
 ## Information
 一個可以幫助我們管理 microservices 的系統，他可以自動化地部署及管理多台機器上的多個 container。K8S 想解決的問題是：「手動部署多個容器到多台機器上並監測管理這些容器的狀態非常麻煩。」而 K8S 要提供的解法： 提供一個平台以較高層次的抽象化去自動化操作與管理容器們。
@@ -24,7 +26,11 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 ## Know docker
 差異就在: https://nakivo.medium.com/kubernetes-vs-docker-what-is-the-difference-3b0c6cce97d3
 
-## Load Balancer for HA (option)
+## Sample
+
+## Load Balancer for K8S (HA option)
+<br><img src="https://brobridge.com/bdsres/wp-content/uploads/2019/08/image-1024x769.png">
+
 - 安裝 HAProxy
     - `yum install haproxy -y`
 - 設定 config
@@ -70,16 +76,18 @@ K8S is a portable, extensible, open-source platform for managing containerized w
         - `kubectl drain t-k8s-m1 --ignore-daemonsets --force=true --delete-local-data=true`
         - `kubectl delete node t-k8s-m1`
 - 設定 config
-    ```bash
-    mkdir -p $HOME/.kube
-    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-    sudo chown $(id -u):$(id -g) $HOME/.kube/config
-    export KUBECONFIG=$HOME/.kube/config
-    ```
-    ```bash
-    sudo su
-    export KUBECONFIG=/etc/kubernetes/admin.conf
-    ```
+    - manage cluster as regular user
+        ```bash
+        mkdir -p $HOME/.kube
+        sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+        sudo chown $(id -u):$(id -g) $HOME/.kube/config
+        export KUBECONFIG=$HOME/.kube/config
+        ```
+    - root env
+        ```bash
+        sudo su
+        export KUBECONFIG=/etc/kubernetes/admin.conf
+        ```
 - 定義 flannel config (f: file, k: directory)
     - `sudo su`
     - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
@@ -97,25 +105,14 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml`
 - 確認 nodes 狀態
     - `kubectl get pods --all-namespaces`
-    ```
-    NAMESPACE     NAME                                      READY   STATUS    RESTARTS   AGE
-    kube-system   coredns-74ff55c5b-5zbrf                   1/1     Running   0          6m43s
-    kube-system   coredns-74ff55c5b-92k2z                   1/1     Running   0          6m43s
-    kube-system   etcd-vm-t-k8s-master                      1/1     Running   0          7m
-    kube-system   kube-apiserver-vm-t-k8s-master            1/1     Running   0          7m
-    kube-system   kube-controller-manager-vm-t-k8s-master   1/1     Running   0          7m
-    kube-system   kube-flannel-ds-sqw42                     1/1     Running   0          2m3s
-    kube-system   kube-proxy-hjkxk                          1/1     Running   0          6m44s
-    kube-system   kube-scheduler-vm-t-k8s-master            1/1     Running   0          6m59s
-    ```
 
 #### (3) 驗證 kubectl configuration
 - cluster 狀態，用 not-root
     - `kubectl cluster-info`
-    ```
-    Kubernetes control plane is running at https://10.0.8.4:6443
-    KubeDNS is running at https://10.0.8.4:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-    ```
+        ```
+        Kubernetes control plane is running at https://10.0.8.4:6443
+        KubeDNS is running at https://10.0.8.4:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+        ```
 
 #### (4) 安裝 K8S Portal
 - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.1/aio/deploy/recommended.yaml`
@@ -134,9 +131,6 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     - `kubectl describe pods`
 
 ### 二、Masters of HA (option)
-- https://brobridge.com/bdsres/2019/08/30/%E6%9C%AC%E7%AF%87%E7%9B%AE%E6%A8%99%E6%98%AF%E9%87%9D%E5%B0%8D%E5%A6%82%E4%BD%95%E8%87%AA%E5%AD%B8%E5%BB%BA%E7%AB%8Bk8s%E6%9E%B6%E6%A7%8B/
-<br><img src="https://brobridge.com/bdsres/wp-content/uploads/2019/08/image-1024x769.png">
-
 - 設定 config on master1
     ```bash
     cat > kubeadm-config.yaml << END
@@ -146,11 +140,9 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     controlPlaneEndpoint: "t-k8s-lb:6443"
     networking:
       podSubnet: "10.244.0.0/16"
-    EOF
     END
     ```
 - kubeadmin join
-    - `kubeadm init --config=kubeadm-config.yaml --upload-certs`
     - `kubeadm init --config=kubeadm-config.yaml --upload-certs --ignore-preflight-errors=all`
 - 重新產生新的 key
     - `kubeadm init phase upload-certs --experimental-upload-certs`
@@ -163,14 +155,13 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 <br><img src="https://www.ovh.com/blog/wp-content/uploads/2019/03/IMG_0135.jpg" alt="drawing" width="800" board="1"/>
 
 - 加入 cluster，該 token 24 小時以內才有效
-    ```bash
-    kubeadm join 10.0.8.4:6443 --token 3to8hs.43xze7y3jaq29ysr --discovery-token-ca-cert-hash sha256:c3aa0c9848582ddb2332bae80e054c12868fc1d33f8023558921c014ec3c9ed1
-    ```
-- Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
-- 失敗的話: https://stackoverflow.com/questions/55531834/kubeadm-fails-to-initialize-when-kubeadm-init-is-called
-    - `echo 1 > /proc/sys/net/ipv4/ip_forward`
+    - `kubeadm join 10.0.8.4:6443 --token XXXX --discovery-token-ca-cert-hash sha256:XXXX`
+    - 失敗的話，請參考: https://stackoverflow.com/questions/55531834/kubeadm-fails-to-initialize-when-kubeadm-init-is-called
+        - `kubeadm reset`
+        - `echo 1 > /proc/sys/net/ipv4/ip_forward`
+        - `--ignore-preflight-errors=all`
 - 當 OS 重開後
-    - `kubeadm token create`(??)
+    - token 會過期，重新產生: `kubeadm token create`
     - the value of --discovery-token-ca-cert-hash
         ```bash
         openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
@@ -178,7 +169,7 @@ K8S is a portable, extensible, open-source platform for managing containerized w
         ```
     - `kubectl config delete-cluster`
     - 將有關 K8S 的東西刪除
-    - `sudo kubeadm reset`
+        - `kubeadm reset`
 
 ## 部署 Container (try it!)
 - 部署名為 nginx 的容器，映像檔名稱為 nginx，透過參數 deployment 會自動幫你創建好 k8s 中的最小管理邏輯單位 pod 與容器
