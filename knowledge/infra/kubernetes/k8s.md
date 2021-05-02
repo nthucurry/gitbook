@@ -17,6 +17,8 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     - [使用kubeadm 安装 kubernetes 1.15.1](http://www.manongjc.com/detail/9-pbmajemrfahtfpl.html)
     - [實現 Kubernetes 高可靠架構部署](https://k2r2bai.com/2019/09/20/ironman2020/day05/)
     - [如何自建 K8S HA Cluster](https://brobridge.com/bdsres/2019/08/30/本篇目標是針對如何自學建立k8s架構/)
+    - https://computingforgeeks.com/how-to-install-kubernetes-dashboard-with-nodeport/
+    - https://faun.pub/configuring-ha-kubernetes-cluster-on-bare-metal-servers-monitoring-logs-and-usage-examples-3-3-340357f21453
 
 ## Information
 一個可以幫助我們管理 microservices 的系統，他可以自動化地部署及管理多台機器上的多個 container。K8S 想解決的問題是：「手動部署多個容器到多台機器上並監測管理這些容器的狀態非常麻煩。」而 K8S 要提供的解法： 提供一個平台以較高層次的抽象化去自動化操作與管理容器們。
@@ -27,6 +29,13 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 差異就在: https://nakivo.medium.com/kubernetes-vs-docker-what-is-the-difference-3b0c6cce97d3
 
 ## Sample
+| type          | IP       | hostname |
+|---------------|----------|----------|
+| load balancer | 10.0.8.4 | t-k8s-lb |
+| master 1      | 10.0.8.5 | t-k8s-m1 |
+| master 1      | 10.0.8.6 | t-k8s-m2 |
+| worker 1      | 10.0.8.7 | t-k8s-n1 |
+| worker 2      | 10.0.8.8 | t-k8s-n2 |
 
 ## Load Balancer for K8S (HA option)
 <br><img src="https://brobridge.com/bdsres/wp-content/uploads/2019/08/image-1024x769.png">
@@ -52,6 +61,12 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     systemctl enable haproxy
     systemctl start haproxy
     ```
+- 安裝 dashborad
+    - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml`
+    - `wget https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml`
+    - `mv recommended.yaml kubernetes-dashboard-deployment.yml`
+    - `vi kubernetes-dashboard-deployment.yml`
+    - add `type: NodePort`
 
 ## Master
 ### 一、Master of Single VM
@@ -146,9 +161,8 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     - `kubeadm init --config=kubeadm-config.yaml --upload-certs --ignore-preflight-errors=all`
 - 重新產生新的 key
     - `kubeadm init phase upload-certs --experimental-upload-certs`
-- 同步 ~/.kube
-    - `rsync -av t-k8s-m1:~/.kube ~/`
-    - `cp /home/docker/.kube/config /etc/kubernetes/admin.conf`
+- 同步 config to load balancer
+    - `rsync -av t-k8s-m1:/etc/kubernetes/ /etc/kubernetes/`
 
 ## Node
 至兩台 node 輸入上一節 worker nodes 欲加入叢集所需輸入的指令，就是這麼簡單！
@@ -174,10 +188,10 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 ## 部署 Container (try it!)
 - 部署名為 nginx 的容器，映像檔名稱為 nginx，透過參數 deployment 會自動幫你創建好 k8s 中的最小管理邏輯單位 pod 與容器
     - `kubectl create deployment nginx --image=nginx`
-- 替容器建立一個 port mapping 的 service，讓 nginx 服務可以被外部存取
-    - `kubectl create service nodeport nginx --tcp=80:80`
     - 如果 ContainerCreating 太久，先停掉 service 再重新執行一次
         - `kubectl delete pod nginx-6799fc88d8-h2m6h`
+- 替容器建立一個 port mapping 的 service，讓 nginx 服務可以被外部存取
+    - `kubectl create service nodeport nginx --tcp=80:80`
 - 查詢 service mapping 的情況
     - `kubectl get pods`
         ```
