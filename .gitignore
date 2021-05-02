@@ -73,7 +73,7 @@ knowledge/exam/*
 !knowledge/cloud
 !knowledge/cloud/vpn.md
 !knowledge/cloud/azure
-!knowledge/cloud/azure/script.md
+!knowledge/cloud/azure/script
 !knowledge/cloud/gcp
 !knowledge/cloud/gcp/script.md
 !knowledge/cloud/gcp/map-api.md

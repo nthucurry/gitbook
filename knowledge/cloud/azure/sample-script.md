@@ -1,4 +1,6 @@
-### 刪除 RG 內的所有相同 resource
+# Sample Azure CLI
+## 刪除 Resource Group 內的資源 (勿亂用)
+```bash
 # Microsoft.Web/sites
 # Microsoft.Compute/virtualMachines
 # Microsoft.Network/privateEndpoints
@@ -26,8 +28,10 @@ do
         -n $resource_name \
         --verbose
 done
+```
 
-### 刪除單一 VM
+## 刪除單一 VM
+```bash
 # auobigdata
 # Azure EA (AUO): de61f224-9a69-4ede-8273-5bcef854dc20
 
@@ -40,8 +44,10 @@ az account set -s $subscription
 az vm delete -g $resource_group -n $vm_name --yes
 az network nic delete -g $resource_group -n $nic
 az disk delete -g $resource_group -n $disk_name --yes
+```
 
-### 開機 VM
+## 開機 VM
+```bash
 subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
 myResourceGroupVM="DBA-K8S"
 az account set -s $subscription
@@ -49,16 +55,21 @@ az vm start --resource-group $myResourceGroupVM --name t-k8s-m1
 az vm start --resource-group $myResourceGroupVM --name t-k8s-m2
 az vm start --resource-group $myResourceGroupVM --name t-k8s-n1
 az vm start --resource-group $myResourceGroupVM --name t-k8s-n2
+```
 
-### 查詢 VM
+## 查詢 VM
+```bash
 subscription="a7bdf2e3-b855-4dda-ac93-047ff722cbbd"
 resource_group="ITDEV_RG"
 vm_name="maz-tbltest01"
 az account set -s $subscription
 az vm show -g $resource_group -n $vm_name -d
 # az vm list -g $resource_group -d
+az vm list -g DBA-K8S -d --query "[?name == 't-k8s-lb'].storageProfile.osDisk.name"
+```
 
-### 建 Subnet
+## 建 Subnet
+```bash
 echo "AKS,10.248.0.0/21" >> ~/temp.txt
 echo "PrivateEndpoint,10.248.8.0/22" >> ~/temp.txt
 echo "VM,10.248.12.0/23" >> ~/temp.txt
@@ -85,14 +96,10 @@ do
     address_prefixes=`echo $line | awk 'BEGIN {FS=","} {print $2}'`
     echo $subnet_name, $address_prefixes
 done
+```
 
-subscription="auobigdata"
-az feature register --name AllowNfsFileShares \
-                    --namespace Microsoft.Storage \
-                    --subscription $subscription
-az provider register --namespace Microsoft.Storage
-
-### NSG
+## NSG
+```bash
 # auobigdata
 # Azure EA (AUO): de61f224-9a69-4ede-8273-5bcef854dc20
 
@@ -108,10 +115,13 @@ az network nsg show --subscription $subscription \
                     -n $nsg_name \
                     --query "securityRules[]" \
                     -o table > ~/table.txt
+```
 
-### Application Gateway
+## Application Gateway
+```powershell
 $context = Get-AzSubscription -SubscriptionId a7bdf2e3-b855-4dda-ac93-047ff722cbbd
 Set-AzContext $context
 
 $vnet = Get-AzVirtualNetwork -Name VNetTEST -ResourceGroupName DBA_Test
 Get-AzVirtualNetworkSubnetConfig -Name MyAGSubnet -VirtualNetwork $vnet
+```
