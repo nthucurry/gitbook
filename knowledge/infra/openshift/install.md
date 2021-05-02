@@ -503,6 +503,8 @@ sshKey: |
     ```
 
 ## 設定 User Managerment
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/wkc-ldap.png">
+
 - https://docs.microsoft.com/zh-tw/system-center/scsm/ad-ds-attribs?view=sc-sm-2019
 - sn: 王大明
 - givenname: 1312032
