@@ -75,21 +75,16 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     - `sudo kubeadm config images pull`
 - 使用 flannel CNI，如果沒有 CNI，請參考 [Kubernetes - Nodes NotReady](https://blog.johnwu.cc/article/kubernetes-nodes-notready.html)
     - `sudo kubeadm init --pod-network-cidr=10.244.0.0/16`(~ 4 min)
-        ```
-        [init] Using Kubernetes version: v1.21.0
-        [preflight] Running pre-flight checks
-        [preflight] Pulling images required for setting up a Kubernetes cluster
-        [preflight] This might take a minute or two, depending on the speed of your internet connection
-        [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
-        ...
-        ```
     - 如果 init 有問題，就重置它
         - `kubeadm reset`
         - 都無解，就執行它
             - `kubeadm init`
-        - `kubectl cordon t-k8s-m1`
-        - `kubectl drain t-k8s-m1 --ignore-daemonsets --force=true --delete-local-data=true`
-        - `kubectl delete node t-k8s-m1`
+        - 刪除 master / worker
+            ```bash
+            kubectl cordon t-k8s-n1
+            kubectl drain t-k8s-n1 --ignore-daemonsets --force=true --delete-local-data=true
+            kubectl delete node t-k8s-n1
+            ```
 - 設定 config
     - manage cluster as regular user
         ```bash
@@ -106,14 +101,6 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 - 定義 flannel config (f: file, k: directory)
     - `sudo su`
     - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
-        ```
-        podsecuritypolicy.policy/psp.flannel.unprivileged created
-        clusterrole.rbac.authorization.k8s.io/flannel created
-        clusterrolebinding.rbac.authorization.k8s.io/flannel created
-        serviceaccount/flannel created
-        configmap/kube-flannel-cfg created
-        daemonset.apps/kube-flannel-ds created
-        ```
 
 #### (2) 安裝 Pod network add-on (添加物)
 - 定義 flannel config (option)
