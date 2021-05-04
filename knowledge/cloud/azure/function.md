@@ -1,8 +1,9 @@
 # Azure Function
 ## Logic Apps
-Azure Logic Apps is a cloud service that helps you schedule, automate, and orchestrate (編排) tasks, business processes, and workflows when you need to integrate apps, data, systems, and services across enterprises or organizations.
+Azure Logic Apps is a cloud service that helps you **schedule**, **automate**, and **orchestrate** (編排) **tasks**, **business processes**, and **workflows** when you need to integrate apps, data, systems, and services across enterprises or organizations.
 
 Logic Apps simplifies how you design and build scalable solutions for app integration, data integration, system integration, enterprise application integration (EAI), and business-to-business (B2B) communication, whether in the cloud, on premises, or both.
+<img src="https://biztalk360.com/wp-content/uploads/2016/12/Use-case-scenario.png">
 
 ### Access to On-Premises Systems
 
@@ -16,11 +17,7 @@ This article provides an overview of common scenarios that involve APIM. It also
 <br><img src="https://docs.microsoft.com/en-us/azure/api-management/media/api-management-using-with-vnet/api-management-vnet-internal.png">
 
 ## Integration Service Environments (ISE)
-ISE is a fully isolated and dedicated environment for all enterprise-scale integration needs. When you create a new ISE, it’s injected into your Azure Virtual Network allowing you to deploy Logic Apps as a service in your VNET.
-
-With the general availability of the ISE, we’ve made several improvements from preview giving your Logic Apps more power when running in an ISE.
-
-Since an ISE provides a private execution environment for executing your Logic Apps where you can take advantage of more deployed resources, many of the limits have also been increased.
+ISE is a fully isolated and dedicated environment for all enterprise-scale integration needs. When you create a new ISE, it’s injected into your VNet allowing you to deploy **Logic Apps** as a service in your VNet.
 
 ## JIRA SAML SSO by Microsoft
 - https://docs.microsoft.com/zh-tw/azure/active-directory/saas-apps/jiramicrosoft-tutorial
@@ -32,3 +29,12 @@ Since an ISE provides a private execution environment for executing your Logic A
 
 ### Active Directory Federation Services (ADFS)
 識別身分同盟的組織也就是 Active Directory Federation Services (ADFS) 是一種可以讓特定 Active Directory (AD) 加入的服務。一旦任何的 AD 加入了這個同盟組織，ADFS 伺服器可以立刻的知道。而這樣的特性剛好可以跟單一認證系統 SSO 做互相的整合與應用，讓之後陸續加入的 AD (或跨網域 AD) 可以做為單一認證系統 SSO 的諮詢對象，進而逹到跨網域的控管。
+
+### Multi-Factor Authentication
+Multi-factor authentication is a process where a user is prompted during the sign-in process for an additional form of identification, such as to enter a code on their cellphone or to provide a fingerprint scan.
+
+先決條件
+- A working AAD tenant with at least an **AAD Premium P1** or trial license enabled.
+- An account with **global administrator** privileges.
+- A non-administrator user with a password you know, such as testuser.
+- A group that the non-administrator user is a member of, such as MFA-Test-Group. You enable **AAD** Multi-Factor Authentication for this group in this tutorial.

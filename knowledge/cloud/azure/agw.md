@@ -94,3 +94,9 @@ Gets the backend health of the specified application gateway in a resource group
 - ~~Azure Application Gateway's back-end pool isn't configured or empty.~~
 - None of the VMs or instances in virtual machine scale set are healthy.
 - Request time-out or connectivity issues with user requests.
+
+## Log
+```powershell
+AzureDiagnostics | where Category =="ApplicationGatewayFirewallLog" and TimeGenerated >= todatetime('2020-12-26T04:50:01.397Z')
+and TimeGenerated < todatetime('2020-12-26T05:00:01.397Z')
+```
