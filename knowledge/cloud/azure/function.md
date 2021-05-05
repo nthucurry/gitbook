@@ -3,16 +3,27 @@
 Azure Logic Apps is a cloud service that helps you **schedule**, **automate**, and **orchestrate** (編排) **tasks**, **business processes**, and **workflows** when you need to integrate apps, data, systems, and services across enterprises or organizations.
 
 Logic Apps simplifies how you design and build scalable solutions for app integration, data integration, system integration, enterprise application integration (EAI), and business-to-business (B2B) communication, whether in the cloud, on premises, or both.
+
+### Why use Logic Apps
+- Visually create and edit workflows with **easy-to-use** tools
+- Connect different systems across various environments
+- Write once, reuse often
+- First-class support for enterprise integration and B2B scenarios
+- Built-in extensibility
+- Access resources inside VNet
+    <br>Logic app workflows can access secured resources, such as VMs and other systems or services, that are inside an VNet when you create an integration service environment (ISE).
+- Pricing options
+
 <img src="https://biztalk360.com/wp-content/uploads/2016/12/Use-case-scenario.png">
 
-### Access to On-Premises Systems
-
-## API Management
+## API Management (API Proxy)
 API Management (APIM) is a way to create consistent and modern API gateways for existing back-end services.
 
 API Management helps organizations publish APIs to external, partner, and internal developers to unlock the potential of their data and services. Businesses everywhere are looking to extend their operations as a digital platform, creating new channels, finding new customers and driving deeper engagement with existing ones. API Management provides the core competencies (管理能力) to ensure a successful API program through developer engagement (保證), business insights, analytics, security, and protection. You can use Azure API Management to take any backend and launch a full-fledged API program based on it.
 
-This article provides an overview of common scenarios that involve APIM. It also gives a brief overview of the APIM system's main components. The article, then, gives a more detailed overview of each component.
+若要用最簡單的方式來介紹 API Management，基本上他就是一個 API Proxy，每一個 API Management 服務都提供了一個「https://*.portal.azure-api.net/」端點讓您呼叫自己的 API，主要的應用情境筆者理解如下：
+- 匯集各方的 API 到同一個 endpoint：假設產品所需要用到的 API 是來自各個第三方的 endpoint，透過 API Management 可以整到同一個端點底下來方便管理，若有端點的更新也可以直接從 Portal 抽換更新。
+- 提供自己服務的 API 讓其他客戶使用：假如公司的服務規模大到提供 API、SDK 來讓第三方使用，這時可能會有不同等級的區分，例如可能依照價格來控制每秒或每分鐘可以請求的流量，或是依照不同的服務等級有不同的 API 可以使用，這時便可以透過 API Management 來統一管理，減少原始 API 所需要做的變動。
 
 <br><img src="https://docs.microsoft.com/en-us/azure/api-management/media/api-management-using-with-vnet/api-management-vnet-internal.png">
 

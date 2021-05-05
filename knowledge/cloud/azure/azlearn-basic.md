@@ -197,7 +197,7 @@ A VNet service endpoint provides the identity of your virtual network to the Azu
 - 可以對外連線
 - 把 VNet 放到 PaaS 內
 
-### Private Link (Private Endpoint，強化安全版 Service Endpoint)
+### Private Link (Private Endpoint，安全版 Service Endpoint)
 Azure Private Link provides private connectivity from a VNet to Azure PaaS, customer-owned, or Microsoft partner services. It simplifies the network architecture and secures the connection between endpoints in Azure by eliminating (消除) data exposure to the public internet.
 - Private Endpoint properties
     - Network connections can **only be initiated** by clients connecting to the Private endpoint, Service providers do not have any routing configuration to initiate connections into service consumers. Connections can **only be establish** in a **single** direction.
