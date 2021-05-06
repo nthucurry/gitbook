@@ -95,6 +95,9 @@ Gets the backend health of the specified application gateway in a resource group
 - None of the VMs or instances in virtual machine scale set are healthy.
 - Request time-out or connectivity issues with user requests.
 
+## HTTP Error
+- 403 ModSecurity Action
+
 ## Log
 ```powershell
 AzureDiagnostics | where Category =="ApplicationGatewayFirewallLog" and TimeGenerated >= todatetime('2020-12-26T04:50:01.397Z')
