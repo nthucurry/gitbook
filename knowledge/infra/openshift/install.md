@@ -110,11 +110,17 @@ sshKey: |
             ? azure service principal client secret [? for help] **********************************
             ```
     - 安裝 OpenShift (約一小時，若自行設定 DNS，VM 建立時需注意名稱解析)
-        - `./ocp4.5_inst/openshift-install create cluster --dir=/home/azadmin/ocp4.5_cust --log-level=debug`
-            - 硬體需合規
-            - azure 環境 (10 分鐘)
-            - VM 建置 (5 分鐘)
-            - bootstrap 建置 (10 ~ 20 分鐘)
+        - `./ocp4.5_inst/openshift-install create cluster --dir=/home/docker/ocp4.5_cust --log-level=info`
+            ```
+            INFO Credentials loaded from file "/home/docker/.azure/osServicePrincipal.json"
+            INFO Consuming Install Config from target directory (10 分鐘)
+            INFO Creating infrastructure resources... (5 分鐘)
+            INFO Waiting up to 20m0s for the Kubernetes API at https://api.dba-k8s.azure.org:6443...
+            INFO API v1.18.3+cdb0358 up
+            INFO Waiting up to 40m0s for bootstrapping to complete... (10 ~ 20 分鐘)
+            INFO Destroying the bootstrap resources... (2 分鐘)
+            INFO Waiting up to 30m0s for the cluster at https://api.dba-k8s.azure.org:6443 to initialize...
+            ```
         - check installing status
             - `tail -f ./ocp4.5_inst/.openshift_install.log`
         - 如果不是使用 Azure DNS，需動態改 IP
