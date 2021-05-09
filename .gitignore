@@ -14,6 +14,7 @@ knowledge/vm/*
 knowledge/crawler/*
 knowledge/erp/*
 knowledge/infra/*
+knowledge/infra/openshift/*
 knowledge/exam/*
 
 ### open directories of interest and their contents

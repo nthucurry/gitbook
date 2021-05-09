@@ -1,3 +1,16 @@
+# Maintain List
+## Azure
+- WKC 資源若被 delete，會 auto-rebuild
+- Recovery Services Vault (保存庫)
+    - Geo-redundant storage (GRS, 異地備援儲存體)
+        <br><img src="https://docs.microsoft.com/zh-tw/azure/storage/common/media/storage-redundancy/geo-redundant-storage.png">
+    - 定期備份 Bastion、NFS VM
+        - 一天一次，保留最近三天
+        - WKC cluster 缺少 VM agent，無法備份
+- SLA for Virtual Machines
+    <br>For any Single VM using Premium SSD or Ultra Disk for all OS Disks and Data Disks, we guarantee you will have VM Connectivity of at least 99.9%. (一年最多停機 8.76 小時)
+
+## OpenShift
 ssh core@$node sudo shutdown -h 1
 
 nodes=$(oc get nodes -ojsonpath='{​​​​​​​​.items[*].metadata.name}​​​​​​​​')

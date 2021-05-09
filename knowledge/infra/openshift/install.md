@@ -83,8 +83,10 @@ sshKey: |
 - disk: 256G
 - CPU: 4C
 - RAM: 16G
+- 改時區
 
 ## 安裝 OpenShift on Bastion VM
+- 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.corpnet.auo.com
 - 下載 OpenShift 檔案
     ```bash
     cd ~
@@ -108,7 +110,11 @@ sshKey: |
             ? azure service principal client secret [? for help] **********************************
             ```
     - 安裝 OpenShift (約一小時，若自行設定 DNS，VM 建立時需注意名稱解析)
-        - `./ocp4.5_inst/openshift-install create cluster --dir=/home/azadmin/ocp4.5_cust --log-level=info`
+        - `./ocp4.5_inst/openshift-install create cluster --dir=/home/azadmin/ocp4.5_cust --log-level=debug`
+            - 硬體需合規
+            - azure 環境 (10 分鐘)
+            - VM 建置 (5 分鐘)
+            - bootstrap 建置 (10 ~ 20 分鐘)
         - check installing status
             - `tail -f ./ocp4.5_inst/.openshift_install.log`
         - 如果不是使用 Azure DNS，需動態改 IP
