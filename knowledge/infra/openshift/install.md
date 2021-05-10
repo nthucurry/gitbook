@@ -1,19 +1,3 @@
-<!-- TOC -->
-
-- [WKC Install SOP](#wkc-install-sop)
-    - [Azure 架構](#azure-架構)
-    - [到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password](#到-azure-portal-進-console-找出-subscription-tenant-client-appid-client-password)
-    - [設定 Install Config](#設定-install-config)
-    - [安裝 Bastion VM](#安裝-bastion-vm)
-    - [安裝 OpenShift on Bastion VM](#安裝-openshift-on-bastion-vm)
-    - [安裝 NFS VM](#安裝-nfs-vm)
-    - [安裝 OpenShift Client on NFS VM](#安裝-openshift-client-on-nfs-vm)
-    - [設定 Machine Config](#設定-machine-config)
-    - [設定 Proxy](#設定-proxy)
-    - [設定 User Managerment](#設定-user-managerment)
-
-<!-- /TOC -->
-
 # WKC Install SOP
 ## Azure 架構
 - resource group
@@ -44,8 +28,8 @@
 ## 設定 Install Config
 ```yaml
 apiVersion: v1
-baseDomain: corpnet.auo.com
-compute:
+baseDomain: corpnet.auo.com  # domain name
+compute: # worker spec
 - architecture: amd64
   hyperthreading: Enabled
   name: worker
@@ -57,7 +41,7 @@ compute:
       zones:
       - "1"
   replicas: 4
-controlPlane:
+controlPlane: # master spec
   architecture: amd64
   hyperthreading: Enabled
   name: master
@@ -77,7 +61,7 @@ networking:
   - cidr: 10.128.0.0/14
     hostPrefix: 23
   machineNetwork:
-  - cidr: 10.250.0.0/16
+  - cidr: 10.250.0.0/16 # Azure VNet IP range
   networkType: OpenShiftSDN
   serviceNetwork:
   - 172.30.0.0/16
@@ -85,22 +69,24 @@ platform:
   azure:
     baseDomainResourceGroupName: WKC
     networkResourceGroupName: Global
-    virtualNetwork: VNet
-    controlPlaneSubnet: AUO-AzureWKCMasterFarm
-    computeSubnet: AUO-AzureWKCMasterFarm
+    virtualNetwork: VNet # Azure VNet name
+    controlPlaneSubnet: AUO-AzureWKCMasterFarm # subnet name
+    computeSubnet: AUO-AzureWKCMasterFarm # subnet name
     region: southeastasia
 publish: Internal
-pullSecret: 'json-format-key'
+pullSecret: 'json-format-key' # key from redhat
 sshKey: |
   ssh-rsa XXX azadmin@maz-bastion
 ```
 
-## 安裝 Bastion VM
+## 建置 Bastion VM
 - disk: 256G
 - CPU: 4C
 - RAM: 16G
+- 改時區
 
 ## 安裝 OpenShift on Bastion VM
+- 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.corpnet.auo.com
 - 下載 OpenShift 檔案
     ```bash
     cd ~
@@ -124,7 +110,17 @@ sshKey: |
             ? azure service principal client secret [? for help] **********************************
             ```
     - 安裝 OpenShift (約一小時，若自行設定 DNS，VM 建立時需注意名稱解析)
-        - `./ocp4.5_inst/openshift-install create cluster --dir=/home/azadmin/ocp4.5_cust --log-level=info`
+        - `./ocp4.5_inst/openshift-install create cluster --dir=/home/docker/ocp4.5_cust --log-level=info`
+            ```
+            INFO Credentials loaded from file "/home/docker/.azure/osServicePrincipal.json"
+            INFO Consuming Install Config from target directory (10 分鐘)
+            INFO Creating infrastructure resources... (5 分鐘)
+            INFO Waiting up to 20m0s for the Kubernetes API at https://api.dba-k8s.azure.org:6443...
+            INFO API v1.18.3+cdb0358 up
+            INFO Waiting up to 40m0s for bootstrapping to complete... (10 ~ 20 分鐘)
+            INFO Destroying the bootstrap resources... (2 分鐘)
+            INFO Waiting up to 30m0s for the cluster at https://api.dba-k8s.azure.org:6443 to initialize...
+            ```
         - check installing status
             - `tail -f ./ocp4.5_inst/.openshift_install.log`
         - 如果不是使用 Azure DNS，需動態改 IP
@@ -147,8 +143,8 @@ sshKey: |
     sudo cp ./oc /usr/bin
     ```
 
-## 安裝 NFS VM
-- 掛載大容量 disk
+## 建置 NFS VM
+- 掛載大容量 disk (by LVM)
     ```bash
     sudo su
     fdisk -l
@@ -193,36 +189,6 @@ sshKey: |
     tar xvfz openshift-client-linux-4.5.36.tar.gz
     sudo cp ./oc /usr/bin
     ```
-- 下載 CP4D 檔案
-    ```bash
-    mkdir ~/ibm
-    cd ~/ibm
-    wget https://github.com/IBM/cpd-cli/releases/download/v3.5.3/cpd-cli-linux-EE-3.5.3.tgz
-    tar xzvf cpd-cli-linux-EE-3.5.3.tgz
-    ```
-- 下載 lite
-    ```bash
-    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/lite
-    mkdir -p $DOWNLOAD_FOLDER
-    export ASSEMBLY=lite
-    ./cpd-cli preload-images --repo ./repo.yaml --assembly $ASSEMBLY --download-path=$DOWNLOAD_FOLDER --action download --accept-all-licenses
-    ```
-- 下載 WKC
-    ```bash
-    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/wkc
-    mkdir -p $DOWNLOAD_FOLDER
-    export ASSEMBLY=wkc
-    ./cpd-cli preload-images --repo ./repo.yaml --assembly $ASSEMBLY --download-path=$DOWNLOAD_FOLDER --action download --accept-all-licenses
-    ```
-- 安裝 OpenShift Container Platform
-    ```bash
-    cd ~
-    mkdir ocp4.5_client
-    cd ./ocp4.5_client
-    wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-client-linux-4.5.36.tar.gz
-    tar xvfz openshift-client-linux-4.5.36.tar.gz
-    sudo cp ./oc /usr/bin
-    ```
 - 安裝 k8s incubator
     ```bash
     curl -L -o kubernetes-incubator.zip https://github.com/kubernetes-incubator/external-storage/archive/master.zip
@@ -240,6 +206,8 @@ sshKey: |
     sudo sed -i'' "s/namespace:.*/namespace: $NAMESPACE/g" ./deploy/rbac.yaml
     sudo sed -i'' "s/namespace:.*/namespace: $NAMESPACE/g" ./deploy/deployment.yaml
     ```
+
+## 設定 Disk 路徑 on NFS VM
 - 建立 OpenShift RBAC
     ```bash
     oc create -f deploy/rbac.yaml
@@ -281,6 +249,40 @@ sshKey: |
     oc get pods
     oc get pvc
     ```
+
+## 安裝 WKC by Bastion VM
+- 下載 CP4D 檔案
+    ```bash
+    mkdir ~/ibm
+    cd ~/ibm
+    wget https://github.com/IBM/cpd-cli/releases/download/v3.5.3/cpd-cli-linux-EE-3.5.3.tgz
+    tar xzvf cpd-cli-linux-EE-3.5.3.tgz
+    ```
+- 下載 lite
+    ```bash
+    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/lite
+    mkdir -p $DOWNLOAD_FOLDER
+    export ASSEMBLY=lite
+    ./cpd-cli preload-images --repo ./repo.yaml --assembly $ASSEMBLY --download-path=$DOWNLOAD_FOLDER --action download --accept-all-licenses
+    ```
+- 下載 WKC
+    ```bash
+    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/wkc
+    mkdir -p $DOWNLOAD_FOLDER
+    export ASSEMBLY=wkc
+    ./cpd-cli preload-images --repo ./repo.yaml --assembly $ASSEMBLY --download-path=$DOWNLOAD_FOLDER --action download --accept-all-licenses
+    ```
+- 安裝 OpenShift Container Platform
+    ```bash
+    cd ~
+    mkdir ocp4.5_client
+    cd ./ocp4.5_client
+    wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-client-linux-4.5.36.tar.gz
+    tar xvfz openshift-client-linux-4.5.36.tar.gz
+    sudo cp ./oc /usr/bin
+    ```
+
+## 安裝 WKC from Bastion VM to Cluster VM
 - 安裝 podman (redhad 用來取代 docker tool 的工具)
     - `yum install podman -y`
 - 建立 namespace
@@ -395,7 +397,7 @@ sshKey: |
 - WKC portal
     - https://zen-cpd-zen.apps.wkc.corpnet.auo.com
 
-## 設定 Machine Config
+## 設定 Machine Config on Bastion VM
 - https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=tasks-changing-required-node-settings#node-settings__crio
 - 安裝 python 3
     - `yum install python3 -y`
@@ -471,7 +473,7 @@ sshKey: |
     - 執行 oc 使參數生效
         - `oc create -f 42-cp4d.yaml`
 
-## 設定 Proxy
+## 設定 Proxy on Bastion VM
 - 設定 NSG
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-nsg.png">
 - 編輯 proxy object
@@ -502,7 +504,7 @@ sshKey: |
     management.azure.com
     ```
 
-## 設定 User Managerment
+## 設定 User Managerment on CP4D Portal
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/wkc-ldap.png">
 
 - https://docs.microsoft.com/zh-tw/system-center/scsm/ad-ds-attribs?view=sc-sm-2019

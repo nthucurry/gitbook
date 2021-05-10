@@ -17,8 +17,9 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     - [使用kubeadm 安装 kubernetes 1.15.1](http://www.manongjc.com/detail/9-pbmajemrfahtfpl.html)
     - [實現 Kubernetes 高可靠架構部署](https://k2r2bai.com/2019/09/20/ironman2020/day05/)
     - [如何自建 K8S HA Cluster](https://brobridge.com/bdsres/2019/08/30/本篇目標是針對如何自學建立k8s架構/)
-    - https://computingforgeeks.com/how-to-install-kubernetes-dashboard-with-nodeport/
-    - https://faun.pub/configuring-ha-kubernetes-cluster-on-bare-metal-servers-monitoring-logs-and-usage-examples-3-3-340357f21453
+    - [How To Install Kubernetes Dashboard with NodePort](https://computingforgeeks.com/how-to-install-kubernetes-dashboard-with-nodeport/)
+    - [Configuring HA Kubernetes cluster on bare metal servers](https://faun.pub/configuring-ha-kubernetes-cluster-on-bare-metal-servers-monitoring-logs-and-usage-examples-3-3-340357f21453)
+    - https://github.com/cookeem/kubeadm-ha
 
 ## Information
 一個可以幫助我們管理 microservices 的系統，他可以自動化地部署及管理多台機器上的多個 container。K8S 想解決的問題是：「手動部署多個容器到多台機器上並監測管理這些容器的狀態非常麻煩。」而 K8S 要提供的解法： 提供一個平台以較高層次的抽象化去自動化操作與管理容器們。
@@ -29,13 +30,13 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 差異就在: https://nakivo.medium.com/kubernetes-vs-docker-what-is-the-difference-3b0c6cce97d3
 
 ## Sample
-| type          | IP       | hostname |
-|---------------|----------|----------|
-| load balancer | 10.0.8.4 | t-k8s-lb |
-| master 1      | 10.0.8.5 | t-k8s-m1 |
-| master 1      | 10.0.8.6 | t-k8s-m2 |
-| worker 1      | 10.0.8.7 | t-k8s-n1 |
-| worker 2      | 10.0.8.8 | t-k8s-n2 |
+| type     | IP       | hostname |
+|----------|----------|----------|
+| k8s vip  | 10.0.8.4 | t-k8s-lb |
+| master 1 | 10.0.8.5 | t-k8s-m1 |
+| master 1 | 10.0.8.6 | t-k8s-m2 |
+| worker 1 | 10.0.8.7 | t-k8s-n1 |
+| worker 2 | 10.0.8.8 | t-k8s-n2 |
 
 ## Load Balancer for K8S (HA option)
 <br><img src="https://brobridge.com/bdsres/wp-content/uploads/2019/08/image-1024x769.png">
