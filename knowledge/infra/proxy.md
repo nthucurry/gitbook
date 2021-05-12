@@ -72,6 +72,31 @@ systemctl restart squid
     ```
 - check: `netstat -tulnp | grep squid`
 
+## Proxy over TLS
+```bash
+yum install mod_ssl openssl
+
+# 產生私鑰
+openssl genrsa -out ca.key 2048
+
+# 產生 CSR
+openssl req -new -key ca.key -out ca.csr
+
+# 產生自我簽署的金鑰
+openssl x509 -req -days 365 -in ca.csr -signkey ca.key -out ca.crt
+
+# 複製檔案至正確位置
+cp ca.crt /etc/pki/tls/certs
+cp ca.key /etc/pki/tls/private/ca.key
+cp ca.csr /etc/pki/tls/private/ca.csr
+
+vi +/SSLCertificateFile /etc/httpd/conf.d/ssl.conf
+# SSLCertificateFile /etc/pki/tls/certs/ca.crt
+# SSLCertificateKeyFile /etc/pki/tls/private/ca.key
+
+systemctl restart httpd.service
+```
+
 ## Squid Analysis Report Generator
 [Squid Analysis ReportGenerator](https://www.tecmint.com/sarg-squid-analysis-report-generator-and-internet-bandwidth-monitoring-tool/)
 ```bash

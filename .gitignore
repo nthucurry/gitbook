@@ -87,6 +87,7 @@ knowledge/exam/*
 !knowledge/crawler/code.md
 !knowledge/erp
 !knowledge/infra
+!knowledge/infra/openssl.md
 !knowledge/infra/docker.md
 !knowledge/infra/macos.md
 !knowledge/infra/sharepoint.md
