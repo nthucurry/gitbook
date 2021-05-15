@@ -1,7 +1,7 @@
 #/bin/bash
 echo ".... OS initial ...."
 os_name=`cat /etc/os-release | head -1`
-USER=azadmin
+USER=docker
 k8s_ip=`ifconfig | grep inet | awk '{print $2}' | head -1`
 if [[ $k8s_ip == *"10.250"* ]]; then
     where_am_i="auo250"
@@ -105,7 +105,6 @@ enabled=1
 gpgcheck=1
 repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-exclude=kubelet kubeadm kubectl
 EOF
 
 echo "3. Set SELinux in permissive mode (effectively disabling it)"

@@ -1,13 +1,15 @@
 #/bin/bash
 ###################################
-subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
-resource_group="DBA-K8S"
+# bigdata: a7bdf2e3-b855-4dda-ac93-047ff722cbbd
+# auo:     de61f224-9a69-4ede-8273-5bcef854dc20
+subscription="a7bdf2e3-b855-4dda-ac93-047ff722cbbd"
+resource_group="DBA_Test"
 vm_name=$1
 ###################################
 az account set -s $subscription
 ###################################
 
-if [[ $resource_group == "DBA-K8S" ]]; then
+if [[ $resource_group == "DBA_Test" ]]; then
 
     disk_name=`az vm list -g $resource_group -d --query "[?name == '$vm_name'].storageProfile.osDisk.name" -o tsv`
     nic=`az vm list -g $resource_group -d --query "[?name == '$vm_name'].networkProfile.networkInterfaces"`

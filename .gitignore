@@ -14,7 +14,8 @@ knowledge/vm/*
 knowledge/crawler/*
 knowledge/erp/*
 knowledge/infra/*
-knowledge/infra/openshift/*
+knowledge/infra/openshift/install-config.yaml
+knowledge/infra/openshift/ser-info.txt
 knowledge/exam/*
 
 ### open directories of interest and their contents

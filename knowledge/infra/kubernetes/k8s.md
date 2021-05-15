@@ -44,9 +44,11 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 - 安裝 HAProxy
     - `yum install haproxy -y`
 - 設定 config
-    ```
+    ```bash
+    cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.orig
+    cat >> /etc/haproxy/haproxy.cfg <<END
     frontend kubernetes
-        bind 10.0.8.4:6443
+        bind t-k8s-lb:6443
         option tcplog
         mode tcp
         default_backend kubernetes-master-nodes
@@ -54,13 +56,28 @@ K8S is a portable, extensible, open-source platform for managing containerized w
         mode tcp
         balance roundrobin
         option tcp-check
-        server t-k8s-m1.portal.org 10.0.8.5:6443 check fall 3 rise 2
-        server t-k8s-m2.portal.org 10.0.8.6:6443 check fall 3 rise 2
+        server t-k8s-m1 10.0.8.8:6443 check fall 3 rise 2
+        server t-k8s-m2 10.0.8.9:6443 check fall 3 rise 2
+    END
     ```
 - 啟動
     ```bash
     systemctl enable haproxy
     systemctl start haproxy
+    ```
+- 安裝 K8S
+    ```bash
+    cat << EOF | tee /etc/yum.repos.d/kubernetes.repo
+    [kubernetes]
+    name=Kubernetes
+    baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+    enabled=1
+    gpgcheck=1
+    repo_gpgcheck=1
+    gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    EOF
+
+    yum install kubectl -y
     ```
 - 安裝 dashborad
     - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml`
@@ -147,8 +164,10 @@ K8S is a portable, extensible, open-source platform for managing containerized w
     ```
 - kubeadmin join
     - `kubeadm init --config=kubeadm-config.yaml --upload-certs --ignore-preflight-errors=all`
-- 重新產生新的 key
-    - `kubeadm init phase upload-certs --experimental-upload-certs`
+    - 重新產生新的 key
+        - `kubeadm init phase upload-certs --experimental-upload-certs`
+- 加入 cluster
+    - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
 - 同步 config to load balancer
     - `rsync -av t-k8s-m1:/etc/kubernetes/ /etc/kubernetes/`
 
