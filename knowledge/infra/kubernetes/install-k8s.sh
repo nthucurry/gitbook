@@ -11,10 +11,11 @@ else
     echo "1. I am in" $where_am_i
 fi
 
-echo "1. Enviroment value"
+echo "1. Environment value"
 timedatectl set-timezone Asia/Taipei
 LANG=en_US.UTF-8
 swapoff -a
+systemctl daemon-reload
 echo "alias vi='vim'" >> ~/.bashrc
 echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 source ~/.bashrc
@@ -24,6 +25,7 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 # systemctl stop firewalld
 # systemctl disable firewalld
 
+echo "2. Proxy"
 if [ $where_am_i == "auo250" ]; then
     echo "2. Set proxy"
 cat >> /root/.bashrc << EOF
@@ -90,13 +92,16 @@ systemctl enable docker
 
 echo ".... K8S ...."
 echo "1. Letting iptables see bridged traffic"
-cat << EOF | tee /etc/sysctl.d/k8s.conf
+cat << EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+cat << EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
 sudo sysctl --system
 
-echo "2. Install using native package management"
+echo "2. Installing kubeadm, kubelet and kubectl"
 cat << EOF | tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -105,17 +110,17 @@ enabled=1
 gpgcheck=1
 repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+exclude=kubelet kubeadm kubectl
 EOF
-
-echo "3. Set SELinux in permissive mode (effectively disabling it)"
-setenforce 0
-sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
-
-echo "4. Install K8S"
 yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 systemctl enable --now kubelet
 
-echo "5. Restarting K8S"
+echo "3. Set SELinux in permissive mode (effectively disabling it)"
+# setenforce 0
+# sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
+echo "4. Restarting K8S"
 systemctl daemon-reload
 systemctl restart kubelet
 systemctl enable kubelet
+systemctl status kubelet

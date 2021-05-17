@@ -23,3 +23,5 @@ if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; th
 else
     echo "[Warning...] It is not test resource group!!"
 fi
+
+cat /dev/null > ~/.ssh/known_hosts
