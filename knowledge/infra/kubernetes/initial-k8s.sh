@@ -85,10 +85,10 @@ cat << EOF | tee /etc/docker/daemon.json
 }
 EOF
 
-echo "5. Restart docker"
+echo "5. Start docker"
 systemctl daemon-reload
-systemctl restart docker
 systemctl enable docker
+systemctl start docker
 
 echo ".... K8S ...."
 echo "1. Letting iptables see bridged traffic"
@@ -119,8 +119,11 @@ echo "3. Set SELinux in permissive mode (effectively disabling it)"
 # setenforce 0
 # sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
-echo "4. Restarting K8S"
+echo "4. Start K8S"
 systemctl daemon-reload
 systemctl restart kubelet
 systemctl enable kubelet
+
+echo ".... Check status ...."
+systemctl status docker
 systemctl status kubelet
