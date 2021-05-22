@@ -16,9 +16,10 @@ vi /etc/yum.conf
 yum update -y
 yum install telnet -y
 yum install squid -y
+yum cleam all
 ```
 
-## 啟動步驟
+### 啟動步驟
 ```bash
 systemctl start squid
 systemctl enable squid
@@ -28,7 +29,7 @@ systemctl status squid
 systemctl restart squid
 ```
 
-## 修改參數
+### 修改參數
 - `vi /etc/squid/squid.conf`
     ```txt
     # 定義可以存取此 proxy 的 ip，預設為內網
@@ -72,7 +73,7 @@ systemctl restart squid
     ```
 - check: `netstat -tulnp | grep squid`
 
-## Proxy over TLS
+### Proxy over TLS
 ```bash
 yum install mod_ssl openssl
 
@@ -129,4 +130,19 @@ netstat -anpt | grep ':80'
 
 # startup sarg
 ./sarg -x
+```
+
+##  Restrictions Azure specify tenant by proxy
+- The proxy must be able to perform **TLS interception** (擷取), **HTTP header insertion**, and **filter destinations using FQDNs/URLs**.
+- Clients must trust the certificate chain presented by the proxy for TLS communications. For example, if certificates from an internal public key infrastructure (PKI) are used, the internal issuing root certificate authority certificate must be trusted.
+- Azure AD Premium 1 licenses are required for use of Tenant Restrictions.
+
+### 設定 TLS
+```bash
+mkdir -p /etc/squid/ssl_cert
+cd /etc/squid/ssl_cert
+openssl req -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -keyout myCA.pem  -out myCA.pem
+openssl x509 -in myCA.pem -outform DER -out myCA.der
+
+netstat -peant | grep ":3128"
 ```
