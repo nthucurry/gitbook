@@ -12,11 +12,12 @@
 # proxy 設定
 vi /etc/yum.conf
 
-# 一些常裝軟體
 yum update -y
 yum install telnet -y
 yum install squid -y
 yum cleam all
+
+sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 ```
 
 ### 啟動步驟
@@ -137,7 +138,7 @@ netstat -anpt | grep ':80'
 - Clients must trust the certificate chain presented by the proxy for TLS communications. For example, if certificates from an internal public key infrastructure (PKI) are used, the internal issuing root certificate authority certificate must be trusted.
 - Azure AD Premium 1 licenses are required for use of Tenant Restrictions.
 
-### 設定 TLS
+### 設定 TLS (未完成)
 ```bash
 mkdir -p /etc/squid/ssl_cert
 cd /etc/squid/ssl_cert
@@ -145,4 +146,19 @@ openssl req -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -keyout myCA.pe
 openssl x509 -in myCA.pem -outform DER -out myCA.der
 
 netstat -peant | grep ":3128"
+
+# Create a self-signed SSL certificate.
+openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout squidCA.pem -out squidCA.pem
+
+# Create a trusted certificate to be imported into a browser.
+openssl x509 -in squidCA.pem -outform DER -out squid.der
+
+# Replace http_port in the /etc/squid/squid.conf
+http_port 3128 ssl-bump generate-host-certificates=on dynamic_cert_mem_cache_size=4MB cert=/etc/squid/cert/squidCA.pem
+
+# Add the following lines to the end of the file in the /etc/squid/squid.conf
+sslcrtd_program /usr/lib64/squid/ssl_crtd -s /var/lib/squid/ssl_db -M 4MB
+sslcrtd_children 5
+ssl_bump server-first all
+sslproxy_cert_error deny all
 ```
