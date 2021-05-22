@@ -1,5 +1,4 @@
-### block everything
-*/
+### block list
 README.md
 SUMMARY.md
 .DS_Store
@@ -19,25 +18,6 @@ knowledge/infra/openshift/ser-info.txt
 knowledge/exam/*
 
 ### open directories of interest and their contents
-# img
-!img
-!img/oracle
-!img/oracle/troubleshooting
-!img/vnc
-!img/windows
-!img/virtualbox
-!img/linux
-!img/linux/dataguard
-!img/linux/lvm
-!img/cloud
-!img/cloud/azure
-!img/cloud/gcp
-!img/cloud/ibm
-!img/docker
-!img/veeam
-!img/moss
-!img/kubernetes
-!img/openshift
 # office
 !office
 !office/chipbond

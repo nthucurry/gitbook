@@ -64,23 +64,6 @@ Gets the backend health of the specified application gateway in a resource group
 - CRT + KEY --> PFX
     - http://dog0416.blogspot.com/2017/08/opensslwindows-crt-key-pfx.html
 
-### 憑證設定
-- Tomcat
-    ```txt
-    [azadmin@vm-tomcat ~]$ ls
-    apache-tomcat-9.0.44.zip  apache-tomcat-9.0.44.zip.sha512  auoca2021.key  auoca2021.pem
-    [azadmin@vm-tomcat ~]$ openssl pkcs12 -export -in auoca2021.pem -out auoca2021.pfx
-    Enter Export Password:
-    Verifying - Enter Export Password:
-    [azadmin@vm-tomcat ~]$ ls
-    apache-tomcat-9.0.44.zip  apache-tomcat-9.0.44.zip.sha512  auoca2021.key  auoca2021.pem  auoca2021.pfx
-    [azadmin@vm-tomcat ~]$ sudo cp auoca2021.pfx /usr/share/tomcat/conf/
-    [azadmin@vm-tomcat conf]$ sudo vim server.xml
-    [azadmin@vm-tomcat conf]$ sudo systemctl stop tomcat.service
-    [azadmin@vm-tomcat conf]$ sudo systemctl start tomcat.service
-    [azadmin@vm-tomcat conf]$ sudo systemctl status tomcat.service
-    ```
-
 ## Troubleshooting bad gateway errors in Application Gateway
 - NSG, UDR, or Custom DNS is blocking access to backend pool members.
     <br>The NSG on the Application Gateway subnet is blocking inbound access to ports 65503-65534 (v1 SKU) or 65200-65535 (v2 SKU) from Internet.

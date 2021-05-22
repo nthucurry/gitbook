@@ -17,6 +17,7 @@ yum install telnet -y
 yum install squid -y
 yum cleam all
 
+timedatectl set-timezone Asia/Taipei
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 ```
 
@@ -43,28 +44,22 @@ systemctl restart squid
     # 定義可以取得資料的 ports
     acl SSL_ports port 443
     acl Safe_ports port 80          # http
-    acl Safe_ports port 21          # ftp
     acl Safe_ports port 443         # https
-    acl Safe_ports port 70          # gopher
-    acl Safe_ports port 210         # wais
-    acl Safe_ports port 1025-65535  # unregistered ports
-    acl Safe_ports port 280         # http-mgmt
-    acl Safe_ports port 488         # gss-http
-    acl Safe_ports port 591         # filemaker
-    acl Safe_ports port 777         # multiling http
 
     #
     # INSERT YOUR OWN RULE(S) HERE TO ALLOW ACCESS FROM YOUR CLIENTS
     #
     acl allowurl url_regex -i "/etc/squid/allow_url.lst" # whitelist
     acl iconnect src 10.251.12.0/22
+    acl iconnect src 111.249.192.18
     http_access deny !allowurl
     http_access deny !iconnect
     http_access allow allowurl
     http_access allow iconnect
 
     # Squid normally listens to port 3128
-    http_port 80
+    http_port 3128
+    request_header_add X-GoogApps-Allowed-Domains "mycompany.com" all
     ```
 - `vi /etc/squid/allow_url.lst`
     ```txt
@@ -73,31 +68,6 @@ systemctl restart squid
     ftp.twaren.net
     ```
 - check: `netstat -tulnp | grep squid`
-
-### Proxy over TLS
-```bash
-yum install mod_ssl openssl
-
-# 產生私鑰
-openssl genrsa -out ca.key 2048
-
-# 產生 CSR
-openssl req -new -key ca.key -out ca.csr
-
-# 產生自我簽署的金鑰
-openssl x509 -req -days 365 -in ca.csr -signkey ca.key -out ca.crt
-
-# 複製檔案至正確位置
-cp ca.crt /etc/pki/tls/certs
-cp ca.key /etc/pki/tls/private/ca.key
-cp ca.csr /etc/pki/tls/private/ca.csr
-
-vi +/SSLCertificateFile /etc/httpd/conf.d/ssl.conf
-# SSLCertificateFile /etc/pki/tls/certs/ca.crt
-# SSLCertificateKeyFile /etc/pki/tls/private/ca.key
-
-systemctl restart httpd.service
-```
 
 ## Squid Analysis Report Generator
 [Squid Analysis ReportGenerator](https://www.tecmint.com/sarg-squid-analysis-report-generator-and-internet-bandwidth-monitoring-tool/)
@@ -140,25 +110,58 @@ netstat -anpt | grep ':80'
 
 ### 設定 TLS (未完成)
 ```bash
-mkdir -p /etc/squid/ssl_cert
-cd /etc/squid/ssl_cert
-openssl req -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -keyout myCA.pem  -out myCA.pem
-openssl x509 -in myCA.pem -outform DER -out myCA.der
+mkdir -p /etc/squid/certs
+cd /etc/squid/certs
 
-netstat -peant | grep ":3128"
+# Create self-signed SSL certificate and trusted certificate
+openssl req -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -extensions v3_ca -keyout squid-ca-key.pem -out squid-ca-cert.pem
+cat squid-ca-cert.pem squid-ca-key.pem >> squid-ca-cert-key.pem
+chown squid:squid -R /etc/squid/certs
 
-# Create a self-signed SSL certificate.
-openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout squidCA.pem -out squidCA.pem
+squid -k parse
 
-# Create a trusted certificate to be imported into a browser.
-openssl x509 -in squidCA.pem -outform DER -out squid.der
+/usr/lib64/squid/ssl_crtd -c -s /var/lib/ssl_db
 
 # Replace http_port in the /etc/squid/squid.conf
-http_port 3128 ssl-bump generate-host-certificates=on dynamic_cert_mem_cache_size=4MB cert=/etc/squid/cert/squidCA.pem
+# http_port 3128
+http_port 3128 ssl-bump \
+    cert=/etc/squid/certs/squid-ca-cert-key.pem \
+    generate-host-certificates=on dynamic_cert_mem_cache_size=16MB
+https_port 3129 intercept ssl-bump \
+    cert=/etc/squid/certs/squid-ca-cert-key.pem \
+    generate-host-certificates=on dynamic_cert_mem_cache_size=16MB
+sslcrtd_program /usr/lib64/squid/ssl_crtd -s /var/lib/ssl_db -M 16MB
+acl step1 at_step SslBump1
+ssl_bump peek step1
+ssl_bump bump all
+ssl_bump splice all
 
-# Add the following lines to the end of the file in the /etc/squid/squid.conf
-sslcrtd_program /usr/lib64/squid/ssl_crtd -s /var/lib/squid/ssl_db -M 4MB
-sslcrtd_children 5
-ssl_bump server-first all
-sslproxy_cert_error deny all
+# Add Azure Header
+request_header_add Restrict-Access-To-Tenants "<primary domain>.onmicrosoft.com" all
+request_header_add Restrict-Access-Context "<tenant ID>" all
+
+# Test
+curl --proxy http://squid.hotpo.org:3128 ipinfo.io
+```
+
+### Proxy test by Fiddler
+```csharp
+// Allows access to the listed tenants.
+if (
+    oSession.HostnameIs("login.microsoftonline.com") ||
+    oSession.HostnameIs("login.microsoft.com") ||
+    oSession.HostnameIs("login.windows.net")
+    )
+{
+    oSession.oRequest["Restrict-Access-To-Tenants"] = "<primary domain>.onmicrosoft.com";
+    oSession.oRequest["Restrict-Access-Context"] = "<tenant ID>";
+}
+
+// Blocks access to consumer apps
+if (
+    oSession.HostnameIs("login.live.com")
+    )
+{
+    oSession.oRequest["sec-Restrict-Tenant-Access-Policy"] = "restrict-msa";
+}
 ```
