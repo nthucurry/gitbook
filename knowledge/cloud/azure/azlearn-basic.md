@@ -284,6 +284,7 @@ Azure Storage provides a comprehensive (綜合的) set of security capabilities 
 A shared access signature (SAS) is a URI that grants restricted access rights to Azure Storage resources. You can provide a SAS to clients who shouldn't have access to your storage account key. By distributing a SAS URI to these clients, you grant them access to a resource for a specified period of time. SAS is a secure way to share your storage resources without compromising (妥協) your account keys.
 
 ### File Sync
+Use Azure File Sync to centralize your organization's file shares in Azure Files, while keeping the flexibility, performance, and compatibility of an on-premises file server.
 
 ## 8. Azure Virtual Machine
 - data disk 可以<font color=#FF0000>熱插拔</font>
@@ -346,8 +347,6 @@ Apps in App Service are hosted on worker roles. The Basic and higher pricing pla
 備份到 storage account 轉為 blob，此時可以換 region
 
 ### Container Service
-- containers vs virtual machines
-
 ### [Azure Kubernetes Service](https://github.com/MicrosoftLearning/AZ-104-MicrosoftAzureAdministrator/blob/master/Instructions/Labs/LAB_09c-Implement_Azure_Kubernetes_Service.md)
 Kubernetes is a rapidly evolving platform that manages container-based applications and their associated networking and storage components. The focus is on the application workloads (工作量), not the underlying (淺在的) infrastructure components. Kubernetes provides a declarative approach to deployments, backed by a robust (強壯的) set of APIs for management operations.
 
@@ -384,14 +383,20 @@ To run your applications and supporting services, you need a Kubernetes node. An
 #### AKS Scaling
 
 ## 10. Data Protection
-### Azure Backup
-Azure Backup is the Azure-based service you can use to back up (or protect) and restore your data in the Microsoft cloud. Azure Backup replaces your existing on-premises or off-site backup solution with a cloud-based solution that is reliable, secure, and cost-competiwtive.
+### File and Folder Backups
+#### Azure Backup
+Azure Backup is the Azure-based service you can use to back up (or protect) and restore your data in the Microsoft cloud. Azure Backup replaces your existing on-premises or off-site backup solution with a cloud-based solution that is reliable (可靠的), secure, and cost-competiwtive (競爭的).
 
 ### Virtual Machine Data Protection
-- azure backup
-- azure site recovery
-    - 用 recover service 備份 azure resource 時，必須為同 region
-- managed disk snapshots
+#### azure backup
+Azure Backup creates recovery points that are stored in geo-redundant recovery vaults. When you restore from a recovery point, you can restore the whole VM or just specific files.
+
+#### azure site recovery
+Azure Site Recovery protects your VMs from a major disaster scenario when a whole region experiences an outage due to major natural disaster or widespread service interruption. You can configure Azure Site Recovery for your VMs so that you can recover your application with a single click in matter of minutes. You can replicate to an Azure region of your choice.
+- 用 recover service 備份 azure resource 時，必須為同 region
+
+#### Managed Disk Snapshots
+In development and test environments, snapshots provide a quick and simple option for backing up VMs that use Managed Disks.
 
 ## 11. Monitoring
 ### Log Analytics
