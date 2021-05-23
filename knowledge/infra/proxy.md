@@ -1,12 +1,4 @@
 # Proxy Server
-## Reference
-- 原文
-    - [How to Install and Configure Squid Proxy on CentOS 7](https://hostpresto.com/community/tutorials/how-to-install-and-configure-squid-proxy-on-centos-7/)
-    - [Install Squid Proxy Server on CentOS 7](https://www.centlinux.com/2019/10/install-squid-proxy-server-on-centos-7.html)
-- 內容看起來簡單
-    - [RHEL / CentOS 7 安裝 Proxy Server — Squid](https://www.opencli.com/linux/rhel-centos-7-install-proxy-server-squid)
-    - [Squid 架設](https://dywang.csie.cyut.edu.tw/dywang/linuxserver/node138.html)
-
 ## 安裝
 ```bash
 # proxy 設定
@@ -19,16 +11,6 @@ yum cleam all
 
 timedatectl set-timezone Asia/Taipei
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
-```
-
-### 啟動步驟
-```bash
-systemctl start squid
-systemctl enable squid
-systemctl status squid
-
-# 設定好後
-systemctl restart squid
 ```
 
 ### 修改參數
