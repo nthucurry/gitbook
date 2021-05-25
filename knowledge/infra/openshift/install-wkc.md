@@ -125,6 +125,8 @@ sshKey: |
             - `tail -f ./ocp4.5_inst/.openshift_install.log`
         - 如果不是使用 Azure DNS，需動態改 IP
             <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-dns.png">
+        - fail
+            - time="2021-05-25T21:25:25+08:00" level=fatal msg="failed to fetch Cluster: failed to generate asset \"Cluster\": failed to create cluster: failed to apply Terraform: error(Timeout) from Infrastructure Provider: Copying the VHD to user environment was too slow, and timeout was reached for the success."
     - 確認 OpenShift Status
         - 從 web
             - https://console-openshift-console.apps.wkc.corpnet.auo.com
