@@ -110,7 +110,7 @@ sshKey: |
             ? azure service principal client secret [? for help] **********************************
             ```
     - 安裝 OpenShift (約一小時，若自行設定 DNS，VM 建立時需注意名稱解析)
-        - `./ocp4.5_inst/openshift-install create cluster --dir=/home/docker/ocp4.5_cust --log-level=info`
+        - `./ocp4.5_inst/openshift-install create cluster --dir=/home/azadmin/ocp4.5_cust --log-level=info`
             ```
             INFO Credentials loaded from file "/home/docker/.azure/osServicePrincipal.json"
             INFO Consuming Install Config from target directory (10 分鐘)
