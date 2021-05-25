@@ -120,6 +120,11 @@ sshKey: |
             INFO Waiting up to 40m0s for bootstrapping to complete... (10 ~ 20 分鐘)
             INFO Destroying the bootstrap resources... (2 分鐘)
             INFO Waiting up to 30m0s for the cluster at https://api.dba-k8s.azure.org:6443 to initialize...
+            INFO Cluster operator insights Disabled is False with :
+            INFO Cluster operator monitoring Progressing is True with RollOutInProgress: Rolling out the stack.
+            ERROR Cluster operator monitoring Degraded is True with UpdatingPrometheusK8SFailed: Failed to rollout the stack. Error: running task Updating Prometheus-k8s failed: waiting for Prometheus object changes failed: waiting for Prometheus openshift-monitoring/k8s: expected 2 replicas, got 1 updated replicas
+            INFO Cluster operator monitoring Available is False with :
+            FATAL failed to initialize the cluster: Cluster operator monitoring is still updating
             ```
         - check installing status
             - `tail -f ./ocp4.5_inst/.openshift_install.log`
