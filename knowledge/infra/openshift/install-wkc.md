@@ -120,26 +120,19 @@ sshKey: |
             INFO Waiting up to 40m0s for bootstrapping to complete... (10 ~ 20 分鐘)
             INFO Destroying the bootstrap resources... (2 分鐘)
             INFO Waiting up to 30m0s for the cluster at https://api.dba-k8s.azure.org:6443 to initialize...
-            INFO Cluster operator insights Disabled is False with :
-            INFO Cluster operator monitoring Progressing is True with RollOutInProgress: Rolling out the stack.
-            ERROR Cluster operator monitoring Degraded is True with UpdatingPrometheusK8SFailed: Failed to rollout the stack. Error: running task Updating Prometheus-k8s failed: waiting for Prometheus object changes failed: waiting for Prometheus openshift-monitoring/k8s: expected 2 replicas, got 1 updated replicas
-            INFO Cluster operator monitoring Available is False with :
-            FATAL failed to initialize the cluster: Cluster operator monitoring is still updating
+            INFO Waiting up to 10m0s for the openshift-console route to be created...
+            INFO Install complete!
+            INFO To access the cluster as the system:admin user when using 'oc', run 'export KUBECONFIG=/home/docker/ocp4.5_cust/auth/kubeconfig'
+            INFO Access the OpenShift web-console here: https://console-openshift-console.apps.dba-k8s.azure.org
+            INFO Login to the console with user: "kubeadmin", and password: "Kxksv-gPsnk-bILsY-7Pqax"
+            INFO Time elapsed: 1h3m20s
             ```
         - check installing status
             - `tail -f ./ocp4.5_inst/.openshift_install.log`
         - 如果不是使用 Azure DNS，需動態改 IP
             <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-dns.png">
-        - fail
+        - fail message: please rebuild
             - time="2021-05-25T21:25:25+08:00" level=fatal msg="failed to fetch Cluster: failed to generate asset \"Cluster\": failed to create cluster: failed to apply Terraform: error(Timeout) from Infrastructure Provider: Copying the VHD to user environment was too slow, and timeout was reached for the success."
-    - 確認 OpenShift Status
-        - 從 web
-            - https://console-openshift-console.apps.wkc.corpnet.auo.com
-        - 從 terminal
-            - `oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX`
-            - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
-        - 查詢 kubeadmin 密碼
-            - `cat ~/ocp4.5_cust/auth/kubeadmin-password`
 - 下載 OpenShift 檔案
     ```bash
     cd ~
@@ -149,6 +142,14 @@ sshKey: |
     tar xvfz openshift-client-linux-4.5.36.tar.gz
     sudo cp ./oc /usr/bin
     ```
+- 確認 OpenShift Status
+        - 從 web
+            - https://console-openshift-console.apps.wkc.corpnet.auo.com
+        - 從 terminal
+            - `oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX`
+            - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
+        - 查詢 kubeadmin 密碼
+            - `cat ~/ocp4.5_cust/auth/kubeadmin-password`
 
 ## 建置 NFS VM
 - 掛載大容量 disk (by LVM)
