@@ -22,8 +22,9 @@ yum install telnet -y
 yum install tigervnc-server -y
 yum install nfs-utils -y
 yum install zip unzip -y
-#yum install rsync -y
-#yum install epel-release -y
+yum install rsync -y
+yum install epel-release -y
+yum install htop -y
 
 # browser
 #wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
