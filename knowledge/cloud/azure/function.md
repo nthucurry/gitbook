@@ -49,3 +49,8 @@ Multi-factor authentication is a process where a user is prompted during the sig
 - An account with **global administrator** privileges.
 - A non-administrator user with a password you know, such as testuser.
 - A group that the non-administrator user is a member of, such as MFA-Test-Group. You enable **AAD** Multi-Factor Authentication for this group in this tutorial.
+
+## 條件式存取
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/access-portal-result.png">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/access-databricks-result.png">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/access-machinelearning-result.png">
