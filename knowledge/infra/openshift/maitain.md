@@ -21,7 +21,8 @@
     az feature register --namespace Microsoft.Storage --name AllowNFSV3 --subscription $subscription_id
 
     # check
-    az feature show --namespace Microsoft.Storage --name AllowNFSV3 --subscription <subscription-id>
+    subscription_id="de61f224-9a69-4ede-8273-5bcef854dc20"
+    az feature show --namespace Microsoft.Storage --name AllowNFSV3 --subscription $subscription_id
     ```
 
 ## OpenShift
