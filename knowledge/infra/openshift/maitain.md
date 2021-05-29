@@ -15,6 +15,14 @@
         - WKC cluster 缺少 VM agent，無法備份
 - SLA for Virtual Machines
     <br>For any Single VM using Premium SSD or Ultra Disk for all OS Disks and Data Disks, we guarantee you will have VM Connectivity of at least 99.9%. (一年最多停機 8.76 小時)
+- NFS
+    ```bash
+    subscription_id="de61f224-9a69-4ede-8273-5bcef854dc20"
+    az feature register --namespace Microsoft.Storage --name AllowNFSV3 --subscription $subscription_id
+
+    # check
+    az feature show --namespace Microsoft.Storage --name AllowNFSV3 --subscription <subscription-id>
+    ```
 
 ## OpenShift
 ### 沒開機不能 Login
@@ -58,10 +66,20 @@ oc adm uncordon <worker-node>
 
 ### WKC (CP4D)
 
-## 檢查
-### Replacing an unhealthy etcd member
+## 維運
+### 大型維運
+#### Shutting down the cluster
+#### Restarting the cluster gracefully
+#### Disaster Recovery
+
+### 日常維運
+#### Replacing an unhealthy etcd member
 - Check the status of the EtcdMembersAvailable status condition using the following command
     >oc get etcd -o=jsonpath='{range .items[0].status.conditions[?(@.type=="EtcdMembersAvailable")]}{.message}{"\n"}'
 - Review the output
     - 好: 3 members are available
     - 壞: 2 of 3 members are available, ip-10-0-131-183.ec2.internal is unhealthy
+
+#### (Replacing the unhealthy etcd member)[https://docs.openshift.com/container-platform/4.5/backup_and_restore/replacing-unhealthy-etcd-member.html#replacing-the-unhealthy-etcd-member] (未完成...)
+-  Replacing an unhealthy etcd member whose machine is not running or whose node is not ready
+    1. Remove the unhealthy member.

@@ -11,6 +11,24 @@
 - other
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-insights-other.png" width="300">
 
+## 硬體需求
+- VM
+    - temporary bootstrap * 1
+        - vCPU: 4
+        - RAM: 16G
+        - storage: 120G
+    - control plane * 3
+        - vCPU: 4
+        - RAM: 16G
+        - storage: 120G
+    - worker * 2
+        - vCPU: 2
+        - RAM: 8G
+        - storage: 120G
+
+## 安裝架構
+<br><img src="../../../img/openshift/install-flow.png">
+
 ## 到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password
 - `az ad sp create-for-rbac --role="Contributor" --name="http://corpnet.auo.com" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
     ```json
@@ -78,12 +96,6 @@ pullSecret: 'json-format-key' # key from redhat
 sshKey: |
   ssh-rsa XXX azadmin@maz-bastion
 ```
-
-## 建置 Bastion VM
-- disk: 256G
-- CPU: 4C
-- RAM: 16G
-- 改時區
 
 ## 安裝 OpenShift on Bastion VM
 - 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.corpnet.auo.com
