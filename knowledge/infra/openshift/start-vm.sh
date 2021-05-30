@@ -11,7 +11,7 @@ do
     vm=`az vm list -g $myResourceGroupVM -d --query [$i].name | cut -d '"' -f2`
     echo "VM: "$vm
 
-    vmUnreachableStatus=`ping -c 1 $vm | grep "Destination Host Unreachable"`
+    vmUnreachableStatus=`ping -c 1 $vm | grep "100% packet loss"`
     if [[ ${#vmUnreachableStatus} > 0  ]];then
         echo "need start vm"
         az vm start -g $myResourceGroupVM -n `echo $vm`

@@ -8,7 +8,6 @@ vmIndex=0
 
 for((i=0; i<=$((vmCount-1)); i++))
 do
-    vm=`az vm list -g $myResourceGroupVM -d --query [$i].name`
-    echo $vm | cut -d '"' -f2
-    az vm stop -g $myResourceGroupVM -n `echo $vm | cut -d '"' -f2`
+    vm=`az vm list -g $myResourceGroupVM -d --query [$i].name | cut -d '"' -f2`
+    az vm stop -g $myResourceGroupVM -n `echo $vm`
 done
