@@ -8,7 +8,12 @@ vmIndex=0
 
 for((i=0; i<=$((vmCount-1)); i++))
 do
-    vm=`az vm list -g $myResourceGroupVM -d --query [$i].name`
-    echo $vm | cut -d '"' -f2
-    az vm start -g $myResourceGroupVM -n `echo $vm | cut -d '"' -f2`
+    vm=`az vm list -g $myResourceGroupVM -d --query [$i].name | cut -d '"' -f2`
+    echo "VM: "$vm
+
+    vmUnreachableStatus=`ping -c 1 $vm | grep "Destination Host Unreachable"`
+    if [[ ${#vmUnreachableStatus} > 0  ]];then
+        echo "need start vm"
+        az vm start -g $myResourceGroupVM -n `echo $vm`
+    fi
 done
