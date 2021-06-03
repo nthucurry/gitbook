@@ -51,6 +51,7 @@ fi
 echo "3. Update OS"
 yum update -y > /dev/null 2>&1
 yum install epel-release -y
+yum install htop -y
 yum install telnet -y > /dev/null 2>&1
 yum install traceroute -y > /dev/null 2>&1
 yum install nc -y > /dev/null 2>&1

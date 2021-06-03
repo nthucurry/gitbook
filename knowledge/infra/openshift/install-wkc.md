@@ -45,6 +45,8 @@
 
 ## 設定 Install Config
 ```yaml
+# install-config.yaml
+
 apiVersion: v1
 baseDomain: corpnet.auo.com  # domain name
 compute: # worker spec
@@ -97,6 +99,21 @@ sshKey: |
   ssh-rsa XXX azadmin@maz-bastion
 ```
 
+## 安裝套件
+```bash
+yum update -y
+yum install epel-release -y
+yum install htop telnet nc nmap -y
+rpm --import https://packages.microsoft.com/keys/microsoft.asc
+echo -e "[azure-cli]
+name=Azure CLI
+baseurl=https://packages.microsoft.com/yumrepos/azure-cli
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.microsoft.com/keys/microsoft.asc" | tee /etc/yum.repos.d/azure-cli.repo
+sudo yum install azure-cli -y
+```
+
 ## 安裝 OpenShift on Bastion VM
 - 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.corpnet.auo.com
 - 下載 OpenShift 檔案
@@ -107,8 +124,11 @@ sshKey: |
     wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-install-linux-4.5.36.tar.gz
     tar xvf openshift-install-linux-4.5.36.tar.gz
 
+    cd ~
     mkdir ocp4.5_cust
     cp ./install-config.yaml ./ocp4.5_cust
+
+    cd ~
     ```
 - 安裝 OpenShift 所有環境
     - 設定 config
@@ -118,7 +138,7 @@ sshKey: |
             ? Platform azure
             ? azure subscription id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
             ? azure tenant id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-            ? azure service principal client id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+            ? azure service principal client id (appId) XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
             ? azure service principal client secret [? for help] **********************************
             ```
     - 安裝 OpenShift (約一小時，若自行設定 DNS，VM 建立時需注意名稱解析)
