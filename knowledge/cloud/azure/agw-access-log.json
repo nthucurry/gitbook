@@ -1,0 +1,97 @@
+{
+    "key": "value",
+    "array": [
+        {
+            "resaurceId": "/SUBSCRIPTIONS/DE61F224-9A69-4EDE-8273-5BCEF854DC20/RESOURCEGROUPS/PLATFORM/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/AGW-PLATFORM01",
+            "operationName": "ApplicationGatewayAccess",
+            "time": "2021-06-01T07:48:08Z",
+            "category": "ApplicationGatewayAccessLog",
+            "properties": {
+                "instanceId": "ApplicationGatewayRole_IN_1",
+                "clientIP": "39.10.162.188",
+                "clientPort": 3334,
+                "httpMethod": "PUT",
+                "requestUri": "/server",
+                "requestQuery": "X-AzureApplicationGateway-CACHE-HIT=0&SERVER-ROUTED=172.17.250.5&X-AzureApplicationGateway-LOG-ID=102b869a-ca05-4f2f-933e-9aebb4089361&SERVER-STATUS=200",
+                "userAgent": "MDM/1.0",
+                "httpStatus": 200,
+                "httpVersion": "HTTP/1.1",
+                "receivedBytes": 2550,
+                "sentBytes": 4204,
+                "timeTaken": 124,
+                "sslEnabled": "on",
+                "host": "auomdm01.auo.com:8080",
+                "originalHost": "auomdm01.auo.com:8080"
+            }
+        },
+        {
+            "resourceId": "/SUBSCRIPTIONS/DE61F224-9A69-4EDE-8273-5BCEF854DC20/RESOURCEGROUPS/PLATFORM/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/AGW-PLATFORM01",
+            "operationName": "ApplicationGatewayAccess",
+            "time": "2021-06-01T07:48:08.0000001Z",
+            "category": "ApplicationGatewayAccessLog",
+            "properties": {
+                "instanceId": "ApplicationGatewayRole_IN_1",
+                "clientIP": "49.92.67.6",
+                "clientPort": 29135,
+                "httpMethod": "GET",
+                "requestUri": "/favicon.ico",
+                "requestQuery": "X-AzureApplicationGateway-CACHE-HIT=0&SERVER-ROUTED=172.17.250.5&X-AzureApplicationGateway-LOG-ID=3e81b1b7-f034-48d5-b783-d68195ec59c0&SERVER-STATUS=404",
+                "userAgent": "Mozilla/5.0+(Linux;+Android+7.1.1;+OD105+Build/NMF26F;+wv)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Version/4.0+Chrome/62.0.3202.84+Mobile+Safari/537.36",
+                "httpStatus": 404,
+                "httpVersion": "HTTP/1.1",
+                "receivedBytes": 589,
+                "sentBytes": 1792,
+                "timeTaken": 115,
+                "sslEnabled": "on",
+                "host": "auomdm01.auo.com",
+                "originalHost": "auomdm01.auo.com"
+            }
+        },
+        {
+            "resourceId": "/SUBSCRIPTIONS/DE61F224-9A69-4EDE-8273-5BCEF854DC20/RESOURCEGROUPS/PLATFORM/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/AGW-PLATFORM01",
+            "operationName": "ApplicationGatewayAccess",
+            "time": "2021-06-01T07:48:08.0000002Z",
+            "category": "ApplicationGatewayAccessLog",
+            "properties": {
+                "instanceId": "ApplicationGatewayRole_IN_1",
+                "clientIP": "223.104.145.119",
+                "clientPort": 60955,
+                "httpMethod": "POST",
+                "requestUri": "/mdmService/Page/CheckLocationJson.ashx",
+                "requestQuery": "X-AzureApplicationGateway-CACHE-HIT=0&SERVER-ROUTED=172.17.250.5&X-AzureApplicationGateway-LOG-ID=8401a56f-6cd5-43fb-91c6-513d91569c2b&SERVER-STATUS=200",
+                "userAgent": "-",
+                "httpStatus": 200,
+                "httpVersion": "HTTP/1.1",
+                "receivedBytes": 286,
+                "sentBytes": 920,
+                "timeTaken": 156,
+                "sslEnabled": "on",
+                "host": "auomdm01.auo.com",
+                "originalHost": "auomdm01.auo.com"
+            }
+        },
+        {
+            "resourceId": "/SUBSCRIPTIONS/DE61F224-9A69-4EDE-8273-5BCEF854DC20/RESOURCEGROUPS/PLATFORM/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/AGW-PLATFORM01",
+            "operationName": "ApplicationGatewayAccess",
+            "time": "2021-06-01T07:48:02.0000005Z",
+            "category": "ApplicationGatewayAccessLog",
+            "properties": {
+                "instanceId": "ApplicationGatewayRole_IN_6",
+                "clientIP": "110.28.96.243",
+                "clientPort": 42699,
+                "httpMethod": "POST",
+                "requestUri": "/mdmapi/api/droidhttp/CheckApp",
+                "requestQuery": "X-AzureApplicationGateway-CACHE-HIT=0&SERVER-ROUTED=172.17.250.19&X-AzureApplicationGateway-LOG-ID=cb885a06-fcd3-4e1f-bbf1-0a7d2489100f&SERVER-STATUS=200",
+                "userAgent": "Mozilla/5.0+(Linux;+Android+7.1.1;+E5823+Build/32.4.A.0.160;+wv)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Version/4.0+Chrome/88.0.4324.181+Mobile+Safari/537.36+myAUO10311",
+                "httpStatus": 200,
+                "httpVersion": "HTTP/1.1",
+                "receivedBytes": 4843,
+                "sentBytes": 827,
+                "timeTaken": 542,
+                "sslEnabled": "on",
+                "host": "auomdm01.auo.com",
+                "originalHost": "auomdm01.auo.com"
+            }
+        }
+    ]
+}

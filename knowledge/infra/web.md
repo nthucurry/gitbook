@@ -8,6 +8,8 @@
 - 安裝 Tomcat
     - `yum install tomcat`
     - `yum install tomcat-webapps tomcat-admin-webapps tomcat-docs-webapp tomcat-javadoc`
+- 改 port
+    - `vi /etc/tomcat/server.xml`
 - 安裝憑證
     ```
     [azadmin@vm-tomcat ~]$ ls

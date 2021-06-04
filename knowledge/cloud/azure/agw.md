@@ -82,7 +82,11 @@ Gets the backend health of the specified application gateway in a resource group
 - 403 ModSecurity Action
 
 ## Log
-```powershell
-AzureDiagnostics | where Category =="ApplicationGatewayFirewallLog" and TimeGenerated >= todatetime('2020-12-26T04:50:01.397Z')
-and TimeGenerated < todatetime('2020-12-26T05:00:01.397Z')
-```
+- query from portal
+    ```powershell
+    AzureDiagnostics
+    | where Category =="ApplicationGatewayFirewallLog" and TimeGenerated >= todatetime('2020-12-26T04:50:01.397Z')
+    and TimeGenerated < todatetime('2020-12-26T05:00:01.397Z')
+    ```
+- from storage account: `$.array[?(@.resourceId)].properties.clientIP`
+    - [ApplicationGatewayFirewallLog](../../knowledge/cloud/azure/agw-access-log.json)
