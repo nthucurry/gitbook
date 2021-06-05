@@ -136,26 +136,26 @@ sudo yum install azure-cli -y
             ```
             ? SSH Public Key /home/azadmin/.ssh/id_rsa.pub
             ? Platform azure
-            ? azure subscription id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-            ? azure tenant id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-            ? azure service principal client id (appId) XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-            ? azure service principal client secret [? for help] **********************************
+            ? azure subscription id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX (固定)
+            ? azure tenant id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX (固定)
+            ? azure service principal client id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX (appId, 固定)
+            ? azure service principal client secret **********************************
             ```
     - 安裝 OpenShift (約一小時，若自行設定 DNS，VM 建立時需注意名稱解析)
         - `./ocp4.5_inst/openshift-install create cluster --dir=/home/azadmin/ocp4.5_cust --log-level=info`
             ```
-            INFO Credentials loaded from file "/home/docker/.azure/osServicePrincipal.json"
+            INFO Credentials loaded from file "/home/azadmin/.azure/osServicePrincipal.json"
             INFO Consuming Install Config from target directory (10 分鐘)
             INFO Creating infrastructure resources... (5 分鐘)
-            INFO Waiting up to 20m0s for the Kubernetes API at https://api.dba-k8s.azure.org:6443...
+            INFO Waiting up to 20m0s for the Kubernetes API at https://api.dba-k8s.test.org:6443...
             INFO API v1.18.3+cdb0358 up
             INFO Waiting up to 40m0s for bootstrapping to complete... (10 ~ 20 分鐘)
             INFO Destroying the bootstrap resources... (2 分鐘)
-            INFO Waiting up to 30m0s for the cluster at https://api.dba-k8s.azure.org:6443 to initialize...
+            INFO Waiting up to 30m0s for the cluster at https://api.dba-k8s.test.org:6443 to initialize...
             INFO Waiting up to 10m0s for the openshift-console route to be created...
             INFO Install complete!
-            INFO To access the cluster as the system:admin user when using 'oc', run 'export KUBECONFIG=/home/docker/ocp4.5_cust/auth/kubeconfig'
-            INFO Access the OpenShift web-console here: https://console-openshift-console.apps.dba-k8s.azure.org
+            INFO To access the cluster as the system:admin user when using 'oc', run 'export KUBECONFIG=/home/azadmin/ocp4.5_cust/auth/kubeconfig'
+            INFO Access the OpenShift web-console here: https://console-openshift-console.apps.dba-k8s.test.org
             INFO Login to the console with user: "kubeadmin", and password: "Kxksv-gPsnk-bILsY-7Pqax"
             INFO Time elapsed: 1h3m20s
             ```
@@ -178,11 +178,11 @@ sudo yum install azure-cli -y
     - 從 web
         - 正式: https://console-openshift-console.apps.wkc.corpnet.auo.com
         - 開發: https://console-openshift-console.apps.wkc-test.corpnet.auo.com
-        - 測試: https://console-openshift-console.apps.dba-k8s.azure.org
+        - 測試: https://console-openshift-console.apps.dba-k8s.test.org
     - 從 terminal
         - 登入
             - 正式: `oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX`
-            - 測試: `oc login https://api.dba-k8s.azure.org:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password``
+            - 測試: `oc login https://api.dba-k8s.test.org:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password``
         - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
     - 查詢 kubeadmin 密碼
         - `cat ~/ocp4.5_cust/auth/kubeadmin-password`
