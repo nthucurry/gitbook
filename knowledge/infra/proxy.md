@@ -5,9 +5,11 @@
 vi /etc/yum.conf
 
 yum update -y
+yum install epel-release -y
+yum install htop -y
 yum install telnet -y
 yum install squid -y
-yum cleam all
+yum clean all
 
 timedatectl set-timezone Asia/Taipei
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
@@ -15,7 +17,7 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
 ### 修改參數
 - `vi /etc/squid/squid.conf`
-    ```txt
+    ```
     # 定義可以存取此 proxy 的 ip，預設為內網
     acl localnet src 10.0.0.0/8     # RFC1918 possible internal network
     acl localnet src 172.16.0.0/12  # RFC1918 possible internal network
@@ -44,7 +46,7 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
     request_header_add X-GoogApps-Allowed-Domains "mycompany.com" all
     ```
 - `vi /etc/squid/allow_url.lst`
-    ```txt
+    ```
     mirrorlist.centos.org
     yum.mariadb.org
     ftp.twaren.net
@@ -126,24 +128,26 @@ request_header_add Restrict-Access-Context "<tenant ID>" all
 curl --proxy http://squid.hotpo.org:3128 ipinfo.io
 ```
 
-### Proxy test by Fiddler
-```csharp
-// Allows access to the listed tenants.
-if (
-    oSession.HostnameIs("login.microsoftonline.com") ||
-    oSession.HostnameIs("login.microsoft.com") ||
-    oSession.HostnameIs("login.windows.net")
-    )
-{
-    oSession.oRequest["Restrict-Access-To-Tenants"] = "<primary domain>.onmicrosoft.com";
-    oSession.oRequest["Restrict-Access-Context"] = "<tenant ID>";
-}
+### Proxy test tool
+- test by fiddler
+    ```csharp
+    // Allows access to the listed tenants.
+    if (
+        oSession.HostnameIs("login.microsoftonline.com") ||
+        oSession.HostnameIs("login.microsoft.com") ||
+        oSession.HostnameIs("login.windows.net")
+        )
+    {
+        oSession.oRequest["Restrict-Access-To-Tenants"] = "<primary domain>.onmicrosoft.com";
+        oSession.oRequest["Restrict-Access-Context"] = "<tenant ID>";
+    }
 
-// Blocks access to consumer apps
-if (
-    oSession.HostnameIs("login.live.com")
-    )
-{
-    oSession.oRequest["sec-Restrict-Tenant-Access-Policy"] = "restrict-msa";
-}
-```
+    // Blocks access to consumer apps
+    if (
+        oSession.HostnameIs("login.live.com")
+        )
+    {
+        oSession.oRequest["sec-Restrict-Tenant-Access-Policy"] = "restrict-msa";
+    }
+    ```
+- Wireshark: https://wiki.wireshark.org/HTTP_Preferences

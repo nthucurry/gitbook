@@ -99,8 +99,10 @@ sshKey: |
   ssh-rsa XXX azadmin@maz-bastion
 ```
 
-## 安裝套件
+## 前置作業 (by root)
 ```bash
+timedatectl set-timezone Asia/Taipei
+
 yum update -y
 yum install epel-release -y
 yum install htop telnet nc nmap -y
