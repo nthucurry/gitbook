@@ -26,7 +26,7 @@
         - vCPU: 4
         - RAM: 16G
         - storage: 120G
-    - worker * 2
+    - worker * 3 (最少 2 台，但 2 台會無法安裝，原因未知)
         - vCPU: 2
         - RAM: 8G
         - storage: 120G
@@ -189,7 +189,7 @@ sudo yum install azure-cli -y
     - 從 terminal
         - 登入
             - 正式: `oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX`
-            - 測試: `oc login https://api.dba-k8s.test.org:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password``
+            - 測試: `oc login https://api.dba-k8s.test.org:6443 -u kubeadmin -p `\``cat ~/ocp4.5_cust/auth/kubeadmin-password`\`
         - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
     - 查詢 kubeadmin 密碼
         - `cat ~/ocp4.5_cust/auth/kubeadmin-password`
