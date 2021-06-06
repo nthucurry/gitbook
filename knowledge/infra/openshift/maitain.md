@@ -26,9 +26,70 @@
     ```
 
 ## OpenShift
+### Creating a Self-Signed SSL Certificate for your Intranet Services
+可參考保哥文章: [如何使用 OpenSSL 建立開發測試用途的自簽憑證 (Self-Signed Certificate)](https://blog.miniasp.com/post/2019/02/25/Creating-Self-signed-Certificate-using-OpenSSL)
+
+#### Replacing the default ingress certificate
+- 建立 ssl.conf 設定檔: `vi ssl.conf`
+    ```
+    [req]
+    prompt = no
+    default_md = sha256
+    default_bits = 2048
+    distinguished_name = dn
+    x509_extensions = v3_req
+
+    [dn]
+    C = TW
+    ST = Taiwan
+    L = Taipei
+    O = Test Inc.
+    OU = IT Department
+    emailAddress = admin@example.com
+    CN = localhost
+
+    [v3_req]
+    subjectAltName = @alt_names
+
+    [alt_names]
+    DNS.1 = *.apps.dba-k8s.test.org
+    DNS.2 = api.dba-k8s.test.org
+    ```
+- 產生自簽憑證與相對應的私密金鑰
+    >openssl req -x509 -new -nodes -sha256 -utf8 -days 3650 -newkey rsa:2048 -keyout server.key -out server.crt -config ssl.conf
+    - 請注意：上述命令會建立一個「未加密」的私密金鑰檔案，使用 PEM 格式輸出。
+- 透過 OpenSSL 命令產生 PKCS#12 憑證檔案 (使用時，需密碼)
+    >openssl pkcs12 -export -in server.crt -inkey server.key -out server.pfx
+- 在 bastion 設定憑證
+    ```bash
+    oc create configmap custom-ca \
+        --from-file=ca-bundle.crt=/home/azadmin/server.crt \
+        -n openshift-config
+
+    oc patch proxy/cluster \
+        --type=merge \
+        --patch='{"spec":{"trustedCA":{"name":"custom-ca"}}}'
+
+    oc create secret tls my-tls-migration \
+        --cert=/home/azadmin/server.crt \
+        --key=/home/azadmin/server.key \
+        -n openshift-ingress
+
+    oc patch ingresscontroller.operator default \
+        --type=merge -p \
+        '{"spec":{"defaultCertificate": {"name": "my-tls-migration"}}}' \
+        -n openshift-ingress-operator
+    ```
+- 匯入自簽憑證到「受信任的根憑證授權單位」
+    <br><img src="../../../img/security/root-cert-step-1.png">
+    <br><img src="../../../img/security/root-cert-step-2.png">
+    <br><img src="../../../img/security/root-cert-step-3.png">
+    <br><img src="../../../img/security/root-cert-step-4.png">
+    <br><img src="../../../img/security/root-cert-step-5.png">
+
 ### 沒開機不能 Login
 ```bash
-oc login https://api.dba-k8s.azure.org:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password`
+oc login https://api.dba-k8s.test.org:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password`
 ```
 error: dial tcp 10.0.10.5:6443: connect: no route to host - verify you have provided the correct host and port and that the server is currently running.
 
