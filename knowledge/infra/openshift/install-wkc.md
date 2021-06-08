@@ -184,11 +184,12 @@ sudo yum install azure-cli -y
 - 確認 OpenShift Status
     - 從 web
         - 正式: https://console-openshift-console.apps.wkc.corpnet.auo.com
-        - 開發: https://console-openshift-console.apps.wkc-test.corpnet.auo.com
+        - 開發: https://console-openshift-console.apps.wkc-dev.corpnet.auo.com
         - 測試: https://console-openshift-console.apps.dba-k8s.test.org
     - 從 terminal
         - 登入
-            - 正式: `oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX`
+            - 正式: `oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p `\``cat ~/ocp4.5_cust/auth/kubeadmin-password`\
+            - 開發: `oc login https://api.wkc-dev.corpnet.auo.com:6443 -u kubeadmin -p `\``cat ~/ocp4.5_cust/auth/kubeadmin-password`\
             - 測試: `oc login https://api.dba-k8s.test.org:6443 -u kubeadmin -p `\``cat ~/ocp4.5_cust/auth/kubeadmin-password`\`
         - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
     - 查詢 kubeadmin 密碼
