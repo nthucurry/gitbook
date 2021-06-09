@@ -104,8 +104,10 @@ sshKey: |
   ssh-rsa XXX azadmin@maz-bastion
 ```
 
-## 前置作業 (by root)
+## 前置作業
 ```bash
+# by root
+
 timedatectl set-timezone Asia/Taipei
 
 yum update -y
@@ -118,7 +120,7 @@ baseurl=https://packages.microsoft.com/yumrepos/azure-cli
 enabled=1
 gpgcheck=1
 gpgkey=https://packages.microsoft.com/keys/microsoft.asc" | tee /etc/yum.repos.d/azure-cli.repo
-sudo yum install azure-cli -y
+yum install azure-cli -y
 ```
 
 ## 安裝 OpenShift on Bastion VM
@@ -236,11 +238,6 @@ sudo yum install azure-cli -y
     - `systemctl restart nfs-server`
 
 ## 安裝 OpenShift Client on NFS VM
-- 修改 repo
-    ```bash
-    export registry_key="<cpd_key>"
-    sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
-    ```
 - 下載 OpenShift 檔案
     ```bash
     cd ~
@@ -279,17 +276,17 @@ sudo yum install azure-cli -y
     vi deployment.yaml
     #  env:
     #    - name: PROVISIONER_NAME
-    #    value: storage.io/nfs
+    #    value: storage.io/nfs <-- change it
     #    - name: NFS_SERVER
-    #    value: 10.250.101.6
+    #    value: 10.250.101.6 <-- internal load balancer
     #    - name: NFS_PATH
-    #    value: /data
+    #    value: /data <-- change it
     #
     #  volumes:
     #    - name: nfs-client-root
     #    nfs:
-    #      server: 10.250.101.6
-    #      path: /data
+    #      server: 10.250.101.6 <-- internal load balancer
+    #      path: /data <-- change it
     ```
     ```bash
     vi class.yaml
@@ -318,6 +315,11 @@ sudo yum install azure-cli -y
     cd ~/ibm
     wget https://github.com/IBM/cpd-cli/releases/download/v3.5.3/cpd-cli-linux-EE-3.5.3.tgz
     tar xzvf cpd-cli-linux-EE-3.5.3.tgz
+    ```
+- 修改 repo
+    ```bash
+    export registry_key="<cpd_key>"
+    sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
     ```
 - 下載 lite
     ```bash
