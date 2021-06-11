@@ -1,4 +1,17 @@
 # API Managerment
+## API Management cross domain policies
+### Cross domain policies
+- Allow cross-domain calls - Makes the API accessible from Adobe Flash and Microsoft Silverlight browser-based clients.
+- CORS - Adds cross-origin resource sharing (CORS) support to an operation or an API to allow cross-domain calls from browser-based clients.
+- JSONP - Adds JSON with padding (JSONP) support to an operation or an API to allow cross-domain calls from JavaScript browser-based clients.
+
+## IP addresses of API Management service in VNet
+If your APIM service is inside a VNet, it will have two types of IP addresses - public and private.
+
+Public IP addresses are **used for internal communication** on port 3443 - for managing configuration (for example, through Azure Resource Manager). In the external VNet configuration, they are also used for runtime API traffic. When a request is sent from API Management to a public-facing (Internet-facing) backend, a public IP address will be visible as the origin of the request.
+
+Private virtual IP (VIP) addresses, available **only in the internal VNet** mode, are used to connect from within the network to API Management endpoints - gateways, the developer portal, and the management plane for direct API access. You can use them for setting up DNS records within the network.
+
 ## Integrate API Management in an internal VNet with Application Gateway
 ### Background
 - 參考
@@ -12,7 +25,6 @@
 Certificates (憑證)
 - pfx and cer for the API hostname
 - pfx for the developer portal's hostname
-
 
 ### Scenario
 <br><img src="https://docs.microsoft.com/en-us/azure/api-management/media/api-management-howto-integrate-internal-vnet-appgateway/api-management-howto-integrate-internal-vnet-appgateway.png">
