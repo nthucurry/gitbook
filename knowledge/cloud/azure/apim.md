@@ -1,4 +1,6 @@
 # API Managerment
+## Self-hosted gateway overview
+
 ## API Management cross domain policies
 ### Cross domain policies
 - Allow cross-domain calls - Makes the API accessible from Adobe Flash and Microsoft Silverlight browser-based clients.
@@ -12,7 +14,31 @@ Public IP addresses are **used for internal communication** on port 3443 - for m
 
 Private virtual IP (VIP) addresses, available **only in the internal VNet** mode, are used to connect from within the network to API Management endpoints - gateways, the developer portal, and the management plane for direct API access. You can use them for setting up DNS records within the network.
 
+## Connect to an internal VNet using Azure API Management
+For configurations specific to the internal mode, where the developer portal and API gateway are accessible only within the VNet.
+
+When API Management deploys in internal VNET mode, you can only view the following service endpoints within a VNET whose access you control.
+- The proxy gateway
+- The developer portal
+- Direct management
+- Git
+
+Use API Management in internal mode to:
+- Make APIs hosted in your private datacenter securely accessible by third parties, using site-to-site or Azure ExpressRoute VPN connections.
+- Enable hybrid cloud scenarios by exposing your cloud-based APIs and on-premises APIs through a common - gateway.
+- Manage your APIs hosted in multiple geographic locations, using a single gateway endpoint.
+
+### Prerequisites
+- An active Azure subscription.
+- An Azure API Management instance.
+- A Standard SKU public IPv4 address, if your client uses API version 2021-01-01-preview or later. The public IP address resource is required when setting up the virtual network for either external or internal access. With an **internal VNet**, the public IP address **is used only** for management operations.
+
 ## Integrate API Management in an internal VNet with Application Gateway
+By combining API Management provisioned in an internal virtual network with the Application Gateway front end, you can:
+- Use the same API Management resource for consumption by both **internal** consumers and **external** consumers.
+- Use a single API Management resource and have a subset of APIs defined in API Management available for **external** consumers.
+- Provide a turnkey way to switch access to API Management from the **public internet** on and off.
+
 ### Background
 - 參考
     - https://www.jyt0532.com/2019/11/18/proxy-reverse-proxy
@@ -44,3 +70,7 @@ Certificates (憑證)
     - Application Gateway, by default, uses IP address based probes to figure out which servers in the BackendAddressPool are active. The API Management service only responds to requests with the correct host header, hence the default probes fail. A custom health probe needs to be defined to help application gateway determine that the service is alive and it should forward requests.
 - Custom domain certificates
     - To access API Management from the internet, you need to create a CNAME mapping of its hostname to the Application Gateway front-end DNS name. This ensures that the hostname header and certificate sent to Application Gateway that is forwarded to API Management is one APIM can recognize as valid. In this example, we will use two certificates - for the backend and for the developer portal.
+
+## Troubleshooting
+- Failed to connect to management endpoint at t-apim-external.management.azure-api.net:3443 for a service deployed in a virtual network. Make sure to follow guidance at https://aka.ms/apim-vnet-common-issues.
+    - NSG 新增 APIM service tag to VNet

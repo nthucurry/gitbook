@@ -339,15 +339,6 @@ yum install azure-cli -y
     export ASSEMBLY=wkc
     ./cpd-cli preload-images --repo ./repo.yaml --assembly $ASSEMBLY --download-path=$DOWNLOAD_FOLDER --action download --accept-all-licenses
     ```
-- 安裝 OpenShift Container Platform
-    ```bash
-    cd ~
-    mkdir ocp4.5_client
-    cd ./ocp4.5_client
-    wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-client-linux-4.5.36.tar.gz
-    tar xvfz openshift-client-linux-4.5.36.tar.gz
-    sudo cp ./oc /usr/bin
-    ```
 
 ## 安裝 WKC from Bastion VM to Cluster VM
 - 安裝 podman (redhad 用來取代 docker tool 的工具)
@@ -368,7 +359,6 @@ yum install azure-cli -y
     sudo podman login -u kubeadmin -p $(oc whoami -t) --tls-verify=false $REGISTRY
     ```
 - 安裝 lite
-    - `cd ~/ibm`
     - 設定環境變數
         ```bash
         export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
@@ -381,6 +371,7 @@ yum install azure-cli -y
         export LOAD_FROM=./v3.5.3/lite
         ```
     - 執行 cpd cli
+        - `cd ~/ibm`
         - step 1
             ```bash
             ./cpd-cli preload-images \
@@ -434,6 +425,7 @@ yum install azure-cli -y
         export LOAD_FROM=./v3.5.3/wkc/
         ```
     - 執行 cpd cli
+        - `cd ~/ibm`
         - step 1
             ```bash
             ./cpd-cli preload-images \

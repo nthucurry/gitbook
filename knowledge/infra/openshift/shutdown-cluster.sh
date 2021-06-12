@@ -14,6 +14,12 @@ if [[ $isShutdown == "yes" ]];then
     do
         vm=`az vm list -g $resourcegroup -d --query [$i].name | cut -d '"' -f2`
 
+        # Mark the node as unschedulable
+        oc adm cordon $vm
+
+        # Drain all pods on your node
+        oc adm drain $vm --ignore-daemonsets --force=true --delete-local-data=true
+
         # Stop K8S and CRI-O
         echo "Stop K8S and CRI-O......" $vm
         ssh core@$vm sudo systemctl stop kubelet
@@ -24,7 +30,9 @@ if [[ $isShutdown == "yes" ]];then
         # VM stopped (deallocated)
         echo "Shutdown cluster........" $vm
         az vm deallocate -g $resourcegroup -n `echo $vm`
+
+        sleep 30
     done
 else
-    break
+    echo "Nothing to do"
 fi
