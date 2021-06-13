@@ -71,6 +71,25 @@ Certificates (憑證)
 - Custom domain certificates
     - To access API Management from the internet, you need to create a CNAME mapping of its hostname to the Application Gateway front-end DNS name. This ensures that the hostname header and certificate sent to Application Gateway that is forwarded to API Management is one APIM can recognize as valid. In this example, we will use two certificates - for the backend and for the developer portal.
 
+## Step
+1. Create a resource group for Resource Manager
+2. Create a VNet and a subnet for the application gateway
+3. Create an APIM service inside a VNet configured in internal mode
+4. Set up custom domain names in API Management
+    - Initialize the following variables with the details of the certificates with private keys for the domains and the trusted root certificate.
+        - In this example, we use api.contoso.net, portal.contoso.net, and management.contoso.net.
+    - Create and set the hostname configuration objects for the API Management endpoints.
+5. Configure a private zone for DNS resolution in the VNet
+    - Create a private DNS zone and link the virtual network.
+    - Create A-records for the custom domain hostnames, mapping to the private IP address of the API Management service
+6. Create a public IP address for the front-end configuration
+    - Create a Standard public IP resource **publicIP01** in the resource group.
+    - An IP address is assigned to the application gateway when the service starts.
+7. Create application gateway configuration
+    - All configuration items must be set up **before creating the application gateway**. The following steps create the configuration items that are needed for an application gateway resource.
+8. Create Application Gateway
+9. CNAME the API Management proxy hostname to the public DNS name of the Application Gateway resource
+
 ## Troubleshooting
 - Failed to connect to management endpoint at t-apim-external.management.azure-api.net:3443 for a service deployed in a virtual network. Make sure to follow guidance at https://aka.ms/apim-vnet-common-issues.
     - NSG 新增 APIM service tag to VNet

@@ -30,7 +30,7 @@ $apimSubnetData = $vnet.Subnets[1]
 
 $apimVirtualNetwork = New-AzApiManagementVirtualNetwork -SubnetResourceId $apimSubnetData.Id
 
-$apimServiceName = "ContosoApi"       # API Management service instance name, must be globally unique
-$apimOrganization = "Contoso"         # organization name
-$apimAdminEmail = "admin@contoso.com" # administrator's email address
-$apimService = New-AzApiManagement -ResourceGroupName $resGroupName -Location $location -Name $apimServiceName -Organization $apimOrganization -AdminEmail $apimAdminEmail -VirtualNetwork $apimVirtualNetwork -VpnType "Internal" -Sku "Developer"
+# $apimServiceName = "ContosoApi"       # API Management service instance name, must be globally unique
+# $apimOrganization = "Contoso"         # organization name
+# $apimAdminEmail = "admin@contoso.com" # administrator's email address
+# $apimService = New-AzApiManagement -ResourceGroupName $resGroupName -Location $location -Name $apimServiceName -Organization $apimOrganization -AdminEmail $apimAdminEmail -VirtualNetwork $apimVirtualNetwork -VpnType "Internal" -Sku "Developer"
