@@ -361,14 +361,14 @@ yum install azure-cli -y
 - 安裝 lite
     - 設定環境變數
         ```bash
-        export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
+        # export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
         export NAMESPACE=zen
         export STORAGE_CLASS=managed-nfs-storage
         export IMAGE_REGISTRY_USER=$(oc whoami)
         export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
         export ASSEMBLY=lite
         export VERSION=3.5.3
-        export LOAD_FROM=./v3.5.3/lite
+        export LOAD_FROM=./v3.5.3/$ASSEMBLY/
         ```
     - 執行 cpd cli
         - `cd ~/ibm`
@@ -415,14 +415,14 @@ yum install azure-cli -y
 - 安裝 WKC
     - 設定環境變數
         ```bash
-        export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
+        # export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
         export NAMESPACE=zen
         export STORAGE_CLASS=managed-nfs-storage
         export IMAGE_REGISTRY_USER=kubeadmin
         export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
         export ASSEMBLY=wkc
         export VERSION=3.5.3
-        export LOAD_FROM=./v3.5.3/wkc/
+        export LOAD_FROM=./v3.5.3/$ASSEMBLY/
         ```
     - 執行 cpd cli
         - `cd ~/ibm`
