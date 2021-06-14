@@ -77,11 +77,14 @@ Certificates (憑證)
 3. Create an APIM service inside a VNet configured in internal mode
 4. Set up custom domain names in API Management
     - Initialize the following variables with the details of the certificates with private keys for the domains and the trusted root certificate.
-        - In this example, we use api.contoso.net, portal.contoso.net, and management.contoso.net.
+        - In this example, we use **api-gw.hopto.org**, **api-developer.hopto.org**, and **management.contoso.net**.
+        - API gateway: api-gw.hopto.org
+        - API developer portal: api-developer.hopto.org
+        - API management endpoint: api-management.hopto.org
     - Create and set the hostname configuration objects for the API Management endpoints.
 5. Configure a private zone for DNS resolution in the VNet
     - Create a private DNS zone and link the virtual network.
-    - Create A-records for the custom domain hostnames, mapping to the private IP address of the API Management service
+    - Create A-records for the custom domain hostnames, mapping to the **private IP address** of the API Management service
 6. Create a public IP address for the front-end configuration
     - Create a Standard public IP resource **publicIP01** in the resource group.
     - An IP address is assigned to the application gateway when the service starts.

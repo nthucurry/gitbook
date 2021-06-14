@@ -345,7 +345,7 @@ yum install azure-cli -y
     - `yum install podman -y`
 - 建立 namespace
     ```bash
-    oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX
+    oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password`
     oc new-project zen
     ```
 - 產生 image registry 的 default route
