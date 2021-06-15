@@ -171,6 +171,9 @@ yum install azure-cli -y
         - check installing status
             - `tail -f ./ocp4.5_inst/.openshift_install.log`
         - 如果不是使用 Azure DNS，需動態改 IP
+            - Load balancer: Frontend IP configuration
+            - VM: Network interface
+            - Private DNS zone
             <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-dns.png">
         - fail message: please rebuild
             - time="2021-05-25T21:25:25+08:00" level=fatal msg="failed to fetch Cluster: failed to generate asset \"Cluster\": failed to create cluster: failed to apply Terraform: error(Timeout) from Infrastructure Provider: Copying the VHD to user environment was too slow, and timeout was reached for the success."
@@ -229,7 +232,7 @@ yum install azure-cli -y
     ```
 - 安裝 NFS
     ```bash
-    sudo yum install -y nfs-utils
+    sudo yum install nfs-utils -y
     sudo systemctl enable rpcbind
     sudo systemctl enable nfs-server
     sudo systemctl start rpcbind
@@ -328,16 +331,28 @@ yum install azure-cli -y
 - 下載 lite
     ```bash
     export DOWNLOAD_FOLDER=~/ibm/v3.5.3/lite
-    mkdir -p $DOWNLOAD_FOLDER
     export ASSEMBLY=lite
-    ./cpd-cli preload-images --repo ./repo.yaml --assembly $ASSEMBLY --download-path=$DOWNLOAD_FOLDER --action download --accept-all-licenses
+    mkdir -p $DOWNLOAD_FOLDER
+
+    ./cpd-cli preload-images \
+    --repo ./repo.yaml \
+    --assembly $ASSEMBLY \
+    --download-path=$DOWNLOAD_FOLDER \
+    --action download \
+    --accept-all-licenses
     ```
 - 下載 WKC
     ```bash
     export DOWNLOAD_FOLDER=~/ibm/v3.5.3/wkc
-    mkdir -p $DOWNLOAD_FOLDER
     export ASSEMBLY=wkc
-    ./cpd-cli preload-images --repo ./repo.yaml --assembly $ASSEMBLY --download-path=$DOWNLOAD_FOLDER --action download --accept-all-licenses
+    mkdir -p $DOWNLOAD_FOLDER
+
+    ./cpd-cli preload-images \
+    --repo ./repo.yaml \
+    --assembly $ASSEMBLY \
+    --download-path=$DOWNLOAD_FOLDER \
+    --action download \
+    --accept-all-licenses
     ```
 
 ## 安裝 WKC from Bastion VM to Cluster VM
@@ -358,7 +373,7 @@ yum install azure-cli -y
     export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
     sudo podman login -u kubeadmin -p $(oc whoami -t) --tls-verify=false $REGISTRY
     ```
-- 安裝 lite
+- 安裝 lite (control plane)
     - 設定環境變數
         ```bash
         # export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
@@ -370,45 +385,60 @@ yum install azure-cli -y
         export VERSION=3.5.3
         export LOAD_FROM=./v3.5.3/$ASSEMBLY/
         ```
-    - 執行 cpd cli
-        - `cd ~/ibm`
-        - step 1
-            ```bash
-            ./cpd-cli preload-images \
-            --assembly $ASSEMBLY \
-            --action push \
-            --target-registry-username kubeadmin \
-            --target-registry-password $IMAGE_REGISTRY_PASSWORD \
-            --load-from $LOAD_FROM \
-            --transfer-image-to $REGISTRY/$NAMESPACE \
-            --insecure-skip-tls-verify \
-            --accept-all-licenses
+    - `cd ~/ibm`
+    - 下載必備檔案
+        ```bash
+        ./cpd-cli preload-images \
+        --assembly $ASSEMBLY \
+        --action push \
+        --target-registry-username kubeadmin \
+        --target-registry-password $IMAGE_REGISTRY_PASSWORD \
+        --load-from $LOAD_FROM \
+        --transfer-image-to $REGISTRY/$NAMESPACE \
+        --insecure-skip-tls-verify \
+        --accept-all-licenses
+        ```
+    - 設定 control plane 參數
+        ```bash
+        ./cpd-cli adm \
+        --assembly $ASSEMBLY \
+        --latest-dependency \
+        --namespace $NAMESPACE \
+        --load-from $LOAD_FROM \
+        --apply \
+        --verbose \
+        --accept-all-licenses
+        ```
+    - 安裝
+        ```bash
+        ./cpd-cli install \
+        --assembly $ASSEMBLY \
+        --namespace $NAMESPACE \
+        --storageclass $STORAGE_CLASS \
+        --load-from $LOAD_FROM \
+        --cluster-pull-username=kubeadmin \
+        --cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
+        --cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
+        --latest-dependency \
+        --accept-all-licenses \
+        --verbose \
+        --insecure-skip-tls-verify
+        ```
+        - error
             ```
-        - step 2: **需注意 cpd-install-operator 是否 ready**
-            ```bash
-            ./cpd-cli adm \
-            --assembly $ASSEMBLY \
-            --latest-dependency \
-            --namespace $NAMESPACE \
-            --load-from $LOAD_FROM \
-            --apply \
-            --verbose \
-            --accept-all-licenses
-            ```
-        - step 3
-            ```bash
-            ./cpd-cli install \
-            --assembly $ASSEMBLY \
-            --namespace $NAMESPACE \
-            --storageclass $STORAGE_CLASS \
-            --load-from $LOAD_FROM \
-            --cluster-pull-username=kubeadmin \
-            --cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
-            --cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
-            --latest-dependency \
-            --accept-all-licenses \
-            --verbose \
-            --insecure-skip-tls-verify
+            2021-06-15 14:19:00.243713197 +0800 CST m=+22.407708366
+            Module              |Instance Name   |Status
+            0010-infra x86_64   |                |In Progress
+                ============================
+                |Resource      |Ready   |Total
+                |Deployment    |2       |2
+                |PVC           |5       |5
+                |StateFulSet   |0       |1
+                |Job           |1       |3
+                |ReplicaSet    |2       |2
+                ============================
+            0015-setup x86_64   |      |To Be Installed
+            0020-core x86_64    |      |To Be Installed
             ```
     - 確認狀態
         - `./cpd-cli status --assembly $ASSEMBLY --namespace $NAMESPACE`
@@ -424,46 +454,45 @@ yum install azure-cli -y
         export VERSION=3.5.3
         export LOAD_FROM=./v3.5.3/$ASSEMBLY/
         ```
-    - 執行 cpd cli
-        - `cd ~/ibm`
-        - step 1
-            ```bash
-            ./cpd-cli preload-images \
-            --assembly $ASSEMBLY \
-            --action push \
-            --target-registry-username $IMAGE_REGISTRY_USER \
-            --target-registry-password $IMAGE_REGISTRY_PASSWORD \
-            --load-from $LOAD_FROM \
-            --transfer-image-to $REGISTRY/$NAMESPACE \
-            --insecure-skip-tls-verify \
-            --accept-all-licenses
-            ```
-        - step 2
-            ```bash
-            ./cpd-cli adm \
-            --assembly $ASSEMBLY \
-            --latest-dependency \
-            --namespace $NAMESPACE \
-            --load-from $LOAD_FROM \
-            --apply \
-            --verbose \
-            --accept-all-licenses
-            ```
-        - step 3
-            ```bash
-            ./cpd-cli install \
-            --assembly $ASSEMBLY \
-            --namespace $NAMESPACE \
-            --storageclass $STORAGE_CLASS \
-            --load-from $LOAD_FROM \
-            --cluster-pull-username=$IMAGE_REGISTRY_USER \
-            --cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
-            --cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
-            --latest-dependency \
-            --accept-all-licenses \
-            --verbose \
-            --insecure-skip-tls-verify
-            ```
+    - `cd ~/ibm`
+    - 下載必備檔案
+        ```bash
+        ./cpd-cli preload-images \
+        --assembly $ASSEMBLY \
+        --action push \
+        --target-registry-username $IMAGE_REGISTRY_USER \
+        --target-registry-password $IMAGE_REGISTRY_PASSWORD \
+        --load-from $LOAD_FROM \
+        --transfer-image-to $REGISTRY/$NAMESPACE \
+        --insecure-skip-tls-verify \
+        --accept-all-licenses
+        ```
+    - 設定 control plane 參數
+        ```bash
+        ./cpd-cli adm \
+        --assembly $ASSEMBLY \
+        --latest-dependency \
+        --namespace $NAMESPACE \
+        --load-from $LOAD_FROM \
+        --apply \
+        --verbose \
+        --accept-all-licenses
+        ```
+    - 安裝
+        ```bash
+        ./cpd-cli install \
+        --assembly $ASSEMBLY \
+        --namespace $NAMESPACE \
+        --storageclass $STORAGE_CLASS \
+        --load-from $LOAD_FROM \
+        --cluster-pull-username=$IMAGE_REGISTRY_USER \
+        --cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
+        --cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
+        --latest-dependency \
+        --accept-all-licenses \
+        --verbose \
+        --insecure-skip-tls-verify
+        ```
 - WKC portal
     - https://zen-cpd-zen.apps.wkc.corpnet.auo.com
 
