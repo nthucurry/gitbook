@@ -258,7 +258,6 @@ yum install azure-cli -y
     ```bash
     curl -L -o kubernetes-incubator.zip https://github.com/kubernetes-incubator/external-storage/archive/master.zip
     unzip kubernetes-incubator.zip
-    cd external-storage-master/nfs-client/
     ```
 - 建立 OpenShift storage (在 container 內的 storage)
     ```bash
@@ -266,8 +265,10 @@ yum install azure-cli -y
     oc create namespace openshift-nfs-storage
     oc label namespace openshift-nfs-storage "openshift.io/cluster-monitoring=true"
     oc project openshift-nfs-storage
+
     NAMESPACE=`oc project -q`
     echo $NAMESPACE
+    cd external-storage-master/nfs-client/
     sudo sed -i'' "s/namespace:.*/namespace: $NAMESPACE/g" ./deploy/rbac.yaml
     sudo sed -i'' "s/namespace:.*/namespace: $NAMESPACE/g" ./deploy/deployment.yaml
     ```

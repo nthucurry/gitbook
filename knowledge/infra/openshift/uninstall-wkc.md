@@ -8,16 +8,18 @@ oc project Project_Name
 
 ### Run the following command to preview the changes that will be made to the cluster when you remove the Cloud Pak for Data control plane
 ```bash
+NAMESPACE=zen
 ./cpd-cli uninstall \
---namespace Project_Name \
+--namespace $NAMESPACE \
 --assembly lite \
 --uninstall-dry-run
 ```
 
 ### Run the following command to remove the Cloud Pak for Data control plane
 ```bash
+NAMESPACE=zen
 ./cpd-cli uninstall \
---namespace Project_Name \
+--namespace $NAMESPACE \
 --assembly lite
 ```
 

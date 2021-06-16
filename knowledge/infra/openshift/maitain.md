@@ -87,6 +87,14 @@
     <br><img src="../../../img/security/root-cert-step-4.png">
     <br><img src="../../../img/security/root-cert-step-5.png">
 
+### 調整 worker 數量
+1. View the machine sets that are in the cluster
+    `oc get machinesets -n openshift-machine-api`
+2. Scale the machine set
+    `oc scale --replicas=2 machineset <machineset> -n openshift-machine-api`
+    or
+    `oc edit machineset <machineset> -n openshift-machine-api`
+
 ### 沒開機不能 Login
 ```bash
 oc login https://api.dba-k8s.test.org:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password`
