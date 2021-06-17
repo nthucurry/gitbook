@@ -17,19 +17,18 @@
         <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-iam-user-access-admin.png">
 
 ## 硬體需求
-- VM
-    - temporary bootstrap * 1
-        - vCPU: 4
-        - RAM: 16G
-        - storage: 120G
-    - control plane * 3
-        - vCPU: 4
-        - RAM: 16G
-        - storage: 120G
-    - worker * 3 (最少 2 台，但 2 台會無法安裝，原因未知)
-        - vCPU: 2
-        - RAM: 8G
-        - storage: 120G
+- temporary bootstrap * 1
+    - vCPU: 4
+    - RAM: 16G
+    - storage: 120G
+- control plane * 3
+    - vCPU: 4
+    - RAM: 16G
+    - storage: 120G
+- worker * 3 (最少 2 台，但 2 台會無法安裝，原因未知)
+    - vCPU: 2
+    - RAM: 8G
+    - storage: 120G
 
 ## 安裝架構
 <br><img src="../../../img/openshift/install-flow.png">
