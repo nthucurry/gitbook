@@ -286,14 +286,14 @@ yum install azure-cli -y
     #    - name: PROVISIONER_NAME
     #    value: storage.io/nfs <-- change it
     #    - name: NFS_SERVER
-    #    value: 10.250.101.6 <-- internal load balancer
+    #    value: 10.250.101.6 <-- NFS
     #    - name: NFS_PATH
     #    value: /data <-- change it
     #
     #  volumes:
     #    - name: nfs-client-root
     #    nfs:
-    #      server: 10.250.101.6 <-- internal load balancer
+    #      server: 10.250.101.6 <-- NFS
     #      path: /data <-- change it
     ```
     ```bash
@@ -331,8 +331,8 @@ yum install azure-cli -y
     ```
 - 下載 lite
     ```bash
-    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/lite
     export ASSEMBLY=lite
+    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/$ASSEMBLY/
     mkdir -p $DOWNLOAD_FOLDER
 
     ./cpd-cli preload-images \
@@ -344,8 +344,8 @@ yum install azure-cli -y
     ```
 - 下載 WKC
     ```bash
-    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/wkc
     export ASSEMBLY=wkc
+    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/$ASSEMBLY/
     mkdir -p $DOWNLOAD_FOLDER
 
     ./cpd-cli preload-images \
@@ -377,7 +377,7 @@ yum install azure-cli -y
 - 安裝 lite (control plane)
     - 設定環境變數
         ```bash
-        # export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
+        export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
         export NAMESPACE=zen
         export STORAGE_CLASS=managed-nfs-storage
         export IMAGE_REGISTRY_USER=$(oc whoami)
@@ -425,28 +425,12 @@ yum install azure-cli -y
         --verbose \
         --insecure-skip-tls-verify
         ```
-        - error
-            ```
-            2021-06-15 14:19:00.243713197 +0800 CST m=+22.407708366
-            Module              |Instance Name   |Status
-            0010-infra x86_64   |                |In Progress
-                ============================
-                |Resource      |Ready   |Total
-                |Deployment    |2       |2
-                |PVC           |5       |5
-                |StateFulSet   |0       |1
-                |Job           |1       |3
-                |ReplicaSet    |2       |2
-                ============================
-            0015-setup x86_64   |      |To Be Installed
-            0020-core x86_64    |      |To Be Installed
-            ```
     - 確認狀態
         - `./cpd-cli status --assembly $ASSEMBLY --namespace $NAMESPACE`
 - 安裝 WKC
     - 設定環境變數
         ```bash
-        # export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
+        export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
         export NAMESPACE=zen
         export STORAGE_CLASS=managed-nfs-storage
         export IMAGE_REGISTRY_USER=kubeadmin
@@ -468,7 +452,7 @@ yum install azure-cli -y
         --insecure-skip-tls-verify \
         --accept-all-licenses
         ```
-    - 設定 control plane 參數
+    - 設定參數
         ```bash
         ./cpd-cli adm \
         --assembly $ASSEMBLY \
