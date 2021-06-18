@@ -140,7 +140,7 @@ yum install azure-cli -y
     ```
 - 安裝 OpenShift 所有環境
     - 設定 config
-        - `./ocp4.5_inst/openshift-install create install-config --dir=/home/azadmin/ocp4.5_cust`
+        - `~/ocp4.5_inst/openshift-install create install-config --dir=/home/azadmin/ocp4.5_cust`
             ```
             ? SSH Public Key /home/azadmin/.ssh/id_rsa.pub
             ? Platform azure
@@ -150,7 +150,7 @@ yum install azure-cli -y
             ? azure service principal client secret **********************************
             ```
     - 安裝 OpenShift (約一小時，若自行設定 DNS，VM 建立時需注意名稱解析)
-        - `./ocp4.5_inst/openshift-install create cluster --dir=/home/azadmin/ocp4.5_cust --log-level=info`
+        - `~/ocp4.5_inst/openshift-install create cluster --dir=/home/azadmin/ocp4.5_cust --log-level=info`
             ```
             INFO Credentials loaded from file "/home/azadmin/.azure/osServicePrincipal.json"
             INFO Consuming Install Config from target directory (10 分鐘)
@@ -168,7 +168,7 @@ yum install azure-cli -y
             INFO Time elapsed: 1h3m20s
             ```
         - check installing status
-            - `tail -f ./ocp4.5_inst/.openshift_install.log`
+            - `tail -f ~/ocp4.5_cust/.openshift_install.log`
         - 如果不是使用 Azure DNS，需動態改 IP
             - Load balancer: Frontend IP configuration
             - VM: Network interface
@@ -190,26 +190,16 @@ yum install azure-cli -y
     sudo cp oc_bash_completion /etc/bash_completion.d/
     ```
 - 確認 OpenShift Status
-    - 從 web
-        - 正式: https://console-openshift-console.apps.wkc.corpnet.auo.com
-        - 開發: https://console-openshift-console.apps.wkc-dev.corpnet.auo.com
-        - 測試: https://console-openshift-console.apps.dba-k8s.test.org
+    - 從 web: https://console-openshift-console.apps.wkc.corpnet.auo.com
     - 從 terminal
-        - 登入
-            - 正式: `oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p `\``cat ~/ocp4.5_cust/auth/kubeadmin-password`\`
-            - 開發: `oc login https://api.wkc-dev.corpnet.auo.com:6443 -u kubeadmin -p `\``cat ~/ocp4.5_cust/auth/kubeadmin-password`\`
-            - 測試: `oc login https://api.dba-k8s.test.org:6443 -u kubeadmin -p `\``cat ~/ocp4.5_cust/auth/kubeadmin-password`\`
-        - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
+        - 登入: `oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p `\``cat ~/ocp4.5_cust/auth/kubeadmin-password`\`
+        - 檢查: `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
     - 查詢 kubeadmin 密碼
         - `cat ~/ocp4.5_cust/auth/kubeadmin-password`
     - 改時間
         ```bash
         ssh core@$(oc get nodes | grep master | sed -n '1,1p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
-        ssh core@$(oc get nodes | grep master | sed -n '2,2p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
-        ssh core@$(oc get nodes | grep master | sed -n '3,3p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
         ssh core@$(oc get nodes | grep worker | sed -n '1,1p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
-        ssh core@$(oc get nodes | grep worker | sed -n '2,2p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
-        ssh core@$(oc get nodes | grep worker | sed -n '3,3p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
         ```
 
 ## 建置 NFS VM
@@ -426,7 +416,7 @@ yum install azure-cli -y
     --insecure-skip-tls-verify
     ```
 - 確認狀態
-    - `./cpd-cli status --assembly lite --namespace zen`
+    - `~/ibm/cpd-cli status --assembly lite --namespace zen`
 ### 安裝 WKC
 - 設定環境變數
     ```bash
@@ -478,6 +468,8 @@ yum install azure-cli -y
     --verbose \
     --insecure-skip-tls-verify
     ```
+- 確認狀態
+    - `~/ibm/cpd-cli status --assembly wkc --namespace zen`
 - WKC portal
     - https://zen-cpd-zen.apps.wkc.corpnet.auo.com
 
