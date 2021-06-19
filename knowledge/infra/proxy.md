@@ -1,5 +1,12 @@
-# Proxy Server
-## 安裝
+- [安裝 Squid](#安裝-squid)
+- [修改參數](#修改參數)
+  - [設定 Header & TLS (未完成)](#設定-header--tls-未完成)
+  - [Header 測試工具](#header-測試工具)
+    - [Fiddler](#fiddler)
+    - [Wireshark](#wireshark)
+- [安裝報表 (Squid Analysis Report Generator)](#安裝報表-squid-analysis-report-generator)
+
+## 安裝 Squid
 ```bash
 # proxy 設定
 vi /etc/yum.conf
@@ -15,13 +22,13 @@ timedatectl set-timezone Asia/Taipei
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 ```
 
-### 修改參數
+## 修改參數
 - `vi /etc/squid/squid.conf`
     ```
     # 定義可以存取此 proxy 的 ip，預設為內網
-    acl localnet src 10.0.0.0/8     # RFC1918 possible internal network
-    acl localnet src 172.16.0.0/12  # RFC1918 possible internal network
-    acl localnet src 192.168.0.0/16 # RFC1918 possible internal network
+    acl localnet src 10.0.0.0/8     # RFC 1918 possible internal network
+    acl localnet src 172.16.0.0/12  # RFC 1918 possible internal network
+    acl localnet src 192.168.0.0/16 # RFC 1918 possible internal network
     acl localnet src fc00::/7       # RFC 4193 local private network range
     acl localnet src fe80::/10      # RFC 4291 link-local (directly plugged) machines
 
@@ -53,46 +60,7 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
     ```
 - check: `netstat -tulnp | grep squid`
 
-## Squid Analysis Report Generator
-[Squid Analysis ReportGenerator](https://www.tecmint.com/sarg-squid-analysis-report-generator-and-internet-bandwidth-monitoring-tool/)
-```bash
-# yum
-yum install gcc gd-devel make perl-GD httpd -y
-
-# login root account and yum packages
-su - root
-
-# download sarg
-wget https://sourceforge.net/projects/sarg/files/sarg/sarg-2.4.0/sarg-2.4.0.tar.gz
-cd /root
-tar -xvzf sarg-2.4.0.tar.gz
-cd sarg-2.4.0
-./configure
-make && make install
-
-# update parameter and uncomment it
-vi /usr/local/etc/sarg.conf
-# access_log /var/log/squid/access.log
-# title "Squid User Access Reports"
-# output_dir /var/www/html/squid-reports
-# date_format e
-
-# startup apache server
-# please check the port 80 should be not use
-systemctl start httpd
-systemctl enable httpd
-netstat -anpt | grep ':80'
-
-# startup sarg
-./sarg -x
-```
-
-##  Restrictions Azure specify tenant by proxy
-- The proxy must be able to perform **TLS interception** (擷取), **HTTP header insertion**, and **filter destinations using FQDNs/URLs**.
-- Clients must trust the certificate chain presented by the proxy for TLS communications. For example, if certificates from an internal public key infrastructure (PKI) are used, the internal issuing root certificate authority certificate must be trusted.
-- Azure AD Premium 1 licenses are required for use of Tenant Restrictions.
-
-### 設定 TLS (未完成)
+### 設定 Header & TLS (未完成)
 ```bash
 mkdir -p /etc/squid/certs
 cd /etc/squid/certs
@@ -128,26 +96,61 @@ request_header_add Restrict-Access-Context "<tenant ID>" all
 curl --proxy http://squid.hotpo.org:3128 ipinfo.io
 ```
 
-### Proxy test tool
-- test by fiddler
-    ```csharp
-    // Allows access to the listed tenants.
-    if (
-        oSession.HostnameIs("login.microsoftonline.com") ||
-        oSession.HostnameIs("login.microsoft.com") ||
-        oSession.HostnameIs("login.windows.net")
-        )
-    {
-        oSession.oRequest["Restrict-Access-To-Tenants"] = "<primary domain>.onmicrosoft.com";
-        oSession.oRequest["Restrict-Access-Context"] = "<tenant ID>";
-    }
+### Header 測試工具
+#### Fiddler
+```csharp
+// Allows access to the listed tenants.
+if (
+    oSession.HostnameIs("login.microsoftonline.com") ||
+    oSession.HostnameIs("login.microsoft.com") ||
+    oSession.HostnameIs("login.windows.net")
+    )
+{
+    oSession.oRequest["Restrict-Access-To-Tenants"] = "<primary domain>.onmicrosoft.com";
+    oSession.oRequest["Restrict-Access-Context"] = "<tenant ID>";
+}
 
-    // Blocks access to consumer apps
-    if (
-        oSession.HostnameIs("login.live.com")
-        )
-    {
-        oSession.oRequest["sec-Restrict-Tenant-Access-Policy"] = "restrict-msa";
-    }
-    ```
-- Wireshark: https://wiki.wireshark.org/HTTP_Preferences
+// Blocks access to consumer apps
+if (
+    oSession.HostnameIs("login.live.com")
+    )
+{
+    oSession.oRequest["sec-Restrict-Tenant-Access-Policy"] = "restrict-msa";
+}
+```
+#### Wireshark
+https://wiki.wireshark.org/HTTP_Preferences
+
+## 安裝報表 (Squid Analysis Report Generator)
+[Squid Analysis ReportGenerator](https://www.tecmint.com/sarg-squid-analysis-report-generator-and-internet-bandwidth-monitoring-tool/)
+```bash
+# yum
+yum install gcc gd-devel make perl-GD httpd -y
+
+# login root account and yum packages
+su - root
+
+# download sarg
+wget https://sourceforge.net/projects/sarg/files/sarg/sarg-2.4.0/sarg-2.4.0.tar.gz
+cd /root
+tar -xvzf sarg-2.4.0.tar.gz
+cd sarg-2.4.0
+./configure
+make && make install
+
+# update parameter and uncomment it
+vi /usr/local/etc/sarg.conf
+# access_log /var/log/squid/access.log
+# title "Squid User Access Reports"
+# output_dir /var/www/html/squid-reports
+# date_format e
+
+# startup apache server
+# please check the port 80 should be not use
+systemctl start httpd
+systemctl enable httpd
+netstat -anpt | grep ':80'
+
+# startup sarg
+./sarg -x
+```

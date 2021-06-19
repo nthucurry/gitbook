@@ -1,5 +1,22 @@
-# WKC Install SOP
-## Azure 架構
+- [Azure 架構](#azure-架構)
+- [硬體需求](#硬體需求)
+- [安裝架構](#安裝架構)
+- [到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password](#到-azure-portal-進-console-找出-subscription-tenant-client-appid-client-password)
+- [設定 Install Config](#設定-install-config)
+- [前置作業](#前置作業)
+- [安裝 OpenShift on Bastion VM](#安裝-openshift-on-bastion-vm)
+- [建置 NFS VM](#建置-nfs-vm)
+- [安裝 OpenShift Client on NFS VM](#安裝-openshift-client-on-nfs-vm)
+- [設定 Disk 路徑 on NFS VM](#設定-disk-路徑-on-nfs-vm)
+- [安裝 WKC by Bastion VM](#安裝-wkc-by-bastion-vm)
+- [安裝 WKC from Bastion VM to Cluster VM](#安裝-wkc-from-bastion-vm-to-cluster-vm)
+  - [安裝 lite (control plane)](#安裝-lite-control-plane)
+  - [安裝 WKC](#安裝-wkc)
+- [設定 Machine Config on Bastion VM](#設定-machine-config-on-bastion-vm)
+- [設定 Proxy on Bastion VM](#設定-proxy-on-bastion-vm)
+- [設定 User Managerment on CP4D Portal](#設定-user-managerment-on-cp4d-portal)
+
+# Azure 架構
 - resource group
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-insights-overall.png" width="300">
 - VM
@@ -16,7 +33,7 @@
     - user access administrator
         <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-iam-user-access-admin.png">
 
-## 硬體需求
+# 硬體需求
 - temporary bootstrap * 1
     - vCPU: 4
     - RAM: 16G
@@ -30,10 +47,10 @@
     - RAM: 8G
     - storage: 120G
 
-## 安裝架構
+# 安裝架構
 <br><img src="../../../img/openshift/install-flow.png">
 
-## 到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password
+# 到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password
 - `az ad sp create-for-rbac --role="Contributor" --name="http://corpnet.auo.com" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
     ```json
     {
@@ -47,7 +64,7 @@
 - `az ad sp list --filter "appId eq 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'"`
 - `az role assignment create --role "User Access Administrator" --assignee-object-id "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
 
-## 設定 Install Config
+# 設定 Install Config
 ```yaml
 # install-config.yaml
 
@@ -103,7 +120,7 @@ sshKey: |
   ssh-rsa XXX azadmin@maz-bastion
 ```
 
-## 前置作業
+# 前置作業
 ```bash
 # by root
 
@@ -122,7 +139,7 @@ gpgkey=https://packages.microsoft.com/keys/microsoft.asc" | tee /etc/yum.repos.d
 yum install azure-cli -y
 ```
 
-## 安裝 OpenShift on Bastion VM
+# 安裝 OpenShift on Bastion VM
 - 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.corpnet.auo.com
 - 下載 OpenShift 檔案
     ```bash
@@ -202,7 +219,7 @@ yum install azure-cli -y
         ssh core@$(oc get nodes | grep worker | sed -n '1,1p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
         ```
 
-## 建置 NFS VM
+# 建置 NFS VM
 - 掛載大容量 disk (by LVM)
     ```bash
     sudo su
@@ -233,7 +250,7 @@ yum install azure-cli -y
 - 重啟 NFS
     - `systemctl restart nfs-server`
 
-## 安裝 OpenShift Client on NFS VM
+# 安裝 OpenShift Client on NFS VM
 - 下載 OpenShift 檔案
     ```bash
     cd ~
@@ -262,7 +279,7 @@ yum install azure-cli -y
     sudo sed -i'' "s/namespace:.*/namespace: $NAMESPACE/g" ./deploy/deployment.yaml
     ```
 
-## 設定 Disk 路徑 on NFS VM
+# 設定 Disk 路徑 on NFS VM
 - 建立 OpenShift RBAC
     ```bash
     oc create -f deploy/rbac.yaml
@@ -305,7 +322,7 @@ yum install azure-cli -y
     oc get pvc
     ```
 
-## 安裝 WKC by Bastion VM
+# 安裝 WKC by Bastion VM
 - 下載 CP4D 檔案
     ```bash
     mkdir ~/ibm
@@ -345,7 +362,7 @@ yum install azure-cli -y
     --accept-all-licenses
     ```
 
-## 安裝 WKC from Bastion VM to Cluster VM
+# 安裝 WKC from Bastion VM to Cluster VM
 - 安裝 podman (redhad 用來取代 docker tool 的工具)
     - `yum install podman -y`
 - 建立 namespace
@@ -364,7 +381,7 @@ yum install azure-cli -y
     sudo podman login -u kubeadmin -p $(oc whoami -t) --tls-verify=false $REGISTRY
     ```
 
-### 安裝 lite (control plane)
+## 安裝 lite (control plane)
 - 設定環境變數
     ```bash
     export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
@@ -417,7 +434,7 @@ yum install azure-cli -y
     ```
 - 確認狀態
     - `~/ibm/cpd-cli status --assembly lite --namespace zen`
-### 安裝 WKC
+## 安裝 WKC
 - 設定環境變數
     ```bash
     export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
@@ -473,7 +490,7 @@ yum install azure-cli -y
 - WKC portal
     - https://zen-cpd-zen.apps.wkc.corpnet.auo.com
 
-## 設定 Machine Config on Bastion VM
+# 設定 Machine Config on Bastion VM
 - https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=tasks-changing-required-node-settings#node-settings__crio
 - 安裝 python 3
     - `yum install python3 -y`
@@ -549,7 +566,7 @@ yum install azure-cli -y
     - 執行 oc 使參數生效
         - `oc create -f 42-cp4d.yaml`
 
-## 設定 Proxy on Bastion VM
+# 設定 Proxy on Bastion VM
 - 設定 NSG
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-nsg.png">
 - 編輯 proxy object
@@ -580,7 +597,7 @@ yum install azure-cli -y
     management.azure.com
     ```
 
-## 設定 User Managerment on CP4D Portal
+# 設定 User Managerment on CP4D Portal
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/wkc-ldap.png">
 
 - https://docs.microsoft.com/zh-tw/system-center/scsm/ad-ds-attribs?view=sc-sm-2019
