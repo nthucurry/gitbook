@@ -1,11 +1,30 @@
-# Maintain List
-## 重點概念
+- [重點概念](#重點概念)
+- [Azure](#azure)
+- [OpenShift](#openshift)
+  - [Creating a Self-Signed SSL Certificate for your Intranet Services](#creating-a-self-signed-ssl-certificate-for-your-intranet-services)
+    - [Replacing the default ingress certificate](#replacing-the-default-ingress-certificate)
+  - [調整 worker 數量](#調整-worker-數量)
+  - [沒開機不能 Login](#沒開機不能-login)
+- [備份](#備份)
+  - [OpenShift](#openshift-1)
+    - [Backing up etcd](#backing-up-etcd)
+  - [WKC (CP4D)](#wkc-cp4d)
+- [維運](#維運)
+  - [大型維運](#大型維運)
+    - [Shutting down the cluster](#shutting-down-the-cluster)
+    - [Restarting the cluster gracefully](#restarting-the-cluster-gracefully)
+    - [Disaster Recovery](#disaster-recovery)
+  - [日常維運](#日常維運)
+    - [Replacing an unhealthy etcd member](#replacing-an-unhealthy-etcd-member)
+    - [(Replacing the unhealthy etcd member)[https://docs.openshift.com/container-platform/4.5/backup_and_restore/replacing-unhealthy-etcd-member.html#replacing-the-unhealthy-etcd-member] (未完成...)](#replacing-the-unhealthy-etcd-memberhttpsdocsopenshiftcomcontainer-platform45backup_and_restorereplacing-unhealthy-etcd-memberhtmlreplacing-the-unhealthy-etcd-member-未完成)
+
+# 重點概念
 - OpenShift cluster 不需備份 VM，因為已經是 cluster 架構了，壞了在透過 yaml rebuild 就好
     - 嚴格說起來，一台 Master VM 也可以執行 WKC
 - 需要備份的是 Bastion VM，因為上面有 ssh key、kubeadm 密碼
 - etcd 備份到 storage account
 
-## Azure
+# Azure
 - WKC 資源若被 delete，會 auto-rebuild
 - Recovery Services Vault (保存庫)
     - Geo-redundant storage (GRS, 異地備援儲存體)
@@ -25,11 +44,11 @@
     az feature show --namespace Microsoft.Storage --name AllowNFSV3 --subscription $subscription_id
     ```
 
-## OpenShift
-### Creating a Self-Signed SSL Certificate for your Intranet Services
+# OpenShift
+## Creating a Self-Signed SSL Certificate for your Intranet Services
 可參考保哥文章: [如何使用 OpenSSL 建立開發測試用途的自簽憑證 (Self-Signed Certificate)](https://blog.miniasp.com/post/2019/02/25/Creating-Self-signed-Certificate-using-OpenSSL)
 
-#### Replacing the default ingress certificate
+### Replacing the default ingress certificate
 - 建立 ssl.conf 設定檔: `vi ssl.conf`
     ```
     [req]
@@ -87,7 +106,7 @@
     <br><img src="../../../img/security/root-cert-step-4.png">
     <br><img src="../../../img/security/root-cert-step-5.png">
 
-### 調整 worker 數量
+## 調整 worker 數量
 1. View the machine sets that are in the cluster
     `oc get machinesets -n openshift-machine-api`
 2. Scale the machine set
@@ -95,7 +114,7 @@
     or
     `oc edit machineset <machineset> -n openshift-machine-api`
 
-### 沒開機不能 Login
+## 沒開機不能 Login
 ```bash
 oc login https://api.dba-k8s.test.org:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password`
 ```
@@ -120,11 +139,11 @@ systemctl reboot
 oc adm uncordon <worker-node>
 ```
 
-## 備份
-### OpenShift
+# 備份
+## OpenShift
 - https://docs.openshift.com/container-platform/4.5/backup_and_restore/backing-up-etcd.html
 
-#### Backing up etcd
+### Backing up etcd
 - etcd is the key-value store for OCP, which persists the state of all resource objects.
 1. Start a debug session for a master node
     >oc debug node/<node_name>
@@ -134,22 +153,22 @@ oc adm uncordon <worker-node>
 4. Run the cluster-backup.sh script and pass in the location to save the backup to
     >/usr/local/bin/cluster-backup.sh /home/core/assets/backup
 
-### WKC (CP4D)
+## WKC (CP4D)
 
-## 維運
-### 大型維運
-#### Shutting down the cluster
-#### Restarting the cluster gracefully
-#### Disaster Recovery
+# 維運
+## 大型維運
+### Shutting down the cluster
+### Restarting the cluster gracefully
+### Disaster Recovery
 
-### 日常維運
-#### Replacing an unhealthy etcd member
+## 日常維運
+### Replacing an unhealthy etcd member
 - Check the status of the EtcdMembersAvailable status condition using the following command
     >oc get etcd -o=jsonpath='{range .items[0].status.conditions[?(@.type=="EtcdMembersAvailable")]}{.message}{"\n"}'
 - Review the output
     - 好: 3 members are available
     - 壞: 2 of 3 members are available, ip-10-0-131-183.ec2.internal is unhealthy
 
-#### (Replacing the unhealthy etcd member)[https://docs.openshift.com/container-platform/4.5/backup_and_restore/replacing-unhealthy-etcd-member.html#replacing-the-unhealthy-etcd-member] (未完成...)
+### (Replacing the unhealthy etcd member)[https://docs.openshift.com/container-platform/4.5/backup_and_restore/replacing-unhealthy-etcd-member.html#replacing-the-unhealthy-etcd-member] (未完成...)
 -  Replacing an unhealthy etcd member whose machine is not running or whose node is not ready
     1. Remove the unhealthy member.
