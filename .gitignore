@@ -2,6 +2,11 @@
 README.md
 SUMMARY.md
 .DS_Store
+*.cer
+*.crt
+*.key
+*.pfx
+
 file/*
 img/chipbond
 office/*
@@ -77,5 +82,6 @@ knowledge/exam/*
 !knowledge/infra/docker
 !knowledge/infra/paas
 !knowledge/infra/web.md
+!knowledge/infra/ssl
 !knowledge/exam
 !knowledge/exam/oracle-11g.md
