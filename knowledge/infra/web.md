@@ -6,6 +6,7 @@
 - https://www.ionos.com/digitalguide/server/configuration/apache-tomcat-on-centos/
 - https://downloads.apache.org/tomcat/tomcat-9/
 - http://ftp.tc.edu.tw/pub/Apache/tomcat/tomcat-9/v9.0.44/bin/
+- 第三方認證: https://manage.sslforfree.com/dashboard
 
 # Tomcat
 - 安裝 Tomcat
