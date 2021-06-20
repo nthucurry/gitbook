@@ -1,10 +1,10 @@
 - [前言](#前言)
 - [安裝 Squid](#安裝-squid)
 - [修改參數](#修改參數)
-  - [設定 Header & TLS (未完成)](#設定-header--tls-未完成)
-  - [Header 測試工具](#header-測試工具)
-    - [Fiddler](#fiddler)
-    - [Wireshark](#wireshark)
+    - [設定 Header & TLS (未完成)](#設定-header--tls-未完成)
+    - [Header 測試工具](#header-測試工具)
+        - [Fiddler](#fiddler)
+        - [Wireshark](#wireshark)
 - [安裝報表 (Squid Analysis Report Generator)](#安裝報表-squid-analysis-report-generator)
 
 # 前言
