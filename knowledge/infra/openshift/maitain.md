@@ -108,11 +108,10 @@
 
 ## 調整 worker 數量
 1. View the machine sets that are in the cluster
-    `oc get machinesets -n openshift-machine-api`
+    - `oc get machinesets -n openshift-machine-api`
 2. Scale the machine set
-    `oc scale --replicas=2 machineset <machineset> -n openshift-machine-api`
-    or
-    `oc edit machineset <machineset> -n openshift-machine-api`
+    - `oc scale --replicas=2 machineset <machineset> -n openshift-machine-api`
+    - `oc edit machineset <machineset> -n openshift-machine-api`
 
 ## 沒開機不能 Login
 ```bash

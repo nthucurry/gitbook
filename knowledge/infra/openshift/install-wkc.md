@@ -12,6 +12,7 @@
 - [安裝 WKC from Bastion VM to Cluster VM](#安裝-wkc-from-bastion-vm-to-cluster-vm)
     - [安裝 lite (control plane)](#安裝-lite-control-plane)
     - [安裝 WKC](#安裝-wkc)
+- [如果 WKC 安裝失敗](#如果-wkc-安裝失敗)
 - [設定 Machine Config on Bastion VM](#設定-machine-config-on-bastion-vm)
 - [設定 Proxy on Bastion VM](#設定-proxy-on-bastion-vm)
 - [設定 User Managerment on CP4D Portal](#設定-user-managerment-on-cp4d-portal)
@@ -490,8 +491,13 @@ yum install azure-cli -y
 - WKC portal
     - https://zen-cpd-zen.apps.wkc.corpnet.auo.com
 
+# 如果 WKC 安裝失敗
+刪除 project，重裝 WKC
+- `oc delete project zen`
+- [安裝 WKC from Bastion VM to Cluster VM](#安裝-wkc-from-bastion-vm-to-cluster-vm)
+
 # 設定 Machine Config on Bastion VM
-- https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=tasks-changing-required-node-settings#node-settings__crio
+- [CRI-O container settings](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=tasks-changing-required-node-settings#node-settings__crio)
 - 安裝 python 3
     - `yum install python3 -y`
 - 設定 CRI-O container
