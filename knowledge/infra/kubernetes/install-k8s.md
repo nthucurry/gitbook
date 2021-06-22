@@ -13,7 +13,7 @@
 - https://blog.johnwu.cc/article/kubernetes-exercise.html
 - https://ithelp.ithome.com.tw/articles/10235069?sc=iThomeR
 - 不錯的說明
-    - [使用kubeadm 安装 kubernetes 1.15.1](http://www.manongjc.com/detail/9-pbmajemrfahtfpl.html)
+    - [使用 kubeadm 安装 kubernetes 1.15.1](http://www.manongjc.com/detail/9-pbmajemrfahtfpl.html)
     - [實現 Kubernetes 高可靠架構部署](https://k2r2bai.com/2019/09/20/ironman2020/day05/)
     - [如何自建 K8S HA Cluster](https://brobridge.com/bdsres/2019/08/30/本篇目標是針對如何自學建立k8s架構/)
     - [How To Install Kubernetes Dashboard with NodePort](https://computingforgeeks.com/how-to-install-kubernetes-dashboard-with-nodeport/)

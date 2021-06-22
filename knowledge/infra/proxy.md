@@ -5,6 +5,7 @@
     - [Header 測試工具](#header-測試工具)
         - [Fiddler](#fiddler)
         - [Wireshark](#wireshark)
+    - [OS 設定位置](#os-設定位置)
 - [安裝報表 (Squid Analysis Report Generator)](#安裝報表-squid-analysis-report-generator)
 
 # 前言
@@ -22,6 +23,7 @@ yum update -y
 yum install epel-release -y
 yum install htop -y
 yum install telnet -y
+yum install nc -y
 yum install squid -y
 yum clean all
 
@@ -147,6 +149,15 @@ if (
 ```
 ### Wireshark
 https://wiki.wireshark.org/HTTP_Preferences
+- `ip.src == 10.0.8.5 && ip.dst == 10.0.8.4 &&  http && tcp.port == 3128`
+
+## OS 設定位置
+- windows
+    <br><img src="../../img/proxy/windows-config.png">
+- linux
+    - `/etc/yum.conf`
+    - `export http_proxy=http://squid.gotdns.ch:3128`
+    - `export https_proxy=https://squid.gotdns.ch:3128`
 
 # 安裝報表 (Squid Analysis Report Generator)
 [Squid Analysis ReportGenerator](https://www.tecmint.com/sarg-squid-analysis-report-generator-and-internet-bandwidth-monitoring-tool/)
