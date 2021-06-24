@@ -492,9 +492,13 @@ yum install azure-cli -y
     - https://zen-cpd-zen.apps.wkc.corpnet.auo.com
 
 # 如果 WKC 安裝失敗
-刪除 project，重裝 WKC
-- `oc delete project zen`
-- [安裝 WKC from Bastion VM to Cluster VM](#安裝-wkc-from-bastion-vm-to-cluster-vm)
+- 檢查 pod 狀態
+    - 出現 ErrImagePull 與 ImagePullBackOff，皆表示無法取得映像檔
+    - 查看詳細資料內 Event 的內容
+        - `oc describe pods iis-xmetarepo-5b54fbfd7-qckmj`
+- 刪除 project，重裝 WKC
+    - `oc delete project zen`
+    - [安裝 WKC from Bastion VM to Cluster VM](#安裝-wkc-from-bastion-vm-to-cluster-vm)
 
 # 設定 Machine Config on Bastion VM
 - [CRI-O container settings](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=tasks-changing-required-node-settings#node-settings__crio)
@@ -503,7 +507,7 @@ yum install azure-cli -y
 - 設定 CRI-O container
     - 複製 worker 的 crio.conf 到 bastion
         - `scp core@$(oc get nodes | grep worker | head -1 | awk '{print $1}'):/etc/crio/crio.conf /tmp/crio.conf`
-    - 編輯 /tmp/crio.conf
+    - `vi /tmp/crio.conf`
         ```
         default_ulimits = [
                 "nofile=66560:66560"

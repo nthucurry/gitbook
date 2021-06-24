@@ -1,0 +1,4 @@
+AzureDiagnostics
+| where ResourceGroup == "GLOBAL"
+| where Resource == "BIGDATAFIREWALL"
+| sort by TimeGenerated desc
