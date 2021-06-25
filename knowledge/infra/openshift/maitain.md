@@ -9,6 +9,14 @@
     - [OpenShift](#openshift-1)
         - [Backing up etcd](#backing-up-etcd)
     - [WKC (CP4D)](#wkc-cp4d)
+        - [Backing up and restoring your project](#backing-up-and-restoring-your-project)
+            - [Backup and restore service list](#backup-and-restore-service-list)
+            - [Installing the Cloud Pak for Data backup and restore service](#installing-the-cloud-pak-for-data-backup-and-restore-service)
+            - [Preparing to install the Cloud Pak for Data file system backup and restore service](#preparing-to-install-the-cloud-pak-for-data-file-system-backup-and-restore-service)
+        - [Backing up](#backing-up)
+            - [Backing up the Cloud Pak for Data file system on Portworx (需付費使用)](#backing-up-the-cloud-pak-for-data-file-system-on-portworx-需付費使用)
+            - [Backing up the Cloud Pak for Data file system to a local repository or object store](#backing-up-the-cloud-pak-for-data-file-system-to-a-local-repository-or-object-store)
+        - [Restoring](#restoring)
 - [維運](#維運)
     - [大型維運](#大型維運)
         - [Shutting down the cluster](#shutting-down-the-cluster)
@@ -82,7 +90,7 @@
 - 在 bastion 設定憑證
     ```bash
     oc create configmap custom-ca \
-        --from-file=ca-bundle.crt=/home/azadmin/server.crt \
+        --from-file=ca-bundle.crt=/home/azadmin/ssl/server.crt \
         -n openshift-config
 
     oc patch proxy/cluster \
@@ -90,8 +98,8 @@
         --patch='{"spec":{"trustedCA":{"name":"custom-ca"}}}'
 
     oc create secret tls my-tls-migration \
-        --cert=/home/azadmin/server.crt \
-        --key=/home/azadmin/server.key \
+        --cert=/home/azadmin/ssl/server.crt \
+        --key=/home/azadmin/ssl/server.key \
         -n openshift-ingress
 
     oc patch ingresscontroller.operator default \
@@ -105,6 +113,9 @@
     <br><img src="../../../img/security/root-cert-step-3.png">
     <br><img src="../../../img/security/root-cert-step-4.png">
     <br><img src="../../../img/security/root-cert-step-5.png">
+- 從 pfx 匯出 crt (or cer)
+    - `openssl pkcs12 -in server.pfx -nokeys -password "pass:ncu5540" -out - 2>/dev/null | openssl x509 -out server.crt`
+    - `openssl pkcs12 -in server.pfx -nocerts -password "pass:ncu5540" -nodes -out server.key`
 
 ## 調整 worker 數量
 1. View the machine sets that are in the cluster
@@ -138,6 +149,7 @@ systemctl reboot
 oc adm uncordon <worker-node>
 ```
 
+[Back to top](#)
 # 備份
 ## OpenShift
 - https://docs.openshift.com/container-platform/4.5/backup_and_restore/backing-up-etcd.html
@@ -153,7 +165,66 @@ oc adm uncordon <worker-node>
     >/usr/local/bin/cluster-backup.sh /home/core/assets/backup
 
 ## WKC (CP4D)
+### Backing up and restoring your project
+You can back up and restore the **Persistent Volumes (PVs)** in a project (namespace) in your IBM® Cloud Pak for Data file system.
 
+#### Backup and restore service list
+The following table describes the components and services that support backup and restore by using volume snapshots, volume backups, or a separate process.
+
+#### Installing the Cloud Pak for Data backup and restore service
+Installing the Cloud Pak for Data backup and restore service involves the following tasks.
+- Backup and restore service PVC
+    - 建立 NFS volumn yaml
+        ```yaml
+        apiVersion: v1
+        kind: PersistentVolumeClaim
+        metadata:
+          name: cpdbr-pvc
+        spec:
+          storageClassName: nfs-client
+          accessModes:
+            - ReadWriteMany
+          resources:
+          requests:
+            storage: 200Gi
+        ```
+    - `oc apply -f cpdbr-pvc.yaml -n zen`
+
+#### Preparing to install the Cloud Pak for Data file system backup and restore service
+- Install the cpdbr Docker image
+    ```bash
+    IMAGE_REGISTRY=`oc get route -n openshift-image-registry | grep image-registry | awk '{print $2}'`
+    echo $IMAGE_REGISTRY
+    NAMESPACE=`oc project -q`
+    echo $NAMESPACE
+    CPU_ARCH=`uname -m`
+    echo $CPU_ARCH
+    BUILD_NUM=`~/ibm/cpd-cli backup-restore version | grep "Build Number" |cut -d : -f 2 | xargs`
+    echo $BUILD_NUM
+
+
+    # Pull cpdbr image from Docker Hub
+    sudo podman pull docker.io/ibmcom/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
+    # Push image to internal registry
+    sudo podman login -u kubeadmin -p $(oc whoami -t) $IMAGE_REGISTRY --tls-verify=false
+    sudo podman tag docker.io/ibmcom/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH} $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
+    sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH} --tls-verify=false
+    ```
+- `~/ibm/cpd-cli backup-restore version`
+
+### Backing up
+Create backups of your IBM Cloud Pak for Data system to protect your data.
+
+#### Backing up the Cloud Pak for Data file system on Portworx (需付費使用)
+
+#### Backing up the Cloud Pak for Data file system to a local repository or object store
+https://access.redhat.com/solutions/4098321
+
+### Restoring
+The process to restore the persistent volumes (PVs) that are associated with your IBM Cloud Pak for Data project depends on the storage provider that you are using.
+
+
+[Back to top](#)
 # 維運
 ## 大型維運
 ### Shutting down the cluster

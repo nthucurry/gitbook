@@ -130,6 +130,7 @@ timedatectl set-timezone Asia/Taipei
 yum update -y
 yum install epel-release -y
 yum install htop telnet nc nmap -y
+yum install nfs-utils -y
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
 echo -e "[azure-cli]
 name=Azure CLI

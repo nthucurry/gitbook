@@ -8,14 +8,8 @@
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/storage-login-info.png">
 
 ## Create an NFS share
-```powershell
-Connect-AzAccount
-
-$yourSubscriptionIDHere = ""
-$context = Get-AzSubscription -SubscriptionId $yourSubscriptionIDHere
-Set-AzContext $context
-
-Register-AzProviderFeature -FeatureName AllowNfsFileShares -ProviderNamespace Microsoft.Storage
-
-Register-AzResourceProvider -ProviderNamespace Microsoft.Storage
+```bash
+# https://www.wintellect.com/using-nfs-with-azure-blob-storage/
+az feature register --namespace Microsoft.Storage --name AllowNFSV3
+az feature register --namespace Microsoft.Storage --name PremiumHns
 ```
