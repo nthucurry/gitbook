@@ -33,7 +33,7 @@
 - etcd 備份到 storage account
 
 # Azure
-- WKC 資源若被 delete，會 auto-rebuild
+- WKC 資源若被 delete，會 auto-rebuild，但不可靠
 - Recovery Services Vault (保存庫)
     - Geo-redundant storage (GRS, 異地備援儲存體)
         <br><img src="https://docs.microsoft.com/zh-tw/azure/storage/common/media/storage-redundancy/geo-redundant-storage.png">
@@ -46,6 +46,7 @@
     ```bash
     subscription_id="de61f224-9a69-4ede-8273-5bcef854dc20"
     az feature register --namespace Microsoft.Storage --name AllowNFSV3 --subscription $subscription_id
+    az feature register --namespace Microsoft.Storage --name PremiumHns --subscription $subscription_id
 
     # check
     subscription_id="de61f224-9a69-4ede-8273-5bcef854dc20"
@@ -83,10 +84,10 @@
     DNS.2 = api.dba-k8s.test.org
     ```
 - 產生自簽憑證與相對應的私密金鑰
-    >openssl req -x509 -new -nodes -sha256 -utf8 -days 3650 -newkey rsa:2048 -keyout server.key -out server.crt -config ssl.conf
+    - `openssl req -x509 -new -nodes -sha256 -utf8 -days 3650 -newkey rsa:2048 -keyout server.key -out server.crt -config ssl.conf`
     - 請注意：上述命令會建立一個「未加密」的私密金鑰檔案，使用 PEM 格式輸出。
 - 透過 OpenSSL 命令產生 PKCS#12 憑證檔案 (使用時，需密碼)
-    >openssl pkcs12 -export -in server.crt -inkey server.key -out server.pfx
+    - `openssl pkcs12 -export -in server.crt -inkey server.key -out server.pfx`
 - 在 bastion 設定憑證
     ```bash
     oc create configmap custom-ca \

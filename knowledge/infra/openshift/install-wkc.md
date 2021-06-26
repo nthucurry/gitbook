@@ -8,10 +8,10 @@
 - [建置 NFS VM](#建置-nfs-vm)
 - [安裝 OpenShift Client on NFS VM](#安裝-openshift-client-on-nfs-vm)
 - [設定 Disk 路徑 on NFS VM](#設定-disk-路徑-on-nfs-vm)
-- [安裝 WKC by Bastion VM](#安裝-wkc-by-bastion-vm)
-- [安裝 WKC from Bastion VM to Cluster VM](#安裝-wkc-from-bastion-vm-to-cluster-vm)
-    - [安裝 lite (control plane)](#安裝-lite-control-plane)
-    - [安裝 WKC](#安裝-wkc)
+- [安裝 Command-Line Interface on Bastion VM](#安裝-command-line-interface-on-bastion-vm)
+- [建置專案 zen](#建置專案-zen)
+    - [安裝 Control Plane (lite)](#安裝-control-plane-lite)
+    - [安裝 WKC (Watson Knowledge Catalog)](#安裝-wkc-watson-knowledge-catalog)
 - [如果 WKC 安裝失敗](#如果-wkc-安裝失敗)
 - [設定 Machine Config on Bastion VM](#設定-machine-config-on-bastion-vm)
 - [設定 Proxy on Bastion VM](#設定-proxy-on-bastion-vm)
@@ -40,13 +40,14 @@
     - RAM: 16G
     - storage: 120G
 - control plane * 3
-    - vCPU: 4
-    - RAM: 16G
+    - vCPU: 4 (8)
+    - RAM: 16G (32G)
     - storage: 120G
-- worker * 3 (最少 2 台，但 2 台會無法安裝，原因未知)
-    - vCPU: 2
-    - RAM: 8G
+- worker * 2 (3)
+    - vCPU: 2 (16)
+    - RAM: 8G (64G)
     - storage: 120G
+- https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=planning-system-requirements#rhos-reqs__production
 
 # 安裝架構
 <br><img src="../../../img/openshift/install-flow.png">
@@ -262,7 +263,7 @@ yum install azure-cli -y
     tar xvfz openshift-client-linux-4.5.36.tar.gz
     sudo cp ./oc /usr/bin
     ```
-- 安裝 k8s incubator
+- 安裝 K8S incubator
     ```bash
     curl -L -o kubernetes-incubator.zip https://github.com/kubernetes-incubator/external-storage/archive/master.zip
     unzip kubernetes-incubator.zip
@@ -324,47 +325,20 @@ yum install azure-cli -y
     oc get pvc
     ```
 
-# 安裝 WKC by Bastion VM
-- 下載 CP4D 檔案
-    ```bash
-    mkdir ~/ibm
-    cd ~/ibm
-    wget https://github.com/IBM/cpd-cli/releases/download/v3.5.3/cpd-cli-linux-EE-3.5.3.tgz
-    tar xzvf cpd-cli-linux-EE-3.5.3.tgz
-    ```
-- 修改 repo
-    ```bash
-    export registry_key="<cpd_key>"
-    sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
-    ```
-- 下載 lite
-    ```bash
-    export ASSEMBLY=lite
-    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/$ASSEMBLY/
-    mkdir -p $DOWNLOAD_FOLDER
+# 安裝 Command-Line Interface on Bastion VM
+```bash
+# 安裝 cpd-cli
+mkdir ~/ibm
+cd ~/ibm
+wget https://github.com/IBM/cpd-cli/releases/download/v3.5.3/cpd-cli-linux-EE-3.5.3.tgz
+tar xzvf cpd-cli-linux-EE-3.5.3.tgz
 
-    ./cpd-cli preload-images \
-    --repo ./repo.yaml \
-    --assembly $ASSEMBLY \
-    --download-path=$DOWNLOAD_FOLDER \
-    --action download \
-    --accept-all-licenses
-    ```
-- 下載 WKC
-    ```bash
-    export ASSEMBLY=wkc
-    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/$ASSEMBLY/
-    mkdir -p $DOWNLOAD_FOLDER
+# 設定 cpd key
+export registry_key="<cpd_key>"
+sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
+```
 
-    ./cpd-cli preload-images \
-    --repo ./repo.yaml \
-    --assembly $ASSEMBLY \
-    --download-path=$DOWNLOAD_FOLDER \
-    --action download \
-    --accept-all-licenses
-    ```
-
-# 安裝 WKC from Bastion VM to Cluster VM
+# 建置專案 zen
 - 安裝 podman (redhad 用來取代 docker tool 的工具)
     - `yum install podman -y`
 - 建立 namespace
@@ -383,7 +357,20 @@ yum install azure-cli -y
     sudo podman login -u kubeadmin -p $(oc whoami -t) --tls-verify=false $REGISTRY
     ```
 
-## 安裝 lite (control plane)
+## 安裝 Control Plane (lite)
+- 下載 lite
+    ```bash
+    export ASSEMBLY=lite
+    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/$ASSEMBLY/
+    mkdir -p $DOWNLOAD_FOLDER
+
+    ./cpd-cli preload-images \
+    --repo ./repo.yaml \
+    --assembly $ASSEMBLY \
+    --download-path=$DOWNLOAD_FOLDER \
+    --action download \
+    --accept-all-licenses
+    ```
 - 設定環境變數
     ```bash
     export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
@@ -436,7 +423,20 @@ yum install azure-cli -y
     ```
 - 確認狀態
     - `~/ibm/cpd-cli status --assembly lite --namespace zen`
-## 安裝 WKC
+## 安裝 WKC (Watson Knowledge Catalog)
+- 下載 WKC
+    ```bash
+    export ASSEMBLY=wkc
+    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/$ASSEMBLY/
+    mkdir -p $DOWNLOAD_FOLDER
+
+    ./cpd-cli preload-images \
+    --repo ./repo.yaml \
+    --assembly $ASSEMBLY \
+    --download-path=$DOWNLOAD_FOLDER \
+    --action download \
+    --accept-all-licenses
+    ```
 - 設定環境變數
     ```bash
     export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`

@@ -1,4 +1,83 @@
-# Azure Learn Lesson
+- [0. Azure Learn Lesson](#0-azure-learn-lesson)
+- [1. Identity](#1-identity)
+    - [Azure Active Directory (建帳號)](#azure-active-directory-建帳號)
+    - [Azure AD Join](#azure-ad-join)
+    - [Bulk User Accounts](#bulk-user-accounts)
+- [2. Governance And Compliance (治理與合規)](#2-governance-and-compliance-治理與合規)
+    - [Azure Subscriptions](#azure-subscriptions)
+    - [Management Groups](#management-groups)
+    - [Azure Policy](#azure-policy)
+    - [Role-Based Access Control (RBAC, IAM)](#role-based-access-control-rbac-iam)
+    - [Azure RBAC Roles vs Azure AD Roles](#azure-rbac-roles-vs-azure-ad-roles)
+    - [RBAC Authentication](#rbac-authentication)
+- [3. Azure Administration](#3-azure-administration)
+    - [Resource Manager](#resource-manager)
+    - [Group](#group)
+    - [Tag](#tag)
+- [Resource](#resource)
+- [Template](#template)
+- [Moving Resources](#moving-resources)
+- [4. Virtual Networking (VNets are Layer-3 overlays)](#4-virtual-networking-vnets-are-layer-3-overlays)
+    - [Public IP](#public-ip)
+    - [Network Security Groups (NSG)](#network-security-groups-nsg)
+    - [Azure Firewall](#azure-firewall)
+    - [DNS Record Sets](#dns-record-sets)
+    - [DNS for Private Domains](#dns-for-private-domains)
+    - [VNet Peering](#vnet-peering)
+    - [Gateway Transit and Connectivity](#gateway-transit-and-connectivity)
+    - [VPN Gateway](#vpn-gateway)
+    - [ExpressRoute (專線)](#expressroute-專線)
+- [6. Network Traffic Management](#6-network-traffic-management)
+    - [System Routes](#system-routes)
+    - [User Defined Routes](#user-defined-routes)
+    - [Route Table](#route-table)
+    - [Service Endpoint (VNet Service Endpoints)](#service-endpoint-vnet-service-endpoints)
+    - [Private Link (Private Endpoint，安全版 Service Endpoint)](#private-link-private-endpoint安全版-service-endpoint)
+    - [Azure Private Endpoint DNS configuration](#azure-private-endpoint-dns-configuration)
+        - [On-premises workloads using a DNS forwarder](#on-premises-workloads-using-a-dns-forwarder)
+    - [Azure Load Balancer (Lev 4)](#azure-load-balancer-lev-4)
+    - [Session Persistence](#session-persistence)
+    - [Application Gateway (Lev 7)](#application-gateway-lev-7)
+- [7. Azure Storage](#7-azure-storage)
+    - [Azure Storage Services](#azure-storage-services)
+    - [Securing Storage Endpoints](#securing-storage-endpoints)
+    - [Blob Storage](#blob-storage)
+    - [Storage Security](#storage-security)
+        - [Shared Access Signatures (SAS)](#shared-access-signatures-sas)
+    - [File Sync](#file-sync)
+- [8. Azure Virtual Machine](#8-azure-virtual-machine)
+    - [Virtual Machine Storage](#virtual-machine-storage)
+    - [Virtual Machine Connections](#virtual-machine-connections)
+    - [Availability Sets](#availability-sets)
+    - [Availability Zones (相同 region，不同 data center)](#availability-zones-相同-region不同-data-center)
+    - [Scaling Concepts](#scaling-concepts)
+    - [Virtual Machine Extensions](#virtual-machine-extensions)
+- [9. Serverless Computing (無伺服器運算)](#9-serverless-computing-無伺服器運算)
+    - [App Service Overview](#app-service-overview)
+        - [App Service Plan](#app-service-plan)
+        - [VNet Integration](#vnet-integration)
+        - [Hybrid Connections](#hybrid-connections)
+    - [Backup an App Service](#backup-an-app-service)
+    - [Container Service](#container-service)
+    - [Azure Kubernetes Service](#azure-kubernetes-service)
+        - [AKS Clusters and Nodes](#aks-clusters-and-nodes)
+        - [Nodes and node pools](#nodes-and-node-pools)
+        - [AKS Networking](#aks-networking)
+        - [AKS Storage](#aks-storage)
+        - [AKS Service Security](#aks-service-security)
+        - [AKS Scaling](#aks-scaling)
+- [10. Data Protection](#10-data-protection)
+    - [File and Folder Backups](#file-and-folder-backups)
+        - [Azure Backup](#azure-backup)
+    - [Virtual Machine Data Protection](#virtual-machine-data-protection)
+        - [azure backup](#azure-backup-1)
+        - [azure site recovery](#azure-site-recovery)
+        - [Managed Disk Snapshots](#managed-disk-snapshots)
+- [11. Monitoring](#11-monitoring)
+    - [Log Analytics](#log-analytics)
+    - [Network Watcher](#network-watcher)
+
+# 0. Azure Learn Lesson
 - https://github.com/MicrosoftLearning
     - 104
         - https://microsoftlearning.github.io/AZ-104-MicrosoftAzureAdministrator/
@@ -12,22 +91,22 @@
 - https://imgur.com/gsa8Cij
 - https://imgur.com/wCtaGzM
 
-## 1. Identity
-### Azure Active Directory (建帳號)
+# 1. Identity
+## Azure Active Directory (建帳號)
 AAD is Microsoft’s multi-tenant cloud-based directory and identity management service. For IT Admins, AAD provides an affordable (可負擔的), easy to use solution to give employees and business partners single sign-on (SSO) access to thousands of cloud SaaS Applications like Microsoft 365, Salesforce, DropBox, and Concur.
 <br><img src="https://www.synacktiv.com/sites/default/files/inline-images/app-management-overview.png" boarder='1'>
 <br><img src="https://strongsecurity.co.za/wp-content/uploads/2020/04/Diagram-Azure-AD-for-Apps-1.png">
 
-### Azure AD Join
+## Azure AD Join
 AAD enables SSO to devices, apps, and services from anywhere. The proliferation (增殖) of devices - including Bring Your Own Device (BYOD) – empowers end users to be productive wherever and whenever. But, IT administrators must ensure corporate assets (資產) are protected and that devices meet standards for security and compliance (合規).
 <br><img src="https://docs.microsoft.com/zh-tw/azure/active-directory/devices/media/concept-azure-ad-join/azure-ad-joined-device.png">
 
-### Bulk User Accounts
+## Bulk User Accounts
 - use PowerShell
 - import CSV file
 
-## 2. Governance And Compliance (治理與合規)
-### Azure Subscriptions
+# 2. Governance And Compliance (治理與合規)
+## Azure Subscriptions
 <img src="https://cloudinfrastructureservices.co.uk/wp-content/uploads/2018/06/Multi-Subscription-Model.png"><br>
 - subscription usage
     - free
@@ -36,18 +115,18 @@ AAD enables SSO to devices, apps, and services from anywhere. The proliferation 
     - student
 - cost savings
     - reservations (保留)
-        <br>It helps you save money by pre-paying for one-year or three-years of Azure resources.
+        - It helps you save money by pre-paying for one-year or three-years of Azure resources.
     - azure hybrid benefits (自帶授權)
-        <br>It is a pricing benefit for customers who have licenses with Software Assurance, which helps maximize the value of existing on-premises Windows Server and/or SQL Server license investments when migrating to Azure.
+        - It is a pricing benefit for customers who have licenses with Software Assurance, which helps maximize the value of existing on-premises Windows Server and/or SQL Server license investments when migrating to Azure.
     - azure credits
     - azure regions (區域)
     - budgets (預算)
 
-### Management Groups
+## Management Groups
 If your organization has several subscriptions, you may need a way to efficiently manage access, policies, and compliance for those subscriptions. Azure management groups provide a level of scope above subscriptions. You organize subscriptions into containers called management groups and apply your governance conditions to the management groups.
 <br><img src="https://docs.microsoft.com/zh-tw/azure/governance/management-groups/media/tree.png">
 
-### Azure Policy
+## Azure Policy
 Azure Policy is a service in Azure that you use to create, assign and manage policies. These policies enforce different rules over your resources, so those resources stay compliant with (符合) your corporate standards and service level agreements. Azure Policy does this by running evaluations of your resources and scanning for those not compliant with the policies you have created.
 - 連 owner 都會被管道，只要有在 AAD 內都會被管道
 - https://github.com/Azure/azure-policy
@@ -62,32 +141,28 @@ Azure Policy is a service in Azure that you use to create, assign and manage pol
     - 繼承 tag
 - backup policy
 
-### Role-Based Access Control (RBAC, IAM)
+## Role-Based Access Control (RBAC, IAM)
 RBAC helps you manage who has access to Azure resources, what they can do with those resources, and what areas they have access to.
 - 委派三元素: 範圍、角色、誰
-- 產出 json file
-    ```powershell
-    Get-AzRoleDefinition -name reader | convertto-json
-    ```
 
-### Azure RBAC Roles vs Azure AD Roles
-| Azure RBAC roles                                                            | Azure AD roles                  |
-|-----------------------------------------------------------------------------|---------------------------------|
-| Manage access to Azure resources.                                           | Manage access to AAD resources. |
-| Scope can be specified at multiple levels (MG, subscription, RG, resource). | Scope is at the tenant level.   |
+## Azure RBAC Roles vs Azure AD Roles
+| Azure RBAC roles                          | AAD roles                       |
+|-------------------------------------------|---------------------------------|
+| Manage access to Azure resources.         | Manage access to AAD resources. |
+| Scope can be specified at multiple levels | Scope is at the tenant level.   |
 
-### RBAC Authentication
+## RBAC Authentication
 <img src="https://docs.microsoft.com/en-us/azure/role-based-access-control/media/rbac-and-directory-admin-roles/rbac-admin-roles.png">
 
-## 3. Azure Administration
-### Resource Manager
+# 3. Azure Administration
+## Resource Manager
 Azure Resource Manager enables you to work with the resources in your solution as a group. You can deploy, update, or delete all the resources for your solution in a single, coordinated operation.
 
-### Group
+## Group
 - dynamic group: 可依據條件來設定群組，例如 job title = XXX
 - 在同一個 AAD 下，可跨 subscription 做管理
 
-### Tag
+## Tag
 - 管理不同 location、不同 resource group 的資源
     - IaaS: VM
     - PaaS: SQL database
@@ -95,19 +170,19 @@ Azure Resource Manager enables you to work with the resources in your solution a
     - 寫程式
     - azure policy
 
-## Resource
+# Resource
 - 同個 AAD 之下， resource 可跨 subscription or other resource group 移動
 - 跨 subscription 移動時，要注意目的端有沒有相對應的 resource type register
 
-## Template
+# Template
 https://github.com/Azure/azure-quickstart-templates
 
-## Moving Resources
+# Moving Resources
 <img src="../../../img/cloud/azure/migratie-to-new-subscription.png" width=700><br>
 https://medium.com/@calloncampbell/moving-your-azure-resources-to-another-subscription-or-resource-group-1644f43d2e07
 
-## 4. Virtual Networking (VNets are Layer-3 overlays)
-### Public IP
+# 4. Virtual Networking (VNets are Layer-3 overlays)
+## Public IP
 - basic vs standard
     - basic
         - 動態、靜態 IP
@@ -118,12 +193,12 @@ https://medium.com/@calloncampbell/moving-your-azure-resources-to-another-subscr
         - 支援高可用性
         - public load balancer
 
-### Network Security Groups (NSG)
+## Network Security Groups (NSG)
 NSG contains a list of security rules that allow or deny inbound or outbound network traffic. NSG can be associated to a subnet or a network interface. NSG can be associated multiple times.
 <br><img src="https://docs.microsoft.com/zh-tw/azure/virtual-network/media/network-security-group-how-it-works/network-security-group-interaction.png">
 - VM4: Traffic is allowed to VM4, because a network security group isn't associated to Subnet3, or the network interface in the virtual machine. All network traffic is allowed through a subnet and network interface if they don't have a network security group associated to them.
 
-### Azure Firewall
+## Azure Firewall
 You can centrally create, enforce, and log application and network connectivity policies across subscriptions and virtual networks.
 <br><img src="https://docs.microsoft.com/zh-tw/azure/firewall/media/overview/firewall-threat.png">
 - AzureFirewallSubnet - the firewall is in this subnet.
@@ -148,15 +223,15 @@ You can centrally create, enforce, and log application and network connectivity 
         - 將目標 subnet 放於內
         - 將 0.0.0.0/0 都需經過 firewall (IP binding)
 
-### DNS Record Sets
+## DNS Record Sets
 It's important to understand the difference between DNS record sets and individual DNS records. A record set is a collection of records in a zone that have the same name and are the same type.
 A record set cannot contain two identical records. Empty record sets (with zero records) can be created, but do not appear on the Azure DNS name servers. Record sets of type CNAME can contain one record at most.
 
-### DNS for Private Domains
+## DNS for Private Domains
 <br><img src="https://docs.microsoft.com/zh-tw/azure/dns/media/private-dns-overview/scenario.png">
 - 設定後可由 <app-name>.azurewebsites.net 連到該 app
 
-### VNet Peering
+## VNet Peering
 Perhaps the simplest and quickest way to connect your VNets is to use VNet peering. Virtual network peering enables you to seamlessly (無縫地) connect two Azure virtual networks. Once peered, the virtual networks appear as one, for connectivity purposes.
 <br><img src='../../../img/cloud/azure/VNet-peering.png'>
 <br><img src="https://miro.medium.com/max/505/1*3tQlWO0d82Vt6oO0G7jbmA.png">
@@ -165,39 +240,39 @@ Perhaps the simplest and quickest way to connect your VNets is to use VNet peeri
     - https://docs.microsoft.com/en-us/azure/virtual-network/create-peering-different-deployment-models-subscriptions
 - 資料流出 data center 才要費用
 
-### Gateway Transit and Connectivity
+## Gateway Transit and Connectivity
 When virtual networks are peered, you can configure a VPN gateway in the peered virtual network as a transit point. In this case, a peered virtual network can use the remote gateway to gain access to other resources. A virtual network can have only one gateway. Gateway transit is supported for both VNet Peering and Global VNet Peering.
 <br><img src="https://docs.microsoft.com/en-us/azure/virtual-network/media/virtual-networks-peering-overview/local-or-remote-gateway-in-peered-virual-network.png">
 
-### VPN Gateway
+## VPN Gateway
 A VPN gateway is a specific type of virtual network gateway that is used to send encrypted traffic between an Azure virtual network and an on-premises location over the public Internet. You can also use a VPN gateway to send encrypted traffic between Azure virtual networks over the Microsoft network. Each virtual network can have only one VPN gateway. However, you can create multiple connections to the same VPN gateway. When you create multiple connections to the same VPN gateway, all VPN tunnels share the available gateway bandwidth.
 <br><img src='https://docs.microsoft.com/zh-tw/azure/vpn-gateway/media/tutorial-site-to-site-portal/diagram.png'>
 - 要建立 route table
 - 當要使用 S2S VPN 時，與地端連
 - 預設都用 route-based
 
-### ExpressRoute (專線)
+## ExpressRoute (專線)
 Azure ExpressRoute lets you extend your on-premises networks into the Microsoft cloud over a dedicated private connection facilitated by a connectivity provider. With ExpressRoute, you can establish connections to Microsoft cloud services, such as Microsoft Azure, Microsoft 365, and CRM Online.
 <br><img src='https://docs.microsoft.com/zh-tw/azure/expressroute/media/expressroute-introduction/expressroute-connection-overview.png'>
 <br><img src="https://i.pinimg.com/originals/26/79/a3/2679a35f8b6838776609b0563eb7b85c.png">
 
-## 6. Network Traffic Management
-### System Routes
-### User Defined Routes
+# 6. Network Traffic Management
+## System Routes
+## User Defined Routes
 <br><img src="https://wasimbloch.files.wordpress.com/2015/12/120815_0519_userdefined1.png?w=383">
 <br><img src="https://mykloud.files.wordpress.com/2019/02/udr.png?w=685">
 <br><img src="https://petri.com/wp-content/uploads/sites/3/2015/05/User-DefinedRouting.png">
 
-### Route Table
+## Route Table
 - 需同 region 才可適用
 
-### Service Endpoint (VNet Service Endpoints)
+## Service Endpoint (VNet Service Endpoints)
 A VNet service endpoint provides the identity of your virtual network to the Azure service. Once service endpoints are enabled in your virtual network, you can secure Azure service resources to your VNet by adding a VNet rule to the resources.
 - 針對 PaaS 服務建立連線，等於微軟幫忙建立 VPN gateway
 - 可以對外連線
 - 把 VNet 放到 PaaS 內
 
-### Private Link (Private Endpoint，安全版 Service Endpoint)
+## Private Link (Private Endpoint，安全版 Service Endpoint)
 Azure Private Link provides private connectivity from a VNet to Azure PaaS, customer-owned, or Microsoft partner services. It simplifies the network architecture and secures the connection between endpoints in Azure by eliminating (消除) data exposure to the public internet.
 - Private Endpoint properties
     - Network connections can **only be initiated** by clients connecting to the Private endpoint, Service providers do not have any routing configuration to initiate connections into service consumers. Connections can **only be establish** in a **single** direction.
@@ -211,10 +286,10 @@ Azure Private Link provides private connectivity from a VNet to Azure PaaS, cust
     ```
 - https://acloud.guru/forums/az-500-microsoft-azure-security-technologies/discussion/-M5IkN1SzQcDUNRyvaVL/Service%20endpoints%20vs.%20Private%20Endpoints%3F
 
-### Azure Private Endpoint DNS configuration
+## Azure Private Endpoint DNS configuration
 可跨 subnet 設定 FQDN
 
-#### On-premises workloads using a DNS forwarder
+### On-premises workloads using a DNS forwarder
 For on-premises workloads to resolve the FQDN of a private endpoint, use a DNS forwarder to resolve the Azure service public DNS zone in Azure.
 To configure properly, you need the following resources:
 - On-premises network
@@ -224,15 +299,15 @@ To configure properly, you need the following resources:
 - Private endpoint information (FQDN record name and private IP address)
 <br><img src="https://docs.microsoft.com/zh-tw/azure/private-link/media/private-endpoint-dns/on-premises-using-azure-dns.png">
 
-### Azure Load Balancer (Lev 4)
+## Azure Load Balancer (Lev 4)
 <img src="https://docs.microsoft.com/zh-tw/azure/load-balancer/media/load-balancer-distribution-mode/load-balancer-distribution.png">
 
-### Session Persistence
+## Session Persistence
 By default, Azure Load Balancer distributes network traffic equally among multiple VM instances. The load balancer uses a 5-tuple (source IP, source port, destination IP, destination port, and protocol type) hash to map traffic to available servers. It provides stickiness only within a transport session.
 
 Session persistence specifies how traffic from a client should be handled. The default behavior (None) is that successive requests from a client may be handled by any virtual machine. You can change this behavior.
 
-### Application Gateway (Lev 7)
+## Application Gateway (Lev 7)
 Application Gateway manages the requests that client applications can send to a web app. Application Gateway routes traffic to a pool of web servers based on the URL of a request. This is known as application layer routing. The pool of web servers can be Azure virtual machines, Azure virtual machine scale sets, Azure App Service, and even on-premises servers.
 
 Traditional load balancers operate at the transport layer (OSI layer 4 - TCP and UDP) and route traffic based on source IP address and port, to a destination IP address and port.
@@ -242,14 +317,14 @@ The Application Gateway will **automatically load balance** requests sent to the
 <br><img src="https://docs.microsoft.com/zh-tw/azure/application-gateway/media/application-gateway-components/application-gateway-components.png">
 <br><img src="https://miro.medium.com/max/1400/0*X38oEgWmuKHRAqVP.png">
 
-## 7. Azure Storage
-### Azure Storage Services
+# 7. Azure Storage
+## Azure Storage Services
 - 屬於 IaaS: https://azure.microsoft.com/en-us/overview/what-is-azure/iaas/
 - 類型(不可中途改變類型)
     - standard
-        <br>They are best for applications that require **bulk storage** or where data is accessed infrequently
+        - They are best for applications that require **bulk storage** or where data is accessed infrequently
     - premium
-        <br>They can only be used with Azure virtual machine disks and are best for I/O-intensive applications, like databases
+        - They can only be used with Azure virtual machine disks and are best for I/O-intensive applications, like databases
 - Azure Containers (Blobs)
     - A massively scalable object store for text and binary data(unstructured data)
     - Objects in Blob storage can be accessed from anywhere in the world via HTTP or HTTPS
@@ -262,11 +337,11 @@ The Application Gateway will **automatically load balance** requests sent to the
 - Azure Tables
     - Table storage is now part of Azure Cosmos DB.
 
-### Securing Storage Endpoints
+## Securing Storage Endpoints
 - firewalls and VNet restricts access to the storage account from specific subnets on VNet or public ip’s.
 - subnets and VNet must exist in the same azure region or region pair as the storage account.
 
-### Blob Storage
+## Blob Storage
 A service that stores **unstructured data** in the cloud as objects/blobs. Blob storage can store any type of text or binary data, such as a document, media file, or application installer. Blob storage is also referred to as object storage.
 <br><img src="https://docs.microsoft.com/zh-tw/azure/storage/blobs/media/storage-quickstart-blobs-dotnet/blob1.png">
 - blob access tiers
@@ -277,26 +352,26 @@ A service that stores **unstructured data** in the cloud as objects/blobs. Blob 
 - 可覆寫 container 內容
 - files vs blobs
 
-### Storage Security
+## Storage Security
 Azure Storage provides a comprehensive (綜合的) set of security capabilities that together enable developers to build secure applications.
 
-#### Shared Access Signatures (SAS)
+### Shared Access Signatures (SAS)
 A shared access signature (SAS) is a URI that grants restricted access rights to Azure Storage resources. You can provide a SAS to clients who shouldn't have access to your storage account key. By distributing a SAS URI to these clients, you grant them access to a resource for a specified period of time. SAS is a secure way to share your storage resources without compromising (妥協) your account keys.
 
-### File Sync
+## File Sync
 Use Azure File Sync to centralize your organization's file shares in Azure Files, while keeping the flexibility, performance, and compatibility of an on-premises file server.
 
-## 8. Azure Virtual Machine
+# 8. Azure Virtual Machine
 - data disk 可以<font color=#FF0000>熱插拔</font>
 
-### Virtual Machine Storage
+## Virtual Machine Storage
 - unmanaged disks
 - managed disks (推薦)
 
-### Virtual Machine Connections
+## Virtual Machine Connections
 <img src="https://petri.com/wp-content/uploads/sites/3/2020/06/Figure1-4.png">
 
-### Availability Sets
+## Availability Sets
 A logical feature used to ensure that a group of related VMs are deployed so that they aren't all subject to a single point of failure and not all upgraded at the same time during a host operating system upgrade in the datacenter. 言下之意是把 VM 放在多個的機櫃上面
 - update domain: VM
     - an upgrade domain (UD) is a group of nodes that are upgraded together during the process of a service upgrade (rollout).
@@ -304,13 +379,13 @@ A logical feature used to ensure that a group of related VMs are deployed so tha
     - a fault domain (FD) is a group of nodes that represent a physical unit of failure. A fault domain defines a group of virtual machines that share a common set of hardware, switches, that share a single point of failure.
 <img src="../../../img/cloud/azure/availability-set.jpg">
 
-### Availability Zones (相同 region，不同 data center)
+## Availability Zones (相同 region，不同 data center)
 A HA offering that protects your applications and data from datacenter failures.
 - each zone is made up of one or more datacenters equipped.
 - to ensure resiliency, there’s a minimum of three separate zones in all enabled regions.
 <img src="https://mwesterink.files.wordpress.com/2018/09/azure-az-2.png">
 
-### Scaling Concepts
+## Scaling Concepts
 - vertical scaling (scale up and scale down): 須重開機才會生效
 - horizontal scaling (scale out and scale in)
 - scale sets
@@ -319,35 +394,35 @@ A HA offering that protects your applications and data from datacenter failures.
 - autoscale
     <br><img src="https://docs.microsoft.com/zh-tw/azure/azure-monitor/platform/media/autoscale-overview/autoscale_overview_v4.png">
 
-### Virtual Machine Extensions
+## Virtual Machine Extensions
 Azure virtual machine extensions are small applications that provide post-deployment configuration and automation tasks on Azure VMs. For example, if a virtual machine requires software installation, anti-virus protection, or a configuration script inside, a VM extension can be used. Extensions are all about managing your virtual machines.
 
-## 9. Serverless Computing (無伺服器運算)
-### App Service Overview
+# 9. Serverless Computing (無伺服器運算)
+## App Service Overview
 - 不能換 region
 - Connections to SaaS platforms and on-premises data.
     - Choose from more than 50 connectors for enterprise systems (such as SAP), SaaS services (such as Salesforce), and internet services (such as Facebook). Access on-premises data using Hybrid Connections and Azure Virtual Networks.
 
-#### App Service Plan
+### App Service Plan
 In App Service (Web Apps, API Apps, or Mobile Apps), an app always runs in an App Service plan.
 
-#### VNet Integration
+### VNet Integration
 <br><img src="https://docs.microsoft.com/zh-tw/azure/app-service/media/web-sites-integrate-with-vnet/vnetint-regionalworks.png">
 
 Apps in App Service are hosted on worker roles. The Basic and higher pricing plans are dedicated hosting plans where there are no other customers' workloads running on the same workers. Regional VNet Integration works by mounting virtual interfaces with addresses in the delegated subnet. Because the from address is in your VNet, it can access most things in or through your VNet like a VM in your VNet would. The networking implementation is **different than running a VM in your VNet**. That's why some networking features aren't yet available for this feature.
 
-#### Hybrid Connections
+### Hybrid Connections
 <br><img src="https://www.emtec.digital/wp-content/uploads/2020/07/Azure-VNet-alternate-approach.png">
 <br><img src="https://docs.microsoft.com/zh-tw/azure/app-service/media/app-service-hybrid-connections/hybridconn-connectiondiagram.png">
 <br><img src="https://i.imgur.com/7srzaYr.png">
 - https://devblogs.microsoft.com/premier-developer/using-azure-app-services-with-hybrid-connections/
 - [使用 Hybrid Connection 連接 Azure VM 與地端伺服器](https://blog.poychang.net/use-hybrid-connection-connect-azure-vm-and-on-premises)
 
-### Backup an App Service
+## Backup an App Service
 備份到 storage account 轉為 blob，此時可以換 region
 
-### Container Service
-### [Azure Kubernetes Service](https://github.com/MicrosoftLearning/AZ-104-MicrosoftAzureAdministrator/blob/master/Instructions/Labs/LAB_09c-Implement_Azure_Kubernetes_Service.md)
+## Container Service
+## [Azure Kubernetes Service](https://github.com/MicrosoftLearning/AZ-104-MicrosoftAzureAdministrator/blob/master/Instructions/Labs/LAB_09c-Implement_Azure_Kubernetes_Service.md)
 Kubernetes is a rapidly evolving platform that manages container-based applications and their associated networking and storage components. The focus is on the application workloads (工作量), not the underlying (淺在的) infrastructure components. Kubernetes provides a declarative approach to deployments, backed by a robust (強壯的) set of APIs for management operations.
 
 You can build and run modern, portable, microservices-based applications that benefit from Kubernetes orchestrating and managing the availability of those application components. Kubernetes supports both stateless and stateful applications as teams progress through the adoption of microservices-based applications.
@@ -365,39 +440,39 @@ AKS makes it simple to deploy a managed Kubernetes cluster in Azure. AKS reduces
 - Deployment has one or more identical pods managed by Kubernetes​.
 - Manifest (清單文件) is the YAML file describing a deployment.
 
-#### AKS Clusters and Nodes
+### AKS Clusters and Nodes
 A Kubernetes cluster is divided into two components:
 - Azure-managed nodes, which provide the core Kubernetes services and orchestration (編排) of application workloads.
     <br>When you create an AKS cluster, a cluster node is **automatically** created and configured. This node is provided as a managed Azure resource abstracted from the user. You pay only for running agent nodes.
 - Customer-managed nodes that run your application workloads.
 
-#### Nodes and node pools
+### Nodes and node pools
 To run your applications and supporting services, you need a Kubernetes node. An AKS cluster contains one or more nodes (Azure Virtual Machines) that run the Kubernetes node components and the container runtime.
 - The kubelet is the Kubernetes agent that processes the orchestration (編排) requests from the Azure-managed node , and scheduling of running the requested containers.
 - VNet **is handled by the kube-proxy** on each node. The proxy routes network traffic and manages IP addressing for services and pods.
 - The container runtime is the component that allows containerized applications to run and interact with additional resources such as the VNet and storage. In AKS, Docker is used as the container runtime.
 
-#### AKS Networking
-#### AKS Storage
-#### AKS Service Security
-#### AKS Scaling
+### AKS Networking
+### AKS Storage
+### AKS Service Security
+### AKS Scaling
 
-## 10. Data Protection
-### File and Folder Backups
-#### Azure Backup
+# 10. Data Protection
+## File and Folder Backups
+### Azure Backup
 Azure Backup is the Azure-based service you can use to back up (or protect) and restore your data in the Microsoft cloud. Azure Backup replaces your existing on-premises or off-site backup solution with a cloud-based solution that is reliable (可靠的), secure, and cost-competiwtive (競爭的).
 
-### Virtual Machine Data Protection
-#### azure backup
+## Virtual Machine Data Protection
+### azure backup
 Azure Backup creates recovery points that are stored in geo-redundant recovery vaults. When you restore from a recovery point, you can restore the whole VM or just specific files.
 
-#### azure site recovery
+### azure site recovery
 Azure Site Recovery protects your VMs from a major disaster scenario when a whole region experiences an outage due to major natural disaster or widespread service interruption. You can configure Azure Site Recovery for your VMs so that you can recover your application with a single click in matter of minutes. You can replicate to an Azure region of your choice.
 - 用 recover service 備份 azure resource 時，必須為同 region
 
-#### Managed Disk Snapshots
+### Managed Disk Snapshots
 In development and test environments, snapshots provide a quick and simple option for backing up VMs that use Managed Disks.
 
-## 11. Monitoring
-### Log Analytics
-### Network Watcher
+# 11. Monitoring
+## Log Analytics
+## Network Watcher
