@@ -21,5 +21,6 @@ Plan smarter, collaborate better, and ship faster with a set of modern (現代�
 ## Azure Machine Learning
 ### Virtual network isolation and privacy overview
 <br><img src="https://docs.microsoft.com/en-us/azure/machine-learning/media/how-to-network-security-overview/secure-workspace-resources.png">
+
 ### Secure an Azure Machine Learning inferencing environment with virtual networks
 <br><img src="https://docs.microsoft.com/en-us/azure/machine-learning/media/how-to-network-security-overview/secure-inferencing-environment.png">
