@@ -52,6 +52,16 @@
     subscription_id="de61f224-9a69-4ede-8273-5bcef854dc20"
     az feature show --namespace Microsoft.Storage --name AllowNFSV3 --subscription $subscription_id
     ```
+- 開機自動掛載 NFS
+    - `chmod +x /etc/rc.d/rc.local`
+    - `vi /etc/rc.d/rc.local`
+        ```bash
+        mkdir -p /mnt/backup/etcd
+        mount -o sec=sys,vers=3,nolock,proto=tcp wkcnfs.blob.core.windows.net:/wkcnfs/etcd /mnt/backup/etcd
+
+        mkdir -p /mnt/backup/config
+        mount -o sec=sys,vers=3,nolock,proto=tcp wkcnfs.blob.core.windows.net:/wkcnfs/config /mnt/backup/config
+        ```
 
 # OpenShift
 ## Creating a Self-Signed SSL Certificate for your Intranet Services
@@ -156,14 +166,14 @@ oc adm uncordon <worker-node>
 - https://docs.openshift.com/container-platform/4.5/backup_and_restore/backing-up-etcd.html
 
 ### Backing up etcd
-- etcd is the key-value store for OCP, which persists the state of all resource objects.
+The etcd is the key-value store for OCP, which persists the state of all resource objects.
 1. Start a debug session for a master node
-    >oc debug node/<node_name>
+    - `oc debug node/<node_name>`
 2. Change your root directory to the host
-    >chroot /host
+    - `chroot /host`
 3. If the cluster-wide proxy is enabled, be sure that you have exported the NO_PROXY, HTTP_PROXY, and HTTPS_PROXY environment variables
 4. Run the cluster-backup.sh script and pass in the location to save the backup to
-    >/usr/local/bin/cluster-backup.sh /home/core/assets/backup
+    `/usr/local/bin/cluster-backup.sh /home/core/assets/backup`
 
 ## WKC (CP4D)
 ### Backing up and restoring your project
