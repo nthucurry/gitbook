@@ -25,7 +25,7 @@ echo "[Resource Group...] "$resource_group
 az vm create \
 --name $vm_name \
 --resource-group $resource_group \
-#--admin-password $password \
+--admin-password $password \
 --admin-username $admin \
 --enable-agent true \
 --image $image \
@@ -38,11 +38,11 @@ az vm create \
 --public-ip-address "" \
 --nics $vm_name \
 --license-type none \
---authentication-type ssh \
+--authentication-type all \
 --ssh-key-values $ssh_key_values
 
 ###################################
 
-ssh $admin@$vn_name sudo timedatectl set-timezone Asia/Taipei
-ssh $admin@$vn_name wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/k8s/initial-k8s.sh
-ssh $admin@$vn_name chmod +x initial-k8s.sh
+ssh $admin@$vm_name sudo timedatectl set-timezone Asia/Taipei
+ssh $admin@$vm_name wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/k8s/initial-k8s.sh
+ssh $admin@$vm_name chmod +x initial-k8s.sh
