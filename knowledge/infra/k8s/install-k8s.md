@@ -1,11 +1,18 @@
 # Kubernetes
-- kubelet: node 用來 master 溝通的內部元件
-- kubectl: 控制 K8S
+- kubeadm
+    - K8S deploy 工具
+    - the command to bootstrap the cluster
+- kubelet
+    - node 用來 master 溝通的內部元件
+    - the component that runs on all of the machines in your cluster and does things like starting pods and containers
+- kubectl
+    - 控制 K8S
+    - the command line util to talk to your cluster
     - `kubectl cluster-info`
     - `kubectl get pods`
     - `kubectl get service`
-- helm: 實作部屬的工具
-- kubeadm K8S deploy 工具
+- helm
+    - 實作部屬的工具
 
 ## Reference
 - [Steps for Installing Kubernetes on CentOS 7](https://phoenixnap.com/kb/how-to-install-kubernetes-on-centos)
