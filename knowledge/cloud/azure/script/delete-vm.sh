@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 ###################################
 # bigdata: a7bdf2e3-b855-4dda-ac93-047ff722cbbd
 # auo:     de61f224-9a69-4ede-8273-5bcef854dc20
