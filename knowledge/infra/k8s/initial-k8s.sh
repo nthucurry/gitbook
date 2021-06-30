@@ -1,4 +1,5 @@
-#/bin/bash
+#!/bin/bash
+
 echo ".... OS initial ...."
 USER=azadmin
 os_name=`cat /etc/os-release | head -1`
@@ -114,7 +115,7 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kubelet kubeadm kubectl
 EOF
-yum install kubectl -y --disableexcludes=kubernetes | grep Complete
+yum install kubeadm kubelet kubectl -y --disableexcludes=kubernetes | grep Complete
 systemctl enable --now kubelet
 
 echo "  4. Start K8S"
