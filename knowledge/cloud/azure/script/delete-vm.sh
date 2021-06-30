@@ -7,7 +7,7 @@ resource_group="DBA_Test"
 vm_name=$1
 ###################################
 az account set -s $subscription
-echo "[Delete VM........] "$vn_name
+echo "[Delete VM........] "$vm_name
 echo "[Subscription.....] "`az account show --query name`
 ###################################
 

@@ -17,7 +17,7 @@ vnet="BigDataVNet"
 ssh_key_values="~/.ssh/id_rsa.pub"
 ###################################
 az account set -s $subscription
-echo "[Create VM........] "$vn_name
+echo "[Create VM........] "$vm_name
 echo "[Subscription.....] "`az account show --query name`
 echo "[Resource Group...] "$resource_group
 ###################################

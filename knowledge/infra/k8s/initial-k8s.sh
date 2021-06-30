@@ -116,7 +116,7 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cl
 exclude=kubelet kubeadm kubectl
 EOF
 yum install kubeadm kubelet kubectl -y --disableexcludes=kubernetes | grep "Complete!"
-# systemctl enable --now kubelet
+systemctl enable --now kubelet
 
 echo "  4. Start K8S"
 systemctl daemon-reload
