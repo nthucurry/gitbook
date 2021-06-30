@@ -47,24 +47,24 @@ else
 fi
 
 echo "  4. Update OS"
-yum update -y | grep Complete
-yum install epel-release -y | grep Complete
-yum install htop -y | grep Complete
-yum install telnet -y | grep Complete
-yum install traceroute -y | grep Complete
-yum install nc -y | grep Complete
-yum install nmap -y | grep Complete
+yum update -y | grep "Complete!"
+yum install epel-release -y | grep "Complete!"
+yum install htop -y | grep "Complete!"
+yum install telnet -y | grep "Complete!"
+yum install traceroute -y | grep "Complete!"
+yum install nc -y | grep "Complete!"
+yum install nmap -y | grep "Complete!"
 
 echo ".... Docker ...."
 echo "  1. Install Docker CE"
-yum install yum-utils device-mapper-persistent-data lvm2 -y | grep Complete
+yum install yum-utils device-mapper-persistent-data lvm2 -y | grep "Complete!"
 
 echo "  2. Add the Docker repository"
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
 echo "  3. Install Docker CE"
 # yum install containerd.io-1.2.13 docker-ce-19.03.11 docker-ce-cli-19.03.11 -y | grep Complete
-yum install containerd.io docker-ce docker-ce-cli -y | grep Complete
+yum install containerd.io docker-ce docker-ce-cli -y | grep "Complete!"
 # echo "==== If necessary, remove it"
 # yum remove containerd.io && yum remove docker
 
@@ -115,8 +115,8 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kubelet kubeadm kubectl
 EOF
-yum install kubeadm kubelet kubectl -y --disableexcludes=kubernetes | grep Complete
-systemctl enable --now kubelet
+yum install kubeadm kubelet kubectl -y --disableexcludes=kubernetes | grep "Complete!"
+# systemctl enable --now kubelet
 
 echo "  4. Start K8S"
 systemctl daemon-reload
