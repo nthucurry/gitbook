@@ -41,6 +41,8 @@ K8S 運作的指揮中心，可以簡化看成一個特化的 node，負責管�
     - 整個 K8S 的 pods 調度員，scheduler 會監視新建立但還沒有被指定要跑在哪個 node 上的 pod，並根據每個 node 上面資源規定、硬體限制等條件去協調出一個最適合放置的 node 讓該 pod 跑
 - cloud-controller-manager
 
+<br><img src="https://1.bp.blogspot.com/-2UalznMykXE/XVuPNRgKDyI/AAAAAAAACiU/FmwpvN_7mA82cmnqAXI2WM7RHpGWRLvcACLcBGAs/s1600/20190820-kubernetes002.png">
+
 ## Worker Node (K8S 運作的最小硬體單位)
 Node components run on every node, maintaining running pods and providing the K8S runtime environment.
 - kubelet

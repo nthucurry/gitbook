@@ -20,7 +20,7 @@ echo "alias vi='vim'" >> ~/.bashrc
 echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
 source ~/.bashrc
 echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-systemctl daemon-reload
+#systemctl daemon-reload
 # sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
 echo "  3. Proxy"
@@ -54,6 +54,7 @@ yum install telnet -y | grep "Complete!"
 yum install traceroute -y | grep "Complete!"
 yum install nc -y | grep "Complete!"
 yum install nmap -y | grep "Complete!"
+echo -e
 
 echo ".... Docker ...."
 echo "  1. Install Docker CE"
@@ -103,6 +104,7 @@ sudo sysctl --system
 echo "  2. Set SELinux in permissive mode (effectively disabling it)"
 setenforce 0
 sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+echo -e
 
 echo "  3. Installing kubeadm, kubelet and kubectl"
 cat << EOF | tee /etc/yum.repos.d/kubernetes.repo
@@ -117,12 +119,18 @@ exclude=kubelet kubeadm kubectl
 EOF
 yum install kubeadm kubelet kubectl -y --disableexcludes=kubernetes | grep "Complete!"
 systemctl enable --now kubelet
+echo -e
 
-echo "  4. Start K8S"
+echo "  4. Pull the images for kubeadm requires"
+kubeadm config images pull
+
+echo "  5. Start K8S"
 systemctl daemon-reload
 systemctl restart kubelet
 systemctl enable kubelet
+echo -e
 
 echo ".... Check status ...."
 systemctl status docker
+echo -e
 systemctl status kubelet

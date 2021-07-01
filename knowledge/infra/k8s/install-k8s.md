@@ -1,4 +1,17 @@
-# Kubernetes
+- [三大指令](#三大指令)
+- [Reference](#reference)
+- [Sample](#sample)
+- [Load Balancer for K8S (HA option)](#load-balancer-for-k8s-ha-option)
+- [Master](#master)
+    - [一、Master of Single VM](#一master-of-single-vm)
+        - [(1) 建立 Cluster](#1-建立-cluster)
+        - [(2) 安裝 K8S Portal](#2-安裝-k8s-portal)
+        - [(3) 檢查](#3-檢查)
+    - [二、Masters of HA (option)](#二masters-of-ha-option)
+- [Worker Node](#worker-node)
+- [部署 Container (try it!)](#部署-container-try-it)
+
+# 三大指令
 - kubeadm
     - K8S deploy 工具
     - the command to bootstrap the cluster
@@ -14,11 +27,13 @@
 - helm
     - 實作部屬的工具
 
-## Reference
-- [Steps for Installing Kubernetes on CentOS 7](https://phoenixnap.com/kb/how-to-install-kubernetes-on-centos)
-- https://blog.tomy168.com/2019/08/centos-76-kubernetes.html
-- https://blog.johnwu.cc/article/kubernetes-exercise.html
-- https://ithelp.ithome.com.tw/articles/10235069?sc=iThomeR
+# Reference
+- 安裝
+    - [Steps for Installing Kubernetes on CentOS 7](https://phoenixnap.com/kb/how-to-install-kubernetes-on-centos)
+    - [CentOS 7.6 上安裝 Kubernetes（一）叢集佈署](https://blog.tomy168.com/2019/08/centos-76-kubernetes.html)
+    - [CentOS 7.6上安裝 Kubernetes（二）監控儀表板](https://blog.tomy168.com/2020/03/centos-76-kubernetes.html)
+    - [Kubernetes 安裝筆記](https://blog.johnwu.cc/article/kubernetes-exercise.html)
+    - https://ithelp.ithome.com.tw/articles/10235069?sc=iThomeR
 - 不錯的說明
     - [使用 kubeadm 安装 kubernetes 1.15.1](http://www.manongjc.com/detail/9-pbmajemrfahtfpl.html)
     - [實現 Kubernetes 高可靠架構部署](https://k2r2bai.com/2019/09/20/ironman2020/day05/)
@@ -26,8 +41,10 @@
     - [How To Install Kubernetes Dashboard with NodePort](https://computingforgeeks.com/how-to-install-kubernetes-dashboard-with-nodeport/)
     - [Configuring HA Kubernetes cluster on bare metal servers](https://faun.pub/configuring-ha-kubernetes-cluster-on-bare-metal-servers-monitoring-logs-and-usage-examples-3-3-340357f21453)
     - https://github.com/cookeem/kubeadm-ha
+- 網路
+    - [常見 CNI (Container Network Interface) Plugin 介紹](https://www.hwchiu.com/cni-compare.html)
 
-## Sample
+# Sample
 | type     | IP       | hostname |
 |----------|----------|----------|
 | k8s vip  | 10.0.8.4 | t-k8s-lb |
@@ -36,7 +53,7 @@
 | worker 1 | 10.0.8.7 | t-k8s-n1 |
 | worker 2 | 10.0.8.8 | t-k8s-n2 |
 
-## Load Balancer for K8S (HA option)
+# Load Balancer for K8S (HA option)
 <br><img src="https://brobridge.com/bdsres/wp-content/uploads/2019/08/image-1024x769.png">
 
 - 安裝 HAProxy
@@ -82,15 +99,17 @@
     - `wget https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml`
     - `mv recommended.yaml kubernetes-dashboard-deployment.yml`
     - `vi kubernetes-dashboard-deployment.yml`
-    - add `type: NodePort`
+        - add `type: NodePort`
+    - `kubectl apply -f kubernetes-dashboard-deployment.yml`
+    - `kubectl get service -n kubernetes-dashboard`
 
-## Master
-### 一、Master of Single VM
-#### (1) 安裝 kubeadm
+# Master
+## 一、Master of Single VM
+### (1) 建立 Cluster
 - 預先找出 kubeadmin 需要的 images (option, check internet connection)
-    - `sudo kubeadm config images pull`
+    - `kubeadm config images pull`
 - 使用 flannel CNI，如果沒有 CNI，請參考 [Kubernetes - Nodes NotReady](https://blog.johnwu.cc/article/kubernetes-nodes-notready.html)
-    - `sudo kubeadm init --pod-network-cidr=10.244.0.0/16`(~ 4 min)
+    - `kubeadm init --pod-network-cidr=10.244.0.0/16`(~ 4 min)
     - 如果 init 有問題，就重置它
         - `kubeadm reset`
         - 都無解，就執行它
@@ -102,7 +121,7 @@
             kubectl delete node t-k8s-n1
             ```
 - 設定 config
-    - manage cluster as regular user
+    - 修改權限，讓 root 以外的權限也可以使用 kubernetes
         ```bash
         mkdir -p $HOME/.kube
         sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -114,33 +133,28 @@
         sudo su
         export KUBECONFIG=/etc/kubernetes/admin.conf
         ```
-- 定義 flannel config (f: file, k: directory)
-    - `sudo su`
+- 設定 pod network (f: file, k: directory)
     - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
-
-#### (2) 安裝 Pod network add-on (添加物)
-- 定義 flannel config (option)
-    - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml`
-- 確認 nodes 狀態
+- 檢查狀態
+    - `kubectl get nodes`
     - `kubectl get pods --all-namespaces`
-
-#### (3) 驗證 kubectl configuration
-- cluster 狀態，用 not-root
     - `kubectl cluster-info`
-        ```
-        Kubernetes control plane is running at https://10.0.8.4:6443
-        KubeDNS is running at https://10.0.8.4:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-        ```
 
-#### (4) 安裝 K8S Portal
+### (2) 安裝 K8S Portal
 - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.1/aio/deploy/recommended.yaml`
-- `kubectl proxy`
+- `kubectl proxy &`
 - 確認安裝狀態
     - `kubectl get deployment -n kube-system | grep dashboard`
 
-#### (5) 檢查
+### (3) 檢查
 - nodes 都要是 Ready，NotReady 解法: [移除 CNI 參數](https://blog.johnwu.cc/article/kubernetes-nodes-notready.html)
     - `kubectl get nodes`
+    - `vi /var/lib/kubelet/kubeadm-flags.env`
+        ```
+        KUBELET_KUBEADM_ARGS="--pod-infra-container-image=k8s.gcr.io/pause:3.4.1"
+        ```
+    - `systemctl daemon-reload`
+    - `systemctl restart kubelet.service`
 - 集群都要是 Healthy，Unhealthy 解法: [修改 port 值](https://blog.csdn.net/xiaobao7865/article/details/107513957)
     - `kubectl get cs`
 - 檢查 pods
@@ -148,7 +162,7 @@
 - pods pending
     - `kubectl describe pods`
 
-### 二、Masters of HA (option)
+## 二、Masters of HA (option)
 - 設定 config on master1
     ```bash
     cat > kubeadm-config.yaml << END
@@ -169,7 +183,7 @@
 - 同步 config to load balancer
     - `rsync -av t-k8s-m1:/etc/kubernetes/ /etc/kubernetes/`
 
-## Node
+# Worker Node
 至兩台 node 輸入上一節 worker nodes 欲加入叢集所需輸入的指令，就是這麼簡單！
 <br><img src="https://www.ovh.com/blog/wp-content/uploads/2019/03/IMG_0135.jpg" alt="drawing" width="800" board="1"/>
 
@@ -190,7 +204,7 @@
     - 將有關 K8S 的東西刪除
         - `kubeadm reset`
 
-## 部署 Container (try it!)
+# 部署 Container (try it!)
 - 部署名為 nginx 的容器，映像檔名稱為 nginx，透過參數 deployment 會自動幫你創建好 k8s 中的最小管理邏輯單位 pod 與容器
     - `kubectl create deployment nginx --image=nginx`
     - 如果 ContainerCreating 太久，先停掉 service 再重新執行一次
