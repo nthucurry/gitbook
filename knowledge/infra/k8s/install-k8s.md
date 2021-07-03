@@ -94,14 +94,6 @@
 
     yum install kubectl -y
     ```
-- 安裝 dashborad
-    - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml`
-    - `wget https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml`
-    - `mv recommended.yaml kubernetes-dashboard-deployment.yml`
-    - `vi kubernetes-dashboard-deployment.yml`
-        - add `type: NodePort`
-    - `kubectl apply -f kubernetes-dashboard-deployment.yml`
-    - `kubectl get service -n kubernetes-dashboard`
 
 # Master
 ## 一、Master of Single VM
@@ -120,6 +112,8 @@
             kubectl drain t-k8s-n1 --ignore-daemonsets --force=true --delete-local-data=true
             kubectl delete node t-k8s-n1
             ```
+- 安裝 weave net
+	- `kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"`
 - 設定 config
     - 修改權限，讓 root 以外的權限也可以使用 kubernetes
         ```bash

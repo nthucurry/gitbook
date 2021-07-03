@@ -78,10 +78,10 @@ knowledge/exam/*
 !knowledge/infra/network.md
 !knowledge/infra/veeam.md
 !knowledge/infra/openshift
-!knowledge/infra/kubernetes
+!knowledge/infra/k8s
 !knowledge/infra/docker
 !knowledge/infra/paas
 !knowledge/infra/web.md
-!knowledge/infra/ssl
+!knowledge/infra/cert
 !knowledge/exam
 !knowledge/exam/oracle-11g.md

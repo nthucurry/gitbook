@@ -15,8 +15,10 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 - 同時部署多個容器 (container) 到多台機器 (node) 上 (deployment)
 - 服務的乘載量有變化時，可以對容器做自動擴展 (scaling)
 - 管理多個容器的狀態，自動偵測並重啟故障的容器 (management)
-<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/k8s-architecture.png?raw=true" alt="drawing" width="800" board="1"/>
-<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/k8s-vs-app-diff.png?raw=true" alt="drawing" width="800" board="1"/>
+<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/k8s-architecture.png?raw=true" alt="drawing" width="700" board="1"/>
+<br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/k8s-vs-app-diff.png?raw=true" alt="drawing" width="700" board="1"/>
+<br><img src="https://miro.medium.com/max/4800/1*1d9xxBFSm3qky9gjHwBNTw.png" width=700>
+<br><img src="https://miro.medium.com/max/1056/1*pMiVoPOQbo8-q-4Sq4aJUA.png">
 
 # Know docker
 差異就在: https://nakivo.medium.com/kubernetes-vs-docker-what-is-the-difference-3b0c6cce97d3
