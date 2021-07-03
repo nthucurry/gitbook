@@ -134,7 +134,7 @@ systemctl restart kubelet
 systemctl enable kubelet
 echo -e
 
-echo "  6. Set up  autocomplete"
+echo "  7. Set up autocomplete"
 source < (kubectl completion bash)
 echo "source < (kubectl completion bash)" >> ~/.bashrc
 
