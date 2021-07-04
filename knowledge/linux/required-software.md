@@ -19,7 +19,7 @@ systemctl start vncserver@:1.service && systemctl enable vncserver@:1.service
 
 # 設定密碼
 vncserver(啟動 vnc server，需依照各別 user account)
-vncpasswd
+vncpasswdc
 vncserver -kill :1
 
 # 重啟

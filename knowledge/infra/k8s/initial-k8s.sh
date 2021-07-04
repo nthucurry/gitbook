@@ -124,9 +124,9 @@ echo -e
 echo "  4. Pull the images for kubeadm requires"
 kubeadm config images pull
 
-echo "  5. Install weave net"
-curl -L git.io/weave -o /usr/local/bin/weave
-chmod a+x /usr/local/bin/weave
+# echo "  5. Install weave net"
+# curl -L git.io/weave -o /usr/local/bin/weave
+# chmod a+x /usr/local/bin/weave
 
 echo "  6. Start K8S"
 systemctl daemon-reload

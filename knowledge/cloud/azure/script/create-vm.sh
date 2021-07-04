@@ -43,6 +43,21 @@ az vm create \
 
 ###################################
 
-ssh $admin@$vm_name sudo timedatectl set-timezone Asia/Taipei
-ssh $admin@$vm_name wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/k8s/initial-k8s.sh
-ssh $admin@$vm_name chmod +x initial-k8s.sh
+if [[ uname == "Linux" ]]; then
+    # In office environment
+    ssh -oStrictHostKeyChecking=no $admin@$vm_name sudo timedatectl set-timezone Asia/Taipei
+    ssh -oStrictHostKeyChecking=no $admin@$vm_name wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/k8s/initial-k8s.sh
+    ssh -oStrictHostKeyChecking=no $admin@$vm_name chmod +x initial-k8s.sh
+else
+    # In home environment
+    public_ip=`az vm list -g $resource_group -d --query "[?name == '$vm_name'].publicIps" -o tsv`
+    ssh -oStrictHostKeyChecking=no $admin@$public_ip sudo timedatectl set-timezone Asia/Taipei
+    ssh -oStrictHostKeyChecking=no $admin@$public_ip wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/k8s/initial-k8s.sh
+    ssh -oStrictHostKeyChecking=no $admin@$public_ip chmod +x initial-k8s.sh
+    ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.7  t-m1" | sudo tee -a /etc/hosts'
+    ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.8  t-m2" | sudo tee -a /etc/hosts'
+    ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.9  t-m3" | sudo tee -a /etc/hosts'
+    ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.10 t-n1" | sudo tee -a /etc/hosts'
+    ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.11 t-n2" | sudo tee -a /etc/hosts'
+    ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.12 t-n3" | sudo tee -a /etc/hosts'
+fi

@@ -31,7 +31,8 @@
     PATH=/usr/local/opt/gnu-sed/libexec/gnubin:$PATH
 
     export PATH
-    export CLICOLOR='true'
+    export CLICOLOR=1
+    export LSCOLORS=ExFxBxDxCxegedabagacad
 
     alias ll='ls -l'
     alias vi='vim'
@@ -42,7 +43,7 @@
     git config --global alias.co checkout
     git config --global alias.ci commit
     git config --global alias.st status
-    git config --global user.name "Tony's Mac"
+    git config --global user.name "MBP18"
     git config --global user.email "xu3ej04u454@gmail.com"
     ```
 

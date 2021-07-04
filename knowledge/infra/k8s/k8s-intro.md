@@ -37,7 +37,7 @@ K8S 運作的指揮中心，可以簡化看成一個特化的 node，負責管�
 - kube-controller-manager
     - 負責管理並運行 K8S controller 的組件，簡單來說 controller 就是 K8S 裡一個個負責監視 cluster 狀態的 process，例如：node controller、replication controller
     - 這些 process 會在 cluster 與預期狀態 (desire state) 不符時嘗試更新現有狀態。
-        <br>例如：現在要多開一台機器以應付突然增加的流量，那我的預期狀態就會更新成 n+1，現有狀態為 n，這時相對應的 controller 就會想辦法多開一台機器
+        - 例如：現在要多開一台機器以應付突然增加的流量，那我的預期狀態就會更新成 n+1，現有狀態為 n，這時相對應的 controller 就會想辦法多開一台機器
     - controller-manager 的監視與嘗試更新也都需要透過訪問 kube-apiserver 達成
 - kube-scheduler
     - 整個 K8S 的 pods 調度員，scheduler 會監視新建立但還沒有被指定要跑在哪個 node 上的 pod，並根據每個 node 上面資源規定、硬體限制等條件去協調出一個最適合放置的 node 讓該 pod 跑
@@ -53,9 +53,10 @@ Node components run on every node, maintaining running pods and providing the K8
     - 接收 master 下達的命令，並對 node 操作
         - `/var/log/messages`
 - kube-proxy
-    <br>為 node 的傳訊員，負責更新 node 的 iptables，讓 K8S 中不在該 node 的其他物件可以得知該 node 上所有 pods 的最新狀態
+    - 為 node 的傳訊員，負責更新 node 的 iptables，讓 K8S 中不在該 node 的其他物件可以得知該 node 上所有 pods 的最新狀態
+    <br><img src="http://dockone.io/uploads/article/20190626/bc92fdf5f0ae4f6d2024a15d056d68b9.png">
 - Container Runtime
-    <br>為 node 負責容器執行的程式，以 docker 容器為例就是 docker engine
+    - 為 node 負責容器執行的程式，以 docker 容器為例就是 docker engine
 
 ## Kubernetes Objects and Workloads
 - Pods
@@ -98,6 +99,7 @@ Node components run on every node, maintaining running pods and providing the K8
     - 查詢 pod 中的 console log
 - `kubectl logs --previous`
     - pod 必須 restart 才看的出前一版 pod log
+- `kubectl get service -A`
 
 # 簡易架構
 <br><img src="https://miro.medium.com/max/4800/0*5N7SlevIHOdKB-yC">

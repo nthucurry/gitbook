@@ -4,14 +4,16 @@
 
 # Deploy dashboard
 ```bash
-kubectl apply -f  https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml
 ```
+- 確認狀態
+    - `kubectl get svc --namespace=kube-system`
+    - `kubectl get service -n kubernetes-dashboard`
 - `wget https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml`
 - `mv recommended.yaml kubernetes-dashboard-deployment.yml`
 - `vi kubernetes-dashboard-deployment.yml`
     - add `type: NodePort`
 - `kubectl apply -f kubernetes-dashboard-deployment.yml`
-- `kubectl get service -n kubernetes-dashboard`
 
 # Access dashboard
 ```bash
