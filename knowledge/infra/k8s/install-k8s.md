@@ -67,7 +67,7 @@
     ```
 - root env
     ```bash
-    sud export KUBECONFIG=/etc/kubernetes/admin.conf
+    sudo export KUBECONFIG=/etc/kubernetes/admin.conf
     ```
 - 如果 token 忘的話
     - `kubeadm token create --print-join-command`
