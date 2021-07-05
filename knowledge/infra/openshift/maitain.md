@@ -24,7 +24,7 @@
         - [Disaster Recovery](#disaster-recovery)
     - [日常維運](#日常維運)
         - [Replacing an unhealthy etcd member](#replacing-an-unhealthy-etcd-member)
-        - [(Replacing the unhealthy etcd member)[https://docs.openshift.com/container-platform/4.5/backup_and_restore/replacing-unhealthy-etcd-member.html#replacing-the-unhealthy-etcd-member] (未完成...)](#replacing-the-unhealthy-etcd-memberhttpsdocsopenshiftcomcontainer-platform45backup_and_restorereplacing-unhealthy-etcd-memberhtmlreplacing-the-unhealthy-etcd-member-未完成)
+        - [Replacing the unhealthy etcd member (未完成...)](#replacing-the-unhealthy-etcd-member-未完成)
 
 # 重點概念
 - OpenShift cluster 不需備份 VM，因為已經是 cluster 架構了，壞了在透過 yaml rebuild 就好
@@ -182,7 +182,7 @@ You can back up and restore the **Persistent Volumes (PVs)** in a project (names
 #### Backup and restore service list
 The following table describes the components and services that support backup and restore by using volume snapshots, volume backups, or a separate process.
 
-#### Installing the Cloud Pak for Data backup and restore service
+#### [Installing the Cloud Pak for Data backup and restore service](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=project-installing-backup-restore-service)
 Installing the Cloud Pak for Data backup and restore service involves the following tasks.
 - Backup and restore service PVC
     - 建立 NFS volumn yaml
@@ -228,12 +228,31 @@ Create backups of your IBM Cloud Pak for Data system to protect your data.
 
 #### Backing up the Cloud Pak for Data file system on Portworx (需付費使用)
 
-#### Backing up the Cloud Pak for Data file system to a local repository or object store
+#### [Backing up the Cloud Pak for Data file system to a local repository or object store](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=bu-backing-up-file-system-local-repository-object-store)
 https://access.redhat.com/solutions/4098321
+- Initialize cpd-cli backup-restore
+    ```bash
+    # Initialize the cpdbr first with pvc name and s3 storage.  Note that the bucket must exist.
+    NAMESPACE=zen
+    $ cpd-cli backup-restore init --namespace zen --pvc-name cpdbr-pvc --image-prefix=image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
+        --provider=s3 --s3-endpoint="s3 endpoint" --s3-bucket=cpdbr --s3-prefix=zen/
+    ```
+- Manually scale down K8S
+    - `cpd-cli backup-restore quiesce -n zen`
+- Check for completed jobs and pods
+    - `cpd-cli backup-restore volume-backup create -n zen --dry-run <backup_name>`
+- Manually scale up K8S
+    - `cpd-cli backup-restore unquiesce -n zen`
+- Check the status of a backup job
+    - `cpd-cli backup-restore volume-backup status -n zen <backup_name>`
+- View a list of existing volume backups
+    - `cpd-cli backup-restore volume-backup list -n zen`
+- Get the logs of a volume backup
+    - `cpd-cli backup-restore volume-backup logs -n zen <backup_name>`
+
 
 ### Restoring
 The process to restore the persistent volumes (PVs) that are associated with your IBM Cloud Pak for Data project depends on the storage provider that you are using.
-
 
 [Back to top](#)
 # 維運
@@ -245,11 +264,11 @@ The process to restore the persistent volumes (PVs) that are associated with you
 ## 日常維運
 ### Replacing an unhealthy etcd member
 - Check the status of the EtcdMembersAvailable status condition using the following command
-    >oc get etcd -o=jsonpath='{range .items[0].status.conditions[?(@.type=="EtcdMembersAvailable")]}{.message}{"\n"}'
+    - `oc get etcd -o=jsonpath='{range .items[0].status.conditions[?(@.type=="EtcdMembersAvailable")]}{.message}{"\n"}'`
 - Review the output
     - 好: 3 members are available
     - 壞: 2 of 3 members are available, ip-10-0-131-183.ec2.internal is unhealthy
 
-### (Replacing the unhealthy etcd member)[https://docs.openshift.com/container-platform/4.5/backup_and_restore/replacing-unhealthy-etcd-member.html#replacing-the-unhealthy-etcd-member] (未完成...)
+### [Replacing the unhealthy etcd member](https://docs.openshift.com/container-platform/4.5/backup_and_restore/replacing-unhealthy-etcd-member.html#replacing-the-unhealthy-etcd-member) (未完成...)
 -  Replacing an unhealthy etcd member whose machine is not running or whose node is not ready
     1. Remove the unhealthy member.

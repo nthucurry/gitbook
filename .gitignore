@@ -19,7 +19,6 @@ knowledge/vm/*
 knowledge/crawler/*
 knowledge/erp/*
 knowledge/infra/*
-knowledge/infra/openshift/install-config.yaml
 knowledge/infra/openshift/ser-info.txt
 knowledge/exam/*
 

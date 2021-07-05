@@ -9,10 +9,10 @@ vm_name=$1
 az account set -s $subscription
 echo "[Delete VM........] "$vm_name
 echo "[Subscription.....] "`az account show --query name`
+echo "[Resource Group...] "$resource_group
 ###################################
 
 if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; then
-    echo "[Resource Group...] "$resource_group
     disk_name=`az vm list -g $resource_group -d --query "[?name == '$vm_name'].storageProfile.osDisk.name" -o tsv`
     nic=`az vm list -g $resource_group -d --query "[?name == '$vm_name'].networkProfile.networkInterfaces"`
 

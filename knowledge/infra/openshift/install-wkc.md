@@ -53,12 +53,12 @@
 <br><img src="../../../img/openshift/install-flow.png">
 
 # 到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password
-- `az ad sp create-for-rbac --role="Contributor" --name="http://corpnet.auo.com" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
+- `az ad sp create-for-rbac --role="Contributor" --name="http://test.org" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
     ```json
     {
         "appId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-        "displayName": "corpnet.auo.com",
-        "name": "http://corpnet.auo.com",
+        "displayName": "test.org",
+        "name": "http://test.org",
         "password": "**********************************",
         "tenant": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
     }
@@ -71,7 +71,7 @@
 # install-config.yaml
 
 apiVersion: v1
-baseDomain: corpnet.auo.com  # domain name
+baseDomain: test.org  # domain name
 compute: # worker spec
 - architecture: amd64
   hyperthreading: Enabled
@@ -79,11 +79,11 @@ compute: # worker spec
   platform:
     azure:
       osDisk:
-        diskSizeGB: 300
+        diskSizeGB: 300 # >= 120
       type: Standard_D16s_v3
       zones:
       - "1"
-  replicas: 4
+  replicas: 4 # >= 3
 controlPlane: # master spec
   architecture: amd64
   hyperthreading: Enabled
@@ -91,7 +91,7 @@ controlPlane: # master spec
   platform:
     azure:
       osDisk:
-        diskSizeGB: 300
+        diskSizeGB: 300 # >= 120
       type: Standard_D8s_v3
       zones:
       - "1"
@@ -143,7 +143,7 @@ yum install azure-cli -y
 ```
 
 # 安裝 OpenShift on Bastion VM
-- 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.corpnet.auo.com
+- 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.test.org
 - 下載 OpenShift 檔案
     ```bash
     cd ~
@@ -210,9 +210,9 @@ yum install azure-cli -y
     sudo cp oc_bash_completion /etc/bash_completion.d/
     ```
 - 確認 OpenShift Status
-    - 從 web: https://console-openshift-console.apps.wkc.corpnet.auo.com
+    - 從 web: https://console-openshift-console.apps.wkc.test.org
     - 從 terminal
-        - 登入: `oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p `\``cat ~/ocp4.5_cust/auth/kubeadmin-password`\`
+        - 登入: `oc login https://api.wkc.test.org:6443 -u kubeadmin -p `\``cat ~/ocp4.5_cust/auth/kubeadmin-password`\`
         - 檢查: `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
     - 查詢 kubeadmin 密碼
         - `cat ~/ocp4.5_cust/auth/kubeadmin-password`
@@ -270,7 +270,7 @@ yum install azure-cli -y
     ```
 - 建立 OpenShift storage (在 container 內的 storage)
     ```bash
-    oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX
+    oc login https://api.wkc.test.org:6443 -u kubeadmin -p XXXXX-XXXXX-XXXXX-XXXXX
     oc create namespace openshift-nfs-storage
     oc label namespace openshift-nfs-storage "openshift.io/cluster-monitoring=true"
     oc project openshift-nfs-storage
@@ -343,7 +343,7 @@ sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
     - `yum install podman -y`
 - 建立 namespace
     ```bash
-    oc login https://api.wkc.corpnet.auo.com:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password`
+    oc login https://api.wkc.test.org:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password`
     oc new-project zen
     ```
 - 產生 image registry 的 default route
@@ -490,7 +490,7 @@ sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
 - 確認狀態
     - `~/ibm/cpd-cli status --assembly wkc --namespace zen`
 - WKC portal
-    - https://zen-cpd-zen.apps.wkc.corpnet.auo.com
+    - https://zen-cpd-zen.apps.wkc.test.org
 
 # 如果 WKC 安裝失敗
 - 檢查 pod 狀態
