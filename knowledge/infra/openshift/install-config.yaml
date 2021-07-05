@@ -1,0 +1,50 @@
+apiVersion: v1
+baseDomain: test.org
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  platform:
+    azure:
+      osDisk:
+        diskSizeGB: 120
+      type: Standard_D16s_v3 # Standard_B2ms
+      zones:
+      - "0"
+  replicas: 3
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  platform:
+    azure:
+      osDisk:
+        diskSizeGB: 120
+      type: Standard_D8s_v3 # Standard_B4ms
+      zones:
+      - "0"
+  replicas: 3
+metadata:
+  creationTimestamp: null
+  name: dba-k8s
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 10.0.0.0/16
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  azure:
+    baseDomainResourceGroupName: DBA-K8S
+    networkResourceGroupName: DBA-K8S
+    virtualNetwork: vnet-k8s
+    controlPlaneSubnet: vm
+    computeSubnet: vm
+    region: southeastasia
+publish: Internal
+pullSecret: '{"auths":{"cloud.openshift.com":{"auth":"XXXX","email":"XXX@gmail.com"},"quay.io":{"auth":"XXXX","email":"XXX@gmail.com"},"registry.connect.redhat.com":{"auth":"XXXX","email":"XXX@gmail.com"},"registry.redhat.io":{"auth":"XXXX","email":"XXX@gmail.com"}}}'
+sshKey: |
+  ssh-rsa XXXX
