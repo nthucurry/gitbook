@@ -19,7 +19,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/a
 ```bash
 # It will proxy server between your machine and Kubernetes API server.
 # Run all these commands in a new terminal, otherwise your kubectl proxy command will stop.
-kubectl proxy & # 只能 local 使用
+kubectl proxy & # 供本機使用
 kubectl proxy --address='0.0.0.0' --port=8002 --accept-hosts='^*$' & # 供外部使用
 ```
 - http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
