@@ -135,8 +135,8 @@ systemctl enable kubelet
 echo -e
 
 echo "  7. Set up autocomplete"
-source <(kubectl completion bash)
-echo "source <(kubectl completion bash)" >> ~/.bashrc
+sudo -u $USER source <(kubectl completion bash)
+sudo -u $USER echo "source <(kubectl completion bash)" >> ~/.bashrc
 
 echo ".... Check status ...."
 systemctl status docker
