@@ -1,10 +1,10 @@
 - [K8S 三大指令](#k8s-三大指令)
 - [Reference](#reference)
 - [建立 K8S Cluster](#建立-k8s-cluster)
-    - [1. Master of Single](#1-master-of-single)
-    - [2. 安裝 Dashborad](#2-安裝-dashborad)
-    - [3. 檢查](#3-檢查)
-    - [4. Masters of HA (option)](#4-masters-of-ha-option)
+  - [1. Master of Single](#1-master-of-single)
+  - [2. 安裝 Dashborad](#2-安裝-dashborad)
+  - [3. 檢查](#3-檢查)
+  - [4. Masters of HA (option)](#4-masters-of-ha-option)
 - [建立 Worker Node](#建立-worker-node)
 - [部署 Container (try it!)](#部署-container-try-it)
 - [Load Balancer for K8S (HA option)](#load-balancer-for-k8s-ha-option)
@@ -47,7 +47,7 @@
 - 使用 flannel CNI，如果沒有 CNI，請參考 [Kubernetes - Nodes NotReady](https://blog.johnwu.cc/article/kubernetes-nodes-notready.html)
     - `sudo kubeadm init --pod-network-cidr=10.244.0.0/16`(~ 4 min)
     - 如果 init 有問題，就重置它
-        - `kubeadm reset`
+        - `sudo kubeadm reset`
         - 都無解，就執行它
             - `kubeadm init`
         - 刪除 master / worker
@@ -70,7 +70,7 @@
     sudo export KUBECONFIG=/etc/kubernetes/admin.conf
     ```
 - 如果 token 忘的話
-    - `kubeadm token create --print-join-command`
+    - `sudo kubeadm token create --print-join-command`
 - 此時 node status 為 NotReady
 - 設定 pod network (f: file, k: directory)
     - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
@@ -112,7 +112,7 @@
     END
     ```
 - kubeadmin join
-    - `kubeadm init --config=kubeadm-config.yaml --upload-certs --ignore-preflight-errors=all`
+    - `sudo kubeadm init --config=kubeadm-config.yaml --upload-certs --ignore-preflight-errors=all`
     - 重新產生新的 key
         - `kubeadm init phase upload-certs --experimental-upload-certs`
 - 設定 pod network
@@ -125,9 +125,9 @@
 <br><img src="https://www.ovh.com/blog/wp-content/uploads/2019/03/IMG_0135.jpg" alt="drawing" width="800" board="1"/>
 
 - 加入 cluster，該 token 24 小時以內才有效
-    - `kubeadm join 10.0.8.4:6443 --token XXXX --discovery-token-ca-cert-hash sha256:XXXX`
+    - `sudo kubeadm join 10.0.8.4:6443 --token XXXX --discovery-token-ca-cert-hash sha256:XXXX`
     - 失敗的話，請參考: https://stackoverflow.com/questions/55531834/kubeadm-fails-to-initialize-when-kubeadm-init-is-called
-        - `kubeadm reset`
+        - `sudo kubeadm reset`
         - `echo 1 > /proc/sys/net/ipv4/ip_forward`
         - `--ignore-preflight-errors=all`
 - 當 OS 重開後
@@ -202,5 +202,5 @@
     gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
     EOF
 
-    yum install kubectl -y
+    sudo yum install kubectl -y
     ```
