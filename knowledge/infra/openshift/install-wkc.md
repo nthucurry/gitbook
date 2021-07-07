@@ -67,80 +67,12 @@
 - `az role assignment create --role "User Access Administrator" --assignee-object-id "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
 
 # 設定 Install Config
-```yaml
-# install-config.yaml
-
-apiVersion: v1
-baseDomain: test.org  # domain name
-compute: # worker spec
-- architecture: amd64
-  hyperthreading: Enabled
-  name: worker
-  platform:
-    azure:
-      osDisk:
-        diskSizeGB: 300 # >= 120
-      type: Standard_D16s_v3
-      zones:
-      - "1"
-  replicas: 4 # >= 3
-controlPlane: # master spec
-  architecture: amd64
-  hyperthreading: Enabled
-  name: master
-  platform:
-    azure:
-      osDisk:
-        diskSizeGB: 300 # >= 120
-      type: Standard_D8s_v3
-      zones:
-      - "1"
-  replicas: 3
-metadata:
-  creationTimestamp: null
-  name: wkc
-networking:
-  clusterNetwork:
-  - cidr: 10.128.0.0/14
-    hostPrefix: 23
-  machineNetwork:
-  - cidr: 10.250.0.0/16 # Azure VNet IP range
-  networkType: OpenShiftSDN
-  serviceNetwork:
-  - 172.30.0.0/16
-platform:
-  azure:
-    baseDomainResourceGroupName: WKC
-    networkResourceGroupName: Global
-    virtualNetwork: VNet # Azure VNet name
-    controlPlaneSubnet: AUO-AzureWKCMasterFarm # subnet name
-    computeSubnet: AUO-AzureWKCMasterFarm # subnet name
-    region: southeastasia
-publish: Internal
-pullSecret: 'json-format-key' # key from redhat
-sshKey: |
-  ssh-rsa XXX azadmin@maz-bastion
-```
+[install-config.yaml](./install-config.yaml)
 
 # 前置作業
-```bash
-# by root
-
-timedatectl set-timezone Asia/Taipei
-
-yum update -y
-yum install epel-release -y
-yum install htop telnet nc nmap -y
-yum install nfs-utils -y
-rpm --import https://packages.microsoft.com/keys/microsoft.asc
-echo -e "[azure-cli]
-name=Azure CLI
-baseurl=https://packages.microsoft.com/yumrepos/azure-cli
-enabled=1
-gpgcheck=1
-gpgkey=https://packages.microsoft.com/keys/microsoft.asc" | tee /etc/yum.repos.d/azure-cli.repo
-yum install azure-cli -y
-```
+[install-ocp.sh](./script/install-ocp.sh)
+- 下載 ocp install
+- 下載 ocp client
 
 # 安裝 OpenShift on Bastion VM
 - 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.test.org
@@ -222,6 +154,7 @@ yum install azure-cli -y
         ssh core@$(oc get nodes | grep worker | sed -n '1,1p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
         ```
 
+[Back to top](#)
 # 建置 NFS VM
 - 掛載大容量 disk (by LVM)
     ```bash
@@ -249,7 +182,9 @@ yum install azure-cli -y
     ```
 - 設定 NFS config
     - `sudo vi /etc/exports`
-        >/data *(rw,sync,no_root_squash)
+        ```
+        /data *(rw,sync,no_root_squash)
+        ```
 - 重啟 NFS
     - `systemctl restart nfs-server`
 
@@ -288,32 +223,31 @@ yum install azure-cli -y
     oc create -f deploy/rbac.yaml
     oc adm policy add-scc-to-user hostmount-anyuid system:serviceaccount:$NAMESPACE:nfs-client-provisioner
     ```
-    ```bash
-    cd deploy/
-    vi deployment.yaml
-    #  env:
-    #    - name: PROVISIONER_NAME
-    #    value: storage.io/nfs <-- change it
-    #    - name: NFS_SERVER
-    #    value: 10.250.101.6 <-- NFS
-    #    - name: NFS_PATH
-    #    value: /data <-- change it
-    #
-    #  volumes:
-    #    - name: nfs-client-root
-    #    nfs:
-    #      server: 10.250.101.6 <-- NFS
-    #      path: /data <-- change it
+    ```yaml
+    # vi deploy/deployment.yaml
+    env:
+      - name: PROVISIONER_NAME
+      value: storage.io/nfs # <-- change it
+      - name: NFS_SERVER
+      value: 10.250.101.6 # <-- NFS
+      - name: NFS_PATH
+      value: /data # <-- change it
+
+    volumes:
+      - name: nfs-client-root
+      nfs:
+        server: 10.250.101.6 # <-- NFS
+        path: /data # <-- change it
     ```
-    ```bash
-    vi class.yaml
-    #  apiVersion: storage.k8s.io/v1
-    #  kind: StorageClass
-    #  metadata:
-    #    name: managed-nfs-storage
-    #  provisioner: storage.io/nfs # or choose another name, must match deployment's env PROVISIONER_NAME'
-    #  parameters:
-    #    archiveOnDelete: "false"
+    ```yaml
+    # vi deploy/class.yaml
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: managed-nfs-storage
+    provisioner: storage.io/nfs # or choose another name, must match deployment's env PROVISIONER_NAME'
+    parameters:
+      archiveOnDelete: "false"
     ```
 - 建立 deploy resource
     ```bash
@@ -357,6 +291,7 @@ sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
     sudo podman login -u kubeadmin -p $(oc whoami -t) --tls-verify=false $REGISTRY
     ```
 
+[Back to top](#)
 ## 安裝 Control Plane (lite)
 - 下載 lite
     ```bash
