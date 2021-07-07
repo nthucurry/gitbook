@@ -30,7 +30,7 @@ mkdir ocp4.5_cust
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/install-config.yaml
 cp ./install-config.yaml ./ocp4.5_cust
 
-# openshift tool
+# openshift client tool
 cd ~
 mkdir ocp4.5_client
 cd ./ocp4.5_client

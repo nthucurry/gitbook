@@ -3,7 +3,7 @@
 - [安裝架構](#安裝架構)
 - [到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password](#到-azure-portal-進-console-找出-subscription-tenant-client-appid-client-password)
 - [設定 Install Config](#設定-install-config)
-- [前置作業](#前置作業)
+- [前置作業 on Bastion VM](#前置作業-on-bastion-vm)
 - [安裝 OpenShift on Bastion VM](#安裝-openshift-on-bastion-vm)
 - [建置 NFS VM](#建置-nfs-vm)
 - [安裝 OpenShift Client on NFS VM](#安裝-openshift-client-on-nfs-vm)
@@ -69,10 +69,10 @@
 # 設定 Install Config
 [install-config.yaml](./install-config.yaml)
 
-# 前置作業
+# 前置作業 on Bastion VM
 [install-ocp.sh](./script/install-ocp.sh)
-- 下載 ocp install
-- 下載 ocp client
+- 下載 ocp install config
+- 下載 ocp client tool
 
 # 安裝 OpenShift on Bastion VM
 - 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.test.org
@@ -150,8 +150,8 @@
         - `cat ~/ocp4.5_cust/auth/kubeadmin-password`
     - 改時間
         ```bash
-        ssh core@$(oc get nodes | grep master | sed -n '1,1p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
-        ssh core@$(oc get nodes | grep worker | sed -n '1,1p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
+        ssh -oStrictHostKeyChecking=no core@$(oc get nodes | grep master | sed -n '1,1p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
+        ssh -oStrictHostKeyChecking=no core@$(oc get nodes | grep worker | sed -n '1,1p' | awk '{print $1}') 'sudo timedatectl set-timezone Asia/Taipei'
         ```
 
 [Back to top](#)
