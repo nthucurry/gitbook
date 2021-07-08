@@ -1,10 +1,9 @@
 #!/bin/bash
 ###################################
-# bigdata: a7bdf2e3-b855-4dda-ac93-047ff722cbbd
-# auo    : de61f224-9a69-4ede-8273-5bcef854dc20
+# subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
+# resource_group="DBA-K8S"
 subscription="a7bdf2e3-b855-4dda-ac93-047ff722cbbd"
 resource_group="DBA_Test"
-###################################
 vm_name=$1
 image="OpenLogic:CentOS:7_9:7.9.2021020400"
 size="Standard_B2s" # CPU, RAM
@@ -21,7 +20,6 @@ echo "[Create VM........] "$vm_name
 echo "[Subscription.....] "`az account show --query name`
 echo "[Resource Group...] "$resource_group
 ###################################
-
 if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; then
     az vm create \
     --name $vm_name \
@@ -68,3 +66,4 @@ if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; th
 else
     echo "[Warning...] It is not test resource group!!"
 fi
+###################################
