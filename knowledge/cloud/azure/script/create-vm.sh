@@ -1,10 +1,24 @@
 #!/bin/bash
 ###################################
-# subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
-# resource_group="DBA-K8S"
-subscription="a7bdf2e3-b855-4dda-ac93-047ff722cbbd"
-resource_group="DBA_Test"
-vm_name=$1
+echo "  * Azure EA : WKC      (1)"
+echo "  * Azure EA : DBA-K8S  (2)"
+echo "  * Big Data : DBA_Test (3)"
+###################################
+echo "Choise 1, 2, 3: "
+read info
+if [[ $info == "1" ]]; then
+    subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
+    resource_group="WKC"
+elif [[ "$info" = "2" ]]; then
+    subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
+    resource_group="DBA-K8S"
+else
+    subscription="a7bdf2e3-b855-4dda-ac93-047ff722cbbd"
+    resource_group="DBA_Test"
+fi
+###################################
+echo "Input VM name: "
+read vm_name
 image="OpenLogic:CentOS:7_9:7.9.2021020400"
 size="Standard_B2s" # CPU, RAM
 os_disk_size="30" # GB
