@@ -3,6 +3,7 @@ sudo yum update -y | grep "Complete!"
 sudo yum install epel-release -y | grep "Complete!"
 sudo yum install htop telnet nc nmap -y | grep "Complete!"
 sudo yum install nfs-utils -y | grep "Complete!"
+sudo yum install expect -y | grep "Complete!"
 
 # azure cli
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc

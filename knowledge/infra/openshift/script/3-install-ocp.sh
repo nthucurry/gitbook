@@ -1,0 +1,1 @@
+~/ocp4.5_inst/openshift-install create cluster --dir=~/ocp4.5_cust --log-level=info
