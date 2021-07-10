@@ -10,7 +10,7 @@ compute:
         diskSizeGB: 120
       type: Standard_D16s_v3 # Standard_B2ms
       zones:
-      - "0"
+      - "1"
   replicas: 3
 controlPlane:
   architecture: amd64
@@ -22,7 +22,7 @@ controlPlane:
         diskSizeGB: 120
       type: Standard_D8s_v3 # Standard_B4ms
       zones:
-      - "0"
+      - "1"
   replicas: 3
 metadata:
   creationTimestamp: null

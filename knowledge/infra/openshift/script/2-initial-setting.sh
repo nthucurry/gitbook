@@ -3,12 +3,9 @@ sudo yum update -y
 sudo yum install epel-release -y
 sudo yum install htop telnet nc nmap -y
 sudo yum install nfs-utils -y
-sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-
-# ssh
-ssh-keygen
 
 # azure cli
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 echo -e "[azure-cli]
 name=Azure CLI
 baseurl=https://packages.microsoft.com/yumrepos/azure-cli
