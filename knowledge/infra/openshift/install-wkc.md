@@ -70,82 +70,38 @@
 [install-config.yaml](./install-config.yaml)
 
 # 前置作業 on Bastion VM
-[install-ocp.sh](./script/install-ocp.sh)
-- 下載 ocp install config
-- 下載 ocp client tool
+- 執行 [1-initial-setting.sh](./script/1-initial-setting.sh)
+    - 安裝 azure cli
+    - 安裝 openshift install package
+    - 產生 ssh key
+    - 更新 install-config.yaml 的 pullSecret 和 sshKey
+    - 安裝 openshift client tool
+    - 安裝 openshift tab completion
+- 下載實用 script
+    ```bash
+    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/login-ocp.sh
+    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/check-pod.sh
+    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/backup-etcd.sh
+    ```
 
 # 安裝 OpenShift on Bastion VM
 - 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.test.org
-- 下載 OpenShift 檔案
-    ```bash
-    cd ~
-    mkdir ocp4.5_inst
-    cd ./ocp4.5_inst
-    wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-install-linux-4.5.36.tar.gz
-    tar xvf openshift-install-linux-4.5.36.tar.gz
-
-    cd ~
-    mkdir ocp4.5_cust
-    cp ./install-config.yaml ./ocp4.5_cust
-
-    cd ~
-    ```
-- 安裝 OpenShift 所有環境
-    - 設定 config
-        - `~/ocp4.5_inst/openshift-install create install-config --dir=/home/azadmin/ocp4.5_cust`
-            ```
-            ? SSH Public Key /home/azadmin/.ssh/id_rsa.pub
-            ? Platform azure
-            ? azure subscription id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX (固定)
-            ? azure tenant id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX (固定)
-            ? azure service principal client id XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX (appId, 固定)
-            ? azure service principal client secret **********************************
-            ```
-    - 安裝 OpenShift (約一小時，若自行設定 DNS，VM 建立時需注意名稱解析)
-        - `~/ocp4.5_inst/openshift-install create cluster --dir=/home/azadmin/ocp4.5_cust --log-level=info`
-            ```
-            INFO Credentials loaded from file "/home/azadmin/.azure/osServicePrincipal.json"
-            INFO Consuming Install Config from target directory (10 分鐘)
-            INFO Creating infrastructure resources... (5 分鐘)
-            INFO Waiting up to 20m0s for the Kubernetes API at https://api.dba-k8s.test.org:6443...
-            INFO API v1.18.3+cdb0358 up
-            INFO Waiting up to 40m0s for bootstrapping to complete... (10 ~ 20 分鐘)
-            INFO Destroying the bootstrap resources... (2 分鐘)
-            INFO Waiting up to 30m0s for the cluster at https://api.dba-k8s.test.org:6443 to initialize...
-            INFO Waiting up to 10m0s for the openshift-console route to be created...
-            INFO Install complete!
-            INFO To access the cluster as the system:admin user when using 'oc', run 'export KUBECONFIG=/home/azadmin/ocp4.5_cust/auth/kubeconfig'
-            INFO Access the OpenShift web-console here: https://console-openshift-console.apps.dba-k8s.test.org
-            INFO Login to the console with user: "kubeadmin", and password: "Kxksv-gPsnk-bILsY-7Pqax"
-            INFO Time elapsed: 1h3m20s
-            ```
-        - check installing status
-            - `tail -f ~/ocp4.5_cust/.openshift_install.log`
-        - 如果不是使用 Azure DNS，需動態改 IP
-            - Load balancer: Frontend IP configuration
-            - VM: Network interface
-            - Private DNS zone
-            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-dns.png">
-        - fail message: please rebuild
-            - time="2021-05-25T21:25:25+08:00" level=fatal msg="failed to fetch Cluster: failed to generate asset \"Cluster\": failed to create cluster: failed to apply Terraform: error(Timeout) from Infrastructure Provider: Copying the VHD to user environment was too slow, and timeout was reached for the success."
-- 下載 OpenShift 檔案
-    ```bash
-    cd ~
-    mkdir ocp4.5_client
-    cd ./ocp4.5_client
-    wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-client-linux-4.5.36.tar.gz
-    tar xvfz openshift-client-linux-4.5.36.tar.gz
-    sudo cp ./oc /usr/bin
-
-    # tab completion
-    oc completion bash > oc_bash_completion
-    sudo cp oc_bash_completion /etc/bash_completion.d/
-    ```
+- 執行
+    - [2-azure-config.sh](./script/2-azure-config.sh)
+    - [3-install-ocp.sh](./script/3-install-ocp.sh)
+- 安裝 OpenShift，約一小時，若自行設定 DNS，VM 建立時需注意名稱解析
+- 檢查安裝中 log
+    - `tail -f ~/ocp4.5_cust/.openshift_install.log`
+- 如果不是使用 Azure DNS，需動態改 IP
+    - Load balancer: Frontend IP configuration
+    - VM: Network interface
+    - Private DNS zone
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-dns.png">
 - 確認 OpenShift Status
     - 從 web: https://console-openshift-console.apps.wkc.test.org
     - 從 terminal
-        - 登入: `oc login https://api.wkc.test.org:6443 -u kubeadmin -p `\``cat ~/ocp4.5_cust/auth/kubeadmin-password`\`
-        - 檢查: `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
+        - 登入: [login-ocp.sh](./script/login-ocp.sh)
+        - 檢查: [check-pod.sh](./script/check-pod.sh)
     - 查詢 kubeadmin 密碼
         - `cat ~/ocp4.5_cust/auth/kubeadmin-password`
     - 改時間
@@ -172,6 +128,10 @@
     vi /etc/fstab
     chown azadmin:azadmin /data
     ```
+- 執行 [4-install-nfs.sh](./script/4-install-nfs.sh)
+    - 安裝 NFS
+    - 設定 NFS config
+    - 安裝 openshift client tool
 - 安裝 NFS
     ```bash
     sudo yum install nfs-utils -y
@@ -293,10 +253,21 @@ sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
 
 [Back to top](#)
 ## 安裝 Control Plane (lite)
+- `cd ~/ibm`
+- 設定環境變數
+    ```bash
+    export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
+    export NAMESPACE=zen
+    export STORAGE_CLASS=managed-nfs-storage
+    export IMAGE_REGISTRY_USER=$(oc whoami)
+    export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
+    export ASSEMBLY=lite
+    export VERSION=v3.5.3
+    export LOAD_FROM=~/ibm/$VERSION/$ASSEMBLY/
+    export DOWNLOAD_FOLDER=~/ibm/$VERSION/$ASSEMBLY/
+    ```
 - 下載 lite
     ```bash
-    export ASSEMBLY=lite
-    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/$ASSEMBLY/
     mkdir -p $DOWNLOAD_FOLDER
 
     ./cpd-cli preload-images \
@@ -306,18 +277,6 @@ sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
     --action download \
     --accept-all-licenses
     ```
-- 設定環境變數
-    ```bash
-    export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
-    export NAMESPACE=zen
-    export STORAGE_CLASS=managed-nfs-storage
-    export IMAGE_REGISTRY_USER=$(oc whoami)
-    export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
-    export ASSEMBLY=lite
-    export VERSION=3.5.3
-    export LOAD_FROM=./v3.5.3/$ASSEMBLY/
-    ```
-- `cd ~/ibm`
 - 下載必備檔案
     ```bash
     ./cpd-cli preload-images \
@@ -358,11 +317,23 @@ sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
     ```
 - 確認狀態
     - `~/ibm/cpd-cli status --assembly lite --namespace zen`
+
 ## 安裝 WKC (Watson Knowledge Catalog)
+- `cd ~/ibm`
+- 設定環境變數
+    ```bash
+    export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
+    export NAMESPACE=zen
+    export STORAGE_CLASS=managed-nfs-storage
+    export IMAGE_REGISTRY_USER=kubeadmin
+    export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
+    export ASSEMBLY=wkc
+    export VERSION=v3.5.3
+    export LOAD_FROM=./$VERSION/$ASSEMBLY/
+    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/$ASSEMBLY/
+    ```
 - 下載 WKC
     ```bash
-    export ASSEMBLY=wkc
-    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/$ASSEMBLY/
     mkdir -p $DOWNLOAD_FOLDER
 
     ./cpd-cli preload-images \
@@ -372,18 +343,6 @@ sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
     --action download \
     --accept-all-licenses
     ```
-- 設定環境變數
-    ```bash
-    export REGISTRY=`oc get route default-route -n openshift-image-registry --template="{{ .spec.host }}"`
-    export NAMESPACE=zen
-    export STORAGE_CLASS=managed-nfs-storage
-    export IMAGE_REGISTRY_USER=kubeadmin
-    export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
-    export ASSEMBLY=wkc
-    export VERSION=3.5.3
-    export LOAD_FROM=./v3.5.3/$ASSEMBLY/
-    ```
-- `cd ~/ibm`
 - 下載必備檔案
     ```bash
     ./cpd-cli preload-images \
@@ -427,6 +386,7 @@ sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
 - WKC portal
     - https://zen-cpd-zen.apps.wkc.test.org
 
+[Back to top](#)
 # 如果 WKC 安裝失敗
 - 檢查 pod 狀態
     - 出現 ErrImagePull 與 ImagePullBackOff，皆表示無法取得映像檔
@@ -512,6 +472,7 @@ sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
     - 執行 oc 使參數生效
         - `oc create -f 42-cp4d.yaml`
 
+[Back to top](#)
 # 設定 Proxy on Bastion VM
 - 設定 NSG
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-nsg.png">
