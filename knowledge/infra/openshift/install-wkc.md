@@ -70,6 +70,7 @@
 [install-config.yaml](./install-config.yaml)
 
 # 前置作業 on Bastion VM
+- `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/1-initial-setting.sh`
 - 執行 [1-initial-setting.sh](./script/1-initial-setting.sh)
     - 安裝 azure cli
     - 安裝 openshift install package
@@ -87,7 +88,7 @@
 # 安裝 OpenShift on Bastion VM
 - 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.test.org
 - 執行
-    - [2-azure-config.sh](./script/2-azure-config.sh)
+    - [2-azure-config.exp](./script/2-azure-config.exp)
     - [3-install-ocp.sh](./script/3-install-ocp.sh)
 - 安裝 OpenShift，約一小時，若自行設定 DNS，VM 建立時需注意名稱解析
 - 檢查安裝中 log
@@ -128,6 +129,7 @@
     vi /etc/fstab
     chown azadmin:azadmin /data
     ```
+- `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/4-install-nfs.sh`
 - 執行 [4-install-nfs.sh](./script/4-install-nfs.sh)
     - 安裝 NFS
     - 設定 NFS config
