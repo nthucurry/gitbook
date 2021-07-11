@@ -5,6 +5,9 @@ sudo yum install htop telnet nc nmap -y | grep "Complete!"
 sudo yum install nfs-utils -y | grep "Complete!"
 sudo yum install expect -y | grep "Complete!"
 
+# replace redhad docker tool
+sudo yum install podman -y | grep "Complete!"
+
 # azure cli
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 echo -e "[azure-cli]

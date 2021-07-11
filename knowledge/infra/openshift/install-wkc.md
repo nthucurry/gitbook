@@ -231,12 +231,10 @@ tar xzvf cpd-cli-linux-EE-3.5.3.tgz
 
 # 設定 cpd key
 export registry_key="<cpd_key>"
-sed -i -e "s/<enter_api_key>/$registry_key/g" ./repo.yaml
+sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
 ```
 
 # 建置專案 zen
-- 安裝 podman (redhad 用來取代 docker tool 的工具)
-    - `yum install podman -y`
 - 建立 namespace
     ```bash
     oc login https://api.wkc.test.org:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password`
