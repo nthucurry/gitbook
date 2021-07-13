@@ -343,6 +343,8 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
     --action download \
     --accept-all-licenses
     ```
+- 避免 504 錯誤
+    - `oc annotate route default-route default-route --overwrite haproxy.router.openshift.io/timeout=10m -n openshift-image-registry`
 - 下載必備檔案
     ```bash
     ./cpd-cli preload-images \

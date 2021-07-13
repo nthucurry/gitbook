@@ -1,10 +1,10 @@
 - [K8S 三大指令](#k8s-三大指令)
 - [Reference](#reference)
 - [建立 K8S Cluster](#建立-k8s-cluster)
-  - [1. Master of Single](#1-master-of-single)
-  - [2. 安裝 Dashborad](#2-安裝-dashborad)
-  - [3. 檢查](#3-檢查)
-  - [4. Masters of HA (option)](#4-masters-of-ha-option)
+    - [1. Master of Single](#1-master-of-single)
+    - [2. 安裝 Dashborad](#2-安裝-dashborad)
+    - [3. 檢查](#3-檢查)
+    - [4. Masters of HA (option)](#4-masters-of-ha-option)
 - [建立 Worker Node](#建立-worker-node)
 - [部署 Container (try it!)](#部署-container-try-it)
 - [Load Balancer for K8S (HA option)](#load-balancer-for-k8s-ha-option)
@@ -45,7 +45,7 @@
 # 建立 K8S Cluster
 ## 1. Master of Single
 - 使用 flannel CNI，如果沒有 CNI，請參考 [Kubernetes - Nodes NotReady](https://blog.johnwu.cc/article/kubernetes-nodes-notready.html)
-    - `sudo kubeadm init --pod-network-cidr=10.244.0.0/16`(~ 4 min)
+    - `sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address $(hostname -i)`
     - 如果 init 有問題，就重置它
         - `sudo kubeadm reset`
         - 都無解，就執行它
@@ -56,7 +56,7 @@
             kubectl drain t-k8s-n1 --ignore-daemonsets --force=true --delete-local-data=true
             kubectl delete node t-k8s-n1
             ```
-- 安裝 weave net (option)
+- ~~安裝 weave net~~
 	- `kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"`
 - 設定 config
     ```bash
@@ -74,6 +74,7 @@
 - 此時 node status 為 NotReady
 - 設定 pod network (f: file, k: directory)
     - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
+- 此時 node status 為 Ready
 - 檢查狀態
     - `kubectl -n kube-system get po -l app=flannel -o wide`
     - `kubectl get nodes`
@@ -114,11 +115,11 @@
 - kubeadmin join
     - `sudo kubeadm init --config=kubeadm-config.yaml --upload-certs --ignore-preflight-errors=all`
     - 重新產生新的 key
-        - `kubeadm init phase upload-certs --experimental-upload-certs`
+        - `sudo kubeadm init phase upload-certs --experimental-upload-certs`
 - 設定 pod network
     - `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml`
 - 同步 config to load balancer
-    - `rsync -av t-k8s-m1:/etc/kubernetes/ /etc/kubernetes/`
+    - `sudo rsync -av t-k8s-m1:/etc/kubernetes/ /etc/kubernetes/`
 
 # 建立 Worker Node
 至兩台 node 輸入上一節 worker nodes 欲加入叢集所需輸入的指令，就是這麼簡單！
@@ -139,7 +140,7 @@
         ```
     - `kubectl config delete-cluster`
     - 將有關 K8S 的東西刪除
-        - `kubeadm reset`
+        - `sudo kubeadm reset`
 
 # 部署 Container (try it!)
 - 部署名為 nginx 的容器，映像檔名稱為 nginx，透過參數 deployment 會自動幫你創建好 k8s 中的最小管理邏輯單位 pod 與容器
@@ -154,7 +155,7 @@
         READY   STATUS    RESTARTS   AGE
         nginx-6799fc88d8-4bkb8   1/1     Running   0          3m36s
         ```
-    - `kubectl get services`
+    - `kubectl get services`、`kubectl get svc`
         ```
         NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
         kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        23m
@@ -167,7 +168,7 @@
 <br><img src="https://brobridge.com/bdsres/wp-content/uploads/2019/08/image-1024x769.png">
 
 - 安裝 HAProxy
-    - `yum install haproxy -y`
+    - `sudo yum install haproxy -y`
 - 設定 config
     ```bash
     cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.orig
@@ -187,8 +188,8 @@
     ```
 - 啟動
     ```bash
-    systemctl enable haproxy
-    systemctl start haproxy
+    sudo systemctl enable haproxy
+    sudo systemctl start haproxy
     ```
 - 安裝 K8S
     ```bash

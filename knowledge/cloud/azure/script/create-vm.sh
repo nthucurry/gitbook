@@ -53,7 +53,7 @@ if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; th
     --license-type none \
     --authentication-type all \
     --ssh-key-values $ssh_key_values
-    if [[ uname == "Linux" ]]; then
+    if [[ `uname` == "Linux" ]]; then
         # In office environment
         ssh -oStrictHostKeyChecking=no $admin@$vm_name sudo timedatectl set-timezone Asia/Taipei
         ssh -oStrictHostKeyChecking=no $admin@$vm_name wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/k8s/initial-k8s.sh

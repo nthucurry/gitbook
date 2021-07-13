@@ -3,8 +3,7 @@
 echo ".... OS initial ...."
 USER=azadmin
 os_name=`cat /etc/os-release | head -1`
-k8s_ip=`ifconfig | grep inet | awk '{print $2}' | head -1`
-if [[ $k8s_ip == *"10.250"* ]]; then
+if [[ `hostname -i` == *"10.250"* ]]; then
     where_am_i="auo250"
     echo "  1. I am in" $where_am_i
 else
@@ -16,12 +15,9 @@ echo "  2. Environment value"
 timedatectl set-timezone Asia/Taipei
 LANG=en_US.UTF-8
 swapoff -a
-echo "alias vi='vim'" >> ~/.bashrc
-echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
-source ~/.bashrc
+echo "alias vi='vim'" >> /home/$USER/.bashrc
+echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> /root/.bashrc
 echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-#systemctl daemon-reload
-# sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
 echo "  3. Proxy"
 if [ $where_am_i == "auo250" ]; then
@@ -124,9 +120,9 @@ echo -e
 echo "  4. Pull the images for kubeadm requires"
 kubeadm config images pull
 
-echo "  5. Install weave net"
-curl -L git.io/weave -o /usr/local/bin/weave
-chmod a+x /usr/local/bin/weave
+# echo "  5. Install weave net"
+# curl -L git.io/weave -o /usr/local/bin/weave
+# chmod a+x /usr/local/bin/weave
 
 echo "  6. Start K8S"
 systemctl daemon-reload
@@ -137,6 +133,7 @@ echo -e
 echo "  7. Set up autocomplete"
 # sudo -u $USER source <(kubectl completion bash)
 sudo -u $USER echo "source <(kubectl completion bash)" >> /home/$USER/.bashrc
+source /home/$USER/.bashrc
 
 echo ".... Check status ...."
 systemctl status docker
