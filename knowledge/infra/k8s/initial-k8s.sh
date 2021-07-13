@@ -133,6 +133,8 @@ echo -e
 echo "  7. Set up autocomplete"
 # sudo -u $USER source <(kubectl completion bash)
 sudo -u $USER echo "source <(kubectl completion bash)" >> /home/$USER/.bashrc
+echo "alias k=kubectl" >> /home/$USER/.bashrc
+echo "complete -F __start_kubectl k" >> /home/$USER/.bashrc
 source /home/$USER/.bashrc
 
 echo ".... Check status ...."
