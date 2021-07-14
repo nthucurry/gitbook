@@ -79,7 +79,7 @@ cat << EOF | tee /etc/docker/daemon.json
         "overlay2.override_kernel_check=true"
     ]
 }
-EOF > /dev/null
+EOF
 
 echo "  5. Start docker"
 systemctl daemon-reload
@@ -90,11 +90,11 @@ echo ".... K8S ...."
 echo "  1. Letting iptables see bridged traffic"
 cat << EOF | sudo tee /etc/modules-load.d/k8s.conf
 br_netfilter
-EOF > /dev/null
+EOF
 cat << EOF | sudo tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
-EOF > /dev/null
+EOF
 sudo sysctl --system
 
 echo "  2. Set SELinux in permissive mode (effectively disabling it)"
@@ -112,7 +112,7 @@ gpgcheck=1
 repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kubelet kubeadm kubectl
-EOF > /dev/null
+EOF
 yum install kubeadm kubelet kubectl -y --disableexcludes=kubernetes | grep "Complete!"
 systemctl enable --now kubelet
 echo -e
