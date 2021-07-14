@@ -329,8 +329,8 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
     export IMAGE_REGISTRY_PASSWORD=$(oc whoami -t)
     export ASSEMBLY=wkc
     export VERSION=v3.5.3
-    export LOAD_FROM=./$VERSION/$ASSEMBLY/
-    export DOWNLOAD_FOLDER=~/ibm/v3.5.3/$ASSEMBLY/
+    export LOAD_FROM=~/ibm/$VERSION/$ASSEMBLY/
+    export DOWNLOAD_FOLDER=~/ibm/$VERSION/$ASSEMBLY/
     ```
 - 下載 WKC
     ```bash
@@ -401,7 +401,7 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
 # 設定 Machine Config on Bastion VM
 - [CRI-O container settings](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=tasks-changing-required-node-settings#node-settings__crio)
 - 安裝 python 3
-    - `yum install python3 -y`
+    - `sudo yum install python3 -y`
 - 設定 CRI-O container
     - 複製 worker 的 crio.conf 到 bastion
         - `scp core@$(oc get nodes | grep worker | head -1 | awk '{print $1}'):/etc/crio/crio.conf /tmp/crio.conf`
@@ -489,8 +489,6 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
             httpProxy: http://10.250.12.5:3128
             httpsProxy: http://10.250.12.5:3128
         ```
-- 確認 pods 狀態
-    - `oc get pod -A | grep -Ev '1/1 .* R|2/2 .* R|3/3 .* R|4/4 .* R|5/5 .* R|6/6 .* R|7/7 .* R' | grep -v 'Completed'`
 - proxy 連線清單
     ```
     mirror.openshift.com

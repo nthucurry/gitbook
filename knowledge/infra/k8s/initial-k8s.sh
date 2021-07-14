@@ -120,21 +120,17 @@ echo -e
 echo "  4. Pull the images for kubeadm requires"
 kubeadm config images pull
 
-# echo "  5. Install weave net"
-# curl -L git.io/weave -o /usr/local/bin/weave
-# chmod a+x /usr/local/bin/weave
-
-echo "  6. Start K8S"
+echo "  5. Start K8S"
 systemctl daemon-reload
 systemctl restart kubelet
 systemctl enable kubelet
 echo -e
 
-echo "  7. Set up autocomplete"
+echo "  6. Set up autocomplete"
 # sudo -u $USER source <(kubectl completion bash)
 sudo -u $USER echo "source <(kubectl completion bash)" >> /home/$USER/.bashrc
-echo "alias k=kubectl" >> /home/$USER/.bashrc
-echo "complete -F __start_kubectl k" >> /home/$USER/.bashrc
+sudo -u $USER echo "alias k=kubectl" >> /home/$USER/.bashrc
+sudo -u $USER echo "complete -F __start_kubectl k" >> /home/$USER/.bashrc
 source /home/$USER/.bashrc
 
 echo ".... Check status ...."

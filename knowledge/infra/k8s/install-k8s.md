@@ -56,8 +56,6 @@
             kubectl drain t-k8s-n1 --ignore-daemonsets --force=true --delete-local-data=true
             kubectl delete node t-k8s-n1
             ```
-- ~~安裝 weave net~~
-	- `kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"`
 - 設定 config
     ```bash
     mkdir -p $HOME/.kube
@@ -91,8 +89,8 @@
         ```
         KUBELET_KUBEADM_ARGS="--pod-infra-container-image=k8s.gcr.io/pause:3.4.1"
         ```
-    - `systemctl daemon-reload`
-    - `systemctl restart kubelet.service`
+    - `sudo systemctl daemon-reload`
+    - `sudo systemctl restart kubelet.service`
 - 集群都要是 Healthy，Unhealthy 解法: [修改 port 值](https://blog.csdn.net/xiaobao7865/article/details/107513957)
     - `kubectl get cs`
 - 檢查 pods
@@ -193,7 +191,7 @@
     ```
 - 安裝 K8S
     ```bash
-    cat << EOF | tee /etc/yum.repos.d/kubernetes.repo
+    cat << EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
     [kubernetes]
     name=Kubernetes
     baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
