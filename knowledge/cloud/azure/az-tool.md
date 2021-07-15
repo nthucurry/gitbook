@@ -4,6 +4,7 @@
     - [Virtual network isolation and privacy overview](#virtual-network-isolation-and-privacy-overview)
     - [Secure an Azure Machine Learning inferencing environment with virtual networks](#secure-an-azure-machine-learning-inferencing-environment-with-virtual-networks)
 - [Lab Service](#lab-service)
+- [Service Principal](#service-principal)
 
 # Enterprise applications
 AAD is an IAM system. It provides a single place to store information about digital identities. You can configure your software applications to use Azure AD as the place where user information is stored.
@@ -29,3 +30,8 @@ Plan smarter, collaborate better, and ship faster with a set of modern (現代�
 
 # Lab Service
 - [雲端中的電腦教室 Azure Lab Services](https://reurl.cc/DgDgXe)
+
+# Service Principal
+```bash
+az ad sp create-for-rbac --skip-assignment --name openaigpupocsp
+```
