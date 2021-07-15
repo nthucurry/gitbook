@@ -131,7 +131,6 @@ echo "  6. Set up autocomplete"
 sudo -u $USER echo "source <(kubectl completion bash)" >> /home/$USER/.bashrc
 sudo -u $USER echo "alias k=kubectl" >> /home/$USER/.bashrc
 sudo -u $USER echo "complete -F __start_kubectl k" >> /home/$USER/.bashrc
-source /home/$USER/.bashrc
 
 echo ".... Check status ...."
 systemctl status docker
