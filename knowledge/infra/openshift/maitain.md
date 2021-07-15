@@ -4,19 +4,18 @@
     - [Creating a Self-Signed SSL Certificate for your Intranet Services](#creating-a-self-signed-ssl-certificate-for-your-intranet-services)
         - [Replacing the default ingress certificate](#replacing-the-default-ingress-certificate)
     - [調整 worker 數量](#調整-worker-數量)
-    - [沒開機不能 Login](#沒開機不能-login)
+    - [未整理筆記](#未整理筆記)
 - [備份](#備份)
     - [OpenShift](#openshift-1)
         - [Backing up etcd](#backing-up-etcd)
     - [WKC (CP4D)](#wkc-cp4d)
         - [Backing up and restoring your project](#backing-up-and-restoring-your-project)
-            - [Backup and restore service list](#backup-and-restore-service-list)
-            - [Installing the Cloud Pak for Data backup and restore service](#installing-the-cloud-pak-for-data-backup-and-restore-service)
-            - [Preparing to install the Cloud Pak for Data file system backup and restore service](#preparing-to-install-the-cloud-pak-for-data-file-system-backup-and-restore-service)
-        - [Backing up](#backing-up)
-            - [Backing up the Cloud Pak for Data file system on Portworx (需付費使用)](#backing-up-the-cloud-pak-for-data-file-system-on-portworx-需付費使用)
-            - [Backing up the Cloud Pak for Data file system to a local repository or object store](#backing-up-the-cloud-pak-for-data-file-system-to-a-local-repository-or-object-store)
-        - [Restoring](#restoring)
+        - [Installing the CPD backup and restore service](#installing-the-cpd-backup-and-restore-service)
+            - [Backup and restore service PVC](#backup-and-restore-service-pvc)
+            - [Repository secret](#repository-secret)
+        - [Install the cpdbr Docker image](#install-the-cpdbr-docker-image)
+        - [Backing up the CPD file system to a local repository or object store](#backing-up-the-cpd-file-system-to-a-local-repository-or-object-store)
+        - [Restoring the CPD file system from a local repository or object store](#restoring-the-cpd-file-system-from-a-local-repository-or-object-store)
 - [維運](#維運)
     - [大型維運](#大型維運)
         - [Shutting down the cluster](#shutting-down-the-cluster)
@@ -119,11 +118,11 @@
         -n openshift-ingress-operator
     ```
 - 匯入自簽憑證到「受信任的根憑證授權單位」
-    <br><img src="../../../img/security/root-cert-step-1.png">
-    <br><img src="../../../img/security/root-cert-step-2.png">
-    <br><img src="../../../img/security/root-cert-step-3.png">
-    <br><img src="../../../img/security/root-cert-step-4.png">
-    <br><img src="../../../img/security/root-cert-step-5.png">
+    <br><img src="../../../img/security/root-cert-step-1.png" width=500>
+    <br><img src="../../../img/security/root-cert-step-2.png" width=500>
+    <br><img src="../../../img/security/root-cert-step-3.png" width=500>
+    <br><img src="../../../img/security/root-cert-step-4.png" width=500>
+    <br><img src="../../../img/security/root-cert-step-5.png" width=500>
 - 從 pfx 匯出 crt (or cer)
     - `openssl pkcs12 -in server.pfx -nokeys -password "pass:ncu5540" -out - 2>/dev/null | openssl x509 -out server.crt`
     - `openssl pkcs12 -in server.pfx -nocerts -password "pass:ncu5540" -nodes -out server.key`
@@ -135,13 +134,7 @@
     - `oc scale --replicas=2 machineset <machineset> -n openshift-machine-api`
     - `oc edit machineset <machineset> -n openshift-machine-api`
 
-## 沒開機不能 Login
-```bash
-oc login https://api.dba-k8s.test.org:6443 -u kubeadmin -p `cat ~/ocp4.5_cust/auth/kubeadmin-password`
-```
-error: dial tcp 10.0.10.5:6443: connect: no route to host - verify you have provided the correct host and port and that the server is currently running.
-
-
+## 未整理筆記
 ```bash
 ssh core@$node sudo shutdown -h now
 nodes=$(oc get nodes -ojsonpath='{​​​​​​​​.items[*].metadata.name}​​​​​​​​')
@@ -179,63 +172,52 @@ The etcd is the key-value store for OCP, which persists the state of all resourc
 ### Backing up and restoring your project
 You can back up and restore the **Persistent Volumes (PVs)** in a project (namespace) in your IBM® Cloud Pak for Data file system.
 
-#### Backup and restore service list
 The following table describes the components and services that support backup and restore by using volume snapshots, volume backups, or a separate process.
 
-#### [Installing the Cloud Pak for Data backup and restore service](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=project-installing-backup-restore-service)
-Installing the Cloud Pak for Data backup and restore service involves the following tasks.
-- Backup and restore service PVC
-    - 建立 NFS volumn yaml
-        ```yaml
-        apiVersion: v1
-        kind: PersistentVolumeClaim
-        metadata:
-          name: cpdbr-pvc
-        spec:
-          storageClassName: nfs-client
-          accessModes:
-            - ReadWriteMany
-          resources:
-          requests:
-            storage: 200Gi
-        ```
+### [Installing the CPD backup and restore service](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=project-installing-backup-restore-service)
+#### Backup and restore service PVC
+- [不使用] ~~Creating a PVC from a PV on an NFS file system~~
+- Creating a PVC from a storage class
+    - 建立 NFS volumn yaml: [cpdbr-pvc.yaml](./config/cpdbr-pvc.yaml)
     - `oc apply -f cpdbr-pvc.yaml -n zen`
 
-#### Preparing to install the Cloud Pak for Data file system backup and restore service
-- Install the cpdbr Docker image
-    ```bash
-    IMAGE_REGISTRY=`oc get route -n openshift-image-registry | grep image-registry | awk '{print $2}'`
-    echo $IMAGE_REGISTRY
-    NAMESPACE=`oc project -q`
-    echo $NAMESPACE
-    CPU_ARCH=`uname -m`
-    echo $CPU_ARCH
-    BUILD_NUM=`~/ibm/cpd-cli backup-restore version | grep "Build Number" |cut -d : -f 2 | xargs`
-    echo $BUILD_NUM
+#### Repository secret
+If you are backing up and restoring volumes to and from a local repository or object store, you **must create a repository secret** that is named cpdbr-repo-secret before you can initialize the service.
+```bash
+echo -n 'restic' > RESTIC_PASSWORD
+oc create secret generic -n zen cpdbr-repo-secret \
+    --from-file=./RESTIC_PASSWORD
+```
 
+### Install the cpdbr Docker image
+```bash
+IMAGE_REGISTRY=`oc get route -n openshift-image-registry | grep image-registry | awk '{print $2}'`
+echo $IMAGE_REGISTRY
+NAMESPACE=`oc project -q`
+echo $NAMESPACE
+CPU_ARCH=`uname -m`
+echo $CPU_ARCH
+BUILD_NUM=`~/ibm/cpd-cli backup-restore version | grep "Build Number" |cut -d : -f 2 | xargs`
+echo $BUILD_NUM
 
-    # Pull cpdbr image from Docker Hub
-    sudo podman pull docker.io/ibmcom/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
-    # Push image to internal registry
-    sudo podman login -u kubeadmin -p $(oc whoami -t) $IMAGE_REGISTRY --tls-verify=false
-    sudo podman tag docker.io/ibmcom/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH} $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
-    sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH} --tls-verify=false
-    ```
-- `~/ibm/cpd-cli backup-restore version`
+# Pull cpdbr image from Docker Hub
+sudo podman pull docker.io/ibmcom/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
+# Push image to internal registry
+sudo podman login -u kubeadmin -p $(oc whoami -t) $IMAGE_REGISTRY --tls-verify=false
+sudo podman tag docker.io/ibmcom/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH} $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
+sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH} --tls-verify=false
+```
+- View the version of the backup and restore service
+    - `~/ibm/cpd-cli backup-restore version`
 
-### Backing up
-Create backups of your IBM Cloud Pak for Data system to protect your data.
-
-#### Backing up the Cloud Pak for Data file system on Portworx (需付費使用)
-
-#### [Backing up the Cloud Pak for Data file system to a local repository or object store](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=bu-backing-up-file-system-local-repository-object-store)
-https://access.redhat.com/solutions/4098321
+### [Backing up the CPD file system to a local repository or object store](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=bu-backing-up-file-system-local-repository-object-store)
 - Initialize cpd-cli backup-restore
     ```bash
-    # Initialize the cpdbr first with pvc name and s3 storage.  Note that the bucket must exist.
-    NAMESPACE=zen
-    $ cpd-cli backup-restore init --namespace zen --pvc-name cpdbr-pvc --image-prefix=image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
-        --provider=s3 --s3-endpoint="s3 endpoint" --s3-bucket=cpdbr --s3-prefix=zen/
+    ~/ibm/cpd-cli backup-restore init \
+    --namespace zen \
+    --pvc-name cpdbr-pvc \
+    --image-prefix=image-registry.openshift-image-registry.svc:5000/zen \
+    --provider=local
     ```
 - Manually scale down K8S
     - `cpd-cli backup-restore quiesce -n zen`
@@ -250,9 +232,17 @@ https://access.redhat.com/solutions/4098321
 - Get the logs of a volume backup
     - `cpd-cli backup-restore volume-backup logs -n zen <backup_name>`
 
-
-### Restoring
+### Restoring the CPD file system from a local repository or object store
 The process to restore the persistent volumes (PVs) that are associated with your IBM Cloud Pak for Data project depends on the storage provider that you are using.
+- Initialize cpd-cli backup-restore
+- Check for completed jobs and pods
+    - `cpd-cli backup-restore volume-restore create --from-backup backup_name -n zen --dry-run <restore_name_identifier>`
+- Automatically scale down resources
+    - `cpd-cli backup-restore volume-restore create --from-backup backup_name -n zen <restore_name_identifier>`
+- Check the status of a restore job
+    - `cpd-cli backup-restore volume-restore status -n zen Restore_name_identifier`
+- View a list of existing volume restores
+    - `cpd-cli backup-restore volume-restore list -n zen`
 
 [Back to top](#)
 # 維運

@@ -28,7 +28,7 @@ tar xvf openshift-install-linux-4.5.36.tar.gz
 # openshift install config
 cd ~
 mkdir ocp4.5_cust
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/install-config.yaml
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/config/install-config.yaml
 
 # generate ssh key
 ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa <<< y
@@ -49,3 +49,9 @@ sudo cp ./oc /usr/bin
 # openshift tab completion
 oc completion bash > oc_bash_completion
 sudo cp oc_bash_completion /etc/bash_completion.d/
+
+# download useful script
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/backup-etcd.sh
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/check-pod.sh
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/login-ocp.sh
+chmod +x backup-etcd.sh check-pod.sh login-ocp.sh

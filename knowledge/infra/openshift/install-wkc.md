@@ -67,7 +67,7 @@
 - `az role assignment create --role "User Access Administrator" --assignee-object-id "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
 
 # 設定 Install Config
-[install-config.yaml](./install-config.yaml)
+[install-config.yaml](./config/install-config.yaml)
 
 # 前置作業 on Bastion VM
 - `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/1-initial-setting.sh`
