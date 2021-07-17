@@ -1,7 +1,7 @@
 - [Kubernetes Introduction](#kubernetes-introduction)
 - [Know docker](#know-docker)
 - [Architecture](#architecture)
-    - [Control Plane](#control-plane)
+    - [Control Plane & Master](#control-plane--master)
     - [Worker Node (K8S 運作的最小硬體單位)](#worker-node-k8s-運作的最小硬體單位)
     - [Kubernetes Objects and Workloads](#kubernetes-objects-and-workloads)
     - [Other Kubernetes Components](#other-kubernetes-components)
@@ -24,7 +24,7 @@ K8S is a portable, extensible, open-source platform for managing containerized w
 差異就在: https://nakivo.medium.com/kubernetes-vs-docker-what-is-the-difference-3b0c6cce97d3
 
 # Architecture
-## Control Plane
+## Control Plane & Master
 K8S 運作的指揮中心，可以簡化看成一個特化的 node，負責管理所有其他 node
 - etcd
     - To store **configuration data** that can be accessed by each of the nodes in the cluster.
@@ -43,7 +43,7 @@ K8S 運作的指揮中心，可以簡化看成一個特化的 node，負責管�
     - 整個 K8S 的 pods 調度員，scheduler 會監視新建立但還沒有被指定要跑在哪個 node 上的 pod，並根據每個 node 上面資源規定、硬體限制等條件去協調出一個最適合放置的 node 讓該 pod 跑
 - cloud-controller-manager
 
-<br><img src="https://1.bp.blogspot.com/-2UalznMykXE/XVuPNRgKDyI/AAAAAAAACiU/FmwpvN_7mA82cmnqAXI2WM7RHpGWRLvcACLcBGAs/s1600/20190820-kubernetes002.png">
+<br><img src="https://1.bp.blogspot.com/-2UalznMykXE/XVuPNRgKDyI/AAAAAAAACiU/FmwpvN_7mA82cmnqAXI2WM7RHpGWRLvcACLcBGAs/s1600/20190820-kubernetes002.png" width=500>
 
 ## Worker Node (K8S 運作的最小硬體單位)
 Node components run on every node, maintaining running pods and providing the K8S runtime environment.
@@ -54,7 +54,7 @@ Node components run on every node, maintaining running pods and providing the K8
         - `/var/log/messages`
 - kube-proxy
     - 為 node 的傳訊員，負責更新 node 的 iptables，讓 K8S 中不在該 node 的其他物件可以得知該 node 上所有 pods 的最新狀態
-    <br><img src="http://dockone.io/uploads/article/20190626/bc92fdf5f0ae4f6d2024a15d056d68b9.png">
+    <br><img src="../../../img/kubernetes/k8s-proxy.png" width=500>
 - Container Runtime
     - 為 node 負責容器執行的程式，以 docker 容器為例就是 docker engine
 
@@ -102,7 +102,7 @@ Node components run on every node, maintaining running pods and providing the K8
 - `kubectl get service -A`
 
 # 簡易架構
-<br><img src="https://miro.medium.com/max/4800/0*5N7SlevIHOdKB-yC">
+<br><img src="https://miro.medium.com/max/4800/0*5N7SlevIHOdKB-yC" width=500>
 
 # Reference
 - https://www.slideshare.net/WillHuangTW/things-to-know-about-kubernetes-for-developers/WillHuangTW/things-to-know-about-kubernetes-for-developers?fbclid=IwAR3Y0e-WFRYNhKcs_sTpBen5fT6e0Dn1ZwiqW7Fg7yECfRiEh63HzGUiIZE

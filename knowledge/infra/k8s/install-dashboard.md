@@ -1,6 +1,7 @@
 - [Deploy dashboard](#deploy-dashboard)
 - [Access dashboard](#access-dashboard)
 - [Create a cluster admin service account](#create-a-cluster-admin-service-account)
+- [Reference](#reference)
 
 # Deploy dashboard
 ```bash
@@ -40,3 +41,6 @@ kubectl create clusterrolebinding dashboard-admin -n default \
 # Copy the secret token required for your dashboard login.
 kubectl get secret $(kubectl get serviceaccount dashboard -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 --decode
 ```
+
+# Reference
+- [[Day 14] Kubernetes Dashboard 介紹](https://ithelp.ithome.com.tw/articles/10195385)
