@@ -121,7 +121,7 @@
 
 # 建立 Worker Node
 至兩台 node 輸入上一節 worker nodes 欲加入叢集所需輸入的指令，就是這麼簡單！
-<br><img src="https://www.ovh.com/blog/wp-content/uploads/2019/03/IMG_0135.jpg" alt="drawing" width="800" board="1"/>
+<br><img src="https://www.ovh.com/blog/wp-content/uploads/2019/03/IMG_0135.jpg" alt="drawing" width="500" board="1"/>
 
 - 加入 cluster，該 token 24 小時以內才有效
     - `sudo kubeadm join 10.0.8.4:6443 --token XXXX --discovery-token-ca-cert-hash sha256:XXXX`

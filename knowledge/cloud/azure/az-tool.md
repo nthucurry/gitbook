@@ -16,7 +16,7 @@ AAD must be configured to integrate with an application. In other words, it need
 Plan smarter, collaborate better, and ship faster with a set of modern (現代化) dev services.
 - Azure Boards
 - Azure Pipelines
-    <br>Build, test, and deploy with **CI/CD** that works with any language, platform, and cloud. Connect to GitHub or any other Git provider and deploy continuously.
+    - Build, test, and deploy with **CI/CD** that works with any language, platform, and cloud. Connect to GitHub or any other Git provider and deploy continuously.
 - Azure Repos
 - Azure Test Plans
 - Azure Artifacts

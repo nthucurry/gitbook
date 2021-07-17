@@ -11,7 +11,7 @@
     <br><img src="https://img-blog.csdnimg.cn/20181228120335803.jpg">
     <br><img src="https://img-en.fs.com/community/wp-content/uploads/2017/11/seven-layers-of-OSI-model.png">
 - application gateway subnet
-    <br>The application gateway subnet can contain **only** application gateways. **No other resources** are allowed.
+    - The application gateway subnet can contain **only** application gateways. **No other resources** are allowed.
 
 ## Application Gateway Multiple Site Hosting
 <br><img src="https://docs.microsoft.com/zh-tw/azure/application-gateway/media/multiple-site-overview/multisite.png">
@@ -54,7 +54,7 @@ Gets the backend health of the specified application gateway in a resource group
 ### Beforehand
 - SSL: HTTP (瀏覽器) 和 TCP (Server) 之間的加密方式
 - 數位憑證
-    <br>數位憑證 (Digital ID) 係結合一對可以用來加密及簽章的電子金鑰。簡單的說，數位憑證可以用來核驗宣稱擁有金鑰使用權者的身分，並且可以避免第三者使用偽造的金鑰來頂替真正的合法使用者。數位憑證與加密的技術相結合後，可以提供更高等級的安全性，進而保障進行線上交易的每一方。
+    - 數位憑證 (Digital ID) 係結合一對可以用來加密及簽章的電子金鑰。簡單的說，數位憑證可以用來核驗宣稱擁有金鑰使用權者的身分，並且可以避免第三者使用偽造的金鑰來頂替真正的合法使用者。數位憑證與加密的技術相結合後，可以提供更高等級的安全性，進而保障進行線上交易的每一方。
     - 根憑證 (root certificate)
         - 來自於公認可靠的政府機關、軟體公司、憑證頒發機構公司...等
         - 部署程序複雜費時，需要行政人員的授權及機構法人身分的核認，一張根憑證有效期可能長達十年以上

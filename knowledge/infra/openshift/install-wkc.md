@@ -30,9 +30,9 @@
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-insights-other.png" width="300">
 - access control (IAM)
     - contributor
-        <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-iam-contributor.png">
+        <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-iam-contributor.png" width=600>
     - user access administrator
-        <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-iam-user-access-admin.png">
+        <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-iam-user-access-admin.png" width=600>
 
 # 硬體需求
 - temporary bootstrap * 1
@@ -50,7 +50,7 @@
 - https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=planning-system-requirements#rhos-reqs__production
 
 # 安裝架構
-<br><img src="../../../img/openshift/install-flow.png">
+<br><img src="../../../img/openshift/install-flow.png" width=700>
 
 # 到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password
 - `az ad sp create-for-rbac --role="Contributor" --name="http://test.org" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
@@ -97,7 +97,7 @@
     - Load balancer: Frontend IP configuration
     - VM: Network interface
     - Private DNS zone
-    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-dns.png">
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-dns.png" width=600>
 - 確認 OpenShift Status
     - 從 web: https://console-openshift-console.apps.wkc.test.org
     - 從 terminal

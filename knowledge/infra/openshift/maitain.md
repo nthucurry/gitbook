@@ -16,9 +16,14 @@
         - [Install the cpdbr Docker image](#install-the-cpdbr-docker-image)
         - [Backing up the CPD file system to a local repository or object store](#backing-up-the-cpd-file-system-to-a-local-repository-or-object-store)
         - [Restoring the CPD file system from a local repository or object store](#restoring-the-cpd-file-system-from-a-local-repository-or-object-store)
+        - [Migrating Cloud Pak for Data metadata and clusters](#migrating-cloud-pak-for-data-metadata-and-clusters)
+        - [Install the cpdtool Docker image by using Podman](#install-the-cpdtool-docker-image-by-using-podman)
+        - [Install the zen-core-aux Docker image by using Podman](#install-the-zen-core-aux-docker-image-by-using-podman)
+        - [Install the zen-core-aux Helm chart](#install-the-zen-core-aux-helm-chart)
+        - [Initialize the export-import command](#initialize-the-export-import-command)
 - [維運](#維運)
     - [大型維運](#大型維運)
-        - [Shutting down the cluster](#shutting-down-the-cluster)
+        - [[用不到] ~~Shutting down the cluster~~](#用不到-shutting-down-the-cluster)
         - [Restarting the cluster gracefully](#restarting-the-cluster-gracefully)
         - [Disaster Recovery](#disaster-recovery)
     - [日常維運](#日常維運)
@@ -40,7 +45,7 @@
         - 一天一次，保留最近三天
         - WKC cluster 缺少 VM agent，無法備份
 - SLA for Virtual Machines
-    <br>For any Single VM using Premium SSD or Ultra Disk for all OS Disks and Data Disks, we guarantee you will have VM Connectivity of at least 99.9%. (一年最多停機 8.76 小時)
+    - For any Single VM using Premium SSD or Ultra Disk for all OS Disks and Data Disks, we guarantee you will have VM Connectivity of at least 99.9%. (一年最多停機 8.76 小時)
 - NFS
     ```bash
     subscription_id="de61f224-9a69-4ede-8273-5bcef854dc20"
@@ -197,7 +202,7 @@ NAMESPACE=`oc project -q`
 echo $NAMESPACE
 CPU_ARCH=`uname -m`
 echo $CPU_ARCH
-BUILD_NUM=`~/ibm/cpd-cli backup-restore version | grep "Build Number" |cut -d : -f 2 | xargs`
+BUILD_NUM=`~/ibm/cpd-cli backup-restore version | grep "Build Number" | cut -d : -f 2 | xargs`
 echo $BUILD_NUM
 
 # Pull cpdbr image from Docker Hub
@@ -211,43 +216,143 @@ sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
     - `~/ibm/cpd-cli backup-restore version`
 
 ### [Backing up the CPD file system to a local repository or object store](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=bu-backing-up-file-system-local-repository-object-store)
-- Initialize cpd-cli backup-restore
+- **Initialize cpd-cli backup-restore** (執行一次就好)
     ```bash
     ~/ibm/cpd-cli backup-restore init \
     --namespace zen \
     --pvc-name cpdbr-pvc \
     --image-prefix=image-registry.openshift-image-registry.svc:5000/zen \
     --provider=local
+
+    # Command started, processing...
+    # Command executed successfully
     ```
-- Manually scale down K8S
-    - `cpd-cli backup-restore quiesce -n zen`
+- **Manually scale down K8S** (停下 zen pod 約 10 分鐘)
+    - `~/ibm/cpd-cli backup-restore quiesce -n zen`
 - Check for completed jobs and pods
-    - `cpd-cli backup-restore volume-backup create -n zen --dry-run <backup_name>`
-- Manually scale up K8S
-    - `cpd-cli backup-restore unquiesce -n zen`
+    - `~/ibm/cpd-cli backup-restore volume-backup create -n zen --dry-run cpdbk-2021-0716`
+    - If the dry run reports completed or failed jobs, or pods, that reference PVCs, delete them
+- **Run the backup command** (約 10 分鐘)
+    - `~/ibm/cpd-cli backup-restore volume-backup create -n zen cpdbk-2021-0716 --skip-quiesce=true`
+- **Manually scale up K8S**
+    - `~/ibm/cpd-cli backup-restore unquiesce -n zen`
 - Check the status of a backup job
-    - `cpd-cli backup-restore volume-backup status -n zen <backup_name>`
+    - `~/ibm/cpd-cli backup-restore volume-backup status -n zen cpdbk-2021-0716`
+        ```
+        Name:           cpdbk-2021-0716
+        Job Name:       cpdbr-bu-cpdbk-2021-0716
+        Active:         0
+        Succeeded:      1
+        Failed:         0
+        Start Time:     Fri, 16 Jul 2021 08:27:25 +0800
+        Completed At:   Fri, 16 Jul 2021 08:32:54 +0800
+        Duration:       5m29s
+        ```
 - View a list of existing volume backups
-    - `cpd-cli backup-restore volume-backup list -n zen`
+    - `~/ibm/cpd-cli backup-restore volume-backup list -n zen`
+        ```
+        NAME            CREATED AT              LAST BACKUP
+        cpdbk-2021-0716 2021-07-16T00:27:29Z    2021-07-16T00:32:53Z
+        ```
 - Get the logs of a volume backup
-    - `cpd-cli backup-restore volume-backup logs -n zen <backup_name>`
+    - `~/ibm/cpd-cli backup-restore volume-backup logs -n zen cpdbk-2021-0716`
 
 ### Restoring the CPD file system from a local repository or object store
 The process to restore the persistent volumes (PVs) that are associated with your IBM Cloud Pak for Data project depends on the storage provider that you are using.
-- Initialize cpd-cli backup-restore
+- ~~Initialize cpd-cli backup-restore~~
+- **Manually scale down K8S** (停下 zen pod 約 10 分鐘)
+    - `~/ibm/cpd-cli backup-restore quiesce -n zen`
 - Check for completed jobs and pods
-    - `cpd-cli backup-restore volume-restore create --from-backup backup_name -n zen --dry-run <restore_name_identifier>`
-- Automatically scale down resources
-    - `cpd-cli backup-restore volume-restore create --from-backup backup_name -n zen <restore_name_identifier>`
-- Check the status of a restore job
-    - `cpd-cli backup-restore volume-restore status -n zen Restore_name_identifier`
-- View a list of existing volume restores
-    - `cpd-cli backup-restore volume-restore list -n zen`
+    - `~/ibm/cpd-cli backup-restore volume-restore create --from-backup cpdbk-2021-0716 -n zen --dry-run cpdbk-2021-0716`
+- **Run the restore command** (約 30 分鐘)
+    - `~/ibm/cpd-cli backup-restore volume-restore create --from-backup cpdbk-2021-0716 -n zen cpdbk-2021-0716 --skip-quiesce=true`
+- **Manually scale up application Kubernetes resources** (約 20 分鐘)
+    - `~/ibm/cpd-cli backup-restore unquiesce -n zen`
+
+### [Migrating Cloud Pak for Data metadata and clusters](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=cluster-migrating-cloud-pak-data-metadata-clusters)
+- Creates an NFS volume named zen-pvc
+    ```bash
+    cat << EOF | tee ~/config/zen-pvc.yaml
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+    name: zen-pvc
+    spec:
+    storageClassName: managed-nfs-storage
+    accessModes:
+        - ReadWriteMany
+    resources:
+        requests:
+        storage: 200Gi
+    EOF
+    ```
+    - `oc apply -f zen-pvc.yaml`
+
+### Install the cpdtool Docker image by using Podman
+```bash
+IMAGE_REGISTRY=`oc get route -n openshift-image-registry | grep image-registry | awk '{print $2}'`
+echo $IMAGE_REGISTRY
+NAMESPACE=`oc project -q`
+echo $NAMESPACE
+CPU_ARCH=`uname -m`
+echo $CPU_ARCH
+BUILD_NUM=`~/ibm/cpd-cli export-import version | grep "Build Number" | cut -d : -f 2 | xargs`
+echo $BUILD_NUM
+
+# Pull cpdtool image from Docker Hub
+sudo podman pull docker.io/ibmcom/cpdtool:2.0.0-${BUILD_NUM}-${CPU_ARCH}
+# Push image to internal registry
+sudo podman login -u kubeadmin -p $(oc whoami -t) $IMAGE_REGISTRY --tls-verify=false
+sudo podman tag docker.io/ibmcom/cpdtool:2.0.0-${BUILD_NUM}-${CPU_ARCH} $IMAGE_REGISTRY/$NAMESPACE/cpdtool:2.0.0-${BUILD_NUM}-${CPU_ARCH}
+sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdtool:2.0.0-${BUILD_NUM}-${CPU_ARCH} --tls-verify=false
+```
+
+### Install the zen-core-aux Docker image by using Podman
+```bash
+IMAGE_REGISTRY=`oc get route -n openshift-image-registry | grep image-registry | awk '{print $2}'`
+echo $IMAGE_REGISTRY
+NAMESPACE=`oc project -q`
+echo $NAMESPACE
+CPU_ARCH=`uname -m`
+echo $CPU_ARCH
+BUILD_NUM=`~/ibm/cpd-cli export-import version | grep "Build Number" | cut -d : -f 2 | xargs`
+echo $BUILD_NUM
+
+# Pull zen-core-aux image from Docker Hub
+sudo podman pull docker.io/ibmcom/zen-core-aux:2.0.0-${BUILD_NUM}-${CPU_ARCH}
+# Push image to internal registry
+sudo podman login -u kubeadmin -p $(oc whoami -t) $IMAGE_REGISTRY --tls-verify=false
+sudo podman tag docker.io/ibmcom/zen-core-aux:2.0.0-${BUILD_NUM}-${CPU_ARCH} $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:2.0.0-${BUILD_NUM}-${CPU_ARCH}
+sudo podman push $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:2.0.0-${BUILD_NUM}-${CPU_ARCH} --tls-verify=false
+```
+
+### Install the zen-core-aux Helm chart
+- Download the Helm chart zen-core-aux-2.0.0.tgz
+    - `wget https://github.com/IBM/cpd-cli/raw/master/cpdtool/2.0.0/x86_64/zen-core-aux-2.0.0.tgz`
+- Copy the Helm chart to the cpd-install-operator pod
+- Install the chart by using Helm
+    ```bash
+    # Delete any existing zen-core-aux-exim configmaps
+    oc delete cm cpd-zen-aux-zen-core-aux-exim-cm
+    oc delete cm zen-core-aux-exim-cm
+    # Find the cpd-install-operator pod
+    oc get po | grep cpd-install
+    cpd-install-operator-84bb575c7c-s67f7
+    # Copy the helm chart to the pod
+    oc cp zen-core-aux-2.0.0.tgz cpd-install-operator-84bb575c7c-s67f7:/tmp/zen-core-aux-2.0.0.tgz
+    # Inside the pod, run helm install
+    oc rsh cpd-install-operator-84bb575c7c-s67f7
+    cd tmp
+    helm install zen-core-aux-2.0.0.tgz --name zen-core-aux --tls
+    ```
+
+### Initialize the export-import command
+- `cpd-cli export-import init --namespace zen --arch $(uname -m) --pvc-name zen-pvc --profile=default --image-prefix=image-registry.openshift-image-registry.svc:5000/zen --profile=default`
 
 [Back to top](#)
 # 維運
 ## 大型維運
-### Shutting down the cluster
+### [用不到] ~~Shutting down the cluster~~
 ### Restarting the cluster gracefully
 ### Disaster Recovery
 
