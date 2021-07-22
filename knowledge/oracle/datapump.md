@@ -13,7 +13,7 @@ GRANT datapump_exp_full_database TO TONYLEE;
 GRANT datapump_imp_full_database TO TONYLEE;
 ```
 
-## SOP
+## SOP 1
 ```sql
 CREATE OR REPLACE DIRECTORY datapump AS '/backup/datapump';
 ```
@@ -61,6 +61,48 @@ impdp system/ncu5540 directory=datapump dumpfile=SCH_HR.dmp schemas=HR
     0x53f6f9cb8      1824  package body SYS.KUPW$WORKER
     0x53a262460         2  anonymous block
     ```
+
+## SOP 2
+# 雙方主機建立 directory
+```sql
+CREATE OR REPLACE DIRECTORY DMPDIR AS '/backup/auorpt/datapump'; -- source
+CREATE OR REPLACE DIRECTORY datapump AS '/backup_from_source/datapump'; -- target
+```
+
+# table list
+
+# source 匯出: `execute_expdp.sh`
+```bash
+#!/bin/bash
+
+cat table_list.txt | while read line
+do
+
+  expdp system/oracle \
+  directory=DMPDIR \
+  dumpfile=EXPDP_$line.dmp \
+  logfile=EXPDP_$line.log \
+  tables=$line
+
+done
+```
+
+# target 匯入: `execute_impdp.sh`
+```bash
+#!/bin/bash
+
+cat table_list.txt | while read line
+do
+
+  impdp system/oracle \
+  directory=DMPDIR \
+  dumpfile=EXPDP_$line.dmp \
+  logfile=EXPDP_$line.log \
+  table_exists_action=replace \
+  tables=$line
+
+done
+```
 
 ## Test
 - TABLE_EXISTS_ACTION: Action to take if imported object already exists

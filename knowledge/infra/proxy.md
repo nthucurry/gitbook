@@ -69,6 +69,7 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 - check: `netstat -tulnp | grep squid`
 
 ## 設定 Header & TLS (未完成)
+- [ssl.conf](./certs/ssl.conf)
 - 建立放憑證的資料夾
     ```bash
     mkdir -p /etc/squid/certs
@@ -149,11 +150,11 @@ if (
 ```
 ### Wireshark
 https://wiki.wireshark.org/HTTP_Preferences
-- `ip.src == 10.0.8.5 && ip.dst == 10.0.8.4 &&  http && tcp.port == 3128`
+- `ip.src == 10.0.8.5 && ip.dst == 10.0.8.4 && ttp && tcp.port == 3128`
 
 ## OS 設定位置
 - windows
-    <br><img src="../../img/proxy/windows-config.png">
+    <br><img src="../../img/proxy/windows-config.png" width=400>
 - linux
     - `/etc/yum.conf`
     - `export http_proxy=http://squid.gotdns.ch:3128`
