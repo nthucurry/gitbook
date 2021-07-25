@@ -125,3 +125,19 @@ Set-AzContext $context
 $vnet = Get-AzVirtualNetwork -Name VNetTEST -ResourceGroupName DBA_Test
 Get-AzVirtualNetworkSubnetConfig -Name MyAGSubnet -VirtualNetwork $vnet
 ```
+
+## show all policy detail
+```bash
+policy_definition_id="/providers/Microsoft.Authorization/policyDefinitions/687aa49d-0982-40f8-bf6b-66d1da97a04b"
+az policy assignment list \
+--query "[?policyDefinitionId == '$policy_definition_id'].{policy_name:displayName, status:parameters.effect.value}" \
+-o tsv
+```
+
+## check resource (undone)
+```bash
+resource_group="auobigdata/openpose_rg"
+policy_definition_id="/providers/Microsoft.Authorization/policyDefinitions/687aa49d-0982-40f8-bf6b-66d1da97a04b"
+az policy assignment non-compliance-message list \
+-g $resource_group -n $policy_definition_id
+# https://jmespath.org/

@@ -2,7 +2,7 @@
 https://github.com/Azure/azure-policy/tree/master/built-in-policies/policyDefinitions
 
 # API Management
-## API Management services should use a virtual network
+- API Management services should use a virtual network
 
 # API for FHIR
 # App Configuration
@@ -61,9 +61,11 @@ Policy compliance
 # Storage
 - [ ] Azure File Sync should use private link
 - [ ] Storage account public access should be disallowed
-    - 開啟後，從 Portal 無法看 storage container 裡面的資訊
+    - 若開啟後，從 Portal 無法看 storage container 裡面的資訊
+    <br><img src="../../../img/cloud/azure/policy-public-access-deny.png" width=300>
 - [x] Storage accounts should use private link
 - [x] Storage accounts should restrict network access
+    - 需用 Selected networks
     - 確認 bigdatastoragefirewall 有沒有符合
 
 # Stream Analytics
