@@ -126,18 +126,43 @@ $vnet = Get-AzVirtualNetwork -Name VNetTEST -ResourceGroupName DBA_Test
 Get-AzVirtualNetworkSubnetConfig -Name MyAGSubnet -VirtualNetwork $vnet
 ```
 
-## show all policy detail
+## 顯示 Policy Rule 資訊 (undone)
 ```bash
 policy_definition_id="/providers/Microsoft.Authorization/policyDefinitions/687aa49d-0982-40f8-bf6b-66d1da97a04b"
+
 az policy assignment list \
 --query "[?policyDefinitionId == '$policy_definition_id'].{policy_name:displayName, status:parameters.effect.value}" \
 -o tsv
+
+az policy assignment list \
+--query "[].{policy_name:displayName, status:parameters.effect.value}" \
+-o tsv | sort
+
+az policy assignment list \
+--query "[?policyDefinitionId == '$policy_definition_id']"
+
+policy_assignment="152e5721d9864336bce85d68"
+az policy assignment non-compliance-message show \
+--name $policy_assignment
+
+subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
+az policy state list \
+--subscription $subscription \
+--query "[].{policy_name:policyDefinitionName, action:policyDefinitionAction}" \
+-o tsv
+
+subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
+az policy definition list \
+--subscription $subscription \
+--query "[].{name:displayName, scope:parameters.effect.allowedValues}"
+#-o tsv | grep -v "Deprecated" | sort
 ```
 
-## check resource (undone)
+## 檢查資源合規性 (undone)
 ```bash
 resource_group="auobigdata/openpose_rg"
 policy_definition_id="/providers/Microsoft.Authorization/policyDefinitions/687aa49d-0982-40f8-bf6b-66d1da97a04b"
 az policy assignment non-compliance-message list \
 -g $resource_group -n $policy_definition_id
 # https://jmespath.org/
+```
