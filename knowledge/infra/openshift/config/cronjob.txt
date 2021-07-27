@@ -1,0 +1,2 @@
+00 19 * * * /home/azadmin/cmd/backup-etcd.sh
+30 19 * * * /home/azadmin/cmd/backup-wkc.sh

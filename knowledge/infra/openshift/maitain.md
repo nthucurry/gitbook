@@ -15,6 +15,7 @@
             - [Repository secret](#repository-secret)
         - [Install the cpdbr Docker image](#install-the-cpdbr-docker-image)
         - [Backing up the CPD file system to a local repository or object store](#backing-up-the-cpd-file-system-to-a-local-repository-or-object-store)
+        - [Schedule job](#schedule-job)
         - [Restoring the CPD file system from a local repository or object store](#restoring-the-cpd-file-system-from-a-local-repository-or-object-store)
         - [Migrating Cloud Pak for Data metadata and clusters](#migrating-cloud-pak-for-data-metadata-and-clusters)
         - [Install the cpdtool Docker image by using Podman](#install-the-cpdtool-docker-image-by-using-podman)
@@ -29,6 +30,7 @@
     - [日常維運](#日常維運)
         - [Replacing an unhealthy etcd member](#replacing-an-unhealthy-etcd-member)
         - [Replacing the unhealthy etcd member (未完成...)](#replacing-the-unhealthy-etcd-member-未完成)
+    - [Alert Mail (TBD)](#alert-mail-tbd)
 
 # 重點概念
 - OpenShift cluster 不需備份 VM，因為已經是 cluster 架構了，壞了在透過 yaml rebuild 就好
@@ -66,6 +68,7 @@
         mkdir -p /mnt/backup/config
         mount -o sec=sys,vers=3,nolock,proto=tcp wkcnfs.blob.core.windows.net:/wkcnfs/config /mnt/backup/config
         ```
+    - 參考: [mount-aznfs.sh](./script/mount-aznfs.sh)
 
 # OpenShift
 ## Creating a Self-Signed SSL Certificate for your Intranet Services
@@ -127,7 +130,7 @@
     <br><img src="../../../img/security/root-cert-step-2.png" width=500>
     <br><img src="../../../img/security/root-cert-step-3.png" width=500>
     <br><img src="../../../img/security/root-cert-step-4.png" width=500>
-    <br><img src="../../../img/security/root-cert-step-5.png" width=500>
+    <br><img src="../../../img/security/root-cert-step-5.png" width=250>
 - 從 pfx 匯出 crt (or cer)
     - `openssl pkcs12 -in server.pfx -nokeys -password "pass:ncu5540" -out - 2>/dev/null | openssl x509 -out server.crt`
     - `openssl pkcs12 -in server.pfx -nocerts -password "pass:ncu5540" -nodes -out server.key`
@@ -182,7 +185,7 @@ The following table describes the components and services that support backup an
 ### [Installing the CPD backup and restore service](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=project-installing-backup-restore-service)
 #### Backup and restore service PVC
 - [不使用] ~~Creating a PVC from a PV on an NFS file system~~
-- Creating a PVC from a storage class
+- Creating a PVC from a storage class of bastion VM
     - 建立 NFS volumn yaml: [cpdbr-pvc.yaml](./config/cpdbr-pvc.yaml)
     - `oc apply -f cpdbr-pvc.yaml -n zen`
 
@@ -256,6 +259,10 @@ sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
         ```
 - Get the logs of a volume backup
     - `~/ibm/cpd-cli backup-restore volume-backup logs -n zen cpdbk-2021-0716`
+
+### Schedule job
+- [cronjob.txt](./config/cronjob.txt)
+- [backup-wkc.sh](./script/backup-wkc.sh)
 
 ### Restoring the CPD file system from a local repository or object store
 The process to restore the persistent volumes (PVs) that are associated with your IBM Cloud Pak for Data project depends on the storage provider that you are using.
@@ -367,3 +374,7 @@ sudo podman push $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:2.0.0-${BUILD_NUM}-${CP
 ### [Replacing the unhealthy etcd member](https://docs.openshift.com/container-platform/4.5/backup_and_restore/replacing-unhealthy-etcd-member.html#replacing-the-unhealthy-etcd-member) (未完成...)
 -  Replacing an unhealthy etcd member whose machine is not running or whose node is not ready
     1. Remove the unhealthy member.
+
+## Alert Mail (TBD)
+- 從 log 抓 successfully... 等字串
+- 若無符合，mail 通知
