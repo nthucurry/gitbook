@@ -15,7 +15,7 @@
             - [Repository secret](#repository-secret)
         - [Install the cpdbr Docker image](#install-the-cpdbr-docker-image)
         - [Backing up the CPD file system to a local repository or object store](#backing-up-the-cpd-file-system-to-a-local-repository-or-object-store)
-        - [Schedule job](#schedule-job)
+        - [Schedule job (Option)](#schedule-job-option)
         - [Restoring the CPD file system from a local repository or object store](#restoring-the-cpd-file-system-from-a-local-repository-or-object-store)
         - [Migrating Cloud Pak for Data metadata and clusters](#migrating-cloud-pak-for-data-metadata-and-clusters)
         - [Install the cpdtool Docker image by using Podman](#install-the-cpdtool-docker-image-by-using-podman)
@@ -260,7 +260,7 @@ sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
 - Get the logs of a volume backup
     - `~/ibm/cpd-cli backup-restore volume-backup logs -n zen cpdbk-2021-0716`
 
-### Schedule job
+### Schedule job (Option)
 - [cronjob.txt](./config/cronjob.txt)
 - [backup-wkc.sh](./script/backup-wkc.sh)
 
