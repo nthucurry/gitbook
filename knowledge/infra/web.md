@@ -58,4 +58,4 @@
         ```
 - 重啟 apache 服務
 - 測試: sslshopper.com
-    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/security/ssl-result.png">
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/security/ssl-result.png" width=500>

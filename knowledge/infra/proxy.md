@@ -29,6 +29,9 @@ yum clean all
 
 timedatectl set-timezone Asia/Taipei
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+
+echo "alias srs=‘systemctl restart squid.service’" >> ~/.bashrc
+echo "alias sss=‘systemctl status squid.service’" >> ~/.bashrc
 ```
 
 # 修改參數
@@ -78,19 +81,19 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 - 產生 self-signed SSL certificate and trusted certificate
     ```bash
     # 用 openssl 創建 CA 證書 (PEM 格式，有效期為一年)
-    #openssl req -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -extensions v3_ca -keyout squid-ca-key.pem -out squid-ca-cert.pem
     openssl req -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -extensions v3_req -keyout server.key -out server.crt -config ssl.conf
-
-    # 做啥用的?
-    cat server.crt server.key >> squid-ca-cert-key.pem
 
     # 產生 CSR (需重打 ssl.conf 資訊)
     openssl req -out server.csr -key server.key -new
 
     chown squid:squid -R /etc/squid/certs
     ```
-- 產生 PEM (crt 轉成 cer，DER 編碼二進制格式)
+- 產生 PEM
     ```bash
+    # 產生 .pem = .key + ,crt
+    cat server.crt server.key >> squid-ca-cert-key.pem
+
+    # crt 轉成 cer，DER 編碼二進制格式
     openssl x509 -outform DER -in server.crt -out server.cer
     ```
 - 修改 squid.conf
@@ -125,6 +128,7 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
     ```bash
     curl --proxy http://squid.gotdns.ch:3128 ipinfo.io
     ```
+- 驗證該網站是否有透過 squid 的憑證交握
 
 ## Header 測試工具
 ### Fiddler
@@ -154,7 +158,7 @@ https://wiki.wireshark.org/HTTP_Preferences
 
 ## OS 設定位置
 - windows
-    <br><img src="../../img/proxy/windows-config.png" width=400>
+    <br><img src="../../img/proxy/windows-config.png" width=350>
 - linux
     - `/etc/yum.conf`
     - `export http_proxy=http://squid.gotdns.ch:3128`
