@@ -1,19 +1,13 @@
 {
     "properties": {
         "policyId": "default",
-        "sourceAccount": "<source-account>",
-        "destinationAccount": "<dest-account>",
+        "sourceAccount": "1storageauo",
+        "destinationAccount": "datainterchange",
         "rules": [
             {
                 "ruleId": "",
-                "sourceContainer": "<source-container>",
-                "destinationContainer": "<destination-container>",
-                "filters": {
-                    "prefixMatch": [
-                        "b"
-                    ],
-                    "minCreationTime": "2020-08-028T00:00:00Z"
-                }
+                "sourceContainer": "i-mfg",
+                "destinationContainer": "i-mfg"
             }
         ]
     }
