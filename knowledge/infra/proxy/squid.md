@@ -30,8 +30,8 @@ yum clean all
 timedatectl set-timezone Asia/Taipei
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
-echo "alias srs=‘systemctl restart squid.service’" >> ~/.bashrc
-echo "alias sss=‘systemctl status squid.service’" >> ~/.bashrc
+echo "alias srs='systemctl restart squid.service''" >> ~/.bashrc
+echo "alias sss='systemctl status squid.service'" >> ~/.bashrc
 ```
 
 # 修改參數
