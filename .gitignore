@@ -70,7 +70,6 @@ knowledge/exam/*
 !knowledge/infra/macos.md
 !knowledge/infra/sharepoint.md
 !knowledge/infra/gitlab.md
-!knowledge/infra/proxy.md
 !knowledge/infra/zabbix.md
 !knowledge/infra/windows.md
 !knowledge/infra/network.md
@@ -81,5 +80,6 @@ knowledge/exam/*
 !knowledge/infra/paas
 !knowledge/infra/web.md
 !knowledge/infra/cert
+!knowledge/infra/proxy
 !knowledge/exam
 !knowledge/exam/oracle-11g.md
