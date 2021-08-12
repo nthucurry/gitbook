@@ -158,7 +158,7 @@ https://wiki.wireshark.org/HTTP_Preferences
 
 ## OS 設定位置
 - windows
-    <br><img src="../../img/proxy/windows-config.png" width=350>
+    <br><img src="../../../img/proxy/windows-config.png" width=350>
 - linux
     - `/etc/yum.conf`
     - `export http_proxy=http://squid.gotdns.ch:3128`
