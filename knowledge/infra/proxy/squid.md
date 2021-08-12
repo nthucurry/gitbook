@@ -65,9 +65,19 @@ echo "alias sss='systemctl status squid.service'" >> ~/.bashrc
     ```
 - `vi /etc/squid/allow_url.lst`
     ```
-    mirrorlist.centos.org
-    yum.mariadb.org
-    ftp.twaren.net
+    # azure portal
+    portal.azure.com
+    login.microsoftonline.com
+    login.live.com
+    management.azure.com
+
+    # databricks
+    afd.hosting.portal.azure.net
+    .azuredatabricks.net
+
+    # else
+    adfs.auo.com
+    ipinfo.io
     ```
 - check: `netstat -tulnp | grep squid`
 
