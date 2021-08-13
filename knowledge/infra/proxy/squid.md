@@ -32,6 +32,7 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
 echo "alias srs='systemctl restart squid.service''" >> ~/.bashrc
 echo "alias sss='systemctl status squid.service'" >> ~/.bashrc
+source ~/.bashrc
 ```
 
 # 修改參數
