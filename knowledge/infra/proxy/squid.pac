@@ -9,8 +9,8 @@ function FindProxyForURL(url, host) {
         (host == "login.windows.net")
     )
         // If the hostname matches, send to the proxy
-        return "PROXY 10.0.0.4:3128; DIRECT";
+        return "PROXY 10.0.8.4:3128";
     else
         // DEFAULT RULE: All other traffic, send direct
-        return "DIRECT";
+        return "PROXY 10.0.8.13:3128";
 }

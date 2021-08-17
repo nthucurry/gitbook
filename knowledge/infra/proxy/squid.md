@@ -1,7 +1,7 @@
 - [前言](#前言)
 - [安裝 Squid](#安裝-squid)
 - [修改參數](#修改參數)
-    - [設定 Header & TLS (未完成)](#設定-header--tls-未完成)
+    - [設定 Header & TLS](#設定-header--tls)
     - [Header 測試工具](#header-測試工具)
         - [Fiddler](#fiddler)
         - [Wireshark](#wireshark)
@@ -30,7 +30,7 @@ yum clean all
 timedatectl set-timezone Asia/Taipei
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
-echo "alias srs='systemctl restart squid.service''" >> ~/.bashrc
+echo "alias srs='systemctl restart squid.service'" >> ~/.bashrc
 echo "alias sss='systemctl status squid.service'" >> ~/.bashrc
 source ~/.bashrc
 ```
@@ -82,7 +82,7 @@ source ~/.bashrc
     ```
 - check: `netstat -tulnp | grep squid`
 
-## 設定 Header & TLS (未完成)
+## 設定 Header & TLS
 - [ssl.conf](./certs/ssl.conf)
 - 建立放憑證的資料夾
     ```bash
@@ -140,6 +140,9 @@ source ~/.bashrc
     curl --proxy http://squid.gotdns.ch:3128 ipinfo.io
     ```
 - 驗證該網站是否有透過 squid 的憑證交握
+- PAC 設定方式
+    <br><img src="../../../img/proxy/pac-config-on-windows.png" width=350>
+
 
 ## Header 測試工具
 ### Fiddler
@@ -169,7 +172,7 @@ https://wiki.wireshark.org/HTTP_Preferences
 
 ## OS 設定位置
 - windows
-    <br><img src="../../../img/proxy/windows-config.png" width=350>
+    <br><img src="../../../img/proxy/proxy-on-windows-config.png" width=350>
 - linux
     - `/etc/yum.conf`
     - `export http_proxy=http://squid.gotdns.ch:3128`

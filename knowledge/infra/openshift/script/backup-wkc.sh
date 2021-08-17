@@ -8,3 +8,5 @@ backup_time=`date +%Y-%m%d`
     > /home/azadmin/cmd/log/wkc-backup-volume-$backup_time.log
 /home/azadmin/ibm/cpd-cli backup-restore unquiesce -n zen \
     > /home/azadmin/cmd/log/wkc-backup-unquiesce-$backup_time.log
+
+# /home/azadmin/ibm/cpd-cli backup-restore volume-backup purge cpdbk-2021-0801
