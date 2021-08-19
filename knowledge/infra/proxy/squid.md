@@ -215,5 +215,5 @@ netstat -anpt | grep ':80'
 30 7 * * * /usr/local/bin/sarg -d day-1 -o /var/www/html/squid-reports
 
 # check connection list
-/usr/local/bin/sarg -t 11:00-12:00 -d day-1 -d day-0 -o /var/www/html/squid-reports
+/usr/local/bin/sarg -t 11:00-12:00 -d day-0 -o /var/www/html/squid-reports
 ```
