@@ -32,6 +32,7 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 
 echo "alias srs='systemctl restart squid.service'" >> ~/.bashrc
 echo "alias sss='systemctl status squid.service'" >> ~/.bashrc
+echo "alias vi='vim'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
@@ -83,7 +84,7 @@ source ~/.bashrc
 - check: `netstat -tulnp | grep squid`
 
 ## 設定 Header & TLS
-- [ssl.conf](./certs/ssl.conf)
+- [ssl.conf](../certs/ssl.conf)
 - 建立放憑證的資料夾
     ```bash
     mkdir -p /etc/squid/certs
@@ -94,14 +95,18 @@ source ~/.bashrc
     # 用 openssl 創建 CA 證書 (PEM 格式，有效期為一年)
     openssl req -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -extensions v3_req -keyout server.key -out server.crt -config ssl.conf
 
-    # 產生 CSR (需重打 ssl.conf 資訊)
+    # 產生 CSR
     openssl req -out server.csr -key server.key -new
+    openssl req -out server.csr -key server.key -new -config ssl.conf
 
-    chown squid:squid -R /etc/squid/certs
+    # 產生 PFX (trusted certificate，放到 Client 端)
+    openssl pkcs12 -in server.crt -inkey server.key -export -out server.pfx -password pass:1234
+
+    #chown squid:squid -R /etc/squid/certs
     ```
 - 產生 PEM
     ```bash
-    # 產生 .pem = .key + ,crt
+    # 產生 .pem = .key + .crt
     cat server.crt server.key >> squid-ca-cert-key.pem
 
     # crt 轉成 cer，DER 編碼二進制格式
@@ -142,7 +147,6 @@ source ~/.bashrc
 - 驗證該網站是否有透過 squid 的憑證交握
 - PAC 設定方式
     <br><img src="../../../img/proxy/pac-config-on-windows.png" width=350>
-
 
 ## Header 測試工具
 ### Fiddler
