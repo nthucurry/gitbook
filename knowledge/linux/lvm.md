@@ -22,6 +22,9 @@
     <br><img src="https://github.com/ShaqtinAFool/gitbook/raw/master/img/linux/lvm/architecture.png">
 
 ## 步驟
+### (0) 讓 VM 看得到 Disk 正確的大小
+- `echo 1 > /sys/block/sdc/device/rescan`
+
 ### (1) 分割磁碟 & 選定格式
 - `fdisk -l`
 - `fdisk -l /dev/sdb`(建議不切 partition)
@@ -37,6 +40,8 @@
 - `pvscan`
 - `pvcreate /dev/sdb`
 - `pvdisplay /dev/sdb`
+- `pvresize /dev/sdc`
+    - 沒切 partition 時，好用
 
 ### (3) Volume Group, VG, 捲軸群組
 - 調整 VG
@@ -68,6 +73,7 @@
         - `lvextend -l 204790 /dev/mapper/vg_demo-lv_u01`
     - 調整到目標大小
         - `lvresize -L +20G /dev/testvg/testlv`
+        - `lvextend -l 291800 -n /dev/vg01/lv_s01`
     - 調整到 Max
         - `lvextend -l +100%FREE /dev/mapper/vg_demo-lv_u01`
     - 結果
