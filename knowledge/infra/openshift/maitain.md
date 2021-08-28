@@ -261,7 +261,10 @@ sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
     - `~/ibm/cpd-cli backup-restore volume-backup logs -n zen cpdbk-2021-0716`
 
 ### Schedule job (Option)
+- [/etc/rc.d/rc.local](./config/rc.local)
 - [cronjob.txt](./config/cronjob.txt)
+- [cronjob.txt](./script/backup-etcd.sh)
+- [check-nfs-disk.sh](./script/check-nfs-disk.sh)
 - [backup-wkc.sh](./script/backup-wkc.sh)
 
 ### Restoring the CPD file system from a local repository or object store
