@@ -135,6 +135,7 @@ source ~/.bashrc
 - 檢查 squid 組態正確性
     ```bash
     squid -k parse
+    squid -k check
     ```
 - 初始化憑證資料夾
     ```bash
