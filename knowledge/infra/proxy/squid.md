@@ -54,9 +54,13 @@ source ~/.bashrc
     #
     # INSERT YOUR OWN RULE(S) HERE TO ALLOW ACCESS FROM YOUR CLIENTS
     #
+    acl exe-filter urlpath_regex -i \.exe$
+    http_access deny exe-filter
     acl allowurl url_regex -i "/etc/squid/allow_url.lst"
+
     acl iconnect src 10.251.12.0/22
     acl iconnect src 111.249.192.18
+
     http_access deny !allowurl
     http_access deny !iconnect
     http_access allow allowurl
