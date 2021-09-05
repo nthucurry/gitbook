@@ -11,4 +11,4 @@ backup_time=`date +%Y-%m%d`
     > /mnt/backup/wkc/$service_type/wkc-backup-unquiesce-$backup_time.log
 
 delete_time=`date +%Y-%m%d --date="-7 day"`
-/home/azadmin/ibm/cpd-cli backup-restore volume-backup purge cpdbk-$delete_time
+/home/azadmin/ibm/purge-wkc-bk $delete_time

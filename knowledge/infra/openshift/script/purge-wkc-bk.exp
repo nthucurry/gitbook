@@ -1,0 +1,10 @@
+#!/usr/bin/expect
+
+set delete_time [lindex $argv 0]
+
+spawn /home/azadmin/ibm/cpd-cli backup-restore volume-backup purge cpdbk-$delete_time --retention-time 120h
+
+expect {
+    "Are you sure you want to proceed(y/n)?" { send "y\r" }
+}
+interact

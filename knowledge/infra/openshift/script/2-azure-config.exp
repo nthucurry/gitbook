@@ -2,7 +2,7 @@
 
 set subscription "de61f224-9a69-4ede-8273-5bcef854dc20"
 set tenant "2fa430c4-fd7e-4dfe-996c-46fc2cda44f8"
-set  service_principal_client_id "aec62ff6-bae7-4152-86d8-f1fdfef6ea8a"
+set service_principal_client_id "aec62ff6-bae7-4152-86d8-f1fdfef6ea8a"
 set service_principal_client_secret "wpicu-gsJBPTxyKk1nmUOe1sGsyd51_po-"
 
 spawn ~/ocp4.5_inst/openshift-install create install-config --dir=/home/azadmin/ocp4.5_cust
