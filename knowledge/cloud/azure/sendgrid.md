@@ -1,6 +1,8 @@
+# Send Mail by SendGrid
+<br><img src="../../../img/azure/../cloud/azure/sendgrid-login-portal.png">
+<br><img src="../../../img/azure/../cloud/azure/sendgrid-api-curl.png">
 
-
-
+# Sample Code
 ```bash
 export SENDGRID_API_KEY='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'
 
