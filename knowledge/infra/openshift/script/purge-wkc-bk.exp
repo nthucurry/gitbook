@@ -7,4 +7,5 @@ spawn /home/azadmin/ibm/cpd-cli backup-restore volume-backup purge cpdbk-$delete
 expect {
     "Are you sure you want to proceed(y/n)?" { send "y\r" }
 }
-interact
+expect eof
+exit

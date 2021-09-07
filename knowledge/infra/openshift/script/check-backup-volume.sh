@@ -1,0 +1,1 @@
+~/ibm/cpd-cli backup-restore volume-backup list -n zen--details
