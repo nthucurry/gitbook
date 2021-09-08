@@ -1,3 +1,3 @@
 00 19 * * * /home/azadmin/cmd/backup-etcd.sh
-10 19 * * * /home/azadmin/cmd/check-nfs-disk.sh
-30 19 * * * /home/azadmin/cmd/backup-wkc.sh
+10 19 * * * /home/azadmin/cmd/backup-wkc.sh
+50 20 * * * /home/azadmin/cmd/check-nfs-disk.sh

@@ -16,4 +16,4 @@ chmod 755 /mnt/backup/wkc/$service_type/wkc-backup-volume-$backup_time.log
 chmod 755 /mnt/backup/wkc/$service_type/wkc-backup-unquiesce-$backup_time.log
 
 delete_time=`date +%Y-%m%d --date="-7 day"`
-/home/azadmin/ibm/purge-wkc-bk $delete_time
+/home/azadmin/cmd/purge-wkc-bk.exp $delete_time

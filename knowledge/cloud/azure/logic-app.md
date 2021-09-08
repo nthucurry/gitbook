@@ -1,0 +1,6 @@
+- [Logic app trigger when blob is created showing error](#logic-app-trigger-when-blob-is-created-showing-error)
+
+# [Logic app trigger when blob is created showing error](https://docs.microsoft.com/en-us/answers/questions/359193/logic-app-trigger-when-blob-is-created-showing-err.html)
+- Logic apps can't directly access storage accounts that are behind firewalls if they're both in the same region. As a workaround, you can have your logic apps and storage account in different regions.
+- https://docs.microsoft.com/en-us/azure/connectors/connectors-create-api-azureblobstorage?tabs=single-tenant#access-storage-accounts-in-other-regions
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/logic-trigger-error.png">
