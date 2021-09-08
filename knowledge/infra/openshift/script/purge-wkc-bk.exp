@@ -1,4 +1,4 @@
-#!/usr/bin/expect
+#!/usr/bin/expect -f
 
 set delete_time [lindex $argv 0]
 
@@ -8,3 +8,5 @@ expect {
     "Are you sure you want to proceed(y/n)?" { send "y\r" }
 }
 interact
+#expect eof
+#exit
