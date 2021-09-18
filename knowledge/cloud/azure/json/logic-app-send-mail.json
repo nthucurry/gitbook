@@ -1,0 +1,342 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Compose": {
+                "inputs": "@json(body('HTTP_-_List_Blob'))",
+                "runAfter": {
+                    "HTTP_-_List_Blob": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Compose"
+            },
+            "Convert_time_zone": {
+                "inputs": {
+                    "baseTime": "@{utcNow()}",
+                    "destinationTimeZone": "UTC",
+                    "formatString": "r",
+                    "sourceTimeZone": "UTC"
+                },
+                "kind": "ConvertTimeZone",
+                "runAfter": {},
+                "type": "Expression"
+            },
+            "Filter_array": {
+                "inputs": {
+                    "from": "@body('Parse_JSON')?['EnumerationResults']?['Blobs']?['Blob']",
+                    "where": "@contains(item()?['Name'], 'dev/')"
+                },
+                "runAfter": {
+                    "Parse_JSON": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Query"
+            },
+            "For_each": {
+                "actions": {
+                    "Append_to_array_variable": {
+                        "inputs": {
+                            "name": "Attachments",
+                            "value": {
+                                "ContentBytes": "@{base64(body('HTTP_-_Retrieve_Blob_Content'))}",
+                                "Name": "@{outputs('Compose_2')}"
+                            }
+                        },
+                        "runAfter": {
+                            "Compose_2": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "AppendToArrayVariable"
+                    },
+                    "Append_to_string_variable": {
+                        "inputs": {
+                            "name": "emailcontent",
+                            "value": "@{outputs('Compose_2')}<br/>\n==================<br/>\n@{body('HTTP_-_Retrieve_Blob_Content')}<br/><br/>"
+                        },
+                        "runAfter": {
+                            "Append_to_array_variable": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "AppendToStringVariable"
+                    },
+                    "Compose_2": {
+                        "inputs": "@items('For_each')?['Name']",
+                        "runAfter": {
+                            "HTTP_-_Retrieve_Blob_Content": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "Compose"
+                    },
+                    "HTTP": {
+                        "inputs": {
+                            "authentication": {
+                                "audience": "https://storage.azure.com",
+                                "type": "ManagedServiceIdentity"
+                            },
+                            "headers": {
+                                "x-ms-date": "@body('Convert_time_zone')",
+                                "x-ms-version": "2020-10-02"
+                            },
+                            "method": "DELETE",
+                            "uri": "https://wkcnfs.blob.core.windows.net/nfs-disk-space/@{items('For_each')?['Name']}"
+                        },
+                        "runAfter": {
+                            "HTTP_-_Create_in_Archive_Folder": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "Http"
+                    },
+                    "HTTP_-_Create_in_Archive_Folder": {
+                        "inputs": {
+                            "authentication": {
+                                "audience": "https://storage.azure.com",
+                                "type": "ManagedServiceIdentity"
+                            },
+                            "body": "@body('HTTP_-_Retrieve_Blob_Content')",
+                            "headers": {
+                                "x-ms-blob-type": "BlockBlob",
+                                "x-ms-version": "2020-10-02"
+                            },
+                            "method": "PUT",
+                            "uri": "https://wkcnfs.blob.core.windows.net/nfs-disk-space/@{replace(outputs('Compose_2'), 'dev/', 'Archive/')}"
+                        },
+                        "runAfter": {
+                            "Append_to_string_variable": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "Http"
+                    },
+                    "HTTP_-_Retrieve_Blob_Content": {
+                        "inputs": {
+                            "authentication": {
+                                "audience": "https://storage.azure.com",
+                                "type": "ManagedServiceIdentity"
+                            },
+                            "headers": {
+                                "x-ms-date": "@body('Convert_time_zone')",
+                                "x-ms-version": "2020-10-02"
+                            },
+                            "method": "GET",
+                            "uri": "https://wkcnfs.blob.core.windows.net/nfs-disk-space/@{items('For_each')?['Name']}"
+                        },
+                        "runAfter": {},
+                        "type": "Http"
+                    }
+                },
+                "foreach": "@body('Filter_array')",
+                "runAfter": {
+                    "Initialize_variable_2": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Foreach"
+            },
+            "HTTP_-_List_Blob": {
+                "inputs": {
+                    "authentication": {
+                        "audience": "https://storage.azure.com",
+                        "type": "ManagedServiceIdentity"
+                    },
+                    "headers": {
+                        "x-ms-date": "@body('Convert_time_zone')",
+                        "x-ms-version": "2020-10-02"
+                    },
+                    "method": "GET",
+                    "uri": "https://wkcnfs.blob.core.windows.net/nfs-disk-space?restype=container&comp=list"
+                },
+                "runAfter": {
+                    "Convert_time_zone": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Http"
+            },
+            "Initialize_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "Attachments",
+                            "type": "array",
+                            "value": []
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Filter_array": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Initialize_variable_2": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "emailcontent",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Parse_JSON": {
+                "inputs": {
+                    "content": "@outputs('Compose')",
+                    "schema": {
+                        "properties": {
+                            "?xml": {
+                                "properties": {
+                                    "@@encoding": {
+                                        "type": "string"
+                                    },
+                                    "@@version": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "EnumerationResults": {
+                                "properties": {
+                                    "@@ContainerName": {
+                                        "type": "string"
+                                    },
+                                    "@@ServiceEndpoint": {
+                                        "type": "string"
+                                    },
+                                    "Blobs": {
+                                        "properties": {
+                                            "Blob": {
+                                                "items": {
+                                                    "properties": {
+                                                        "Name": {
+                                                            "type": "string"
+                                                        },
+                                                        "OrMetadata": {},
+                                                        "Properties": {
+                                                            "properties": {
+                                                                "AccessTier": {
+                                                                    "type": "string"
+                                                                },
+                                                                "AccessTierInferred": {
+                                                                    "type": "string"
+                                                                },
+                                                                "BlobType": {
+                                                                    "type": "string"
+                                                                },
+                                                                "Cache-Control": {},
+                                                                "Content-CRC64": {},
+                                                                "Content-Disposition": {},
+                                                                "Content-Encoding": {},
+                                                                "Content-Language": {},
+                                                                "Content-Length": {},
+                                                                "Content-MD5": {},
+                                                                "Content-Type": {},
+                                                                "Creation-Time": {},
+                                                                "Etag": {},
+                                                                "Last-Modified": {},
+                                                                "LeaseState": {},
+                                                                "LeaseStatus": {},
+                                                                "ServerEncrypted": {}
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "Name",
+                                                        "Properties",
+                                                        "OrMetadata"
+                                                    ],
+                                                    "type": "object"
+                                                },
+                                                "type": "array"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "NextMarker": {}
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "runAfter": {
+                    "Compose": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ParseJson"
+            },
+            "Send_email_(V4)": {
+                "inputs": {
+                    "body": {
+                        "from": "p0460369@o365.fcu.edu.tw",
+                        "ishtml": true,
+                        "subject": "test",
+                        "text": "<p>@{variables('emailcontent')}</p>",
+                        "to": "xu3ej04u454@gmail.com"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['sendgrid']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/v4/mail/send"
+                },
+                "runAfter": {
+                    "For_each": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "Recurrence": {
+                "recurrence": {
+                    "frequency": "Month",
+                    "interval": 1
+                },
+                "runtimeConfiguration": {
+                    "concurrency": {
+                        "runs": 57
+                    }
+                },
+                "type": "Recurrence"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "sendgrid": {
+                    "connectionId": "/subscriptions/de61f224-9a69-4ede-8273-5bcef854dc20/resourceGroups/WKC/providers/Microsoft.Web/connections/sendgrid",
+                    "connectionName": "sendgrid",
+                    "id": "/subscriptions/de61f224-9a69-4ede-8273-5bcef854dc20/providers/Microsoft.Web/locations/southeastasia/managedApis/sendgrid"
+                }
+            }
+        }
+    }
+}
