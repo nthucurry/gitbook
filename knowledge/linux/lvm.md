@@ -25,7 +25,7 @@
 ### (0) 讓 VM 看得到 Disk 正確的大小
 - `echo 1 > /sys/block/sdc/device/rescan`
 
-### (1) 分割磁碟 & 選定格式
+### (1) 分割磁碟 & 選定格式 (option)
 - `fdisk -l`
 - `fdisk -l /dev/sdb`(建議不切 partition)
 - `fdisk /dev/sdb`(這樣就是會切 partition)

@@ -47,8 +47,8 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     # docker daemon setting
     sudo mkdir -p /etc/systemd/system/docker.service.d
     echo "[Service]" >> /etc/systemd/system/docker.service.d/http-proxy.conf
-    echo "Environment=\"HTTP_PROXY=http://10.250.12.5:3128/\"" >> /etc/systemd/system/docker.service.d/http-proxy.conf
-    echo "Environment=\"HTTPS_PROXY=http://10.250.12.5:3128/\"" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"HTTP_PROXY=http://10.250.12.5:3128\"" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"HTTPS_PROXY=http://10.250.12.5:3128\"" >> /etc/systemd/system/docker.service.d/http-proxy.conf
 
     sudo systemctl daemon-reload
     sudo systemctl restart docker
