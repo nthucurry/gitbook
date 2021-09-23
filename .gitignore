@@ -74,6 +74,7 @@ knowledge/exam/*
 !knowledge/infra/windows.md
 !knowledge/infra/network.md
 !knowledge/infra/veeam.md
+!knowledge/infra/elk.md
 !knowledge/infra/openshift
 !knowledge/infra/k8s
 !knowledge/infra/docker
