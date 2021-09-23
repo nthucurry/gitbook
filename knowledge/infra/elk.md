@@ -68,7 +68,7 @@
 
 # 匯入資料
 - `vi /etc/logstash/conf.d/json-read.conf`
-    ```json
+    ```conf
     input {
         file {
             start_position => "beginning"
