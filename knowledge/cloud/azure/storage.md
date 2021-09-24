@@ -1,6 +1,7 @@
 - [Troubleshoot](#troubleshoot)
 - [How to mount it?](#how-to-mount-it)
 - [Create an NFS share](#create-an-nfs-share)
+- [Mount blob on Linux](#mount-blob-on-linux)
 - [Configure object replication when you have access only to the destination account](#configure-object-replication-when-you-have-access-only-to-the-destination-account)
 - [Manage storage account keys with Key Vault and the Azure CLI](#manage-storage-account-keys-with-key-vault-and-the-azure-cli)
 
@@ -18,6 +19,22 @@
 az feature register --namespace Microsoft.Storage --name AllowNFSV3
 az feature register --namespace Microsoft.Storage --name PremiumHns
 ```
+
+# Mount blob on Linux
+- `rpm -Uvh https://packages.microsoft.com/config/rhel/7/packages-microsoft-prod.rpm`
+- `yum install blobfuse fuse -y`
+- `mkdir /mnt/resource/blobfusetmp -p`
+- `chown azadmin /mnt/resource/blobfusetmp`
+- `touch ~/fuse_connection.cfg`
+- `chmod 777 fuse_connection.cfg`
+- `vi fuse_connection.cfg`
+    ```
+    accountName storagedbak8s
+    accountKey access-key
+    containerName bootdiagnostics-telk-5341971d-f072-4fd0-bb08-66d57de21f4a
+    ```
+- `blobfuse /mnt/insights-metrics-pt1m --tmp-path=/mnt/resource/blobfusetmp  --config-file=/root/fuse_connection.cfg`
+- finish
 
 # [Configure object replication when you have access only to the destination account](https://docs.microsoft.com/en-us/azure/storage/blobs/object-replication-configure?tabs=portal#configure-object-replication-when-you-have-access-only-to-the-destination-account)
 If you do not have permissions to the source storage account, then you can configure object replication on the destination account and provide a JSON file that contains the policy definition to another user to create the same policy on the source account. For example, if the source account is **in a different AAD tenant** from the destination account, then you can use this approach to configure object replication.

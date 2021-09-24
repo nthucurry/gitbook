@@ -1,13 +1,14 @@
 - [Reference](#reference)
 - [名詞解釋](#名詞解釋)
 - [安裝步驟](#安裝步驟)
-    - [更新 Package](#更新-package)
+    - [基本處置](#基本處置)
     - [Java](#java)
     - [Elasticsearch](#elasticsearch)
     - [Kibana](#kibana)
     - [Logstash](#logstash)
-    - [轉 Port (5601 to 80)](#轉-port-5601-to-80)
+    - [轉 Port (5601 to 80, option)](#轉-port-5601-to-80-option)
 - [匯入資料](#匯入資料)
+- [排程](#排程)
 
 # Reference
 - [How To Install ELK Stack on CentOS 7 / Fedora 31/30/29](https://computingforgeeks.com/how-to-install-elk-stack-on-centos-fedora/)
@@ -19,14 +20,14 @@
 - Kibana: UI
 
 # 安裝步驟
-## 更新 Package
+## 基本處置
+```
+yum update -y
+timedatectl set-timezone Asia/Taipei
+```
+
 ## Java
 - `yum install java-openjdk-devel java-openjdk -y`
-- `vi /etc/elasticsearch/jvm.options`
-    ```
-    -Xms1g
-    -Xmx1g
-    ```
 
 ## Elasticsearch
 - update repo
@@ -48,23 +49,37 @@
 - `yum clean all`
 - `yum makecache`
 - `yum install elasticsearch -y`
+- `vi /etc/elasticsearch/jvm.options`
+    ```
+    VM 重開才會生效
+    -Xms1g
+    -Xmx1g
+    ```
 - 啟動服務
     - `systemctl start elasticsearch.service`
     - `systemctl enable elasticsearch.service`
 - 測試
-    - curl http://127.0.0.1:9200
+    - `curl http://127.0.0.1:9200`
 
 ## Kibana
 - `yum install kibana -y`
 - `vi /etc/kibana/kibana.yml`
-- `systemctl start kibana.service`
-- `systemctl enable kibana.service`
+    ```
+    server.host: "0.0.0.0"
+    ```
+- 啟動服務
+    - `systemctl start kibana.service`
+    - `systemctl enable kibana.service`
+- 檢查服務狀態
+    - `netstat -ntl | grep 5601`
 
 ## Logstash
 - `yum install logstash -y`
+    - `systemctl start logstash.service`
+    - `systemctl enable logstash.service`
 
-## 轉 Port (5601 to 80)
-- `iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601`
+## 轉 Port (5601 to 80, option)
+- `sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601`
 
 # 匯入資料
 - `vi /etc/logstash/conf.d/json-read.conf`
@@ -91,5 +106,47 @@
         stdout {}
     }
     ```
-- `/usr/share/logstash/bin/logstash -f json-read.conf`
+- `/usr/share/logstash/bin/logstash -f /etc/logstash/conf.d/json-read.conf`
 - `curl localhost:9200/demo-json/_search?pretty=true`
+- 到 kibana 顯示 log 結果
+    1. Index patterns > Create index pattern
+    2. Discover
+
+# 排程
+```bash
+Year=`date +%Y`
+Month=`date +%m`
+Day=`date +%d`
+Hour=`date +%a --date="-2 Hour"`
+Subscription="a7bdf2e3-b855-4dda-ac93-047ff722cbbd"
+
+log_path="/mnt/log/insights-logs-storagewrite/resourceId=/subscriptions/$Subscription/resourceGroups/Global/providers/Microsoft.Storage/storageAccounts/auobigdatagwadls/blobServices/default/y=$Year/m=$Month/d=$Day/h=$Hour/m=00/PT1H.json"
+
+echo $log_path
+
+cat << EOF | tee /etc/logstash/conf.d/file-write.conf
+input {
+    file {
+        start_position => "beginning"
+        path => "$log_path"
+        sincedb_path => "/dev/null"
+    }
+}
+
+filter {
+    json {
+        source => "message"
+    }
+}
+
+output {
+    elasticsearch {
+        hosts => "http://localhost:9200"
+        index => "file-write"
+    }
+    stdout {}
+}
+EOF
+
+/usr/share/logstash/bin/logstash -f /etc/logstash/conf.d/file-write.conf
+```
