@@ -13,6 +13,7 @@
 # Reference
 - [How To Install ELK Stack on CentOS 7 / Fedora 31/30/29](https://computingforgeeks.com/how-to-install-elk-stack-on-centos-fedora/)
 - [ELK學習筆記(2)：在ElasticSearch匯入及查詢 Sample Data](https://atceiling.blogspot.com/2018/05/linux3elasticsearch-sample-data.html)
+- [Day 11 ELK 收集系統 Log](https://ithelp.ithome.com.tw/articles/10200989)
 
 # 名詞解釋
 - Elasticsearch: This is an open source, distributed, RESTful, JSON-based search engine. It is scalable, easy to use, and flexible
@@ -21,10 +22,8 @@
 
 # 安裝步驟
 ## 基本處置
-```
-yum update -y
-timedatectl set-timezone Asia/Taipei
-```
+- `yum update -y`
+- `timedatectl set-timezone Asia/Taipei`
 
 ## Java
 - `yum install java-openjdk-devel java-openjdk -y`
@@ -49,12 +48,20 @@ timedatectl set-timezone Asia/Taipei
 - `yum clean all`
 - `yum makecache`
 - `yum install elasticsearch -y`
-- `vi /etc/elasticsearch/jvm.options`
+- `vi /etc/elasticsearch/elasticsearch.yml`
+    ```yml
+    path.data: /var/lib/elasticsearch
+    network.host: localhost # 僅本地端可以連
+    network.bind_host: 0.0.0.0  # 綁定 IP
+    http.port: 9200 # 綁定 Port，預設 9200
     ```
-    VM 重開才會生效
-    -Xms1g
-    -Xmx1g
-    ```
+- 設定 elasticsearch 記憶體使用上限及下限
+    - `vi /etc/elasticsearch/jvm.options`
+        ```
+        -Xms1g
+        -Xmx1g
+        ```
+    - 重開 VM 記憶體才會生效
 - 啟動服務
     - `systemctl start elasticsearch.service`
     - `systemctl enable elasticsearch.service`
@@ -64,7 +71,7 @@ timedatectl set-timezone Asia/Taipei
 ## Kibana
 - `yum install kibana -y`
 - `vi /etc/kibana/kibana.yml`
-    ```
+    ```yml
     server.host: "0.0.0.0"
     ```
 - 啟動服務
