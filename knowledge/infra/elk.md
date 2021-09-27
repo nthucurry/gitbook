@@ -8,6 +8,7 @@
     - [Logstash](#logstash)
     - [轉 Port (5601 to 80, option)](#轉-port-5601-to-80-option)
 - [匯入資料](#匯入資料)
+- [Filebeat](#filebeat)
 - [排程](#排程)
 
 # Reference
@@ -29,7 +30,7 @@
 - `yum install java-openjdk-devel java-openjdk -y`
 
 ## Elasticsearch
-- update repo
+- add repo
     ```bash
     cat << EOF | tee /etc/yum.repos.d/elasticsearch.repo
     [elasticsearch-7.x]
@@ -118,6 +119,27 @@
 - 到 kibana 顯示 log 結果
     1. Index patterns > Create index pattern
     2. Discover
+
+# Filebeat
+- `rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch`
+- add repo
+    ```bash
+    cat << EOF | tee /etc/yum.repos.d/elasticsearch.repo
+    [elasticsearch-7.x]
+    name=Elasticsearch repository for 7.x packages
+    baseurl=https://artifacts.elastic.co/packages/7.x/yum
+    gpgcheck=1
+    gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    enabled=1
+    autorefresh=1
+    type=rpm-md
+    EOF
+    ```
+- `yum install filebeat -y`
+- `vi /etc/filebeat/filebeat.yml`
+- 啟動服務
+    - `systemctl start filebeat`
+    - `systemctl enable filebeat`
 
 # 排程
 ```bash
