@@ -23,17 +23,23 @@ az feature register --namespace Microsoft.Storage --name PremiumHns
 # Mount blob on Linux
 - `rpm -Uvh https://packages.microsoft.com/config/rhel/7/packages-microsoft-prod.rpm`
 - `yum install blobfuse fuse -y`
-- `mkdir /mnt/resource/blobfusetmp -p`
-- `chown azadmin /mnt/resource/blobfusetmp`
-- `touch ~/fuse_connection.cfg`
-- `chmod 777 fuse_connection.cfg`
-- `vi fuse_connection.cfg`
-    ```
-    accountName storagedbak8s
-    accountKey access-key
-    containerName bootdiagnostics-telk-5341971d-f072-4fd0-bb08-66d57de21f4a
-    ```
-- `blobfuse /mnt/insights-metrics-pt1m --tmp-path=/mnt/resource/blobfusetmp  --config-file=/root/fuse_connection.cfg`
+- 建資料夾
+    - `mkdir -p /mnt/resource/blobfusetmp`
+    - `mkdir -p /mnt/insights-metrics-pt1m`
+- 權限
+    - `chown azadmin /mnt/resource/blobfusetmp`
+    - `chown azadmin /mnt/resource/insights-metrics-pt1m`
+- 設定 config
+    - `touch ~/fuse_connection.cfg`
+    - `chmod 777 fuse_connection.cfg`
+    - `vi fuse_connection.cfg`
+        ```
+        accountName storagedbak8s
+        accountKey <access key>
+        containerName bootdiagnostics-telk-5341971d-f072-4fd0-bb08-66d57de21f4a
+        ```
+- 掛起來
+    - `blobfuse /mnt/insights-metrics-pt1m --tmp-path=/mnt/resource/blobfusetmp  --config-file=/home/azadmin/fuse_connection.cfg`
 - finish
 
 # [Configure object replication when you have access only to the destination account](https://docs.microsoft.com/en-us/azure/storage/blobs/object-replication-configure?tabs=portal#configure-object-replication-when-you-have-access-only-to-the-destination-account)
