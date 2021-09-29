@@ -1,3 +1,4 @@
 00 19 * * * /home/azadmin/cmd/backup-etcd.sh
-10 19 * * * /home/azadmin/cmd/backup-wkc.sh > backup-wkc.log
+30 19 * * * /home/azadmin/cmd/backup-wkc.sh > backup-wkc.log
 50 20 * * * /home/azadmin/cmd/check-nfs-disk.sh
+55 20 * * * /home/azadmin/cmd/mail.sh

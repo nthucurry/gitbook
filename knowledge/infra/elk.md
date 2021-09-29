@@ -68,11 +68,11 @@
 - 啟動服務
     - `systemctl start elasticsearch.service`
     - `systemctl enable elasticsearch.service`
-    - 如果遇到啟動錯誤，參考[ElasticSearch – 啟動失敗 – Service Start Operation Timed Out](https://terryl.in/zh/elasticsearch-service-start-operation-timed-out/)
+    - 如果遇到啟動錯誤，參考 [ElasticSearch – 啟動失敗 – Service Start Operation Timed Out](https://terryl.in/zh/elasticsearch-service-start-operation-timed-out/)
         - `vi /usr/lib/systemd/system/elasticsearch.service`
         - `systemctl show elasticsearch | grep ^Timeout`
 - 測試
-    - `curl http://127.0.0.1:9200`
+    - `curl http://t-elk:9200`
 
 ## Kibana
 - `yum install kibana -y`
@@ -90,6 +90,7 @@
 - `yum install logstash -y`
     - `systemctl start logstash.service`
     - `systemctl enable logstash.service`
+- `vi /etc/logstash/logstash.yml`
 
 ## 轉 Port (5601 to 80, option)
 - `sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601`
@@ -113,7 +114,7 @@
 
     output {
         elasticsearch {
-            hosts => "http://localhost:9200"
+            hosts => "http://t-elk:9200"
             index => "demo-json"
         }
         stdout {}
