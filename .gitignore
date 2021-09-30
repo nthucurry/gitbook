@@ -82,5 +82,6 @@ knowledge/exam/*
 !knowledge/infra/web.md
 !knowledge/infra/cert
 !knowledge/infra/proxy
+!knowledge/infra/elk
 !knowledge/exam
 !knowledge/exam/oracle-11g.md

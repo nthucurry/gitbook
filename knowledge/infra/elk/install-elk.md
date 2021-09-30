@@ -52,6 +52,7 @@
 - `vi /etc/elasticsearch/elasticsearch.yml`
     ```yml
     path.data: /var/lib/elasticsearch
+    path.logs: /var/log/elasticsearch
     network.host: localhost # 僅本地端可以連，0.0.0.0 代表任何位址都可存取
     #network.host: 0.0.0.0
     network.bind_host: 0.0.0.0  # 綁定 IP
@@ -78,7 +79,9 @@
 - `yum install kibana -y`
 - `vi /etc/kibana/kibana.yml`
     ```yml
+    server.port: 5601 # 設定 80, 443 都會無法啟動，無解
     server.host: "0.0.0.0"
+    i18n.locale: "en"
     ```
 - 啟動服務
     - `systemctl start kibana.service`

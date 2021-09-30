@@ -1,0 +1,1 @@
+blobfuse /mnt/insights-metrics-pt1m --tmp-path=/mnt/resource/blobfusetmp --config-file=/home/azadmin/fuse_connection.cfg

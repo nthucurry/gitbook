@@ -21,3 +21,6 @@ mv /home/azadmin/*cpdbk-$backup_time* /mnt/backup/wkc/
 # delete expired wkc backup volume and file
 /home/azadmin/cmd/purge-wkc-bk.exp $delete_time
 rm /mnt/backup/wkc/*cpdbk-$delete_time*
+
+# delete NFS backup file
+ssh dev-nfs "rm -fr /data/zen-cpdbr-pvc-pvc-f9570ad4-1a6f-45df-bd43-4794cb70c7ec/cpd/data/volbackups/cpdbk-$delete_time"
