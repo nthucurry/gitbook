@@ -25,11 +25,6 @@
 ## 基本處置
 - `yum update -y`
 - `timedatectl set-timezone Asia/Taipei`
-
-## Java
-- `yum install java-openjdk-devel java-openjdk -y`
-
-## Elasticsearch
 - add repo
     ```bash
     cat << EOF | tee /etc/yum.repos.d/elasticsearch.repo
@@ -48,6 +43,11 @@
     ```
 - `yum clean all`
 - `yum makecache`
+
+## Java
+- `yum install java-openjdk-devel java-openjdk -y`
+
+## Elasticsearch
 - `yum install elasticsearch -y`
 - `vi /etc/elasticsearch/elasticsearch.yml`
     ```yml
