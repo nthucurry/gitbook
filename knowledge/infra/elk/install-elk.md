@@ -71,6 +71,7 @@
     - `systemctl enable elasticsearch.service`
     - 如果遇到啟動錯誤，參考 [ElasticSearch – 啟動失敗 – Service Start Operation Timed Out](https://terryl.in/zh/elasticsearch-service-start-operation-timed-out/)
         - `vi /usr/lib/systemd/system/elasticsearch.service`
+        - `systemctl daemand-reload`
         - `systemctl show elasticsearch | grep ^Timeout`
 - 測試
     - `curl http://t-elk:9200`

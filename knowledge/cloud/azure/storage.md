@@ -32,12 +32,7 @@ az feature register --namespace Microsoft.Storage --name PremiumHns
 - 設定 config
     - `touch ~/fuse_connection.cfg`
     - `chmod 777 fuse_connection.cfg`
-    - `vi fuse_connection.cfg`
-        ```
-        accountName storagedbak8s
-        accountKey <access key>
-        containerName bootdiagnostics-telk-5341971d-f072-4fd0-bb08-66d57de21f4a
-        ```
+    - [fuse_connection.cfg](../../infra/elk/fuse_connection.cfg)
 - 掛起來
     - `blobfuse /mnt/insights-metrics-pt1m --tmp-path=/mnt/resource/blobfusetmp  --config-file=/home/azadmin/fuse_connection.cfg`
 - 掛起來 (自動)
