@@ -1,12 +1,12 @@
 - [Reference](#reference)
 - [名詞解釋](#名詞解釋)
 - [安裝步驟](#安裝步驟)
-  - [基本處置](#基本處置)
-  - [Java](#java)
-  - [Elasticsearch](#elasticsearch)
-  - [Kibana](#kibana)
-  - [Logstash](#logstash)
-  - [轉 Port (5601 to 80, option)](#轉-port-5601-to-80-option)
+    - [基本處置](#基本處置)
+    - [Java](#java)
+    - [Elasticsearch](#elasticsearch)
+    - [Kibana](#kibana)
+    - [Logstash](#logstash)
+    - [轉 Port (5601 to 80, option)](#轉-port-5601-to-80-option)
 - [匯入資料](#匯入資料)
 - [Filebeat](#filebeat)
 - [排程](#排程)
@@ -81,7 +81,7 @@
 - `vi /etc/kibana/kibana.yml`
     ```yml
     server.port: 5601 # 設定 80, 443 都會無法啟動，無解
-    server.host: "0.0.0.0"
+    server.host: 0.0.0.0
     i18n.locale: "en"
     ```
 - 啟動服務

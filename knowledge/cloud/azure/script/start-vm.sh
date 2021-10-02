@@ -11,6 +11,9 @@ if [[ $info == "1" ]]; then
 elif [[ "$info" = "2" ]]; then
     subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
     resource_group="DBA-K8S"
+    nsg="nsg-k8s"
+    nsg_home_rule="from_Home"
+    public_home_ip=`curl https://ifconfig.me`
 else
     subscription="a7bdf2e3-b855-4dda-ac93-047ff722cbbd"
     resource_group="DBA_Test"
@@ -32,8 +35,10 @@ az vm start -g $resource_group -n $vm_name
 ###################################
 if [[ `hostname` == "MBP18.local" ]] || [[ `hostname` == "iMac11.local" ]]; then
     # at home
-    public_ip=`az vm list -g $resource_group -d --query "[?name == '$vm_name'].publicIps"`
-    echo "Public IP: " $public_ip
-    curl ipinfo.io
+    az network nsg rule update \
+        -g $resource_group \
+        --nsg-name $nsg \
+        -n $nsg_home_rule \
+        --source-address-prefixes "$public_home_ip"
 fi
 ###################################
