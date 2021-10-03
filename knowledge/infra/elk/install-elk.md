@@ -1,12 +1,12 @@
 - [Reference](#reference)
 - [名詞解釋](#名詞解釋)
 - [安裝步驟](#安裝步驟)
-    - [基本處置](#基本處置)
-    - [Java](#java)
-    - [Elasticsearch](#elasticsearch)
-    - [Kibana](#kibana)
-    - [Logstash](#logstash)
-    - [轉 Port (5601 to 80, option)](#轉-port-5601-to-80-option)
+  - [基本處置](#基本處置)
+  - [Java](#java)
+  - [Elasticsearch](#elasticsearch)
+  - [Kibana](#kibana)
+  - [Logstash](#logstash)
+  - [轉 Port (5601 to 80, option)](#轉-port-5601-to-80-option)
 - [匯入資料](#匯入資料)
 - [Filebeat](#filebeat)
 - [排程](#排程)
@@ -53,7 +53,7 @@
     ```yml
     path.data: /var/lib/elasticsearch
     path.logs: /var/log/elasticsearch
-    network.host: localhost # 僅本地端可以連，0.0.0.0 代表任何位址都可存取
+    network.host: 0.0.0.0 # localhost 僅本地端可以連，0.0.0.0 代表任何位址都可存取
     http.port: 9200 # 綁定 Port，預設 9200
     discovery.seed_hosts: ["127.0.0.1", "[::1]"]
     ```
@@ -150,40 +150,4 @@
     - `systemctl enable filebeat`
 
 # 排程
-```bash
-Year=`date +%Y`
-Month=`date +%m`
-Day=`date +%d`
-Hour=`date +%a --date="-2 Hour"`
-Subscription="a7bdf2e3-b855-4dda-ac93-047ff722cbbd"
-
-log_path="/mnt/log/insights-logs-storagewrite/resourceId=/subscriptions/$Subscription/resourceGroups/Global/providers/Microsoft.Storage/storageAccounts/auobigdatagwadls/blobServices/default/y=$Year/m=$Month/d=$Day/h=$Hour/m=00/PT1H.json"
-
-echo $log_path
-
-cat << EOF | tee /etc/logstash/conf.d/insights-metrics-pt1m.conf
-input {
-    file {
-        start_position => "beginning"
-        path => "$log_path"
-        sincedb_path => "/dev/null"
-    }
-}
-
-filter {
-    json {
-        source => "message"
-    }
-}
-
-output {
-    elasticsearch {
-        hosts => "http://localhost:9200"
-        index => "file-write"
-    }
-    stdout {}
-}
-EOF
-
-/usr/share/logstash/bin/logstash -f /etc/logstash/conf.d/file-write.conf
-```
+- [import-log.sh](./script/import-log.sh)

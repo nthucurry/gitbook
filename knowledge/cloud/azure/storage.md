@@ -41,7 +41,7 @@ az feature register --namespace Microsoft.Storage --name PremiumHns
         ```
         /root/mount-azblob.sh
         ```
-    - [mount-azblob.sh](../../infra/elk/mount-azblob.sh)
+    - [mount-azblob.sh](../../infra/elk/script/mount-azblob.sh)
 - finish
 
 # [Configure object replication when you have access only to the destination account](https://docs.microsoft.com/en-us/azure/storage/blobs/object-replication-configure?tabs=portal#configure-object-replication-when-you-have-access-only-to-the-destination-account)
