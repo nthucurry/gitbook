@@ -36,11 +36,10 @@ az feature register --namespace Microsoft.Storage --name PremiumHns
 - 掛起來
     - `blobfuse /mnt/insights-metrics-pt1m --tmp-path=/mnt/resource/blobfusetmp  --config-file=/home/azadmin/fuse_connection.cfg`
 - 掛起來 (自動)
-    - `chmod -R 777 /mnt`
-    - `chmod +x /etc/rc.local`
+    - `chmod +x /etc/rc.d/rc.local`
     - `vi /etc/rc.local` (暫時無效)
         ```
-        /home/azadmin/mount-azblob.sh
+        /root/mount-azblob.sh
         ```
     - [mount-azblob.sh](../../infra/elk/mount-azblob.sh)
 - finish

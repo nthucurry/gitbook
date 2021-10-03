@@ -54,8 +54,6 @@
     path.data: /var/lib/elasticsearch
     path.logs: /var/log/elasticsearch
     network.host: localhost # 僅本地端可以連，0.0.0.0 代表任何位址都可存取
-    #network.host: 0.0.0.0
-    network.bind_host: 0.0.0.0  # 綁定 IP
     http.port: 9200 # 綁定 Port，預設 9200
     discovery.seed_hosts: ["127.0.0.1", "[::1]"]
     ```
@@ -71,7 +69,7 @@
     - `systemctl enable elasticsearch.service`
     - 如果遇到啟動錯誤，參考 [ElasticSearch – 啟動失敗 – Service Start Operation Timed Out](https://terryl.in/zh/elasticsearch-service-start-operation-timed-out/)
         - `vi /usr/lib/systemd/system/elasticsearch.service`
-        - `systemctl daemand-reload`
+        - `systemctl daemon-reload`
         - `systemctl show elasticsearch | grep ^Timeout`
 - 測試
     - `curl http://t-elk:9200`
@@ -81,7 +79,7 @@
 - `vi /etc/kibana/kibana.yml`
     ```yml
     server.port: 5601 # 設定 80, 443 都會無法啟動，無解
-    server.host: 0.0.0.0
+    server.host: "0.0.0.0"
     i18n.locale: "en"
     ```
 - 啟動服務
