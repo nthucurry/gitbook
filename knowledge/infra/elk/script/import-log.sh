@@ -3,7 +3,7 @@
 getYY=`date +%Y`
 getMM="09" #`date +%m`
 getDD="28" #`date +%d`
-getHH="00" #`date +%H --date="-2 Hour"`
+getHH="00" #`date +%H --date="-8 Hour"` # UTC
 
 elasticsearch_url="t-elk"
 index_pattern="azure-log"
