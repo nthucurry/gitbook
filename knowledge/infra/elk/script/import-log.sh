@@ -34,4 +34,7 @@ output {
 }
 EOF
 
-/usr/share/logstash/bin/logstash -f /root/logstash.conf --path.data=/root/
+/usr/share/logstash/bin/logstash -f /root/logstash.conf --path.data=/root/ &
+sleep 120
+process=`ps -ef | grep "/usr/share/logstash/jdk/bin/java" | awk '{print $2}'`
+kill -9 $process
