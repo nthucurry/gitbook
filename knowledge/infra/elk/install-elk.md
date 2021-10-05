@@ -1,12 +1,12 @@
 - [Reference](#reference)
 - [名詞解釋](#名詞解釋)
 - [安裝步驟](#安裝步驟)
-  - [基本處置](#基本處置)
-  - [Java](#java)
-  - [Elasticsearch](#elasticsearch)
-  - [Kibana](#kibana)
-  - [Logstash](#logstash)
-  - [轉 Port (5601 to 80, option)](#轉-port-5601-to-80-option)
+    - [基本處置](#基本處置)
+    - [Java](#java)
+    - [Elasticsearch](#elasticsearch)
+    - [Kibana](#kibana)
+    - [Logstash](#logstash)
+    - [轉 Port (5601 to 80, option)](#轉-port-5601-to-80-option)
 - [匯入資料](#匯入資料)
 - [Filebeat](#filebeat)
 - [排程](#排程)
@@ -123,6 +123,8 @@
     }
     ```
 - `/usr/share/logstash/bin/logstash -f /etc/logstash/conf.d/json-read.conf`
+    - 刪除 index
+        - `curl -XDELETE "t-elk:9200/*"`
 - `curl localhost:9200/demo-json/_search?pretty=true`
 - 到 kibana 顯示 log 結果
     1. Index patterns > Create index pattern
