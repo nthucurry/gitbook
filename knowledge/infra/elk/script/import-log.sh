@@ -10,6 +10,8 @@ index_pattern="azure-log"
 subscription="XXXXX"
 log_path="/mnt/log/insights-logs-storagewrite/resourceId=/subscriptions/$subscription/resourceGroups/Global/providers/Microsoft.Storage/storageAccounts/auobigdatagwadls/blobServices/default/y=$getYY/m=$getMM/d=$getDD/h=$getHH/m=00/PT1H.json"
 
+#find /mnt/log -iname “*.json” >> azure-log.txt
+
 cat << EOF | tee /root/logstash.conf
 input {
     file {
