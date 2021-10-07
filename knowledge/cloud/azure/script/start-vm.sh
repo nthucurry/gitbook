@@ -27,9 +27,9 @@ az account set -s $subscription
 isExistVM=`az vm list -g $resource_group -d --query "[?name == '$vm_name'].id" -o tsv`
 if [[ ${#isExistVM} == 0 ]]; then exit 1; fi
 ###################################
-echo "[Start VM.........] "$vm_name
 echo "[Subscription.....] "`az account show --query name`
 echo "[Resource Group...] "$resource_group
+echo "[Start VM.........] "$vm_name
 ###################################
 az vm start -g $resource_group -n $vm_name
 ###################################

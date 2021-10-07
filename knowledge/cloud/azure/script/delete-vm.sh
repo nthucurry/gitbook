@@ -21,9 +21,9 @@ echo "Input VM name: "
 read vm_name
 ###################################
 az account set -s $subscription
-echo "[Delete VM........] "$vm_name
 echo "[Subscription.....] "`az account show --query name`
 echo "[Resource Group...] "$resource_group
+echo "[Delete VM........] "$vm_name
 ###################################
 if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; then
     disk_name=`az vm list -g $resource_group -d --query "[?name == '$vm_name'].storageProfile.osDisk.name" -o tsv`

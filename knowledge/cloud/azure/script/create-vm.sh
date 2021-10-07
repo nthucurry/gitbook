@@ -33,9 +33,9 @@ vnet=""
 ssh_key_values="~/.ssh/id_rsa.pub"
 ###################################
 az account set -s $subscription
-echo "[Create VM........] "$vm_name
 echo "[Subscription.....] "`az account show --query name`
 echo "[Resource Group...] "$resource_group
+echo "[Create VM........] "$vm_name
 ###################################
 if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; then
     az vm create \

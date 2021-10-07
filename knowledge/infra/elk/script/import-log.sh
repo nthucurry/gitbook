@@ -12,7 +12,7 @@ log_path="/mnt/log/insights-logs-storagewrite/resourceId=/subscriptions/$subscri
 
 #find /mnt/log -iname “*.json” | sort >> azure-log.txt
 
-cat << EOF | tee /root/logstash.conf
+cat << EOF | tee /root/logstash.conf > /dev/null
 input {
     file {
         start_position => "beginning"
