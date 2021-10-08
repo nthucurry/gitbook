@@ -1,5 +1,4 @@
 - [Reference](#reference)
-- [名詞解釋](#名詞解釋)
 - [安裝步驟](#安裝步驟)
     - [基本處置](#基本處置)
     - [Java](#java)
@@ -9,17 +8,11 @@
     - [轉 Port (5601 to 80, option)](#轉-port-5601-to-80-option)
 - [匯入資料](#匯入資料)
 - [Filebeat](#filebeat)
-- [排程](#排程)
 
 # Reference
 - [How To Install ELK Stack on CentOS 7 / Fedora 31/30/29](https://computingforgeeks.com/how-to-install-elk-stack-on-centos-fedora/)
 - [ELK學習筆記(2)：在ElasticSearch匯入及查詢 Sample Data](https://atceiling.blogspot.com/2018/05/linux3elasticsearch-sample-data.html)
 - [Day 11 ELK 收集系統 Log](https://ithelp.ithome.com.tw/articles/10200989)
-
-# 名詞解釋
-- Elasticsearch: This is an open source, distributed, RESTful, JSON-based search engine. It is scalable, easy to use, and flexible
-- Logstash: This is a server‑side data processing pipeline that ingests data from multiple sources simultaneously, transforms it, and then sends it to a “stash” like Elasticsearch.
-- Kibana: UI
 
 # 安裝步驟
 ## 基本處置
@@ -43,32 +36,40 @@
     ```
 - `yum clean all`
 - `yum makecache`
+- 環境變數設定
+    ```bash
+    echo "alias sre='systemctl restart elasticsearch.service'" >> /etc/bashrc
+    echo "alias srk='systemctl restart kibana.service'" >> /etc/bashrc
+    echo "alias srl='systemctl restart logstash.service'" >> /etc/bashrc
+    echo "alias sse='systemctl status elasticsearch.service'" >> /etc/bashrc
+    echo "alias ssk='systemctl status kibana.service'" >> /etc/bashrc
+    echo "alias ssl='systemctl status logstash.service'" >> /etc/bashrc
+    ```
 
 ## Java
 - `yum install java-openjdk-devel java-openjdk -y`
 
 ## Elasticsearch
 - `yum install elasticsearch -y`
+- 更新資料存放位置
+    - `mkdir /data/log`
+    - `sed -i 's/#path.data: \/var\/lib\/elasticsearch/path.data: \/data/g' /etc/elasticsearch/elasticsearch.yml`
+    - `sed -i 's/#path.logs: \/var\/log\/elasticsearch/path.logs: \/data\/log/g' /etc/elasticsearch/elasticsearch.yml`
+- 設定 elasticsearch 記憶體使用上限及下限，重開 VM 記憶體才會生效
+    - `sed -i 's/## -Xms4g/-Xms1g/g' /etc/elasticsearch/jvm.options`
+    - `sed -i 's/## -Xmx4g/-Xmx1g/g' /etc/elasticsearch/jvm.options`
+
 - `vi /etc/elasticsearch/elasticsearch.yml`
     ```yml
-    path.data: /var/lib/elasticsearch
-    path.logs: /var/log/elasticsearch
     network.host: 0.0.0.0 # localhost 僅本地端可以連，0.0.0.0 代表任何位址都可存取
     http.port: 9200 # 綁定 Port，預設 9200
     discovery.seed_hosts: ["127.0.0.1", "[::1]"]
     ```
-- 設定 elasticsearch 記憶體使用上限及下限
-    - `vi /etc/elasticsearch/jvm.options`
-        ```
-        -Xms1g
-        -Xmx1g
-        ```
-    - 重開 VM 記憶體才會生效
 - 啟動服務
     - `systemctl start elasticsearch.service`
     - `systemctl enable elasticsearch.service`
     - 如果遇到啟動錯誤，參考 [ElasticSearch – 啟動失敗 – Service Start Operation Timed Out](https://terryl.in/zh/elasticsearch-service-start-operation-timed-out/)
-        - `vi /usr/lib/systemd/system/elasticsearch.service`
+        - `sed -i 's/TimeoutStartSec=75/TimeoutStartSec=500/g' /usr/lib/systemd/system/elasticsearch.service`
         - `systemctl daemon-reload`
         - `systemctl show elasticsearch | grep ^Timeout`
 - 測試
@@ -96,6 +97,8 @@
 
 ## 轉 Port (5601 to 80, option)
 - `sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601`
+- 開機後生效
+    - `echo "sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601" >> /etc/rc.local`
 
 # 匯入資料
 - `vi /etc/logstash/conf.d/json-read.conf`
@@ -150,6 +153,3 @@
 - 啟動服務
     - `systemctl start filebeat`
     - `systemctl enable filebeat`
-
-# 排程
-- [import-log.sh](./script/import-log.sh)
