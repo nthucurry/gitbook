@@ -39,6 +39,6 @@ if [[ `hostname` == "MBP18.local" ]] || [[ `hostname` == "iMac11.local" ]]; then
         -g $resource_group \
         --nsg-name $nsg \
         -n $nsg_home_rule \
-        --source-address-prefixes "$public_home_ip"
+        --source-address-prefixes "$public_home_ip" > /dev/null
 fi
 ###################################

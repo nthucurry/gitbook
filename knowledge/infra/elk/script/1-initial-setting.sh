@@ -1,4 +1,5 @@
 # necessary config & script
+cd /root
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/mount-azblob.sh
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/import-log.sh
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/delete-index.sh
@@ -17,3 +18,7 @@ source /etc/bashrc
 # hostname
 echo "10.1.0.4  t-elk >> /etc/host"
 echo "10.1.0.5  t-filebeat >> /etc/host"
+
+# auto start
+echo "/root/mount-azblob.sh" >> /etc/rc.local
+chmod +x /etc/rc.d/rc.local

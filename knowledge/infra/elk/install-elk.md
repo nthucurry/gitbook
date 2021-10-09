@@ -156,6 +156,14 @@
     ```
 - `yum install filebeat -y`
 - `vi /etc/filebeat/filebeat.yml`
+    ```yaml
+    setup.kibana:
+        #host: "t-elk:5601"
+    output.elasticsearch:
+        #hosts: ["t-elk:9200"]
+    output.logstash:
+        hosts: ["t-elk:5044"]
+    ```
 - 啟動服務
     - `systemctl start filebeat`
     - `systemctl enable filebeat`
