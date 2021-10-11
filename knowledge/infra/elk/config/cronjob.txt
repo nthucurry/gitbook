@@ -1,1 +1,1 @@
-19 14 * * * /root/import-log.sh > /root/tmp.log
+* */1 * * * /root/import-log.sh

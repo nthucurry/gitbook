@@ -14,6 +14,7 @@
 - [ELK學習筆記(2)：在ElasticSearch匯入及查詢 Sample Data](https://atceiling.blogspot.com/2018/05/linux3elasticsearch-sample-data.html)
 - [Day 11 ELK 收集系統 Log](https://ithelp.ithome.com.tw/articles/10200989)
 - [Elasticsearch issue with "cluster_uuid" : "_na_" and license in null](https://stackoverflow.com/questions/67451816/elasticsearch-issue-with-cluster-uuid-na-and-license-in-null)
+- [How to monitor your Azure infrastructure with Filebeat and Elastic Observability](https://cloudblogs.microsoft.com/opensource/2021/01/07/how-to-monitor-azure-infrastructure-filebeat-elastic-observability/)
 
 # 安裝步驟
 ## 基本處置
@@ -131,6 +132,8 @@
         stdout {}
     }
     ```
+- 檢查 conf 格式
+    - `logstash -f logstash.conf --config.test_and_exit true`
 - `/usr/share/logstash/bin/logstash -f /etc/logstash/conf.d/json-read.conf`
     - 刪除 index
         - `curl -XDELETE "t-elk:9200/*"`
@@ -158,7 +161,7 @@
 - `vi /etc/filebeat/filebeat.yml`
     ```yaml
     setup.kibana:
-        #host: "t-elk:5601"
+        host: "t-elk:5601"
     output.elasticsearch:
         #hosts: ["t-elk:9200"]
     output.logstash:
@@ -167,3 +170,7 @@
 - 啟動服務
     - `systemctl start filebeat`
     - `systemctl enable filebeat`
+- 啟動模組
+    - `filebeat modules enable azure`
+    - `vi /etc/filebeat/modules.d/azure.yml`
+    - `filebeat setup`

@@ -13,6 +13,8 @@ echo "alias srl='systemctl restart logstash.service'" >> /etc/bashrc
 echo "alias sse='systemctl status elasticsearch.service'" >> /etc/bashrc
 echo "alias ssk='systemctl status kibana.service'" >> /etc/bashrc
 echo "alias ssl='systemctl status logstash.service'" >> /etc/bashrc
+echo "alias vi='vim'" >> /etc/bashrc
+echo "PATH=$PATH:/usr/share/logstash/bin" >> /etc/bashrc
 source /etc/bashrc
 
 # hostname
@@ -21,4 +23,5 @@ echo "10.1.0.5  t-filebeat >> /etc/host"
 
 # auto start
 echo "/root/mount-azblob.sh" >> /etc/rc.local
+echo "/root/run-logstash.sh" >> /etc/rc.local
 chmod +x /etc/rc.d/rc.local
