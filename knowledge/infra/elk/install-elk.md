@@ -108,30 +108,8 @@
     - `echo "sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601" >> /etc/rc.local`
 
 # 匯入資料
-- `vi /etc/logstash/conf.d/json-read.conf`
-    ```conf
-    input {
-        file {
-            start_position => "beginning"
-            path => "/home/azadmin/PT1H.json"
-            sincedb_path => "/dev/null"
-        }
-    }
-
-    filter {
-        json {
-            source => "message"
-        }
-    }
-
-    output {
-        elasticsearch {
-            hosts => "http://t-elk:9200"
-            index => "demo-json"
-        }
-        stdout {}
-    }
-    ```
+- `vi /etc/logstash/conf.d/logstash.conf`
+    - [logstash.conf](./config/logstash.conf)
 - 檢查 conf 格式
     - `logstash -f logstash.conf --config.test_and_exit true`
 - `/usr/share/logstash/bin/logstash -f /etc/logstash/conf.d/json-read.conf`
@@ -141,22 +119,14 @@
 - 到 kibana 顯示 log 結果
     1. Index patterns > Create index pattern
     2. Discover
+- 開機後，手動啟動 (自動啟動仍無法)
+    - 啟動 logstash
+        - `./run-logstash.sh &`
+    - 更新 config
+        - `./import-log.sh`
 
 # Filebeat
 - `rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch`
-- add repo
-    ```bash
-    cat << EOF | tee /etc/yum.repos.d/elasticsearch.repo
-    [elasticsearch-7.x]
-    name=Elasticsearch repository for 7.x packages
-    baseurl=https://artifacts.elastic.co/packages/7.x/yum
-    gpgcheck=1
-    gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
-    enabled=1
-    autorefresh=1
-    type=rpm-md
-    EOF
-    ```
 - `yum install filebeat -y`
 - `vi /etc/filebeat/filebeat.yml`
     ```yaml

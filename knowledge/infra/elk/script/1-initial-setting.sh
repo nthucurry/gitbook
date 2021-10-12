@@ -3,6 +3,7 @@ cd /root
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/mount-azblob.sh
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/import-log.sh
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/delete-index.sh
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/run-logstash.sh
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/config/fuse_connection.cfg
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/config/logstash.conf
 
@@ -23,5 +24,5 @@ echo "10.1.0.5  t-filebeat >> /etc/host"
 
 # auto start
 echo "/root/mount-azblob.sh" >> /etc/rc.local
-echo "/root/run-logstash.sh" >> /etc/rc.local
+#echo "/root/run-logstash.sh" >> /etc/rc.local
 chmod +x /etc/rc.d/rc.local
