@@ -1,18 +1,19 @@
 #!/bin/bash
 
-# getYY=`date +%Y`
-# getMM="09" #`date +%m`
-# getDD="28" #`date +%d`
-# getHH="00" #`date +%H --date="-8 Hour"` # UTC
-
+getYY=`date +%Y`
+getMM=`date +%m`
+getDD=`date +%d`
+getHH=`date +%H --date="-9 Hour"` # UTC - 1
 elasticsearch_url="t-elk"
-index_pattern="log"
-# subscription="XXXXX"
-# log_path="/mnt/log/insights-logs-storagewrite/resourceId=/subscriptions/$subscription/resourceGroups/Global/providers/Microsoft.Storage/storageAccounts/auobigdatagwadls/blobServices/default/y=$getYY/m=$getMM/d=$getDD/h=$getHH/m=00/PT1H.json"
 
-find /mnt/log -iname "*.json" | sort >> /root/azure-log.txt
-cat /root/azure-log.txt | while read log_path
+cat /root/azure-log-list.csv | while read line
 do
+
+if [[ $line != *"#"* ]]; then
+
+log_dir_path=`echo $line | awk -F"," '{print $1}'`
+index_pattern=`echo $line | awk -F"," '{print $2}'`
+log_path="$log_dir_path/y=$getYY/m=$getMM/d=$getDD/h=$getHH/m=00/PT1H.json"
 
 cat << EOF | tee /root/logstash.conf > /dev/null
 input {
@@ -39,5 +40,7 @@ output {
 EOF
 
 sleep 30
+
+fi
 
 done
