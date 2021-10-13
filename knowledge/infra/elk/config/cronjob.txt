@@ -1,1 +1,1 @@
-* */1 * * * /root/import-log.sh
+20 */1 * * * /root/update-config.sh

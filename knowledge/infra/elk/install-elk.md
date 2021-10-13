@@ -67,6 +67,7 @@
     network.host: 0.0.0.0 # localhost 僅本地端可以連，0.0.0.0 代表任何位址都可存取
     http.port: 9200 # 綁定 Port，預設 9200
     discovery.seed_hosts: ["127.0.0.1", "[::1]"]
+    xpack.security.enabled: false
     ```
 - 啟動服務
     - `systemctl start elasticsearch.service`
@@ -91,8 +92,7 @@
     - `systemctl enable kibana.service`
 - 檢查服務狀態
     - `netstat -ntl | grep 5601`
-    - 如果啟動錯誤: Kibana server is not ready yet
-        - `curl -XDELETE "http://t-elk:9200/.kibana_1"`
+    - Kibana server is not ready yet: 關閉 ELK 後，在重新啟動一次
 - 版本
     - `/usr/share/kibana/bin/kibana --version --allow-root`
 
@@ -104,8 +104,6 @@
 
 ## 轉 Port (5601 to 80, option)
 - `sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601`
-- 開機後生效
-    - `echo "sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601" >> /etc/rc.local`
 
 # 匯入資料
 - `vi /etc/logstash/conf.d/logstash.conf`
@@ -121,9 +119,9 @@
     2. Discover
 - 開機後，手動啟動 (自動啟動仍無法)
     - 啟動 logstash
-        - `./run-logstash.sh &`
+        - `./import-log.sh &`
     - 更新 config
-        - `./import-log.sh`
+        - `./update-config.sh`
 
 # Filebeat
 - `rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch`

@@ -24,5 +24,6 @@ echo "10.1.0.5  t-filebeat >> /etc/host"
 
 # auto start
 echo "/root/mount-azblob.sh" >> /etc/rc.local
-#echo "/root/run-logstash.sh" >> /etc/rc.local
+echo "iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601" >> /etc/rc.local
+#echo "/root/import-log.sh" >> /etc/rc.local
 chmod +x /etc/rc.d/rc.local

@@ -1,1 +1,0 @@
-/usr/share/logstash/bin/logstash -f /root/logstash.conf --config.reload.automatic true
