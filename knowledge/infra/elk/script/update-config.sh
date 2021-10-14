@@ -13,9 +13,12 @@ if [[ $line != *"#"* ]]; then
 
 log_dir_path=`echo $line | awk -F"," '{print $1}'`
 index_pattern=`echo $line | awk -F"," '{print $2}'`
+duration=`echo $line | awk 'BEGIN {FS=","} {print $3}'`
 log_path="$log_dir_path/y=$getYY/m=$getMM/d=$getDD/h=$getHH/m=00/PT1H.json"
 
-cat << EOF | tee /root/logstash.conf > /dev/null
+if [[ -f $log_path ]];then
+
+cat << EOF | tee /root/logstash.conf > /root/logstash_$index_pattern.conf
 input {
     file {
         start_position => "beginning"
@@ -23,13 +26,11 @@ input {
         sincedb_path => "/dev/null"
     }
 }
-
 filter {
     json {
         source => "message"
     }
 }
-
 output {
     elasticsearch {
         hosts => "http://$elasticsearch_url:9200"
@@ -39,8 +40,9 @@ output {
 }
 EOF
 
-sleep 30
+sleep $duration
 
 fi
 
+fi
 done

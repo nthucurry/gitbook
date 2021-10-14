@@ -1,1 +1,1 @@
-curl -XDELETE "t-elk:9200/*"
+curl -XDELETE "t-elk:9200/$1"
