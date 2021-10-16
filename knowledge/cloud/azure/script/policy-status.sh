@@ -20,10 +20,11 @@ do
     --policy-assignment $assignment_name \
     --query "{ \
     compliant: results.resourceDetails[?complianceState == 'compliant'].count[] | [0], \
-    noncompliant: results.resourceDetails[?complianceState == 'noncompliant'].count[] | [0] \
+    noncompliant: results.resourceDetails[?complianceState == 'noncompliant'].count[] | [0], \
+    effect: policyAssignments[].policyDefinitions[].effect | [0] \
     }" -o tsv | tr "\t" "," | tr "None" "0"`
     echo $display_name,$temp >> $output_file
-    echo "az policy state summarize --policy-assignment $assignment_name"
+    # echo "az policy state summarize --policy-assignment $assignment_name"
     echo -e
 done
 
