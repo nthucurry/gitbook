@@ -7,7 +7,7 @@ az account set -s $subscription
 [ -e $output_file ] && rm $output_file
 
 # policy assignment list
-az policy assignment list --query "[].{displayName:displayName,name:name}" -o tsv | sort > tmp.file
+az policy assignment list --query "[].{displayName: displayName,name: name}" -o tsv | sort > tmp.file
 sed -i "s/\t/,/g" tmp.file
 
 # policy assignment show
@@ -18,13 +18,13 @@ do
     assignment_name=`echo $line | awk -F"," '{print $2}'`
     temp=`az policy state summarize \
     --policy-assignment $assignment_name \
-    --query "{\
+    --query "{ \
     compliant: results.resourceDetails[?complianceState == 'compliant'].count[] | [0], \
     noncompliant: results.resourceDetails[?complianceState == 'noncompliant'].count[] | [0] \
     }" -o tsv | tr "\t" "," | tr "None" "0"`
     echo $display_name,$temp >> $output_file
-#    echo "az policy state summarize --policy-assignment $assignment_name"
-#    echo -e
+    echo "az policy state summarize --policy-assignment $assignment_name"
+    echo -e
 done
 
 [ -e tmp.file ] && rm tmp.file

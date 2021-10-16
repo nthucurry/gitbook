@@ -260,7 +260,7 @@ order by first_time;
 -- primary DB archive status
 select * from v$archive_dest_status where status != 'INACTIVE';
 
--- switchover status(primary: TO STANDBY;standby: NOT ALLOWED)
+-- switchover status(primary: TO STANDBY; standby: NOT ALLOWED)
 select name, open_mode, database_role, switchover_status from v$database;
 
 -- there are missing archive logs on the standby database server(no selected rows is right)
@@ -366,7 +366,7 @@ startup
 7. 主庫啟動日誌傳送程序: `alter database recover managed standby database disconnect;`(啟動MRP，sync 機制)
 8. 檢查主、備庫角色狀態: `select switchover_status,database_role from v$database;`
 
-### Failover(not verification)
+### Failover
 此時主庫異常跳電、硬體故障，無法執行資料庫作業(可 kill -9 SID 來測試)，可參考 https://codertw.com/%E8%B3%87%E6%96%99%E5%BA%AB/127062/
 ```txt
 Sun Sep 13 11:42:49 2020
