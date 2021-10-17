@@ -12,16 +12,17 @@ az policy assignment list --query "[].name" -o tsv > tmp.file
 # policy assignment show
 cat tmp.file | while read policy_assignment_id
 do
-    az policy assignment show \
-    --name $policy_assignment_id \
+    az policy assignment show --name $policy_assignment_id \
     --query "{ \
     display_name: displayName, \
     enforcement_mode: enforcementMode, \
     not_scopes: notScopes, \
     parameter_effect_value: parameters.effect.value, \
     policy_definition_id: policyDefinitionId, \
+    policy_definition_name: name, \
     scope:scope \
-    }" >> $output_file
+    }" | tee -a $output_file
+    echo "az policy assignment show --name $policy_assignment_id"
 done
 
 [ -e tmp.file ] && rm tmp.file
