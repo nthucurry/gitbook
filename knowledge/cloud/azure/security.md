@@ -1,1 +1,0 @@
-<br><img src="https://docs.microsoft.com/en-us/learn/modules/azure-well-architected-security/media/2-defense-in-depth.png">
