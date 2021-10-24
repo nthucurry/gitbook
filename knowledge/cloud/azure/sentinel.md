@@ -1,6 +1,6 @@
 # Sentinel Monitoring
 - Deploying any workbooks
-    - ![](../../../img/cloud/azure/sentinel-workbook.png)
+    - ![](https://raw.githubusercontent.com/shaqtinafool/gitbook/master/img/cloud/azure/sentinel-workbook.png)
 
 # Log Analytics workspace data export in Azure Monitor
 ## Enable data export
@@ -14,4 +14,4 @@
         - Firewalls and virtual networks
             - Allow trusted Microsoft services to access this storage account
 - Create or update data export rule
-    - ![](../../../img/cloud/azure/log-anal-data-export.png)
+    - ![](https://raw.githubusercontent.com/shaqtinafool/gitbook/master/img/cloud/azure/log-anal-data-export.png)
