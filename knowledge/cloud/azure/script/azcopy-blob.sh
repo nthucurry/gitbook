@@ -4,7 +4,7 @@ source ~/.bash_profile
 
 exec_time=`date +%Y-%m%d-%H%M`
 
-[[ -f sync-blob-command.sh ]] && rm sync-blob-command.sh
+[[ -f sync-blob-command.sh ]] && rm sync-blob-command.sh || touch sync-blob-command.sh
 
 cat storage-list.csv | while read line;
 do
