@@ -78,20 +78,20 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 
 ## 操作步驟
 1. `sudo docker run hello-world`
-    - ![](../../img/docker/run-hello-world.png)
+    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/run-hello-world.png)
 2. `docker run -d --publish-all jenkins`
-    - ![](../../img/docker/jenkins.png)
+    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/jenkins.png)
 3. `docker ps -a`
-    - ![](../../img/docker/docker-list.png)
+    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/docker-list.png)
     - 停止 container: `docker stop b551697c6c55`
     - 刪除 container: `docker rm b551697c6c55`
     - 刪除 image: `docker rmi 300e315adb2f`
 4. 輸入網址：localhost:32769
-    - ![](../../img/docker/login-page.png)
+    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/login-page.png)
 5. `docker logs gifted_gauss`
-    - ![](../../img/docker/get-password.png)
-    - ![](../../img/docker/copy-password.png)
-    - ![](../../img/docker/finish.png)
+    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/get-password.png)
+    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/copy-password.png)
+    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/finish.png)
 
 ## Run MariaDB
 - `docker run --name scm-mariadb -e MYSQL_ROOT_PASSWORD=ncu5540 -d mariadb`

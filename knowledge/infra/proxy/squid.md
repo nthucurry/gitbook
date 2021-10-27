@@ -151,7 +151,7 @@ source ~/.bashrc
     ```
 - 驗證該網站是否有透過 squid 的憑證交握
 - PAC 設定方式
-    <br><img src="../../../img/proxy/pac-config-on-windows.png" width=350>
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/proxy/pac-config-on-windows.png" width=350>
 
 ## Header 測試工具
 ### Fiddler
@@ -181,7 +181,7 @@ https://wiki.wireshark.org/HTTP_Preferences
 
 ## OS 設定位置
 - windows
-    <br><img src="../../../img/proxy/proxy-on-windows-config.png" width=350>
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/proxy/proxy-on-windows-config.png" width=350>
 - linux
     - `/etc/yum.conf`
     - `export http_proxy=http://squid.gotdns.ch:3128`

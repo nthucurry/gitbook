@@ -50,7 +50,7 @@
 - https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=planning-system-requirements#rhos-reqs__production
 
 # 安裝架構
-<br><img src="../../../img/openshift/install-flow.png" width=700>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/install-flow.png" width=700>
 
 # 到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password
 - `az ad sp create-for-rbac --role="Contributor" --name="http://test.org" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`

@@ -54,7 +54,7 @@ Node components run on every node, maintaining running pods and providing the K8
         - `/var/log/messages`
 - kube-proxy
     - 為 node 的傳訊員，負責更新 node 的 iptables，讓 K8S 中不在該 node 的其他物件可以得知該 node 上所有 pods 的最新狀態
-    <br><img src="../../../img/kubernetes/k8s-proxy.png" width=500>
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/kubernetes/k8s-proxy.png" width=500>
 - Container Runtime
     - 為 node 負責容器執行的程式，以 docker 容器為例就是 docker engine
 

@@ -126,11 +126,11 @@
         -n openshift-ingress-operator
     ```
 - 匯入自簽憑證到「受信任的根憑證授權單位」
-    <br><img src="../../../img/security/root-cert-step-1.png" width=500>
-    <br><img src="../../../img/security/root-cert-step-2.png" width=500>
-    <br><img src="../../../img/security/root-cert-step-3.png" width=500>
-    <br><img src="../../../img/security/root-cert-step-4.png" width=500>
-    <br><img src="../../../img/security/root-cert-step-5.png" width=250>
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/security/root-cert-step-1.png" width=500>
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/security/root-cert-step-2.png" width=500>
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/security/root-cert-step-3.png" width=500>
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/security/root-cert-step-4.png" width=500>
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/security/root-cert-step-5.png" width=250>
 - 從 pfx 匯出 crt (or cer)
     - `openssl pkcs12 -in server.pfx -nokeys -password "pass:ncu5540" -out - 2>/dev/null | openssl x509 -out server.crt`
     - `openssl pkcs12 -in server.pfx -nocerts -password "pass:ncu5540" -nodes -out server.key`

@@ -52,9 +52,9 @@ Keep in mind that you must be assigned the **ARM Contributor role** scoped to th
 - 建立 policy file: [replication-policy.json](./json/replication-policy.json)
 - 到 destination storage
     - 上傳 policy file (此時 ruleId 為空值)
-        <br><img src="../../../img/cloud/azure/storage-obj-replication-1.png" width=500>
+        <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/storage-obj-replication-1.png" width=500>
     - 下載 policy file (此時 ruleId 已有值)
-        <br><img src="../../../img/cloud/azure/storage-obj-replication-2.png" width=500>
+        <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/storage-obj-replication-2.png" width=500>
 - 到 source storage 上傳該 policy file
 
 # [Manage storage account keys with Key Vault and the Azure CLI](https://docs.microsoft.com/en-us/azure/key-vault/secrets/overview-storage-keys)
