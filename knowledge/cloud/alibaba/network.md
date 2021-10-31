@@ -2,6 +2,7 @@
 - [VPN Gateway](#vpn-gateway)
     - [Use IPsec-VPN and CEN to build a high-quality global network](#use-ipsec-vpn-and-cen-to-build-a-high-quality-global-network)
 - [Cloud Enterprise Network (CEN)](#cloud-enterprise-network-cen)
+    - [Pricing Billing](#pricing-billing)
     - [Build an enterprise-class hybrid cloud by combining multiple connection services](#build-an-enterprise-class-hybrid-cloud-by-combining-multiple-connection-services)
 - [Global Accelerator](#global-accelerator)
     - [全球加速联动本地 VPN 网关加速跨国协作](#全球加速联动本地-vpn-网关加速跨国协作)
@@ -31,6 +32,9 @@ The communication performance depends on the quality of the Internet connection.
     - Network instances that are attached to a CEN instance can communicate with each other. You can attach the following network instances to a CEN instance: VPCs, virtual border routers (VBRs) and Cloud Connect Network (CCN) instances.
 - Bandwidth plans
     - No bandwidth plan is required if you want to connect network instances within the same region. To connect network instances in different regions, you must **purchase** a bandwidth plan for the areas to which the networks belong and allocate bandwidth for cross-region connections. Each area contains one or more Alibaba Cloud regions. You can view the supported areas in the CEN console.
+
+## [Pricing Billing](https://www.alibabacloud.com/help/zh/doc-detail/64650.htm?spm=a2796.11534813.8215766810.28.1bd4d7d2cVerUx)
+- 购买带宽包
 
 ## [Build an enterprise-class hybrid cloud by combining multiple connection services](https://www.alibabacloud.com/help/doc-detail/101136.htm?spm=a2c63.p38356.b99.105.4f047100C8mZu3)
 <br><img src="https://help-static-aliyun-doc.aliyuncs.com/assets/img/83131/156508652235239_en-US.png">
