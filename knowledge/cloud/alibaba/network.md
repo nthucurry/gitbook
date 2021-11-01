@@ -19,6 +19,7 @@ The communication performance depends on the quality of the Internet connection.
 | Instance Configuration | $62.64/Mo | $42.48/Mo | $62.64/Mo |
 | Public Network Traffic | $0.117/GB | $0.125/GB | $0.156/GB |
 |     Peak Bandwidth     |  10Mbps   |  10Mbps   |  10Mbps   |
+
 <br><img src="https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7297219951/p3319.png">
 
 ## [Use IPsec-VPN and CEN to build a high-quality global network](https://www.alibabacloud.com/help/doc-detail/110822.htm?spm=a2c63.p38356.b99.90.5a991350fDF1EY)
