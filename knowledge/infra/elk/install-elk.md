@@ -5,9 +5,8 @@
     - [Elasticsearch](#elasticsearch)
     - [Kibana](#kibana)
     - [Logstash](#logstash)
-    - [轉 Port (5601 to 80, option)](#轉-port-5601-to-80-option)
-- [匯入資料](#匯入資料)
 - [Filebeat](#filebeat)
+- [匯入資料](#匯入資料)
 
 # Reference
 - [How To Install ELK Stack on CentOS 7 / Fedora 31/30/29](https://computingforgeeks.com/how-to-install-elk-stack-on-centos-fedora/)
@@ -15,6 +14,7 @@
 - [Day 11 ELK 收集系統 Log](https://ithelp.ithome.com.tw/articles/10200989)
 - [Elasticsearch issue with "cluster_uuid" : "_na_" and license in null](https://stackoverflow.com/questions/67451816/elasticsearch-issue-with-cluster-uuid-na-and-license-in-null)
 - [How to monitor your Azure infrastructure with Filebeat and Elastic Observability](https://cloudblogs.microsoft.com/opensource/2021/01/07/how-to-monitor-azure-infrastructure-filebeat-elastic-observability/)
+- [How to manage Elasticsearch data across multiple indices with Filebeat, ILM, and data streams](https://www.elastic.co/blog/how-to-manage-elasticsearch-data-multiple-indices-filebeat-ilm-data-streams)
 
 # 安裝步驟
 ## 基本處置
@@ -90,20 +90,71 @@
 - 啟動服務
     - `systemctl start kibana.service`
     - `systemctl enable kibana.service`
-- 檢查服務狀態
-    - `netstat -ntl | grep 5601`
-    - Kibana server is not ready yet: 關閉 ELK 後，在重新啟動一次
+- 轉 Port (5601 to 80, option)
+    - `sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601`
 - 版本
     - `/usr/share/kibana/bin/kibana --version --allow-root`
 
 ## Logstash
 - `yum install logstash -y`
+- 啟動服務 (建議不啟動)
     - `systemctl start logstash.service`
     - `systemctl enable logstash.service`
 - `vi /etc/logstash/logstash.yml`
 
-## 轉 Port (5601 to 80, option)
-- `sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601`
+# Filebeat
+- `rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch`
+- `yum install filebeat -y`
+- `vi /etc/filebeat/filebeat.yml`
+    ```yaml
+    #============================== Filebeat inputs ===============================
+    filebeat.inputs:
+    - type: log
+      enabled: true
+      paths:
+        - /var/log/*.log
+      tag: ["index-1"]
+      fields:
+        log_topics: "index-1"
+      fields_under_root: true
+    - type: log
+      enabled: true
+      paths:
+        - /var/log/messages
+      tag: ["index-2"]
+      fields:
+        log_topics: "index-2"
+      fields_under_root: true
+    #================================ Kibana ======================================
+    #setup.kibana:
+    #  host: "t-elk:5601"
+    #================================ Outputs =====================================
+    #-------------------------- Elasticsearch output ------------------------------
+    output.elasticsearch:
+      hosts: ["t-elk:9200"]
+      username: "elastic"
+      password: "password"
+      index: "demo-index-default"
+      indices:
+        - index: "demo-index-1"
+          when.contains:
+            fields:
+              log_topics: "index-1"
+        - index: "demo-index-2"
+          when.contains:
+            fields:
+              log_topics: "index-2"
+    #----------------------------- Logstash output --------------------------------
+    output.logstash:
+      hosts: ["t-elk:5044"]
+    ```
+- 啟動服務
+    - `systemctl start filebeat`
+    - `systemctl enable filebeat`
+- 啟動模組
+    - `filebeat modules enable azure`
+    - `vi /etc/filebeat/modules.d/azure.yml`
+    - `filebeat setup`
 
 # 匯入資料
 - `vi /etc/logstash/conf.d/logstash.conf`
@@ -122,23 +173,3 @@
         - `./import-log.sh &`
     - 更新 config
         - `./update-config.sh`
-
-# Filebeat
-- `rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch`
-- `yum install filebeat -y`
-- `vi /etc/filebeat/filebeat.yml`
-    ```yaml
-    setup.kibana:
-        host: "t-elk:5601"
-    output.elasticsearch:
-        #hosts: ["t-elk:9200"]
-    output.logstash:
-        hosts: ["t-elk:5044"]
-    ```
-- 啟動服務
-    - `systemctl start filebeat`
-    - `systemctl enable filebeat`
-- 啟動模組
-    - `filebeat modules enable azure`
-    - `vi /etc/filebeat/modules.d/azure.yml`
-    - `filebeat setup`
