@@ -5,7 +5,7 @@ getMM=`date +%m`
 getDD=`date +%d`
 getHH=`date +%H --date="-9 Hour"` # LST -> UTC
 
-elasticsearch_url="elktest"
+elasticsearch_url="t-elk"
 index_pattern="azure-file-upload"
 duration=60
 

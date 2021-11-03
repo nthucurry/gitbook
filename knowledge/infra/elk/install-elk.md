@@ -1,10 +1,10 @@
 - [Reference](#reference)
 - [安裝步驟](#安裝步驟)
-    - [基本處置](#基本處置)
-    - [Java](#java)
-    - [Elasticsearch](#elasticsearch)
-    - [Kibana](#kibana)
-    - [Logstash](#logstash)
+  - [基本處置](#基本處置)
+  - [Java](#java)
+  - [Elasticsearch](#elasticsearch)
+  - [Kibana](#kibana)
+  - [Logstash](#logstash)
 - [Filebeat](#filebeat)
 - [匯入資料](#匯入資料)
 
@@ -106,48 +106,7 @@
 - `rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch`
 - `yum install filebeat -y`
 - `vi /etc/filebeat/filebeat.yml`
-    ```yaml
-    #============================== Filebeat inputs ===============================
-    filebeat.inputs:
-    - type: log
-      enabled: true
-      paths:
-        - /var/log/*.log
-      tag: ["index-1"]
-      fields:
-        log_topics: "index-1"
-      fields_under_root: true
-    - type: log
-      enabled: true
-      paths:
-        - /var/log/messages
-      tag: ["index-2"]
-      fields:
-        log_topics: "index-2"
-      fields_under_root: true
-    #================================ Kibana ======================================
-    #setup.kibana:
-    #  host: "t-elk:5601"
-    #================================ Outputs =====================================
-    #-------------------------- Elasticsearch output ------------------------------
-    output.elasticsearch:
-      hosts: ["t-elk:9200"]
-      username: "elastic"
-      password: "password"
-      index: "demo-index-default"
-      indices:
-        - index: "demo-index-1"
-          when.contains:
-            fields:
-              log_topics: "index-1"
-        - index: "demo-index-2"
-          when.contains:
-            fields:
-              log_topics: "index-2"
-    #----------------------------- Logstash output --------------------------------
-    output.logstash:
-      hosts: ["t-elk:5044"]
-    ```
+    - [filebeat.yml](./config/filebeat.yml)
 - 啟動服務
     - `systemctl start filebeat`
     - `systemctl enable filebeat`

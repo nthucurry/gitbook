@@ -1,0 +1,54 @@
+# ============================== Filebeat inputs ===============================
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /mnt/xxx/insights-logs-storagewrite/resourceId=/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Storage/storageAccounts/*/blobServices/default/*/*/*/*/m=00/PT1H.json
+  fields:
+    log_type: "xxx-azure-file-upload"
+  fields_under_root: true
+- type: log
+  enabled: true
+  paths:
+    - /mnt/xxx/am-officeactivity/WorkspaceResourceId=/subscriptions/xxx/resourcegroups/xxx/providers/microsoft.operationalinsights/workspaces/xxx/*/*/*/*/m=00/PT1H.json
+  fields:
+    log_type: "xxx-office-activity"
+  fields_under_root: true
+- type: log
+  enabled: true
+  paths:
+    - /mnt/xxx/insights-logs-azurefirewall/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/BIGDATAFIREWALL/*/*/*/*/m=00/PT1H.json
+  fields:
+    log_type: "xxx-azure-firewall"
+  fields_under_root: true
+# ================================== Outputs ===================================
+# ---------------------------- Elasticsearch Output ----------------------------
+#output.elasticsearch:
+  #hosts: ["t-elk:9200"]
+  #protocol: "http"
+
+  # Authentication credentials - either API key or username/password.
+  #api_key: "id:api_key"
+  #username: "elastic"
+  #password: "elastic"
+# ------------------------------ Logstash Output -------------------------------
+output.logstash:
+  hosts: ["t-elk:5044"]
+  index: "asdasdasd"
+  indices:
+    - index: "xxx-azure-file-upload"
+      when.contains:
+        log_type: "xxx-azure-file-upload"
+    - index: "xxx-office-activity"
+      when.contains:
+        log_type: "xxx-office-activity"
+    - index: "xxx-azure-firewall"
+      when.contains:
+        log_type: "xxx-azure-firewall"
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
