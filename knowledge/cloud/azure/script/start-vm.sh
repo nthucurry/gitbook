@@ -11,7 +11,7 @@ if [[ $info == "1" ]]; then
 elif [[ "$info" = "2" ]]; then
     subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
     resource_group="DBA-K8S"
-    nsg="nsg-k8s"
+    nsg="nsg"
     nsg_home_rule="from_Home"
     public_home_ip=`curl https://ifconfig.me`
 else
