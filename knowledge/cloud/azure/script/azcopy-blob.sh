@@ -38,3 +38,5 @@ done
 
 chmod +x sync-blob-command.sh
 $HOME/sync-blob-command.sh
+
+azcopy jobs clean
