@@ -1,3 +1,3 @@
 # log_dir_path,index_pattern,duration
 #####################
-/mnt/write/resourceId=/subscriptions/de61f224-9a69-4ede-8273-5bcef854dc20/resourceGroups/DBA-K8S/providers/Microsoft.Storage/storageAccounts/storagedbak8s/blobServices/default,write,20
+/mnt/write/resourceId=/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Storage/storageAccounts/xxx/blobServices/default,write,20

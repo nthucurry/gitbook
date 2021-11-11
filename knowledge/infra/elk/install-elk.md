@@ -1,10 +1,10 @@
 - [Reference](#reference)
 - [安裝步驟](#安裝步驟)
-  - [基本處置](#基本處置)
-  - [Java](#java)
-  - [Elasticsearch](#elasticsearch)
-  - [Kibana](#kibana)
-  - [Logstash](#logstash)
+    - [基本處置](#基本處置)
+    - [Java](#java)
+    - [Elasticsearch](#elasticsearch)
+    - [Kibana](#kibana)
+    - [Logstash](#logstash)
 - [Filebeat](#filebeat)
 - [匯入資料](#匯入資料)
 
@@ -60,6 +60,7 @@
 - 設定 elasticsearch 記憶體使用上限及下限，重開 VM 記憶體才會生效
     - `sed -i 's/## -Xms4g/-Xms1g/g' /etc/elasticsearch/jvm.options`
     - `sed -i 's/## -Xmx4g/-Xmx1g/g' /etc/elasticsearch/jvm.options`
+- `ln -s /etc/elasticsearch/elasticsearch.yml`
 - `vi /etc/elasticsearch/elasticsearch.yml`
     ```yml
     node.name: node-1
@@ -81,6 +82,7 @@
 
 ## Kibana
 - `yum install kibana -y`
+- `ln -s /etc/kibana/kibana.yml`
 - `vi /etc/kibana/kibana.yml`
     ```yml
     server.port: 5601 # 設定 80, 443 都會無法啟動，無解
@@ -100,11 +102,13 @@
 - 啟動服務 (建議不啟動)
     - `systemctl start logstash.service`
     - `systemctl enable logstash.service`
+- `ln -s /etc/logstash/logstash.yml`
 - `vi /etc/logstash/logstash.yml`
 
 # Filebeat
 - `rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch`
 - `yum install filebeat -y`
+- `ln -s /etc/filebeat/filebeat.yml`
 - `vi /etc/filebeat/filebeat.yml`
     - [filebeat.yml](./config/filebeat.yml)
 - 啟動服務
