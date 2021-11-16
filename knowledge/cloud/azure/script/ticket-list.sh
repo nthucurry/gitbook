@@ -1,0 +1,1 @@
+az support tickets list --filters "CreatedDate ge 2021-01-01" --query "[].{serviceDisplayName:serviceDisplayName,supportPlanType:supportPlanType,primaryEmailAddress:contactDetails.primaryEmailAddress,createdDate:createdDate}" > tmp.json
