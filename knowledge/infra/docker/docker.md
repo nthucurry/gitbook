@@ -36,7 +36,7 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 - Ubuntu
     - 安裝 curl：`sudo apt install curl`
     - 安裝 docker：`curl -sSL https://get.docker.com/ubuntu/ | sudo sh`
-- CentOS
+- CentOS (請用 user account 執行)
     ```bash
     sudo yum install yum-utils device-mapper-persistent-data lvm2 -y
     sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
