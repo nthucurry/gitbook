@@ -93,7 +93,7 @@
     - `systemctl start kibana.service`
     - `systemctl enable kibana.service`
 - 轉 Port (5601 to 80, option)
-    - `sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601`
+    - `iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601`
 - 版本
     - `/usr/share/kibana/bin/kibana --version --allow-root`
 
