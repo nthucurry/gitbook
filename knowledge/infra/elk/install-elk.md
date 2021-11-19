@@ -111,7 +111,7 @@
 - `ln -s /etc/filebeat/filebeat.yml`
 - `vi /etc/filebeat/filebeat.yml`
     - [filebeat.yml](./config/filebeat.yml)
-- 啟動服務
+- 啟動服務 (要有耐心慢慢等)
     - `systemctl start filebeat`
     - `systemctl enable filebeat`
 - 啟動模組
