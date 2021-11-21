@@ -39,9 +39,9 @@ az feature register --namespace Microsoft.Storage --name PremiumHns
     - `chmod +x /etc/rc.d/rc.local`
     - `vi /etc/rc.local` (暫時無效)
         ```
-        /root/mount-azblob.sh
+        /root/mount-blob.sh
         ```
-    - [mount-azblob.sh](../../infra/elk/script/mount-azblob.sh)
+    - [mount-blob.sh](../../infra/elk/script/mount-blob.sh)
 - finish
 
 # [Configure object replication when you have access only to the destination account](https://docs.microsoft.com/en-us/azure/storage/blobs/object-replication-configure?tabs=portal#configure-object-replication-when-you-have-access-only-to-the-destination-account)

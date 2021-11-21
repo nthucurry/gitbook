@@ -89,4 +89,4 @@ Gets the backend health of the specified application gateway in a resource group
     and TimeGenerated < todatetime('2020-12-26T05:00:01.397Z')
     ```
 - from storage account: `$.array[?(@.resourceId)].properties.clientIP`
-    - [ApplicationGatewayFirewallLog](~/../json/agw-access-log.json)
+    - [ApplicationGatewayFirewallLog](~/../../json/agw-access-log.json)
