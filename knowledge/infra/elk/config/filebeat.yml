@@ -3,23 +3,30 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /mnt/xxx/insights-logs-storagewrite/resourceId=/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Storage/storageAccounts/*/blobServices/default/*/*/*/*/m=00/PT1H.json
+    - /data/insights-logs-storagewrite/resourceId=/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Storage/storageAccounts/*/blobServices/default/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "xxx-azure-file-upload"
   fields_under_root: true
 - type: log
   enabled: true
   paths:
-    - /mnt/xxx/am-officeactivity/WorkspaceResourceId=/subscriptions/xxx/resourcegroups/xxx/providers/microsoft.operationalinsights/workspaces/xxx/*/*/*/*/m=00/PT1H.json
+    - /data/am-officeactivity/WorkspaceResourceId=/subscriptions/xxx/resourcegroups/xxx/providers/microsoft.operationalinsights/workspaces/xxx/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "xxx-office-activity"
   fields_under_root: true
 - type: log
   enabled: true
   paths:
-    - /mnt/xxx/insights-logs-azurefirewall/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/BIGDATAFIREWALL/*/*/*/*/m=00/PT1H.json
+    - /data/insights-logs-azurefirewall/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/BIGDATAFIREWALL/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "xxx-azure-firewall"
+  fields_under_root: true
+- type: log
+  enabled: true
+  paths:
+    - /var/log/*.log
+  fields:
+    log_type: "xxx-os"
   fields_under_root: true
 # ================================== Outputs ===================================
 # ---------------------------- Elasticsearch Output ----------------------------
@@ -45,6 +52,9 @@ output.logstash:
     - index: "xxx-azure-firewall"
       when.contains:
         log_type: "xxx-azure-firewall"
+    - index: "xxx-os"
+      when.contains:
+        log_type: "xxx-os"
 # ================================= Processors =================================
 processors:
   - add_host_metadata:
