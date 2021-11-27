@@ -19,7 +19,7 @@ do
   if [[ $line == *"#"* ]];then
     continue;
   fi
-  blobPath=`echo $line | sed 's/data-from-blobfuse/data-to-local/g'`
+  blobPath=`echo $line | sed 's/data-from-cloud/data-to-local/g'`
   mkdir -p $blobPath/y=$getYY/m=$getMM/d=$getDD
   cp -r $line/y=$getYY/m=$getMM/d=$getDD/h=$getHH $blobPath/y=$getYY/m=$getMM/d=$getDD
   rm -fr $blobPath/y=$delYY/m=$delMM/d=$delDD/h=$delHH
