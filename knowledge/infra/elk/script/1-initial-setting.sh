@@ -1,7 +1,7 @@
 # necessary config & script
 cd /root
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/mount-azblob.sh
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/import-log.sh
+wget https://raw.githubusercontent.com/ShaqtinAcFool/gitbook/master/knowledge/infra/elk/script/mount-blob.sh
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/run-logstash.sh
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/delete-index.sh
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/update-config.sh
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/config/fuse_connection.cfg
