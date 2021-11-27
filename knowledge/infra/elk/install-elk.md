@@ -1,10 +1,10 @@
 - [Reference](#reference)
 - [安裝步驟](#安裝步驟)
-    - [基本處置](#基本處置)
-    - [Java](#java)
-    - [Elasticsearch](#elasticsearch)
-    - [Kibana](#kibana)
-    - [Logstash](#logstash)
+  - [基本處置](#基本處置)
+  - [Java](#java)
+  - [Elasticsearch](#elasticsearch)
+  - [Kibana](#kibana)
+  - [Logstash](#logstash)
 - [Filebeat](#filebeat)
 - [匯入資料](#匯入資料)
 
@@ -109,6 +109,7 @@
 - `rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch`
 - `yum install filebeat -y`
 - `ln -s /etc/filebeat/filebeat.yml`
+    - 需先設定 filebeat log 位置
 - `vi /etc/filebeat/filebeat.yml`
     - [filebeat.yml](./config/filebeat.yml)
 - 啟動服務 (要有耐心慢慢等)
