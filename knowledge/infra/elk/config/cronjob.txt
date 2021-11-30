@@ -1,1 +1,3 @@
 20 */1 * * * /root/update-config.sh
+05 */1 * * * /root/sync-blob-by-blobfuse.sh
+00 19  * * * echo "" > /root/_logstash.log

@@ -22,8 +22,8 @@ do
   mkdir -p $dstPath/y=$getYY/m=$getMM/d=$getDD
   cp -r $srcPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH $dstPath/y=$getYY/m=$getMM/d=$getDD
   # if [[ $srcPath == *"NETWORKSECURITYGROUP"* ]];then
-  #   echo "$HOME/update-file-for-nsg.sh $dstPath/y=$getYY/m=$getMM/d=$getDD"
-  #   $HOME/update-file-for-nsg.sh $dstPath/y=$getYY/m=$getMM/d=$getDD
+  #   echo "~/update-file-for-nsg.sh $dstPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH"
+  #   $HOME/update-file-for-nsg.sh $dstPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH
   # fi
   rm -fr $dstPath/y=$delYY/m=$delMM/d=$delDD/h=$delHH
 done
