@@ -21,6 +21,8 @@ echo "alias srf='systemctl restart filebeat.service'" >> /etc/bashrc
 echo "alias ssf='systemctl status filebeat.service'" >> /etc/bashrc
 echo "alias vi='vim'" >> /etc/bashrc
 echo "PATH=$PATH:/usr/share/logstash/bin" >> /etc/bashrc
+echo "export LS_JAVA_OPTS=\"-Dhttp.proxyHost=squid.gotdns.ch -Dhttp.proxyPort=3128\"
+" >> /etc/bashrc
 source /etc/bashrc
 
 # hostname
