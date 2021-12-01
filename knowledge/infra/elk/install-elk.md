@@ -1,10 +1,10 @@
 - [Reference](#reference)
 - [安裝步驟](#安裝步驟)
-  - [基本處置](#基本處置)
-  - [Java](#java)
-  - [Elasticsearch](#elasticsearch)
-  - [Kibana](#kibana)
-  - [Logstash](#logstash)
+    - [基本處置](#基本處置)
+    - [Java](#java)
+    - [Elasticsearch](#elasticsearch)
+    - [Kibana](#kibana)
+    - [Logstash](#logstash)
 - [Filebeat](#filebeat)
 - [匯入資料](#匯入資料)
 
@@ -15,6 +15,7 @@
 - [Elasticsearch issue with "cluster_uuid" : "_na_" and license in null](https://stackoverflow.com/questions/67451816/elasticsearch-issue-with-cluster-uuid-na-and-license-in-null)
 - [How to monitor your Azure infrastructure with Filebeat and Elastic Observability](https://cloudblogs.microsoft.com/opensource/2021/01/07/how-to-monitor-azure-infrastructure-filebeat-elastic-observability/)
 - [How to manage Elasticsearch data across multiple indices with Filebeat, ILM, and data streams](https://www.elastic.co/blog/how-to-manage-elasticsearch-data-multiple-indices-filebeat-ilm-data-streams)
+- [Logstash 最佳实践](https://doc.yonyoucloud.com/doc/logstash-best-practice-cn/index.html)
 
 # 安裝步驟
 ## 基本處置
