@@ -14,7 +14,7 @@ wkc_startup=`tail -3 /mnt/backup/wkc/$service_type/wkc-backup-unquiesce-$backup_
 cat << EOF | tee /home/azadmin/cmd/mail.exp
 #!/usr/bin/expect -f
 spawn /usr/bin/telnet mail-relay.corpnet.axo.com 25
-expect "220 au3mr1.corpnet.axo.com ESMTP Postfix"
+expect "220 mail-relay.corpnet.axo.com ESMTP Postfix"
 send "EHLO axo.com\r"
 expect "250 DNS"
 send "MAIL FROM: <alert@axo.com>\r"
