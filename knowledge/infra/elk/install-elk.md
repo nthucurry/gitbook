@@ -100,17 +100,23 @@
 
 ## Logstash
 - `yum install logstash -y`
-- 啟動服務 (建議不啟動)
+- 啟動服務
     - `systemctl start logstash.service`
     - `systemctl enable logstash.service`
 - `ln -s /etc/logstash/logstash.yml`
-- `vi /etc/logstash/logstash.yml`
+- 修改 logstash 參數時，自動生效
+    - `vi /etc/systemd/system/logstash.service`
+    - `ExecStart=/usr/share/logstash/bin/logstash "-r" "–path.settings" "/etc/logstash"`
+- `ln -s /etc/logstash/conf.d/logstash.conf`
+- outupt log
+    - `ln -s /var/log/logstash/logstash-plain.log`
 
 # Filebeat
 - `rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch`
 - `yum install filebeat -y`
 - `ln -s /etc/filebeat/filebeat.yml`
     - 需先設定 filebeat log 位置
+- `ln -s /var/log/filebeat/filebeat`
 - `vi /etc/filebeat/filebeat.yml`
     - [filebeat.yml](./config/filebeat.yml)
 - 啟動服務 (要有耐心慢慢等)
