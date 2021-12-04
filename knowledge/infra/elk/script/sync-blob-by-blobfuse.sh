@@ -20,10 +20,12 @@ do
   fi
   dstPath=`echo $srcPath | sed 's/data-from-cloud/data-to-local/g'`
   mkdir -p $dstPath/y=$getYY/m=$getMM/d=$getDD
-  cp -r $srcPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH $dstPath/y=$getYY/m=$getMM/d=$getDD
-  # if [[ $srcPath == *"NETWORKSECURITYGROUP"* ]];then
-  #   echo "~/update-file-for-nsg.sh $dstPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH"
-  #   $HOME/update-file-for-nsg.sh $dstPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH
-  # fi
+  # echo "  mkdir -p $dstPath/y=$getYY/m=$getMM/d=$getDD"
+  cp -fr $srcPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH $dstPath/y=$getYY/m=$getMM/d=$getDD
+  # echo "  cp -fr $srcPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH $dstPath/y=$getYY/m=$getMM/d=$getDD"
+  if [[ $srcPath == *"NETWORKSECURITYGROUP"* ]];then
+  #   echo "    ~/update-file-for-nsg.sh $dstPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH"
+    $HOME/update-file-for-nsg.sh $dstPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH
+  fi
   rm -fr $dstPath/y=$delYY/m=$delMM/d=$delDD/h=$delHH
 done

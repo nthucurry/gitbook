@@ -103,11 +103,11 @@
 - 啟動服務
     - `systemctl start logstash.service`
     - `systemctl enable logstash.service`
-- `ln -s /etc/logstash/logstash.yml`
+- `ln -s /etc/logstash/logstash.yml ~`
 - 修改 logstash 參數時，自動生效
     - `vi /etc/systemd/system/logstash.service`
     - `ExecStart=/usr/share/logstash/bin/logstash "-r" "–path.settings" "/etc/logstash"`
-- `ln -s /etc/logstash/conf.d/logstash.conf`
+- `ln -s /etc/logstash/conf.d/logstash.conf ~`
 - outupt log
     - `ln -s /var/log/logstash/logstash-plain.log`
 
