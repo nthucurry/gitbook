@@ -1,7 +1,0 @@
-#
-#
-#
-/data-from-cloud/insights-logs-networksecuritygroupflowevent/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/T-NSG
-#
-#
-#

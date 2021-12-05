@@ -1,10 +1,10 @@
 - [Reference](#reference)
 - [安裝步驟](#安裝步驟)
-    - [基本處置](#基本處置)
-    - [Java](#java)
-    - [Elasticsearch](#elasticsearch)
-    - [Kibana](#kibana)
-    - [Logstash](#logstash)
+  - [基本處置](#基本處置)
+  - [Java](#java)
+  - [Elasticsearch](#elasticsearch)
+  - [Kibana](#kibana)
+  - [Logstash](#logstash)
 - [Filebeat](#filebeat)
 - [匯入資料](#匯入資料)
 
@@ -104,19 +104,21 @@
     - `systemctl start logstash.service`
     - `systemctl enable logstash.service`
 - `ln -s /etc/logstash/logstash.yml ~`
-- 修改 logstash 參數時，自動生效
+- 修改 logstash 參數，使其自動生效
     - `vi /etc/systemd/system/logstash.service`
     - `ExecStart=/usr/share/logstash/bin/logstash "-r" "–path.settings" "/etc/logstash"`
-- `ln -s /etc/logstash/conf.d/logstash.conf ~`
-- outupt log
-    - `ln -s /var/log/logstash/logstash-plain.log`
+- config 位置
+    - `ln -s /etc/logstash/conf.d/logstash.conf ~`
+- log 位置
+    - `ln -s /var/log/logstash/logstash-plain.log ~`
 
 # Filebeat
 - `rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch`
 - `yum install filebeat -y`
-- `ln -s /etc/filebeat/filebeat.yml`
-    - 需先設定 filebeat log 位置
-- `ln -s /var/log/filebeat/filebeat`
+- config 位置，需先設定 filebeat log 位置
+    - `ln -s /etc/filebeat/filebeat.yml`
+- log 位置
+    - `ln -s /var/log/filebeat/filebeat ~`
 - `vi /etc/filebeat/filebeat.yml`
     - [filebeat.yml](./config/filebeat.yml)
 - 啟動服務 (要有耐心慢慢等)

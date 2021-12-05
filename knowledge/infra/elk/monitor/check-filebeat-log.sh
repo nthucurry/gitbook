@@ -1,0 +1,1 @@
+tail -f filebeat | grep 'input'
