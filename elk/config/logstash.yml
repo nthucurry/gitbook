@@ -1,0 +1,19 @@
+# ------------ Pipeline Settings --------------
+# pipeline.id: main
+# pipeline.workers: 2
+# pipeline.batch.size: 125
+# pipeline.batch.delay: 50
+# pipeline.unsafe_shutdown: false
+# pipeline.ordered: auto
+# ------------ Pipeline Configuration Settings --------------
+# ------------ HTTP API Settings -------------
+http.host: t-elk
+http.port: 9600-9700
+# ------------ Metrics Settings --------------
+# http.host: "127.0.0.1"
+# http.port: 9600-9700
+# ------------ Debugging Settings --------------
+# log.level: info
+path.logs: /var/log/logstash
+# ------------ X-Pack Settings (not applicable for OSS build)--------------
+#xpack.geoip.download.endpoint: "https://geoip.elastic.co/v1/database"
