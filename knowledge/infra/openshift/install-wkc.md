@@ -102,7 +102,7 @@
     - 從 web: https://console-openshift-console.apps.wkc.test.org
     - 從 terminal
         - 登入: [login-ocp.sh](./script/login-ocp.sh)
-        - 檢查: [check-pod.sh](./script/check-pod.sh)
+        - 檢查: [check-pod.sh](./script-maintan/check-pod.sh)
     - 查詢 kubeadmin 密碼
         - `cat ~/ocp4.5_cust/auth/kubeadmin-password`
     - 改時間
@@ -486,8 +486,8 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
         metadata:
             name: cluster
         spec:
-            httpProxy: http://10.250.12.5:3128
-            httpsProxy: http://10.250.12.5:3128
+            httpProxy: http://squid.gotdns.ch:3128
+            httpsProxy: http://squid.gotdns.ch:3128
         ```
 - proxy 連線清單
     ```
@@ -505,11 +505,11 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
     ```
 
 # 設定 User Managerment on CP4D Portal
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/wkc-ldap.png">
-
 - https://docs.microsoft.com/zh-tw/system-center/scsm/ad-ds-attribs?view=sc-sm-2019
 - sn: 王大明
 - givenname: 1312032
 - displayName: DM Wang 王大明
 - sAMAccountName: dmwang
 - department: I200
+
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/wkc-ldap.png">
