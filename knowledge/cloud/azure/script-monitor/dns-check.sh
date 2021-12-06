@@ -43,7 +43,7 @@ if [[ -f $logFile ]];then
   sendMail=$(isSendMail)
   echo "(3) $sendMail"
   if [[ $sendMail > 0 ]];then
-    $HOME/dns/mail-for-check-dns.sh $dnsServerIP
+    $HOME/dns/dns-send-mail.sh $dnsServerIP
   else
     echo "Do not send mail"
   fi
