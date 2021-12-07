@@ -1,0 +1,1 @@
+# [Restrict access to a tenant](https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/tenant-restrictions)
