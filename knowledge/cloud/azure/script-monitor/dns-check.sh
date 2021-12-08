@@ -1,6 +1,6 @@
 #!/bin/bash
 source $HOME/.bash_profile
-dnsServerIPs="10.0.10.4 10.0.10.5"
+dnsServerIPs="168.63.129.16 10.0.10.4 10.0.10.5"
 subscription="xxx"
 resourceGroup="xxx"
 runSendMailScript="dns-send-mail.sh"
