@@ -1,0 +1,6 @@
+# networksecuritygroupflowevent
+/data-from-cloud/insights-logs-networksecuritygroupflowevent/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/xxx
+# applicationgatewayaccesslog
+/data-from-cloud/insights-logs-applicationgatewayaccesslog/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/xxx
+# auditlogs
+/data-from-cloud/am-auditlogs/WorkspaceResourceId=/subscriptions/xxx/resourcegroups/xxx/providers/microsoft.operationalinsights/workspaces/xxx
