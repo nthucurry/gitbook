@@ -23,8 +23,9 @@ function checkDNS() {
 #    echo $domainName >> $logFile
     az network private-dns record-set a list -g Global -z $domainName --query "[].fqdn" -o tsv | while read fqdn
     do
-      ip=`nslookup $fqdn $dnsServerIP | grep Address | tail -1 | awk 'BEGIN {FS=" "} {print $2}'`
-      if [[ $ip != *"10."* ]];then
+      # ip=`nslookup $fqdn $dnsServerIP | grep Address | tail -1 | awk 'BEGIN {FS=" "} {print $2}'`
+      ip=`nslookup $fqdn $dnsServerIP | tail -2 | head -1 | grep Address | sed 's/Address: //g'`
+      if [[ $ip != *"10."* && ! -z $ip ]];then
         echo "     " $fqdn: $ip
         echo "     " $fqdn: $ip"\n" >> $logFile
       fi
@@ -43,7 +44,7 @@ if [[ -f $logFile ]];then
   sendMail=$(isSendMail)
   echo "(3) $sendMail"
   if [[ $sendMail > 0 ]];then
-    $HOME/dns/dns-send-mail.sh $dnsServerIP
+    $HOME/dns/send-mail.sh $dnsServerIP
   else
     echo "Do not send mail"
   fi
