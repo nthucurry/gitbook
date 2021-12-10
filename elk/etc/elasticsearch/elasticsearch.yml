@@ -1,0 +1,20 @@
+# ======================== Elasticsearch Configuration =========================
+# ---------------------------------- Cluster -----------------------------------
+#cluster.name: my-application
+# ------------------------------------ Node ------------------------------------
+node.name: node-1
+#node.attr.rack: r1
+# ----------------------------------- Paths ------------------------------------
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+# ----------------------------------- Memory -----------------------------------
+#bootstrap.memory_lock: true
+# ---------------------------------- Network -----------------------------------
+network.host: 0.0.0.0
+http.port: 9200
+# --------------------------------- Discovery ----------------------------------
+discovery.seed_hosts: ["127.0.0.1", "[::1]"]
+#cluster.initial_master_nodes: ["node-1", "node-2"]
+# ---------------------------------- Various -----------------------------------
+#action.destructive_requires_name: true
+xpack.security.enabled: false

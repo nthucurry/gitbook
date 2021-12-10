@@ -48,6 +48,8 @@ filebeat.inputs:
 # ------------------------------ Logstash Output -------------------------------
 output.logstash:
   hosts: ["t-elk:5044"]
+  # loadbalance: true
+  # worker: 2
   index: "asdasdasd"
   indices:
     - index: "azure-file-upload"
