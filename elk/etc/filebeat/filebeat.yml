@@ -5,7 +5,7 @@ filebeat.inputs:
   paths:
     - /data/insights-logs-storagewrite/resourceId=/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Storage/storageAccounts/*/blobServices/default/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
-    log_type: "azure-file-upload"
+    log_type: "azure-storage-audit"
   fields_under_root: true
 - type: log
   enabled: true
@@ -52,9 +52,9 @@ output.logstash:
   # worker: 2
   index: "asdasdasd"
   indices:
-    - index: "azure-file-upload"
+    - index: "azure-storage-audit"
       when.contains:
-        log_type: "azure-file-upload"
+        log_type: "azure-storage-audit"
     - index: "m365-office-activity"
       when.contains:
         log_type: "m365-office-activity"
