@@ -1,13 +1,7 @@
 # necessary config & script
 cd /root
-wget https://raw.githubusercontent.com/ShaqtinAcFool/gitbook/master/knowledge/infra/elk/script/mount-blob.sh
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/run-logstash.sh
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/delete-index.sh
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/script/update-config.sh
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/config/fuse_connection.cfg
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/config/logstash.conf
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/config/filebeat.conf
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/elk/config/azure-log-list.csv
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/elk/etc/logstash/conf.d/fb-aad-audit.conf
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/elk/etc/logstash/conf.d/fb-azure-nsg-flow%20copy.conf
 chmod +x *.sh
 
 # environment varible
