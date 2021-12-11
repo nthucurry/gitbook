@@ -14,6 +14,8 @@
 ## AAD
 - aad-audit
     - 1100
+- aad-signin
+    - 1110
 
 ## M365
 - m365-office-activity

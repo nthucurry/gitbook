@@ -1,7 +1,9 @@
 # necessary config & script
 cd /root
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/elk/etc/logstash/conf.d/fb-aad-audit.conf
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/elk/etc/logstash/conf.d/fb-azure-nsg-flow%20copy.conf
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/elk/etc/logstash/conf.d/fb-azure-nsg-flow.conf
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/elk/etc/logstash/conf.d/fb-azure-storage-audit.conf
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/elk/etc/logstash/conf.d/fb-m365-office-activity.conf
 chmod +x *.sh
 
 # environment varible
