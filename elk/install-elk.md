@@ -117,6 +117,8 @@
 - `yum install filebeat -y`
 - config 位置，需先設定 filebeat log 位置
     - `ln -s /etc/filebeat/filebeat.yml`
+- 檢查 conf 格式
+    - `filebeat test config -c filebeat.yml`
 - log 位置
     - `ln -s /var/log/filebeat/filebeat ~`
 - `vi /etc/filebeat/filebeat.yml`
