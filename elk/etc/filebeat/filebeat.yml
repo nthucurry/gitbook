@@ -67,6 +67,9 @@ output.logstash:
     - index: "os"
       when.contains:
         log_type: "os"
+  when.contains:
+    index: "azure-nsg-flow"
+  hosts: ["t-elk:1000"]
 # ================================= Processors =================================
 processors:
   - add_host_metadata:
