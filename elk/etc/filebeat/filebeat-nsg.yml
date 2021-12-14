@@ -1,0 +1,36 @@
+# ============================== Filebeat inputs ===============================
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /data-to-local/my/insights-logs-networksecuritygroupflowevent/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/xxx/y=*/m=*/d=*/h=*/m=*/macAddress=*/*.json
+  fields:
+    log_type: "azure-nsg-flow"
+  fields_under_root: true
+# ================================== Outputs ===================================
+# ---------------------------- Elasticsearch Output ----------------------------
+# ------------------------------ Logstash Output -------------------------------
+output.logstash:
+  hosts: ["t-elk:1000"]
+  # loadbalance: true
+  # worker: 2
+  index: "asdasdasd"
+  indices:
+    - index: "azure-nsg-flow"
+      when.contains:
+        log_type: "azure-nsg-flow"
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+# ================================== Logging ===================================
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat/azure-nsg-flow
+  name: filebeat-azure-nsg-flow.log
+  keepfiles: 7
+  permissions: 0644

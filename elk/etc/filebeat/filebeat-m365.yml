@@ -1,0 +1,36 @@
+# ============================== Filebeat inputs ===============================
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /data-to-local/my/am-officeactivity/WorkspaceResourceId=/subscriptions/xxx/resourcegroups/xxx/providers/microsoft.operationalinsights/workspaces/xxx/y=*/m=*/d=*/h=*/m=*/*.json
+  fields:
+    log_type: "m365-office-activity"
+  fields_under_root: true
+# ================================== Outputs ===================================
+# ---------------------------- Elasticsearch Output ----------------------------
+# ------------------------------ Logstash Output -------------------------------
+output.logstash:
+  hosts: ["t-elk:1200"]
+  # loadbalance: true
+  # worker: 2
+  index: "asdasdasd"
+  indices:
+    - index: "m365-office-activity"
+      when.contains:
+        log_type: "m365-office-activity"
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+# ================================== Logging ===================================
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat/m365-office-activity
+  name: filebeat-m365-office-activity.log
+  keepfiles: 7
+  permissions: 0644

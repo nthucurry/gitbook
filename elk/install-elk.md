@@ -1,10 +1,10 @@
 - [Reference](#reference)
 - [安裝步驟](#安裝步驟)
-  - [基本處置](#基本處置)
-  - [Java](#java)
-  - [Elasticsearch](#elasticsearch)
-  - [Kibana](#kibana)
-  - [Logstash](#logstash)
+    - [基本處置](#基本處置)
+    - [Java](#java)
+    - [Elasticsearch](#elasticsearch)
+    - [Kibana](#kibana)
+    - [Logstash](#logstash)
 - [Filebeat](#filebeat)
 - [匯入資料](#匯入資料)
 
@@ -130,6 +130,13 @@
     - `filebeat modules enable azure`
     - `vi /etc/filebeat/modules.d/azure.yml`
     - `filebeat setup`
+- 手動啟動
+    - `filebeat -e -c filebeat.yml`
+- 自建 filebeat 服務
+    - `cp /usr/lib/systemd/system/filebeat.service /usr/lib/systemd/system/filebeat-m365.service`
+    - `vi /usr/lib/systemd/system/filebeat-m365.service`
+    - `Environment="BEAT_CONFIG_OPTS=-c /etc/filebeat/filebeat-m365.yml"`
+    - `Environment="BEAT_PATH_OPTS=--path.home /usr/share/filebeat --path.config /etc/filebeat --path.data /var/lib/filebeat-m365 --path.logs /var/log/filebeat-m365"`
 
 # 匯入資料
 - `vi /etc/logstash/conf.d/logstash.conf`
