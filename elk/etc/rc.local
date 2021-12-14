@@ -1,2 +1,2 @@
-/root/mount-blob.sh
+/root/mount-container.sh
 iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5601
