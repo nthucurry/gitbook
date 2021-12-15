@@ -12,9 +12,6 @@ filebeat.inputs:
 # ------------------------------ Logstash Output -------------------------------
 output.logstash:
   hosts: ["t-elk:1200"]
-  # loadbalance: true
-  # worker: 2
-  index: "asdasdasd"
   indices:
     - index: "m365-office-activity"
       when.contains:
@@ -30,7 +27,7 @@ processors:
 logging.level: info
 logging.to_files: true
 logging.files:
-  path: /var/log/filebeat/m365-office-activity
+  path: /var/log/filebeat
   name: filebeat-m365-office-activity.log
-  keepfiles: 7
+  keepfiles: 1
   permissions: 0644

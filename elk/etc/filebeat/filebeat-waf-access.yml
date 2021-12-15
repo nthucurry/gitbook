@@ -3,19 +3,19 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /data-to-local/my/insights-logs-networksecuritygroupflowevent/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/xxx/y=*/m=*/d=*/h=*/m=*/macAddress=*/*.json
+    - /data-to-local/xxx/insights-logs-applicationgatewayaccesslog/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/xxx/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
-    log_type: "azure-nsg-flow"
+    log_type: "azure-waf-access"
   fields_under_root: true
 # ================================== Outputs ===================================
 # ---------------------------- Elasticsearch Output ----------------------------
 # ------------------------------ Logstash Output -------------------------------
 output.logstash:
-  hosts: ["t-elk:1000"]
+  hosts: ["t-elk:1020"]
   indices:
-    - index: "azure-nsg-flow"
+    - index: "azure-waf-access"
       when.contains:
-        log_type: "azure-nsg-flow"
+        log_type: "azure-waf-access"
 # ================================= Processors =================================
 processors:
   - add_host_metadata:
@@ -28,6 +28,6 @@ logging.level: info
 logging.to_files: true
 logging.files:
   path: /var/log/filebeat
-  name: filebeat-azure-nsg-flow.log
-  keepfiles: 7
+  name: filebeat-azure-waf-access.log
+  keepfiles: 1
   permissions: 0644

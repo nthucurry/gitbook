@@ -11,14 +11,11 @@ filebeat.inputs:
 # ---------------------------- Elasticsearch Output ----------------------------
 # ------------------------------ Logstash Output -------------------------------
 output.logstash:
-  hosts: ["t-elk:1000"]
-  # loadbalance: true
-  # worker: 2
-  index: "asdasdasd"
+  hosts: ["t-elk:1010"]
   indices:
-    - index: "azure-nsg-flow"
+    - index: "azure-storage-audit"
       when.contains:
-        log_type: "azure-nsg-flow"
+        log_type: "azure-storage-audit"
 # ================================= Processors =================================
 processors:
   - add_host_metadata:
@@ -30,7 +27,7 @@ processors:
 logging.level: info
 logging.to_files: true
 logging.files:
-  path: /var/log/filebeat/azure-storage-audit
+  path: /var/log/filebeat
   name: filebeat-azure-storage-audit.log
-  keepfiles: 7
+  keepfiles: 1
   permissions: 0644
