@@ -16,6 +16,12 @@
     - aad-audit
 - 1110
     - aad-signin
+- 1120
+    - aad-service-principal-signin
+- 1130
+    - aad-provisioning
+- 1140
+    - aad-managed-identity-signin
 
 ## M365
 - 1200
