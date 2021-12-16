@@ -3,19 +3,19 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /data-to-local/my/insights-logs-applicationgatewayaccesslog/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/*/y=*/m=*/d=*/h=*/m=*/*.json
+    - /data-to-local/my/insights-logs-azurefirewall/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/*/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
-    log_type: "azure-waf-access"
+    log_type: "azure-firewall"
   fields_under_root: true
 # ================================== Outputs ===================================
 # ---------------------------- Elasticsearch Output ----------------------------
 # ------------------------------ Logstash Output -------------------------------
 output.logstash:
-  hosts: ["t-elk:1020"]
+  hosts: ["t-elk:1040"]
   indices:
-    - index: "azure-waf-access"
+    - index: "azure-firewall"
       when.contains:
-        log_type: "azure-waf-access"
+        log_type: "azure-firewall"
 # ================================= Processors =================================
 processors:
   - add_host_metadata:
@@ -28,6 +28,6 @@ logging.level: info
 logging.to_files: true
 logging.files:
   path: /var/log/filebeat
-  name: filebeat-azure-waf-access.log
+  name: filebeat-azure-firewall.log
   keepfiles: 1
   permissions: 0644

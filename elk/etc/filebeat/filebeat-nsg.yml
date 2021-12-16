@@ -3,7 +3,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /data-to-local/my/insights-logs-networksecuritygroupflowevent/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/xxx/y=*/m=*/d=*/h=*/m=*/macAddress=*/*.json
+    - /data-to-local/my/insights-logs-networksecuritygroupflowevent/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/*/y=*/m=*/d=*/h=*/m=*/macAddress=*/*.json
   fields:
     log_type: "azure-nsg-flow"
   fields_under_root: true

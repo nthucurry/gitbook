@@ -19,7 +19,11 @@
 # 匯入自簽憑證到「受信任的根憑證授權單位」
 光是建立好自簽憑證，網站伺服器也設定正確，還是不夠的。這畢竟是一個 PKI 基礎架構，必須所有需要安全連線的端點都能互相信任才行，因此你還必須將建立好的自簽憑證安裝到「受信任的根憑證授權單位」之中，這樣子你的作業系統或瀏覽器才能將你的自簽憑證視為「可信任的連線」
 
-# 更換憑證 (to do)
-- `openssl pkcs12 -in CA.pfx -password “pass:xxx” -nokeys -out server.crt`
-- `openssl pkcs12 -in CA.pfx -password “pass:xxx” -nodes -nocerts -out private.key`
-- `openssl pkcs12 -in CA.pfx -password “pass:xxx” -nokeys -nodes -cacerts -out ca.crt`
+# 更換憑證
+- `openssl pkcs12 -in xxx.pfx -password “pass:xxx” -nokeys -out server.crt`
+    - `SSLCertificateFile /etc/httpd/conf/ssl/server.crt`
+- `openssl pkcs12 -in xxx.pfx -password “pass:xxx” -nodes -nocerts -out private.key`
+    - `SSLCertificateKeyFile /etc/httpd/conf/ssl/private.key`
+- `openssl pkcs12 -in xxx.pfx -password “pass:xxx” -nokeys -nodes -cacerts -out ca.crt`
+    - `SSLCACertificateFile /etc/httpd/conf/ssl/ca.crt`
+- `systemctl restart httpd`

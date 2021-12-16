@@ -1,3 +1,15 @@
+- [Logstash Service](#logstash-service)
+- [Fiebeat Service](#fiebeat-service)
+    - [SOP](#sop)
+    - [Azure NSG Flow](#azure-nsg-flow)
+    - [Azure Firewall](#azure-firewall)
+    - [Azure WAF Access](#azure-waf-access)
+    - [M365 Office Activity](#m365-office-activity)
+
+# Logstash Service
+```
+```
+
 # Fiebeat Service
 ## SOP
 - `cp /usr/lib/systemd/system/filebeat.service /usr/lib/systemd/system/filebeat-xxx.service`
@@ -13,6 +25,20 @@ Environment="GODEBUG='madvdontneed=1'"
 Environment="BEAT_LOG_OPTS="
 Environment="BEAT_CONFIG_OPTS=-c /etc/filebeat/filebeat-nsg.yml"
 Environment="BEAT_PATH_OPTS=--path.home /usr/share/filebeat --path.config /etc/filebeat --path.data /var/lib/filebeat-nsg --path.logs /var/log/filebeat"
+ExecStart=/usr/share/filebeat/bin/filebeat --environment systemd $BEAT_LOG_OPTS $BEAT_CONFIG_OPTS $BEAT_PATH_OPTS
+Restart=always
+```
+
+## Azure Firewall
+```bash
+systemctl enable filebeat-firewall
+```
+```
+[Service]
+Environment="GODEBUG='madvdontneed=1'"
+Environment="BEAT_LOG_OPTS="
+Environment="BEAT_CONFIG_OPTS=-c /etc/filebeat/filebeat-firewall.yml"
+Environment="BEAT_PATH_OPTS=--path.home /usr/share/filebeat --path.config /etc/filebeat --path.data /var/lib/filebeat-firewall --path.logs /var/log/filebeat"
 ExecStart=/usr/share/filebeat/bin/filebeat --environment systemd $BEAT_LOG_OPTS $BEAT_CONFIG_OPTS $BEAT_PATH_OPTS
 Restart=always
 ```

@@ -3,7 +3,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /data-to-local/my/am-officeactivity/WorkspaceResourceId=/subscriptions/xxx/resourcegroups/xxx/providers/microsoft.operationalinsights/workspaces/xxx/y=*/m=*/d=*/h=*/m=*/*.json
+    - /data-to-local/my/am-officeactivity/WorkspaceResourceId=/subscriptions/*/resourcegroups/*/providers/microsoft.operationalinsights/workspaces/*/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "m365-office-activity"
   fields_under_root: true

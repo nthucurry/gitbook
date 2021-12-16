@@ -1,0 +1,5 @@
+ICMP Type=8 request from 10.248.176.65 to 74.125.24.147. Action: Deny.
+TCP request from 10.248.15.7:40644 to 40.126.35.128:443. Action: Allow.
+DNS Request: 10.248.14.8:10352 - 18419 AAAA IN southeastasia-shared.prod.warm.ingest.monitor.core.windows.net. udp 80 false 512 NOERROR qr,aa,rd,ra 290 0.000147701s
+HTTPS request from 10.248.177.42:51462 to database.clamav.net:443. Action: Deny. No rule matched. Proceeding with default action
+HTTP  request from 10.248.15.7:35632 to clientnotification-userprodscus1-0.servicebus.windows.net:80. Url: clientnotification-userprodscus1-0.servicebus.windows.net. Action: Deny. No rule matched. Proceeding with default action
