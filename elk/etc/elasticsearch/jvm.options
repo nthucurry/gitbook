@@ -1,0 +1,12 @@
+################################################################
+## IMPORTANT: JVM heap size
+################################################################
+-Xms1g
+-Xmx1g
+################################################################
+## Expert settings
+################################################################
+## GC configuration
+8-13:-XX:+UseConcMarkSweepGC
+8-13:-XX:CMSInitiatingOccupancyFraction=75
+8-13:-XX:+UseCMSInitiatingOccupancyOnly

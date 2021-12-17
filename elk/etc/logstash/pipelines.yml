@@ -6,11 +6,13 @@
 #   path.config: "/etc/logstash/conf.d/1010-*.conf"
 - pipeline.id: azure-waf-access
   path.config: "/etc/logstash/conf.d/1020-*.conf"
-# - pipeline.id: azure-waf-firewall
-#   path.config: "/etc/logstash/conf.d/1030-*.conf"
+- pipeline.id: azure-waf-firewall
+  path.config: "/etc/logstash/conf.d/1030-*.conf"
 - pipeline.id: azure-firewall
   path.config: "/etc/logstash/conf.d/1040-*.conf"
 # - pipeline.id: aad-audit
 #   path.config: "/etc/logstash/conf.d/1100-*.conf"
-# - pipeline.id: aad-signin
-#   path.config: "/etc/logstash/conf.d/1110-*.conf"
+- pipeline.id: aad-signin
+  path.config: "/etc/logstash/conf.d/1110-*.conf"
+- pipeline.id: m365-office-activity
+  path.config: "/etc/logstash/conf.d/1200-*.conf"
