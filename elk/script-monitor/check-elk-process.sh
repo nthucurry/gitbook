@@ -1,0 +1,1 @@
+watch "ps -ef | grep -E \"filebeat|logstash|elastic\""
