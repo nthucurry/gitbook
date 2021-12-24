@@ -4,6 +4,7 @@
   - [Azure NSG Flow](#azure-nsg-flow)
   - [Azure Firewall](#azure-firewall)
   - [Azure WAF Access](#azure-waf-access)
+  - [Azure Activity](#azure-activity)
   - [M365 Office Activity](#m365-office-activity)
 
 # Logstash Service
@@ -64,6 +65,20 @@ Environment="GODEBUG='madvdontneed=1'"
 Environment="BEAT_LOG_OPTS="
 Environment="BEAT_CONFIG_OPTS=-c /etc/filebeat/filebeat-waf-access.yml"
 Environment="BEAT_PATH_OPTS=--path.home /usr/share/filebeat --path.config /etc/filebeat --path.data /var/lib/filebeat-waf-access --path.logs /var/log/filebeat"
+ExecStart=/usr/share/filebeat/bin/filebeat --environment systemd $BEAT_LOG_OPTS $BEAT_CONFIG_OPTS $BEAT_PATH_OPTS
+Restart=always
+```
+
+## Azure Activity
+```bash
+systemctl enable filebeat-activity
+```
+```
+[Service]
+Environment="GODEBUG='madvdontneed=1'"
+Environment="BEAT_LOG_OPTS="
+Environment="BEAT_CONFIG_OPTS=-c /etc/filebeat/filebeat-activity.yml"
+Environment="BEAT_PATH_OPTS=--path.home /usr/share/filebeat --path.config /etc/filebeat --path.data /var/lib/filebeat-activity --path.logs /var/log/filebeat"
 ExecStart=/usr/share/filebeat/bin/filebeat --environment systemd $BEAT_LOG_OPTS $BEAT_CONFIG_OPTS $BEAT_PATH_OPTS
 Restart=always
 ```

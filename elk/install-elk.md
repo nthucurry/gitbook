@@ -20,6 +20,7 @@
 # 安裝步驟
 ## 基本處置
 - `yum update -y`
+- `yum install epel-release -y`
 - `timedatectl set-timezone Asia/Taipei`
 - add repo
     ```bash

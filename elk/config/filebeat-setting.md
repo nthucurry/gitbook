@@ -10,6 +10,8 @@
     - azure-waf-firewall
 - 1040
     - azure-firewall
+- 1050
+    - azure-activity
 
 ## AAD
 - 1100
