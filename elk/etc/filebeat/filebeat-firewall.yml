@@ -3,7 +3,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /data-to-local/my/insights-logs-azurefirewall/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/*/y=*/m=*/d=*/h=*/m=*/*.json
+    - /data-to-local/*-insights-logs-azurefirewall/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/*/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "azure-firewall"
   fields_under_root: true

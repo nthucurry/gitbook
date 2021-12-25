@@ -3,7 +3,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /data-from-cloud/auo/insights-activity-logs/resourceId=/SUBSCRIPTIONS/*/y=*/m=*/d=*/h=*/m=*/*.json
+    - /data-to-local/*-insights-activity-logs/resourceId=/SUBSCRIPTIONS/*/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "azure-activity"
   fields_under_root: true

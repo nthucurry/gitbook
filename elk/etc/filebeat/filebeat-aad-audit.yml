@@ -3,7 +3,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /data-from-cloud/auo/am-auditlogs/WorkspaceResourceId=/subscriptions/*/resourcegroups/*/providers/microsoft.operationalinsights/workspaces/*/y=*/m=*/d=*/h=*/m=*/*.json
+    - /data-to-local/*-am-auditlogs/WorkspaceResourceId=/subscriptions/*/resourcegroups/*/providers/microsoft.operationalinsights/workspaces/*/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "aad-audit"
   fields_under_root: true

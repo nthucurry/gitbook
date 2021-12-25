@@ -1,22 +1,24 @@
-# nsg
-blobfuse /data-from-cloud/my/insights-logs-networksecuritygroupflowevent \
-    --tmp-path=/mnt/resource/blobfusetmp/networksecuritygroupevent \
-    --config-file=/root/fuse_my-nsg.cfg
-blobfuse /data-from-cloud/eda/insights-logs-networksecuritygroupflowevent \
-    --tmp-path=/mnt/resource/blobfusetmp/networksecuritygroupevent \
-    --config-file=/root/fuse_eda-nsg.cfg
+# azure nsg
+blobfuse /data-from-cloud/my-insights-logs-networksecuritygroupflowevent \
+    --tmp-path=/mnt/resource/blobfusetmp/insights-logs-networksecuritygroupflowevent \
+    --config-file=/root/fuse_my-azure-nsg.cfg
 
-# waf access
-blobfuse /data-from-cloud/auo/insights-logs-applicationgatewayaccesslog \
-    --tmp-path=/mnt/resource/blobfusetmp/applicationgatewayaccesslog \
-    --config-file=/root/fuse_auo-waf-access.cfg
+# azure waf access
+blobfuse /data-from-cloud/my-insights-logs-applicationgatewayaccesslog \
+    --tmp-path=/mnt/resource/blobfusetmp/insights-logs-applicationgatewayaccesslog \
+    --config-file=/root/fuse_my-azure-waf-access.cfg
+
+# azure activity
+blobfuse /data-from-cloud/my-insights-activity-logs \
+    --tmp-path=/mnt/resource/blobfusetmp/insights-activity-logs \
+    --config-file=/root/fuse_my-azure-activity.cfg
 
 # aad audit
-blobfuse /data-from-cloud/auo/am-auditlogs \
-    --tmp-path=/mnt/resource/blobfusetmp/auditlogs \
-    --config-file=/root/fuse_auo-auditlogs.cfg
+blobfuse /data-from-cloud/aad-am-auditlogs \
+    --tmp-path=/mnt/resource/blobfusetmp/am-auditlogs \
+    --config-file=/root/fuse_aad-audit.cfg
 
 # m365 office activity
-blobfuse /data-from-cloud/auo/am-officeactivity \
-    --tmp-path=/mnt/resource/blobfusetmp/officeactivity \
-    --config-file=/root/fuse_auo-office-activity.cfg
+blobfuse /data-from-cloud/m365-am-officeactivity \
+    --tmp-path=/mnt/resource/blobfusetmp/am-officeactivity \
+    --config-file=/root/fuse_m365-office-activity.cfg

@@ -3,7 +3,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /data-to-local/my/insights-logs-applicationgatewayaccesslog/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/*/y=*/m=*/d=*/h=*/m=*/*.json
+    - /data-to-local/*-insights-logs-applicationgatewayaccesslog/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/*/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "azure-waf-access"
   fields_under_root: true
