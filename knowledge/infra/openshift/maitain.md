@@ -1,42 +1,49 @@
 - [重點概念](#重點概念)
+- [Log4J Issue](#log4j-issue)
 - [Azure](#azure)
 - [OpenShift](#openshift)
-    - [Creating a Self-Signed SSL Certificate for your Intranet Services](#creating-a-self-signed-ssl-certificate-for-your-intranet-services)
-        - [Replacing the default ingress certificate](#replacing-the-default-ingress-certificate)
-    - [調整 worker 數量](#調整-worker-數量)
-    - [未整理筆記](#未整理筆記)
+  - [Creating a Self-Signed SSL Certificate for your Intranet Services](#creating-a-self-signed-ssl-certificate-for-your-intranet-services)
+    - [Replacing the default ingress certificate](#replacing-the-default-ingress-certificate)
+  - [調整 worker 數量](#調整-worker-數量)
+  - [未整理筆記](#未整理筆記)
 - [備份](#備份)
-    - [OpenShift](#openshift-1)
-        - [Backing up etcd](#backing-up-etcd)
-    - [WKC (CP4D)](#wkc-cp4d)
-        - [Backing up and restoring your project](#backing-up-and-restoring-your-project)
-        - [Installing the CPD backup and restore service](#installing-the-cpd-backup-and-restore-service)
-            - [Backup and restore service PVC](#backup-and-restore-service-pvc)
-            - [Repository secret](#repository-secret)
-        - [Install the cpdbr Docker image](#install-the-cpdbr-docker-image)
-        - [Backing up the CPD file system to a local repository or object store](#backing-up-the-cpd-file-system-to-a-local-repository-or-object-store)
-        - [Schedule job (Option)](#schedule-job-option)
-        - [Restoring the CPD file system from a local repository or object store](#restoring-the-cpd-file-system-from-a-local-repository-or-object-store)
-        - [Migrating Cloud Pak for Data metadata and clusters](#migrating-cloud-pak-for-data-metadata-and-clusters)
-        - [Install the cpdtool Docker image by using Podman](#install-the-cpdtool-docker-image-by-using-podman)
-        - [Install the zen-core-aux Docker image by using Podman](#install-the-zen-core-aux-docker-image-by-using-podman)
-        - [Install the zen-core-aux Helm chart](#install-the-zen-core-aux-helm-chart)
-        - [Initialize the export-import command](#initialize-the-export-import-command)
+  - [OpenShift](#openshift-1)
+    - [Backing up etcd](#backing-up-etcd)
+  - [WKC (CP4D)](#wkc-cp4d)
+    - [Backing up and restoring your project](#backing-up-and-restoring-your-project)
+    - [Installing the CPD backup and restore service](#installing-the-cpd-backup-and-restore-service)
+      - [Backup and restore service PVC](#backup-and-restore-service-pvc)
+      - [Repository secret](#repository-secret)
+    - [Install the cpdbr Docker image](#install-the-cpdbr-docker-image)
+    - [Backing up the CPD file system to a local repository or object store](#backing-up-the-cpd-file-system-to-a-local-repository-or-object-store)
+    - [Schedule job (Option)](#schedule-job-option)
+    - [Restoring the CPD file system from a local repository or object store](#restoring-the-cpd-file-system-from-a-local-repository-or-object-store)
+    - [Migrating Cloud Pak for Data metadata and clusters](#migrating-cloud-pak-for-data-metadata-and-clusters)
+    - [Install the cpdtool Docker image by using Podman](#install-the-cpdtool-docker-image-by-using-podman)
+    - [Install the zen-core-aux Docker image by using Podman](#install-the-zen-core-aux-docker-image-by-using-podman)
+    - [Install the zen-core-aux Helm chart](#install-the-zen-core-aux-helm-chart)
+    - [Initialize the export-import command](#initialize-the-export-import-command)
 - [維運](#維運)
-    - [大型維運](#大型維運)
-        - [[用不到] ~~Shutting down the cluster~~](#用不到-shutting-down-the-cluster)
-        - [Restarting the cluster gracefully](#restarting-the-cluster-gracefully)
-        - [Disaster Recovery](#disaster-recovery)
-    - [日常維運](#日常維運)
-        - [Replacing an unhealthy etcd member](#replacing-an-unhealthy-etcd-member)
-        - [Replacing the unhealthy etcd member (未完成...)](#replacing-the-unhealthy-etcd-member-未完成)
-    - [Alert Mail (TBD)](#alert-mail-tbd)
+  - [大型維運](#大型維運)
+    - [[用不到] ~~Shutting down the cluster~~](#用不到-shutting-down-the-cluster)
+    - [Restarting the cluster gracefully](#restarting-the-cluster-gracefully)
+    - [Disaster Recovery](#disaster-recovery)
+  - [日常維運](#日常維運)
+    - [Replacing an unhealthy etcd member](#replacing-an-unhealthy-etcd-member)
+    - [Replacing the unhealthy etcd member (未完成...)](#replacing-the-unhealthy-etcd-member-未完成)
+  - [Alert Mail (TBD)](#alert-mail-tbd)
 
 # 重點概念
 - OpenShift cluster 不需備份 VM，因為已經是 cluster 架構了，壞了在透過 yaml rebuild 就好
     - 嚴格說起來，一台 Master VM 也可以執行 WKC
 - 需要備份的是 Bastion VM，因為上面有 ssh key、kubeadm 密碼
 - etcd 備份到 storage account
+
+# Log4J Issue
+- CVE-2021-44228
+    - A flaw (缺陷) was found in the Apache Log4j logging library in versions **between 2.0.0 - 2.15.0**. A remote attacker who can control log messages or log message parameters, can execute arbitrary (任意的) code on the server via JNDI LDAP endpoint.
+- The following products are NOT affected by this flaw and have been explicitly listed here for the benefit of our customers.
+    - Red Hat OpenShift Data Foundation
 
 # Azure
 - WKC 資源若被 delete，會 auto-rebuild，但不可靠
