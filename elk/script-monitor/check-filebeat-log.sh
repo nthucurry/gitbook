@@ -1,2 +1,2 @@
 clear
-tail -f filebeat | grep 'input'
+tail -30f /var/log/filebeat/filebeat.log | grep 'input'

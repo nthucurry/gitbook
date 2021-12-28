@@ -4,12 +4,18 @@
   path.config: "/etc/logstash/conf.d/1000-*.conf"
 - pipeline.id: azure-storage-audit
   path.config: "/etc/logstash/conf.d/1010-*.conf"
+- pipeline.id: azure-cr-repository-audit
+  path.config: "/etc/logstash/conf.d/1011-*.conf"
+- pipeline.id: azure-cr-login-audit
+  path.config: "/etc/logstash/conf.d/1012-*.conf"
 - pipeline.id: azure-waf-access
   path.config: "/etc/logstash/conf.d/1020-*.conf"
 - pipeline.id: azure-waf-firewall
   path.config: "/etc/logstash/conf.d/1030-*.conf"
 - pipeline.id: azure-firewall
   path.config: "/etc/logstash/conf.d/1040-*.conf"
+- pipeline.id: azure-activity
+  path.config: "/etc/logstash/conf.d/1050-*.conf"
 # - pipeline.id: aad-audit
 #   path.config: "/etc/logstash/conf.d/1100-*.conf"
 - pipeline.id: aad-signin
