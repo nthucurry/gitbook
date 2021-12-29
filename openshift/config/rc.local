@@ -1,3 +1,2 @@
 touch /var/lock/subsys/local
-
 /home/azadmin/cmd/mount-aznfs.sh
