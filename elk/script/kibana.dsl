@@ -8,8 +8,8 @@
 
 {
   "query": {
-    "regexp": {
-      "msg": ".*10.<0-255>.<0-255>.<0-255>.*"
+    "match_phrase": {
+      "identity.authorization.evidence.role": "Owner"
     }
   }
 }
