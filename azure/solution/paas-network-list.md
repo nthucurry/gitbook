@@ -1,13 +1,13 @@
 # Azure Monitor
 | source ip | target ip                            | target port |
 |-----------|--------------------------------------|-------------|
-|           | dc.applicationinsights.azure.com     | 443         |
-|           | dc.applicationinsights.microsoft.com | 443         |
-|           | dc.services.visualstudio.com         | 443         |
-|           | *.in.applicationinsights.azure.com   | 443         |
-|           | live.applicationinsights.azure.com   | 443         |
-|           | rt.applicationinsights.microsoft.com | 443         |
-|           | rt.services.visualstudio.com         | 443         |
+| VNet      | dc.applicationinsights.azure.com     | 443         |
+| VNet      | dc.applicationinsights.microsoft.com | 443         |
+| VNet      | dc.services.visualstudio.com         | 443         |
+| VNet      | *.in.applicationinsights.azure.com   | 443         |
+| VNet      | live.applicationinsights.azure.com   | 443         |
+| VNet      | rt.applicationinsights.microsoft.com | 443         |
+| VNet      | rt.services.visualstudio.com         | 443         |
 
 # AML
 | source ip            | target ip                                    | target port |
@@ -37,3 +37,9 @@
 | VNet                 | dc.services.visualstudio.com                 | 443         |
 
 # Databricks
+| source ip | target ip       | target port |
+|-----------|-----------------|-------------|
+| VNet      | AzureDatabricks | 443         |
+| VNet      | SQL             | 3306        |
+| VNet      | Storage         | 443         |
+| VNet      | EventHub        | 9093        |
