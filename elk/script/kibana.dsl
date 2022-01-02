@@ -16,6 +16,14 @@
 
 {
   "query": {
+    "regexp": {
+      "destination": ".*microsoft.com|aka.ms"
+    }
+  }
+}
+
+{
+  "query": {
     "bool": {
       "should": [
         {
