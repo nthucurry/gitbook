@@ -10,3 +10,9 @@
 # Azure Firewall
 # ==========
 /data-from-cloud/xxx-insights-logs-azurefirewall/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/xxx
+# Azure WAF Access
+# ==========
+/data-from-cloud/xxx-insights-logs-applicationgatewayaccesslog/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/xxx
+# Azure WAF Firewall
+# ==========
+/data-from-cloud/xxx-insights-logs-applicationgatewayfirewalllog/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/xxx
