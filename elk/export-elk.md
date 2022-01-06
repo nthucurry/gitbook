@@ -15,7 +15,8 @@
 # Export ElasticSearch Data
 ```bash
 elasticdump \
-  --input=http://t-elk:9200/azure-firewall-2021.12.24 \
-  --output=output.json \
-  --type=data
+  --input=http://t-elk:9200/$1 \
+  --output=$1.json \
+  --type=data \
+  --sourceOnly=true
 ```
