@@ -42,8 +42,7 @@
 # Log4J Issue
 - CVE-2021-44228
     - A flaw (缺陷) was found in the Apache Log4j logging library in versions **between 2.0.0 - 2.15.0**. A remote attacker who can control log messages or log message parameters, can execute arbitrary (任意的) code on the server via JNDI LDAP endpoint.
-- The following products are NOT affected by this flaw and have been explicitly listed here for the benefit of our customers.
-    - Red Hat OpenShift Data Foundation
+- Mitigation
 
 # Azure
 - WKC 資源若被 delete，會 auto-rebuild，但不可靠
