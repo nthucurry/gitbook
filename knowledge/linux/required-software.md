@@ -1,5 +1,4 @@
-# 必備軟體
-## VNC Server
+# VNC Server
 ```bash
 # 安裝
 yum install tigervnc-server -y
@@ -30,7 +29,7 @@ netstat -tln
 tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
 ```
 
-## X Window System
+# X Window System
 ```bash
 # 需要直接 login demo
 cd ~
@@ -40,7 +39,7 @@ chmod +x .Xclients
 ~/.Xclients # remember open xming
 ```
 
-## NFS
+# NFS
 [CentOS 7 下 yum 安装和配置 NFS](https://qizhanming.com/blog/2018/08/08/how-to-install-nfs-on-centos-7)
 - host & client 安裝 `yum install nfs-utils`
 - host
@@ -73,3 +72,12 @@ chmod +x .Xclients
     # 重新載入 systemd 的腳本設定檔內容
     systemctl daemon-reload
     ```
+
+# Lansweep Agent
+```bash
+wget https://cdn.lansweeper.com/build/lsagent/LsAgent-linux-x64_8.4.100.35.run
+chmod +x LsAgent-linux-x64_8.4.100.35.run
+rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
+yum install dotnet-sdk-6.0
+./LsAgent-linux-x64_8.4.100.35.run
+```

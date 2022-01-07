@@ -1,6 +1,18 @@
-# networksecuritygroupflowevent
-/data-from-cloud/insights-logs-networksecuritygroupflowevent/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/xxx
-# applicationgatewayaccesslog
-/data-from-cloud/insights-logs-applicationgatewayaccesslog/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/xxx
-# auditlogs
-/data-from-cloud/am-auditlogs/WorkspaceResourceId=/subscriptions/xxx/resourcegroups/xxx/providers/microsoft.operationalinsights/workspaces/xxx
+# ==========
+# Azure NSG
+# ==========
+/data-from-cloud/xxx-insights-logs-networksecuritygroupflowevent/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/xxx
+# ==========
+# Azure Activity
+# ==========
+/data-from-cloud/xxx-insights-activity-logs/resourceId=/SUBSCRIPTIONS/xxx
+# ==========
+# Azure Firewall
+# ==========
+/data-from-cloud/xxx-insights-logs-azurefirewall/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/xxx
+# Azure WAF Access
+# ==========
+/data-from-cloud/xxx-insights-logs-applicationgatewayaccesslog/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/xxx
+# Azure WAF Firewall
+# ==========
+/data-from-cloud/xxx-insights-logs-applicationgatewayfirewalllog/resourceId=/SUBSCRIPTIONS/xxx/RESOURCEGROUPS/xxx/PROVIDERS/MICROSOFT.NETWORK/APPLICATIONGATEWAYS/xxx

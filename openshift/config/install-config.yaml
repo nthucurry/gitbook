@@ -11,6 +11,8 @@ compute:
       type: Standard_D16s_v3 # Standard_B2ms
       zones:
       - "1"
+      - "2"
+      - "3"
   replicas: 3
 controlPlane:
   architecture: amd64
@@ -23,6 +25,8 @@ controlPlane:
       type: Standard_D8s_v3 # Standard_B4ms
       zones:
       - "1"
+      - "2"
+      - "3"
   replicas: 3
 metadata:
   creationTimestamp: null

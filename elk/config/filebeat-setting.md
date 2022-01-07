@@ -4,6 +4,10 @@
     - azure-nsg-flow
 - 1010
     - azure-storage-audit
+- 1011
+    - azure-cr-repository-audit
+- 1012
+    - azure-cr-login-audit
 - 1020
     - azure-waf-access
 - 1030

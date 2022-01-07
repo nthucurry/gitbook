@@ -396,7 +396,6 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
         - `oc describe pods iis-xmetarepo-5b54fbfd7-qckmj`
 - 刪除 project，重裝 WKC
     - `oc delete project zen`
-    - [安裝 WKC from Bastion VM to Cluster VM](#安裝-wkc-from-bastion-vm-to-cluster-vm)
 
 # 設定 Machine Config on Bastion VM
 - [CRI-O container settings](https://www.ibm.com/docs/en/cloud-paks/cp-data/3.5.0?topic=tasks-changing-required-node-settings#node-settings__crio)

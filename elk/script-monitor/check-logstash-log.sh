@@ -1,3 +1,2 @@
 clear
-#tail -f _logstash.log
-tail -f logstash-plain.log
+tail -30f /var/log/logstash/logstash-plain.log

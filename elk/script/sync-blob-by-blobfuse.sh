@@ -1,9 +1,9 @@
 #!/bin/bash
 source $HOME/.bash_profile
 
-getYY=`date +%Y`
-getMM=`date +%m`
-getDD=`date +%d`
+getYY=`date +%Y --date="-9 Hour"`
+getMM=`date +%m --date="-9 Hour"`
+getDD=`date +%d --date="-9 Hour"`
 getHH=`date +%H --date="-9 Hour"` # LST -> UTC
 delYY=`date +%Y --date="-22 Hour"`
 delMM=`date +%m --date="-22 Hour"`
