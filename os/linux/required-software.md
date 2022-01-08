@@ -12,6 +12,7 @@
 ```bash
 echo "export http_proxy=http://10.1.0.4:3128" >> /etc/bashrc
 echo "export https_proxy=http://10.1.0.4:3128" >> /etc/bashrc
+source /etc/bashrc
 ```
 
 # VNC Server
@@ -120,6 +121,13 @@ systemctl daemon-reload
     - http://ailog.tw/lifelog/2021/03/15/centos-6-yum/
     - https://blog.tomy168.com/2021/03/centos6yum.html
     - https://iter01.com/68338.html
+    - https://itbilu.com/linux/management/NymXRUieg.html
+- 基本動作
+    ```bash
+    yum update -y
+    yum install epel-release -y
+    yum install gcc gcc-c++ gcc-g++ texinfo -y
+    ```
 - 下載 Lansweep Agent
     ```bash
     wget https://cdn.lansweeper.com/build/lsagent/LsAgent-linux-x64_8.4.100.35.run
@@ -139,42 +147,33 @@ systemctl daemon-reload
     mkdir -p $HOME/dotnet && tar zxf dotnet-runtime-3.1.22-linux-x64.tar.gz -C $HOME/dotnet
     export DOTNET_ROOT=$HOME/dotnet
     export PATH=$PATH:$HOME/dotnet
-    # export http_proxy=http://10.1.0.4:3128
-    # export https_proxy=http://10.1.0.4:3128
+    echo "export DOTNET_ROOT=$HOME/dotnet" >> /etc/bashrc
+    echo "export PATH=$PATH:$HOME/dotnet" >> /etc/bashrc
+    source /etc/bashrc
     ```
 - 此時執行 dotnet 會出現問題
     ```
     [root@t-cent6 ~]# dotnet
     dotnet: /lib64/libc.so.6: version `GLIBC_2.14' not found (required by dotnet)
+
     [root@t-cent6 ~]# ll /lib64/libc.so.6
-    lrwxrwxrwx. 1 root root 12 Apr 29  2020 /lib64/libc.so.6 -> libc-2.12.so
-    [root@t-cent6 ~]# strings /lib64/libc.so.6 | grep GLIBC
-    GLIBC_2.2.5
-    GLIBC_2.2.6
-    GLIBC_2.3
-    GLIBC_2.3.2
-    GLIBC_2.3.3
-    GLIBC_2.3.4
-    GLIBC_2.4
-    GLIBC_2.5
-    GLIBC_2.6
-    GLIBC_2.7
-    GLIBC_2.8
-    GLIBC_2.9
-    GLIBC_2.10
-    GLIBC_2.11
-    GLIBC_2.12
-    GLIBC_PRIVATE
+    lrwxrwxrwx. 1 root root 12 Apr 29  2020 /lib64/libc.so.6 -> libc-2.12.so (X)
+    lrwxrwxrwx. 1 root root 12 Jan  8 15:24 /lib64/libc.so.6 -> libc-2.14.so (O)
+
+    [root@t-cent6 ~]# ll /usr/lib64/libstdc++.so.6
+    lrwxrwxrwx. 1 root root 19 Apr 29  2020 /usr/lib64/libstdc++.so.6 -> libstdc++.so.6.0.13 (X)
     ```
 - 解決缺少 GLIBC_2.14、GLIBCXX_3.4.18 的問題
     ```bash
+    # dotnet: /lib64/libc.so.6: version `GLIBC_2.14' not found (required by dotnet)
     wget http://ftp.gnu.org/gnu/glibc/glibc-2.14.tar.gz
-    mkdir $HOME/glibc-2.14 && tar zxf glibc-2.14.tar.gz
+    mkdir glibc-2.14 && tar zxf glibc-2.14.tar.gz
     cd glibc-2.14
     mkdir build && cd build
-    ../configure  --prefix=/usr --disable-profile --enable-add-ons --with-headers=/usr/include --with-binutils=/usr/bin
+    ../configure --prefix=/usr --disable-profile --enable-add-ons --with-headers=/usr/include --with-binutils=/usr/bin
     make && make install
 
+    # Failed to load X?r?V, error: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.18' not found (required by /root/dotnet/host/fxr/3.1.22/libhostfxr.so)
     wget http://ftp.gnu.org/gnu/gcc/gcc-6.4.0/gcc-6.4.0.tar.xz
     tar -xf gcc-6.4.0.tar.xz -C /usr/src
     cd /usr/src/gcc-6.4.0
@@ -182,6 +181,14 @@ systemctl daemon-reload
     ./contrib/download_prerequisites
     ./configure -enable-checking=release -enable-languages=c,c++ -disable-multilib
     make -j4 && make install
+
+    ls /usr/local/bin | grep gcc
+
+    cd /usr/lib64
+    cp /usr/src/gcc-6.4.0/stage1-x86_64-pc-linux-gnu/libstdc++-v3/src/.libs/libstdc++.so.6.0.22 libstdc++.so.6.0.22
+    mv libstdc++.so.6 libstdc++.so.6.old
+    ln -sv libstdc++.so.6.0.22 libstdc++.so.6
+    reboot
     ```
 - dotnet 安裝完成
     ```

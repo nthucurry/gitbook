@@ -25,7 +25,10 @@ az account set -s $subscription
 ###################################
 # if vm is not exist, exit the process
 isExistVM=`az vm list -g $resource_group -d --query "[?name == '$vm_name'].id" -o tsv`
-if [[ ${#isExistVM} == 0 ]]; then exit 1; fi
+if [[ ${#isExistVM} == 0 ]]; then
+    echo "VM ($vm_name) is not exist."
+    exit 1
+fi
 ###################################
 echo "[Subscription.....] "`az account show --query name`
 echo "[Resource Group...] "$resource_group
