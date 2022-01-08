@@ -10,6 +10,7 @@ file/*
 img/chipbond
 office/*
 office/chipbond/*
+local/*
 knowledge/*
 knowledge/oracle/*
 knowledge/oracle/note/*

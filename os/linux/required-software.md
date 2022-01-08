@@ -29,6 +29,15 @@ netstat -tln
 tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
 ```
 
+# GUI
+```bash
+# CentOS 7
+yum groupinstall "GNOME Desktop" -y
+
+# CentOS 6
+yum groupinstall "Desktop" -y --skip-broken
+```
+
 # X Window System
 ```bash
 # 需要直接 login demo
@@ -73,11 +82,28 @@ chmod +x .Xclients
     systemctl daemon-reload
     ```
 
+# CentOS 6
+```bash
+yum install epel-release -y # epel-release-6-8.noarch
+yum install gcc -y # gcc version 4.4.7 20120313 (Red Hat 4.4.7-23) (GCC)
+
+wget http://ftp.gnu.org/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2
+tar -jxvf gcc-4.8.2.tar.bz2
+cd gcc-4.8.0
+./contrib/download_prerequisites
+```
+
 # Lansweep Agent
 ```bash
 wget https://cdn.lansweeper.com/build/lsagent/LsAgent-linux-x64_8.4.100.35.run
 chmod +x LsAgent-linux-x64_8.4.100.35.run
+
 rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
+rpm -Uvh https://packages.microsoft.com/config/centos/6/packages-microsoft-prod.rpm
+
+wget https://download.visualstudio.microsoft.com/download/pr/ede8a287-3d61-4988-a356-32ff9129079e/bdb47b6b510ed0c4f0b132f7f4ad9d5a/dotnet-sdk-6.0.101-linux-x64.tar.gz
+mkdir -p $HOME/dotnet && tar zxf dotnet-sdk-6.0.101-linux-x64.tar.gz -C $HOME/dotnet
+
 yum install dotnet-sdk-6.0
 ./LsAgent-linux-x64_8.4.100.35.run
 ```
