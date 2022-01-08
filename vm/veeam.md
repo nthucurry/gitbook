@@ -14,4 +14,4 @@
 - ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/veeam/backup-sop-8.png?raw=true)
 
 # 執行 Agent
-- ![](../../img/veeam/execute-windows-agent.png?raw=true)
+- ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/veeam/execute-windows-agent.png?raw=true)

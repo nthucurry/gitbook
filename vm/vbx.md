@@ -16,8 +16,8 @@ https://download.virtualbox.org/virtualbox/5.2.18/VirtualBox-5.2.18-124319-OSX.d
 
 ## 主客機連線
 1. 在 Virtual Box 虛擬機新增網卡
-    ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/add-nic-1.png)
-    ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/add-nic-2.png)
+    ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/add-nic-1.png?raw=true)
+    ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/add-nic-2.png?raw=true)
 2. 到 Guest OS 開啟網路，並確認是否有新增網路
 3. OK
 
@@ -29,10 +29,10 @@ https://download.virtualbox.org/virtualbox/5.2.18/VirtualBox-5.2.18-124319-OSX.d
 - [VirtualBox Network Settings: Complete Guide](https://www.nakivo.com/blog/virtualbox-network-setting-guide/)
 - [VirtualBox lab: Port Forwarding](https://nsrc.org/workshops/2014/btnog/raw-attachment/wiki/Track2Agenda/ex-virtualbox-portforward-ssh.htm#fn1)
     - 主客機 port 不能一樣
-        ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/port-forwarding-1.png)
-        ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/port-forwarding-2.png)
-        ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/port-forwarding-3.png)
+        ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/port-forwarding-1.png?raw=true)
+        ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/port-forwarding-2.png?raw=true)
+        ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/port-forwarding-3.png?raw=true)
 - 新增虛擬機器內網卡
     1. `sudo /Library/Application\ Support/VirtualBox/LaunchDaemons/VirtualBoxStartup.sh restart`
     2. 建立網卡
-       ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/add-nic.png)
+       ![](https://github.com/ShaqtinAFool/gitbook/blob/master/img/virtualbox/add-nic.png?raw=true)

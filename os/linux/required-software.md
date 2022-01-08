@@ -1,3 +1,19 @@
+- [Internet Traffic Setting](#internet-traffic-setting)
+- [VNC Server](#vnc-server)
+- [ProxyChains](#proxychains)
+- [GUI](#gui)
+- [X Window System](#x-window-system)
+- [NFS](#nfs)
+  - [Host](#host)
+  - [Client](#client)
+- [Lansweep Agent](#lansweep-agent)
+
+# Internet Traffic Setting
+```bash
+echo "export http_proxy=http://10.1.0.4:3128" >> /etc/bashrc
+echo "export https_proxy=http://10.1.0.4:3128" >> /etc/bashrc
+```
+
 # VNC Server
 ```bash
 # 安裝
@@ -15,6 +31,7 @@ PIDFile=/home/oracle/.vnc/%H%i.pid
 
 # 登入各個帳號去設定以下(systemctl daemon-reload??)
 systemctl start vncserver@:1.service && systemctl enable vncserver@:1.service
+service vncserver start && chkconfig vncserver on
 
 # 設定密碼
 vncserver(啟動 vnc server，需依照各別 user account)
@@ -29,13 +46,27 @@ netstat -tln
 tcp 0 0 0.0.0.0:5901 0.0.0.0:* LISTEN
 ```
 
+# ProxyChains
+```bash
+yum install git -y
+git config --global http.proxy http://10.1.0.4:3128
+git clone https://github.com/rofl0r/proxychains-ng.git
+cd proxychains-ng
+./configure && make && make install
+make install-config
+```
+
 # GUI
 ```bash
 # CentOS 7
 yum groupinstall "GNOME Desktop" -y
 
 # CentOS 6
-yum groupinstall "Desktop" -y --skip-broken
+yum remove WALinuxAgent -y
+yum groupinstall "X Window System" "Desktop" "Fonts" "General Purpose Desktop"
+yum remove NetworkManager WALinuxAgent -y
+yum groupinstall 'Graphical Administration Tools' -y
+startx
 ```
 
 # X Window System
@@ -49,61 +80,143 @@ chmod +x .Xclients
 ```
 
 # NFS
-[CentOS 7 下 yum 安装和配置 NFS](https://qizhanming.com/blog/2018/08/08/how-to-install-nfs-on-centos-7)
+- [CentOS 7 下 yum 安装和配置 NFS](https://qizhanming.com/blog/2018/08/08/how-to-install-nfs-on-centos-7)
 - host & client 安裝 `yum install nfs-utils`
-- host
-    ```bash
-    # startup NFS(Network File System)
-    systemctl start rpcbind nfs
-    systemctl enable rpcbind nfs
 
-    # firewall setting
-    firewall-cmd --zone=public --permanent --add-service={rpc-bind,mountd,nfs}
-    firewall-cmd --reload
-
-    # check NFS
-    vi /etc/exports
-    # /backup 192.168.56.0/24(rw,sync)
-
-    systemctl restart nfs
-
-    showmount -e localhost
-    ```
-- client
-    ```bash
-    systemctl start rpcbind
-    systemctl enable rpcbind
-
-    # mount NFS when startup
-    vi /etc/fstab
-    # 目標主機名稱:/backup /backup nfs defaults 0 0
-
-    # 重新載入 systemd 的腳本設定檔內容
-    systemctl daemon-reload
-    ```
-
-# CentOS 6
+## Host
 ```bash
-yum install epel-release -y # epel-release-6-8.noarch
-yum install gcc -y # gcc version 4.4.7 20120313 (Red Hat 4.4.7-23) (GCC)
+# startup NFS(Network File System)
+systemctl start rpcbind nfs
+systemctl enable rpcbind nfs
 
-wget http://ftp.gnu.org/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2
-tar -jxvf gcc-4.8.2.tar.bz2
-cd gcc-4.8.0
-./contrib/download_prerequisites
+# firewall setting
+firewall-cmd --zone=public --permanent --add-service={rpc-bind,mountd,nfs}
+firewall-cmd --reload
+
+# check NFS
+vi /etc/exports
+# /backup 192.168.56.0/24(rw,sync)
+
+systemctl restart nfs
+
+showmount -e localhost
+```
+
+## Client
+```bash
+systemctl start rpcbind
+systemctl enable rpcbind
+
+# mount NFS when startup
+vi /etc/fstab
+# 目標主機名稱:/backup /backup nfs defaults 0 0
+
+# 重新載入 systemd 的腳本設定檔內容
+systemctl daemon-reload
 ```
 
 # Lansweep Agent
-```bash
-wget https://cdn.lansweeper.com/build/lsagent/LsAgent-linux-x64_8.4.100.35.run
-chmod +x LsAgent-linux-x64_8.4.100.35.run
+- CentOS 6 troubleshooting
+    - http://ailog.tw/lifelog/2021/03/15/centos-6-yum/
+    - https://blog.tomy168.com/2021/03/centos6yum.html
+    - https://iter01.com/68338.html
+- 下載 Lansweep Agent
+    ```bash
+    wget https://cdn.lansweeper.com/build/lsagent/LsAgent-linux-x64_8.4.100.35.run
+    chmod +x LsAgent-linux-x64_8.4.100.35.run
+    ```
+- 下載微軟套件包
+    ```bash
+    # CentOS 7
+    rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
 
-rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
-rpm -Uvh https://packages.microsoft.com/config/centos/6/packages-microsoft-prod.rpm
+    # CentOS 6
+    rpm -Uvh https://packages.microsoft.com/config/centos/6/packages-microsoft-prod.rpm
+    ```
+- 安裝 dotnet runtime
+    ```bash
+    wget https://download.visualstudio.microsoft.com/download/pr/8a11a2ba-d599-486f-ba61-9e420bc4a2bb/db9d61f28e0a688adc83687b611702ff/dotnet-runtime-3.1.22-linux-x64.tar.gz
+    mkdir -p $HOME/dotnet && tar zxf dotnet-runtime-3.1.22-linux-x64.tar.gz -C $HOME/dotnet
+    export DOTNET_ROOT=$HOME/dotnet
+    export PATH=$PATH:$HOME/dotnet
+    # export http_proxy=http://10.1.0.4:3128
+    # export https_proxy=http://10.1.0.4:3128
+    ```
+- 此時執行 dotnet 會出現問題
+    ```
+    [root@t-cent6 ~]# dotnet
+    dotnet: /lib64/libc.so.6: version `GLIBC_2.14' not found (required by dotnet)
+    [root@t-cent6 ~]# ll /lib64/libc.so.6
+    lrwxrwxrwx. 1 root root 12 Apr 29  2020 /lib64/libc.so.6 -> libc-2.12.so
+    [root@t-cent6 ~]# strings /lib64/libc.so.6 | grep GLIBC
+    GLIBC_2.2.5
+    GLIBC_2.2.6
+    GLIBC_2.3
+    GLIBC_2.3.2
+    GLIBC_2.3.3
+    GLIBC_2.3.4
+    GLIBC_2.4
+    GLIBC_2.5
+    GLIBC_2.6
+    GLIBC_2.7
+    GLIBC_2.8
+    GLIBC_2.9
+    GLIBC_2.10
+    GLIBC_2.11
+    GLIBC_2.12
+    GLIBC_PRIVATE
+    ```
+- 解決缺少 GLIBC_2.14、GLIBCXX_3.4.18 的問題
+    ```bash
+    wget http://ftp.gnu.org/gnu/glibc/glibc-2.14.tar.gz
+    mkdir $HOME/glibc-2.14 && tar zxf glibc-2.14.tar.gz
+    cd glibc-2.14
+    mkdir build && cd build
+    ../configure  --prefix=/usr --disable-profile --enable-add-ons --with-headers=/usr/include --with-binutils=/usr/bin
+    make && make install
 
-wget https://download.visualstudio.microsoft.com/download/pr/ede8a287-3d61-4988-a356-32ff9129079e/bdb47b6b510ed0c4f0b132f7f4ad9d5a/dotnet-sdk-6.0.101-linux-x64.tar.gz
-mkdir -p $HOME/dotnet && tar zxf dotnet-sdk-6.0.101-linux-x64.tar.gz -C $HOME/dotnet
-
-yum install dotnet-sdk-6.0
-./LsAgent-linux-x64_8.4.100.35.run
-```
+    wget http://ftp.gnu.org/gnu/gcc/gcc-6.4.0/gcc-6.4.0.tar.xz
+    tar -xf gcc-6.4.0.tar.xz -C /usr/src
+    cd /usr/src/gcc-6.4.0
+    sed -i 's/wget ftp/wget http/g' ./contrib/download_prerequisites
+    ./contrib/download_prerequisites
+    ./configure -enable-checking=release -enable-languages=c,c++ -disable-multilib
+    make -j4 && make install
+    ```
+- dotnet 安裝完成
+    ```
+    [root@t-cent6 ~]# dotnet --version
+      It was not possible to find any installed .NET Core SDKs
+      Did you mean to run .NET Core SDK commands? Install a .NET Core SDK from:
+         https://aka.ms/dotnet-download
+    [root@t-cent6 ~]# strings /usr/lib64/libstdc++.so.6 | grep GLIBC
+    GLIBCXX_3.4
+    GLIBCXX_3.4.1
+    GLIBCXX_3.4.2
+    GLIBCXX_3.4.3
+    GLIBCXX_3.4.4
+    GLIBCXX_3.4.5
+    GLIBCXX_3.4.6
+    GLIBCXX_3.4.7
+    GLIBCXX_3.4.8
+    GLIBCXX_3.4.9
+    GLIBCXX_3.4.10
+    GLIBCXX_3.4.11
+    GLIBCXX_3.4.12
+    GLIBCXX_3.4.13
+    GLIBCXX_3.4.14
+    GLIBCXX_3.4.15
+    GLIBCXX_3.4.16
+    GLIBCXX_3.4.17
+    GLIBCXX_3.4.18
+    GLIBCXX_3.4.19
+    GLIBCXX_3.4.20
+    GLIBCXX_3.4.21
+    GLIBCXX_3.4.22
+    GLIBC_2.3
+    GLIBC_2.2.5
+    GLIBC_2.14
+    GLIBC_2.3.2
+    GLIBCXX_FORCE_NEW
+    GLIBCXX_DEBUG_MESSAGE_LENGTH
+    ```

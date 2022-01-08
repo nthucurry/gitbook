@@ -1,11 +1,11 @@
 - [前言](#前言)
 - [安裝 Squid](#安裝-squid)
 - [修改參數](#修改參數)
-    - [設定 Header & TLS](#設定-header--tls)
-    - [Header 測試工具](#header-測試工具)
-        - [Fiddler](#fiddler)
-        - [Wireshark](#wireshark)
-    - [OS 設定位置](#os-設定位置)
+  - [設定 Header & TLS](#設定-header--tls)
+  - [Header 測試工具](#header-測試工具)
+    - [Fiddler](#fiddler)
+    - [Wireshark](#wireshark)
+  - [OS 設定位置](#os-設定位置)
 - [安裝報表 (Squid Analysis Report Generator)](#安裝報表-squid-analysis-report-generator)
 
 # 前言
@@ -50,6 +50,14 @@ source ~/.bashrc
     acl SSL_ports port 443
     acl Safe_ports port 80          # http
     acl Safe_ports port 443         # https
+    acl Safe_ports port 21          # ftp
+    acl Safe_ports port 70          # gopher
+    acl Safe_ports port 210         # wais
+    acl Safe_ports port 1025-65535  # unregistered ports
+    acl Safe_ports port 280         # http-mgmt
+    acl Safe_ports port 488         # gss-http
+    acl Safe_ports port 591         # filemaker
+    acl Safe_ports port 777         # multiling http
 
     #
     # INSERT YOUR OWN RULE(S) HERE TO ALLOW ACCESS FROM YOUR CLIENTS
