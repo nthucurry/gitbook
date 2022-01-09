@@ -4,8 +4,8 @@
 - [GUI](#gui)
 - [X Window System](#x-window-system)
 - [NFS](#nfs)
-  - [Host](#host)
-  - [Client](#client)
+    - [Host](#host)
+    - [Client](#client)
 - [Lansweep Agent](#lansweep-agent)
 
 # Internet Traffic Setting
@@ -162,6 +162,10 @@ systemctl daemon-reload
 
     [root@t-cent6 ~]# ll /usr/lib64/libstdc++.so.6
     lrwxrwxrwx. 1 root root 19 Apr 29  2020 /usr/lib64/libstdc++.so.6 -> libstdc++.so.6.0.13 (X)
+    lrwxrwxrwx. 1 root root 19 2022-01-09 04:57 /usr/lib64/libstdc++.so.6 -> libstdc++.so.6.0.22 (O)
+
+    [root@t-cent6 lib64]# strings /usr/lib64/libstdc++.so.6 | grep GLIBCXX_3.4.18
+    GLIBCXX_3.4.18 (O)
     ```
 - 解決缺少 GLIBC_2.14、GLIBCXX_3.4.18 的問題
     ```bash
@@ -172,6 +176,7 @@ systemctl daemon-reload
     mkdir build && cd build
     ../configure --prefix=/usr --disable-profile --enable-add-ons --with-headers=/usr/include --with-binutils=/usr/bin
     make && make install
+    # 執行後會有些錯誤，可忽略
 
     # Failed to load X?r?V, error: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.18' not found (required by /root/dotnet/host/fxr/3.1.22/libhostfxr.so)
     wget http://ftp.gnu.org/gnu/gcc/gcc-6.4.0/gcc-6.4.0.tar.xz
@@ -180,7 +185,7 @@ systemctl daemon-reload
     sed -i 's/wget ftp/wget http/g' ./contrib/download_prerequisites
     ./contrib/download_prerequisites
     ./configure -enable-checking=release -enable-languages=c,c++ -disable-multilib
-    make -j4 && make install
+    make -j4 && make install # 超久 (~2hr)
 
     ls /usr/local/bin | grep gcc
 
@@ -188,7 +193,6 @@ systemctl daemon-reload
     cp /usr/src/gcc-6.4.0/stage1-x86_64-pc-linux-gnu/libstdc++-v3/src/.libs/libstdc++.so.6.0.22 libstdc++.so.6.0.22
     mv libstdc++.so.6 libstdc++.so.6.old
     ln -sv libstdc++.so.6.0.22 libstdc++.so.6
-    reboot
     ```
 - dotnet 安裝完成
     ```
@@ -196,34 +200,8 @@ systemctl daemon-reload
       It was not possible to find any installed .NET Core SDKs
       Did you mean to run .NET Core SDK commands? Install a .NET Core SDK from:
          https://aka.ms/dotnet-download
-    [root@t-cent6 ~]# strings /usr/lib64/libstdc++.so.6 | grep GLIBC
-    GLIBCXX_3.4
-    GLIBCXX_3.4.1
-    GLIBCXX_3.4.2
-    GLIBCXX_3.4.3
-    GLIBCXX_3.4.4
-    GLIBCXX_3.4.5
-    GLIBCXX_3.4.6
-    GLIBCXX_3.4.7
-    GLIBCXX_3.4.8
-    GLIBCXX_3.4.9
-    GLIBCXX_3.4.10
-    GLIBCXX_3.4.11
-    GLIBCXX_3.4.12
-    GLIBCXX_3.4.13
-    GLIBCXX_3.4.14
-    GLIBCXX_3.4.15
-    GLIBCXX_3.4.16
-    GLIBCXX_3.4.17
-    GLIBCXX_3.4.18
-    GLIBCXX_3.4.19
-    GLIBCXX_3.4.20
-    GLIBCXX_3.4.21
-    GLIBCXX_3.4.22
-    GLIBC_2.3
-    GLIBC_2.2.5
-    GLIBC_2.14
-    GLIBC_2.3.2
-    GLIBCXX_FORCE_NEW
-    GLIBCXX_DEBUG_MESSAGE_LENGTH
+    ```
+- 安裝 Agent
+    ```bash
+    $HOME/LsAgent-linux-x64_8.4.100.35.run
     ```
