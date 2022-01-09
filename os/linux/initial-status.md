@@ -107,7 +107,7 @@ yum install htop -y
 - `vi /etc/yum.repos.d/CentOS-Base.repo`
     ```txt
     [base]
-    name=CentOS-$releasever – Base
+    name=CentOS-$releasever - Base
     #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os
     baseurl=http://mirror01.idc.hinet.net/CentOS/$releasever/os/$basearch/
     gpgcheck=1
@@ -115,7 +115,7 @@ yum install htop -y
 
     #released updates
     [updates]
-    name=CentOS-$releasever – Updates
+    name=CentOS-$releasever - Updates
     #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=updates
     baseurl=http://mirror01.idc.hinet.net/CentOS/$releasever/updates/$basearch/
     gpgcheck=1
@@ -123,7 +123,7 @@ yum install htop -y
 
     #additional packages that may be useful
     [extras]
-    name=CentOS-$releasever – Extras
+    name=CentOS-$releasever - Extras
     #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=extras
     baseurl=http://mirror01.idc.hinet.net/CentOS/$releasever/extras/$basearch/
     gpgcheck=1
@@ -131,7 +131,7 @@ yum install htop -y
 
     #additional packages that extend functionality of existing packages
     [centosplus]
-    name=CentOS-$releasever – Plus
+    name=CentOS-$releasever - Plus
     #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=centosplus
     baseurl=http://mirror01.idc.hinet.net/CentOS/$releasever/centosplus/$basearch/
     gpgcheck=1
@@ -140,7 +140,7 @@ yum install htop -y
 
     #contrib – packages by Centos Users
     [contrib]
-    name=CentOS-$releasever – Contrib
+    name=CentOS-$releasever - Contrib
     #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=contrib
     baseurl=http://mirror01.idc.hinet.net/CentOS/$releasever/contrib/$basearch/
     gpgcheck=1
