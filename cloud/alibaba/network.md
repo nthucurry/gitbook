@@ -49,4 +49,4 @@ The communication performance depends on the quality of the Internet connection.
 
 ## [全球加速联动本地 VPN 网关加速跨国协作](https://www.alibabacloud.com/help/zh/doc-detail/160672.htm?spm=a2c63.p38356.b99.81.58565d5dtsfOEf)
 <br><img src="https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/7263473361/p84077.png">
-<br><img src="https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3520358951/p96634.png">◊
+<br><img src="https://help-static-aliyun-doc.aliyuncs.com/assets/img/zh-CN/3520358951/p96634.png">
