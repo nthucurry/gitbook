@@ -10,6 +10,8 @@
 
 # Internet Traffic Setting
 ```bash
+export http_proxy=http://10.1.0.4:3128
+export https_proxy=http://10.1.0.4:3128
 echo "export http_proxy=http://10.1.0.4:3128" >> /etc/bashrc
 echo "export https_proxy=http://10.1.0.4:3128" >> /etc/bashrc
 source /etc/bashrc
@@ -203,4 +205,9 @@ systemctl daemon-reload
 - 安裝 Agent
     ```bash
     $HOME/LsAgent-linux-x64_8.4.100.35.run
+    /opt/LansweeperAgent/LSAgent &
+    ```
+- 排程
+    ```bash
+    echo "/opt/LansweeperAgent/LSAgent" >> /etc/rc.local
     ```
