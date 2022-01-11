@@ -145,10 +145,9 @@ systemctl daemon-reload
     ```bash
     wget https://download.visualstudio.microsoft.com/download/pr/8a11a2ba-d599-486f-ba61-9e420bc4a2bb/db9d61f28e0a688adc83687b611702ff/dotnet-runtime-3.1.22-linux-x64.tar.gz
     mkdir -p $HOME/dotnet && tar zxf dotnet-runtime-3.1.22-linux-x64.tar.gz -C $HOME/dotnet
-    export DOTNET_ROOT=$HOME/dotnet
-    export PATH=$PATH:$HOME/dotnet
     echo "export DOTNET_ROOT=$HOME/dotnet" >> /etc/bashrc
     echo "export PATH=$PATH:$HOME/dotnet" >> /etc/bashrc
+    echo "export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1" >> /etc/bashrc # CentOS 6
     source /etc/bashrc
     ```
 - 此時執行 dotnet 會出現問題
