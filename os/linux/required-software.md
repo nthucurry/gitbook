@@ -157,6 +157,9 @@ systemctl daemon-reload
     [root@t-cent6 ~]# dotnet
     dotnet: /lib64/libc.so.6: version `GLIBC_2.14' not found (required by dotnet)
 
+    [root@t-cent6 ~]# strings /lib64/libc.so.6 |grep GLIBC_2.14
+    GLIBC_2.14 (O)
+
     [root@t-cent6 ~]# ll /lib64/libc.so.6
     lrwxrwxrwx. 1 root root 12 Apr 29  2020 /lib64/libc.so.6 -> libc-2.12.so (X)
     lrwxrwxrwx. 1 root root 12 Jan  8 15:24 /lib64/libc.so.6 -> libc-2.14.so (O)
@@ -201,6 +204,8 @@ systemctl daemon-reload
       It was not possible to find any installed .NET Core SDKs
       Did you mean to run .NET Core SDK commands? Install a .NET Core SDK from:
          https://aka.ms/dotnet-download
+
+    [root@t-cent6 ~]# dotnet --info
     ```
 - 安裝 Agent
     ```bash
