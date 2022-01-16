@@ -19,3 +19,10 @@ Currently, you **can't** configure NSG rules and user-defined routes for private
 - Use the host file (only recommended for testing).
 - Use a private DNS zone.
 - Use your DNS forwarder (optional).
+
+# Service Endpoint
+<br>
+<img src="https://sameeraman.files.wordpress.com/2019/11/clip_image001-1.png" width=500>
+<br>
+<img src="https://docs.microsoft.com/en-us/learn/modules/secure-and-isolate-with-nsg-and-service-endpoints/media/4-service-endpoint-flow.svg" width=500>
+<img src="https://docs.microsoft.com/en-us/learn/modules/secure-and-isolate-with-nsg-and-service-endpoints/media/5-exercise-task.svg" width=500>
