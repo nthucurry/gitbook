@@ -1,0 +1,1 @@
+ssh dbserver 'ps -ef | grep -E "tns|smon" | grep -v "$USER"'
