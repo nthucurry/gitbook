@@ -74,6 +74,7 @@
     - 調整到目標大小
         - `lvresize -L +20G /dev/testvg/testlv`
         - `lvextend -l 291800 -n /dev/vg01/lv_s01`
+        - `lvextend -l (<Alloc PE> + <Free PE> - 9) /dev/mapper/vg01-lv_s01`
     - 調整到 Max
         - `lvextend -l +100%FREE /dev/mapper/vg_demo-lv_u01`
     - 結果
