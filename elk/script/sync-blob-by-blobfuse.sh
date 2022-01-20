@@ -8,10 +8,10 @@ getYY=`date +%Y --date="-$HH Hour"`
 getMM=`date +%m --date="-$HH Hour"`
 getDD=`date +%d --date="-$HH Hour"`
 getHH=`date +%H --date="-$HH Hour"` # LST -> UTC
-delYY=`date +%Y --date="-22 Hour"`
-delMM=`date +%m --date="-22 Hour"`
-delDD=`date +%d --date="-22 Hour"`
-delHH=`date +%H --date="-22 Hour"` # LST -> UTC
+delYY=`date +%Y --date="-$((HH+112)) Hour"`
+delMM=`date +%m --date="-$((HH+112)) Hour"`
+delDD=`date +%d --date="-$((HH+112)) Hour"`
+delHH=`date +%H --date="-$((HH+112)) Hour"` # LST -> UTC
 blobList="$HOME/sync-blob-list.txt"
 
 # echo "______ $getYY/$getMM/$getDD ______"
