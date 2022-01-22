@@ -157,7 +157,7 @@ systemctl daemon-reload
     [root@t-cent6 ~]# dotnet
     dotnet: /lib64/libc.so.6: version `GLIBC_2.14' not found (required by dotnet)
 
-    [root@t-cent6 ~]# strings /lib64/libc.so.6 |grep GLIBC_2.14
+    [root@t-cent6 ~]# strings /lib64/libc.so.6 | grep GLIBC_2.14
     GLIBC_2.14 (O)
 
     [root@t-cent6 ~]# ll /lib64/libc.so.6

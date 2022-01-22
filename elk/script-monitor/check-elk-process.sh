@@ -1,1 +1,1 @@
-watch "ps -ef | grep -E \"filebeat|logstash|elasticsearch\""
+watch "ps -ef | grep -E \"filebeat|logstash|elasticsearch\" | grep -v \"pts\""

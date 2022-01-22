@@ -53,7 +53,7 @@
 - 調整 LV
     - 固定大小: `lvcreate -L 50G -n lv_u01 vg_demo`
     - 依照比例: `lvcreate -l +100%FREE -n lv_u01 vg_demo`
-    - 依照 PE: `lvcreate -l +{Max PE - 9} -n lv_u01 vg_demo`
+    - 依照 PE: `lvcreate -l +(<Max PE> - 9) -n lv_u01 vg_demo`
 - `lvscan`
 
 ### (5) 磁碟格式化
@@ -66,20 +66,22 @@
 - `reboot`(check again)
 
 ## 情境
+### 增加 PV
+- `pvresize /dev/sdc`
+
 ### 增加 LV
-- 調整大小
-    - 增加固定大小
-        - `lvextend -L +4G /dev/mapper/vg_demo-lv_u01`
-        - `lvextend -l 204790 /dev/mapper/vg_demo-lv_u01`
-    - 調整到目標大小
-        - `lvresize -L +20G /dev/testvg/testlv`
-        - `lvextend -l 291800 -n /dev/vg01/lv_s01`
-        - `lvextend -l (<Alloc PE> + <Free PE> - 9) /dev/mapper/vg01-lv_s01`
-    - 調整到 Max
-        - `lvextend -l +100%FREE /dev/mapper/vg_demo-lv_u01`
-    - 結果
-        Size of logical volume testvg/testlv changed from 20.00 GiB (5120 extents) to 40.00 GiB (10240 extents).
-            Logical volume testvg/testlv successfully resized.
+- 增加固定大小
+    - `lvextend -L +4G /dev/mapper/vg_demo-lv_u01`
+    - `lvextend -l 204790 /dev/mapper/vg_demo-lv_u01`
+- 調整到目標大小
+    - `lvresize -L +20G /dev/testvg/testlv`
+    - `lvextend -l 291800 -n /dev/vg01/lv_s01`
+    - `lvextend -l (<Alloc PE> + <Free PE> - 9) /dev/mapper/vg01-lv_s01`
+- 調整到 Max
+    - `lvextend -l +100%FREE /dev/mapper/vg_demo-lv_u01`
+- 結果
+    Size of logical volume testvg/testlv changed from 20.00 GiB (5120 extents) to 40.00 GiB (10240 extents).
+        Logical volume testvg/testlv successfully resized.
 - 執行放大檔案系統
     - xfs: `xfs_growfs /u01`
     - ext: `resize2fs /dev/mapper/vg_demo-lv_u01`
