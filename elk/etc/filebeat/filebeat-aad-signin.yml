@@ -1,0 +1,33 @@
+# ============================== Filebeat inputs ===============================
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /data-to-local/*-am-signinlogs/WorkspaceResourceId=/subscriptions/*/resourcegroups/*/providers/microsoft.operationalinsights/workspaces/*/y=*/m=*/d=*/h=*/m=*/*.json
+  fields:
+    log_type: "aad-signin"
+  fields_under_root: true
+# ================================== Outputs ===================================
+# ---------------------------- Elasticsearch Output ----------------------------
+# ------------------------------ Logstash Output -------------------------------
+output.logstash:
+  hosts: ["t-elk:1110"]
+  indices:
+    - index: "aad-signin"
+      when.contains:
+        log_type: "aad-signin"
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+# ================================== Logging ===================================
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat-aad-signin.log
+  keepfiles: 1
+  permissions: 0644
