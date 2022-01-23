@@ -1,10 +1,13 @@
 - [Reference](#reference)
 - [Architecture](#architecture)
+- [Vendor](#vendor)
 - [Cost](#cost)
     - [Azure WAF (v1 vs v2)](#azure-waf-v1-vs-v2)
     - [FortiWeb (WaaS vs VM)](#fortiweb-waas-vs-vm)
+    - [Fortinet FortiWeb Web Application Firewall (WAF)](#fortinet-fortiweb-web-application-firewall-waf)
 - [FortiWeb Web Application Firewall](#fortiweb-web-application-firewall)
 - [FortoWeb Cloud](#fortoweb-cloud)
+- [Imperva WAF Gateway (On Prem WAF) v13](#imperva-waf-gateway-on-prem-waf-v13)
 
 # Reference
 - [Tutorial: Azure Active Directory single sign-on (SSO) integration with FortiWeb Web Application Firewall](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/fortiweb-web-application-firewall-tutorial)
@@ -13,6 +16,12 @@
 
 # Architecture
 <br><img src="https://docs.microsoft.com/en-us/azure/web-application-firewall/media/ag-overview/waf1.png"  width=600>
+
+# Vendor
+- Fortinet
+    - [技成科技股份有限公司](https://www.mcsi.com.tw/product_list/?id=16)
+- Imperva
+    - [蓋亞資訊](https://www.gaia.net/tc/brands_detail/%E5%93%81%E7%89%8C%E7%B8%BD%E8%A6%BD/3/5/imperva)
 
 # Cost
 ## Azure WAF (v1 vs v2)
@@ -33,6 +42,8 @@
 - The PAYG license includes a WAF license, a FortiCare subscription (includes Security signatures, IP Reputation and Antivirus) and support
 - 還需另外估算 VM & 磁碟費用
 
+## Fortinet FortiWeb Web Application Firewall (WAF)
+
 # FortiWeb Web Application Firewall
 - Vulnerability scanning
 - IP reputation, attack signatures, and antivirus powered by FortiGuard
@@ -43,3 +54,5 @@
 
 # FortoWeb Cloud
 <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/2ffc9903-bcb4-11e9-8977-00505692583a/images/2468b3e46f186060c6c4268e2efbb20b_traffic-flow.png" width=600>
+
+# Imperva WAF Gateway (On Prem WAF) v13
