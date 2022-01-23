@@ -1,27 +1,27 @@
 - [生產工具](#生產工具)
 - [環境設定](#環境設定)
-    - [vimrc](#vimrc)
-    - [Profile](#profile)
-    - [啟動 root](#啟動-root)
-    - [Launchpad 排列方式](#launchpad-排列方式)
-    - [關閉 spotlight](#關閉-spotlight)
-    - [用 ssh 登入 linux](#用-ssh-登入-linux)
-    - [Homebrew](#homebrew)
+  - [vimrc](#vimrc)
+  - [Profile](#profile)
+  - [啟動 root](#啟動-root)
+  - [Launchpad 排列方式](#launchpad-排列方式)
+  - [關閉 spotlight](#關閉-spotlight)
+  - [用 ssh 登入 linux](#用-ssh-登入-linux)
+  - [Homebrew](#homebrew)
 - [開發工具](#開發工具)
-    - [Java](#java)
-    - [MariaDB](#mariadb)
-    - [VirtualBox](#virtualbox)
-    - [Minikube](#minikube)
-    - [Docker](#docker)
-    - [VSCode](#vscode)
-    - [NVM](#nvm)
+  - [Java](#java)
+  - [MariaDB](#mariadb)
+  - [VirtualBox](#virtualbox)
+  - [Minikube](#minikube)
+  - [Docker](#docker)
+  - [VSCode](#vscode)
+  - [NVM](#nvm)
 - [Troubleshooting](#troubleshooting)
-    - [【教學】重灌 Mac 機必用！教你以 Terminal 製作 macOS Sierra 安裝手指！](#教學重灌-mac-機必用教你以-terminal-製作-macos-sierra-安裝手指)
-    - [故障處理方法](#故障處理方法)
-    - [維修網站](#維修網站)
-    - [休眠耗電的解決辦法](#休眠耗電的解決辦法)
-    - [出現 xcrun: error](#出現-xcrun-error)
-    - [macOS 還原問題](#macos-還原問題)
+  - [【教學】重灌 Mac 機必用！教你以 Terminal 製作 macOS Sierra 安裝手指！](#教學重灌-mac-機必用教你以-terminal-製作-macos-sierra-安裝手指)
+  - [故障處理方法](#故障處理方法)
+  - [維修網站](#維修網站)
+  - [休眠耗電的解決辦法](#休眠耗電的解決辦法)
+  - [出現 xcrun: error](#出現-xcrun-error)
+  - [macOS 還原問題](#macos-還原問題)
 
 # 生產工具
 - [PyCharm](https://www.jetbrains.com/pycharm/download/#section=mac)
@@ -47,7 +47,6 @@
 ## Profile
 - `vi ~/.bash_profile`(bash) or `vi ~/.zshrc`(zsh)
     ```bash
-    cd /Users/tony/Documents
     #df -h | grep "/dev/disk2s1"; df -h | grep "/dev/disk3s1";
     df -h | grep "dev/.*s1" | awk '{print $1 "\t" $2 "\t" $4 "\t" $5}'
 
@@ -57,12 +56,15 @@
     export PATH
     export CLICOLOR=1
     export LSCOLORS=ExFxBxDxCxegedabagacad
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
 
     alias ll='ls -l'
     alias vi='vim'
     alias grep='grep --color=auto'
     alias tree='tree -N'
     alias ping='ping -c 4'
+    alias azcli='cd ~/Documents/gitbook/cloud/azure/script'
 
     git config --global alias.co checkout
     git config --global alias.ci commit
