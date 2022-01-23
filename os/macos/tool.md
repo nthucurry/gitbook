@@ -1,31 +1,29 @@
-- [MacOS](#macos)
-    - [生產工具](#生產工具)
-    - [環境設定](#環境設定)
-        - [vimrc](#vimrc)
-        - [Profile](#profile)
-        - [啟動 root](#啟動-root)
-        - [Launchpad 排列方式](#launchpad-排列方式)
-        - [關閉 spotlight](#關閉-spotlight)
-        - [用 ssh 登入 linux](#用-ssh-登入-linux)
-        - [Homebrew](#homebrew)
-    - [開發工具](#開發工具)
-        - [Java](#java)
-        - [MariaDB](#mariadb)
-        - [VirtualBox](#virtualbox)
-        - [Minikube](#minikube)
-        - [Docker](#docker)
-        - [VSCode](#vscode)
-        - [NVM](#nvm)
-    - [Troubleshooting](#troubleshooting)
-        - [【教學】重灌 Mac 機必用！教你以 Terminal 製作 macOS Sierra 安裝手指！](#教學重灌-mac-機必用教你以-terminal-製作-macos-sierra-安裝手指)
-        - [故障處理方法](#故障處理方法)
-        - [維修網站](#維修網站)
-        - [休眠耗電的解決辦法](#休眠耗電的解決辦法)
-        - [出現 xcrun: error](#出現-xcrun-error)
-        - [macOS 還原問題](#macos-還原問題)
+- [生產工具](#生產工具)
+- [環境設定](#環境設定)
+    - [vimrc](#vimrc)
+    - [Profile](#profile)
+    - [啟動 root](#啟動-root)
+    - [Launchpad 排列方式](#launchpad-排列方式)
+    - [關閉 spotlight](#關閉-spotlight)
+    - [用 ssh 登入 linux](#用-ssh-登入-linux)
+    - [Homebrew](#homebrew)
+- [開發工具](#開發工具)
+    - [Java](#java)
+    - [MariaDB](#mariadb)
+    - [VirtualBox](#virtualbox)
+    - [Minikube](#minikube)
+    - [Docker](#docker)
+    - [VSCode](#vscode)
+    - [NVM](#nvm)
+- [Troubleshooting](#troubleshooting)
+    - [【教學】重灌 Mac 機必用！教你以 Terminal 製作 macOS Sierra 安裝手指！](#教學重灌-mac-機必用教你以-terminal-製作-macos-sierra-安裝手指)
+    - [故障處理方法](#故障處理方法)
+    - [維修網站](#維修網站)
+    - [休眠耗電的解決辦法](#休眠耗電的解決辦法)
+    - [出現 xcrun: error](#出現-xcrun-error)
+    - [macOS 還原問題](#macos-還原問題)
 
-# MacOS
-## 生產工具
+# 生產工具
 - [PyCharm](https://www.jetbrains.com/pycharm/download/#section=mac)
 - [DBeaver](https://dbeaver.io/)
 - [AppCleaner](https://freemacsoft.net/appcleaner/)
@@ -38,15 +36,15 @@
 - [XQuartz](https://www.xquartz.org/)
     - `ssh -X user@hostname`
 
-## 環境設定
-### vimrc
+# 環境設定
+## vimrc
 - `vi ~/.vimrc`
     ```bash
     syntax enable
     set background=dark
     ```
 
-### Profile
+## Profile
 - `vi ~/.bash_profile`(bash) or `vi ~/.zshrc`(zsh)
     ```bash
     cd /Users/tony/Documents
@@ -73,30 +71,30 @@
     git config --global user.email "xu3ej04u454@gmail.com"
     ```
 
-### 啟動 root
+## 啟動 root
 - `sudo passwd root`
 - 輸入 apple password
 - done!
 
-### Launchpad 排列方式
+## Launchpad 排列方式
 設定專屬的 Launchpad 排列方法 (initial: 7 columns \- 5 rows)
 - 直向：`defaults write com.apple.dock springboard-rows -int 8`
 - 橫向：`defaults write com.apple.dock springboard-columns -int 8`
 - 完成：`killall Dock`
 
-### [關閉 spotlight](https://ppt.cc/fnWirx)
+## [關閉 spotlight](https://ppt.cc/fnWirx)
 - disable System Integrity Protection
     - reboot into recovery mode: Command+R
     - csrutil disable (開啟: csrutil enable)
 - restrat system
 - `sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist`
 
-### 用 ssh 登入 linux
+## 用 ssh 登入 linux
 - server 端: `vi ~/.ssh/authorized_keys`
 - 將 local 端 public key 加到 server 端的 authorized_keys
 - ok
 
-### Homebrew
+## Homebrew
 - 安裝方式
     - 用一般 User，會一直 key 密碼
         ```bash
@@ -111,8 +109,8 @@
         ```
     - `brew install gnu-sed`
 
-## 開發工具
-### Java
+# 開發工具
+## Java
 - oracle: [JDK 8](https://ppt.cc/f0NTMx)，注意！！Netbeans 須和 JDK 版本一致
 - 假如想開發，可參考: https://ithelp.ithome.com.tw/articles/10227841
 - openJDK
@@ -125,7 +123,7 @@
         - [PHP](https://windows.php.net/download/) 記得下載執行檔放在 php 5 interpreter，才可以執行
     - `brew cask install adoptopenjdk`
 
-### [MariaDB](https://hoyangtsai.github.io/posts/2015/12/09/mac-using-homebrew-install-mariadb/)
+## [MariaDB](https://hoyangtsai.github.io/posts/2015/12/09/mac-using-homebrew-install-mariadb/)
 - 安裝指令：`brew install mariadb`
 - 啟動方式
     - 手動：`mysql.server start`
@@ -133,18 +131,18 @@
     - 登入啟動：[https://n.sfs.tw/content/index/11776](https://n.sfs.tw/content/index/11776)
 - 登入測試：`mysql -u root`
 
-### VirtualBox
+## VirtualBox
 - `brew install --cask virtualbox`
 - `sudo install minikube-darwin-amd64 /usr/local/bin/minikube`
 
-### Minikube
+## Minikube
 - `curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64`
 
-### Docker
+## Docker
 - `brew tap caskroom/cask`
 - `brew install --cask docker`
 
-### VSCode
+## VSCode
 ```json
 {
     "workbench.startupEditor": "newUntitledFile",
@@ -160,7 +158,7 @@
 }
 ```
 
-### NVM
+## NVM
 ```txt
 zsh compinit: insecure directories, run compaudit for list.
 Ignore insecure directories and continue [y] or abort compinit [n]?
@@ -179,27 +177,27 @@ Ignore insecure directories and continue [y] or abort compinit [n]?
     sudo chown -R root:staff /usr/local/share/zsh
     ```
 
-## Troubleshooting
-### [【教學】重灌 Mac 機必用！教你以 Terminal 製作 macOS Sierra 安裝手指！](https://ppt.cc/f0O1lx)
+# Troubleshooting
+## [【教學】重灌 Mac 機必用！教你以 Terminal 製作 macOS Sierra 安裝手指！](https://ppt.cc/f0O1lx)
 ```bash
 sudo /Users/fool/Downloads/Install\ macOS\ Sierra.app/Contents/Resources/createinstallmedia --volume /Volumes/Mac --applicationpath /Users/fool/Downloads/Install\ macOS\ Sierra.app --nointeraction
 ```
 
-### 故障處理方法
+## 故障處理方法
 - 清 PRAM：重開機後會聽到「噹」一聲後立刻按下 **⌘＋option＋P＋R**
 - 重置 SMC：**Shift＋Control＋Option**- 鍵以及電源按鈕
 
-### 維修網站
+## 維修網站
 - [Save Apple Dollars](http://www.appledollars.com/)
 - [iFixit](https://www.ifixit.com/Device/Mac)
 
-### 休眠耗電的解決辦法
+## 休眠耗電的解決辦法
 [https://udn.com/news/story/11017/3433052](https://udn.com/news/story/11017/3433052)
 
-### 出現 xcrun: error
+## 出現 xcrun: error
 - 安裝 xcode: `xcode-select --install`
 
-### macOS 還原問題
+## macOS 還原問題
 - reference
     - https://rizonjet.com/how-to-fix-macbook-error-code-2003f/
 - 指令
