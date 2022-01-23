@@ -6,6 +6,7 @@
   - [Azure WAF Access](#azure-waf-access)
   - [Azure Activity](#azure-activity)
   - [M365 Office Activity](#m365-office-activity)
+  - [AAD Signin](#aad-signin)
 
 # Logstash Service
 ```
@@ -85,14 +86,28 @@ Restart=always
 
 ## M365 Office Activity
 ```bash
+systemctl enable filebeat-m365-office-activity
+```
+```
+[Service]
+Environment="GODEBUG='madvdontneed=1'"
+Environment="BEAT_LOG_OPTS="
+Environment="BEAT_CONFIG_OPTS=-c /etc/filebeat/filebeat-m365-office-activity.yml"
+Environment="BEAT_PATH_OPTS=--path.home /usr/share/filebeat --path.config /etc/filebeat --path.data /var/lib/filebeat-m365-office-activity --path.logs /var/log/filebeat"
+ExecStart=/usr/share/filebeat/bin/filebeat --environment systemd $BEAT_LOG_OPTS $BEAT_CONFIG_OPTS $BEAT_PATH_OPTS
+Restart=always
+```
+
+## AAD Signin
+```bash
 systemctl enable filebeat-m365
 ```
 ```
 [Service]
 Environment="GODEBUG='madvdontneed=1'"
 Environment="BEAT_LOG_OPTS="
-Environment="BEAT_CONFIG_OPTS=-c /etc/filebeat/filebeat-m365.yml"
-Environment="BEAT_PATH_OPTS=--path.home /usr/share/filebeat --path.config /etc/filebeat --path.data /var/lib/filebeat-m365 --path.logs /var/log/filebeat"
+Environment="BEAT_CONFIG_OPTS=-c /etc/filebeat/filebeat-aad-signin.yml"
+Environment="BEAT_PATH_OPTS=--path.home /usr/share/filebeat --path.config /etc/filebeat --path.data /var/lib/filebeat-aad-signin --path.logs /var/log/filebeat"
 ExecStart=/usr/share/filebeat/bin/filebeat --environment systemd $BEAT_LOG_OPTS $BEAT_CONFIG_OPTS $BEAT_PATH_OPTS
 Restart=always
 ```
