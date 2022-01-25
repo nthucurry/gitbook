@@ -1,6 +1,6 @@
 #/bin/bash
 
-. ~/.bash_profile
+source ~/.bash_profile
 
 month=`date +%Y-%m`
 main_path=$HOME/get_os_usage
@@ -10,7 +10,7 @@ cat $main_path/login-info.csv | while read line
 do
 
 if [[ $line == *"$"* ]]; then
-echo $line
+  echo $line
 else
 
 account=`echo $line | awk 'BEGIN {FS=","} {print $1}'`

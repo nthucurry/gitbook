@@ -110,6 +110,19 @@ WHERE to_date(rtime,'YYYY-MM-DD HH24:MI:SS') BETWEEN to_date(to_char(sysdate-1,'
                                  AND to_date(to_char(sysdate-1,'YYYY-MM-DD')||'23:59:59','YYYY-MM-DD HH24:MI:SS')
 ORDER BY rtime;
 
+-- table size
+SELECT
+    owner,
+    table_name,
+    num_rows,
+    blocks * (SELECT value FROM v$parameter WHERE name = 'db_block_size')/1024/1024 "Size MB",
+    last_analyzed
+FROM dba_tables
+WHERE
+    owner NOT IN ('SYS','SYSTEM','SYSMAN') AND
+    blocks IS NOT NULL AND owner = 'GAUDIT_CA'
+ORDER BY blocks DESC;
+
 -- shared pool
 SELECT
     (SELECT name FROM v$database)||','||
