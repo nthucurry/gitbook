@@ -42,6 +42,10 @@ export PATH
         - `mount -t tmpfs shmfs -o size=7g /dev/shm`
 - `yum install gcc* libaio-devel* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* binutils* compat-libcap1* ksh -y`
 
+## 解壓縮
+- `unzip p13390677_112040_Linux-x86-64_1of7.zip`
+- `unzip p13390677_112040_Linux-x86-64_2of7.zip`
+
 ## 安裝 Oracle
 - 改參數
     ```bash
@@ -99,7 +103,7 @@ export PATH
     - 執行
         ```bash
         /u01/oraInventory/orainstRoot.sh
-        $ORACLE_HOME/root.sh
+        /u01/oracle/11204/root.sh
         ```
 
 ### 設定 Listener

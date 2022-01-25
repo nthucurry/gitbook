@@ -3,7 +3,7 @@
 ### define
 os_name=`cat /etc/os-release | head -1`
 user=oracle
-sid=oracle1
+sid=oracle
 uqname=$sid
 base=/u01/oracle
 ora_ver=11204
@@ -16,10 +16,10 @@ LANG=en_US.UTF-8
 NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'
 
 ### update parameter
-echo "alias vi='vim'" >> ~/.bashrc
+echo "alias vi='vim'" >> /etc/bashrc
 echo "$user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
-source ~/.bashrc
+source /etc/bashrc
 
 ### systemctl
 echo "==== systemctl ===="
@@ -87,7 +87,7 @@ chown -R $user:dba /backup
 echo "==== oracle package ===="
 wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo
 wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
-if [ "$ora_ver" -eq 11204 ]; then
+if [[ "$ora_ver" -eq 11204 ]]; then
     yum install oracle-rdbms-server-11gR2-preinstall -y
 else
     yum install oracle-database-server-12cR2-preinstall -y
