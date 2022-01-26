@@ -3,7 +3,7 @@
 ### define
 os_name=`cat /etc/os-release | head -1`
 user=oracle
-sid=oracle
+sid=demo1
 uqname=$sid
 base=/u01/oracle
 ora_ver=11204
@@ -23,7 +23,7 @@ source /etc/bashrc
 
 ### systemctl
 echo "==== systemctl ===="
-systemctl restart sshd
+# systemctl restart sshd
 systemctl stop firewalld && systemctl disable firewalld
 
 ### swap
