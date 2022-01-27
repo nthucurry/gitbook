@@ -2,9 +2,9 @@
 - [Architecture](#architecture)
 - [Vendor](#vendor)
 - [Cost](#cost)
-    - [Azure WAF (v1 vs v2)](#azure-waf-v1-vs-v2)
-    - [FortiWeb (WaaS vs VM)](#fortiweb-waas-vs-vm)
-    - [Fortinet FortiWeb Web Application Firewall (WAF)](#fortinet-fortiweb-web-application-firewall-waf)
+  - [Azure WAF (v1 vs v2)](#azure-waf-v1-vs-v2)
+  - [FortiWeb (WaaS vs VM)](#fortiweb-waas-vs-vm)
+  - [Fortinet FortiWeb Web Application Firewall (WAF)](#fortinet-fortiweb-web-application-firewall-waf)
 - [FortiWeb Web Application Firewall](#fortiweb-web-application-firewall)
 - [FortoWeb Cloud](#fortoweb-cloud)
 - [~~Imperva WAF Gateway (On Prem WAF) v13~~](#imperva-waf-gateway-on-prem-waf-v13)
@@ -44,6 +44,8 @@
 - 還需另外估算 VM & 磁碟費用
 
 ## Fortinet FortiWeb Web Application Firewall (WAF)
+<br><img src="https://yurisk.info/assets/fortiweb-basic-setup.svg">
+<br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/a654c346-45de-11ec-bdf2-fa163e15d75b/images/cdc018b06bc9b59df5d7ec10835b9f68_network_topology_inline.png" width=600>
 
 # FortiWeb Web Application Firewall
 - Vulnerability scanning
