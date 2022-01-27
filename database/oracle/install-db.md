@@ -46,19 +46,18 @@ export PATH
 - `unzip p13390677_112040_Linux-x86-64_1of7.zip`
 - `unzip p13390677_112040_Linux-x86-64_2of7.zip`
 
-## 安裝 Oracle
+## 安裝 Oracle Software
 - 改參數
-    ```bash
-    sed -i 's/CV_ASSUME_DISTID=OEL4/CV_ASSUME_DISTID=OEL6/g' ~/database/stage/cvu/cv/admin/cvu_config
-    ```
+    - `sed -i 's/CV_ASSUME_DISTID=OEL4/CV_ASSUME_DISTID=OEL6/g' ~/database/stage/cvu/cv/admin/cvu_config`
 - `~/database/runInstaller`(用 oracle 帳號，不能用 root)
     - 遇到 xdpyinfo 問題的解決方法: https://support.oracle.com/epmos/faces/SearchDocDisplay?_adf.ctrl-state=m8p0v6j86_4&_afrLoop=63722001626700
+    - `ssh -Y oracle@t-db.southeastasia.cloudapp.azure.com`
 - [x] install database software only
 - [x] single instance database installation
 - [x] enterprise edition(企業版才有 data guard)
 - [x] prerequisite checks
     - `vi /etc/sysctl.conf`(有用懶人包會自動生成)
-        ```txt
+        ```
         fs.file-max = 6815744
         kernel.shmall = 2097152
         kernel.shmmax = 536870912
@@ -72,8 +71,8 @@ export PATH
         ```
     - 執行 `/tmp/CVU_11.2.0.1.0_oracle/runfixup.sh`
         - install error
-            - ![](../../img/oracle/runinstaller-error-1.png)
-            - ![](../../img/oracle/runinstaller-error-2.png)
+            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/oracle/runinstaller-error-1.png">
+            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/oracle/runinstaller-error-2.png">
         - `vi $ORACLE_HOME/ctx/lib/ins_ctx.mk`
             ```bash
             # 原本
@@ -101,10 +100,8 @@ export PATH
             sed -i 's/$(MK_EMAGENT_NMECTL)/$(MK_EMAGENT_NMECTL) -lnnz11/g' $ORACLE_HOME/sysman/lib/ins_emagent.mk
             ```
     - 執行
-        ```bash
-        /u01/oraInventory/orainstRoot.sh
-        /u01/oracle/11204/root.sh
-        ```
+        - `/u01/oraInventory/orainstRoot.sh`
+        - `/u01/oracle/11204/root.sh`
 
 ### 設定 Listener
 - [Oracle Listener 教學](http://shinchuan1.blogspot.com/2014/04/oracle-listener.html)
@@ -112,7 +109,7 @@ export PATH
 - 一直下一步
     - [不容易發現的問題](https://www.itread01.com/content/1549111156.html)
 - `vi $TNS_ADMIN/listener.ora`(如果沒有就新增)
-    ```txt
+    ```
     LISTENER =
         (DESCRIPTION_LIST =
             (DESCRIPTION =
@@ -132,20 +129,23 @@ export PATH
     ADR_BASE_LISTENER = /u01/oracle
     ```
 
-### 安裝資料庫
+### 安裝 Database
 - Reference
     - [How to Use the Database Configuration Assistant (DBCA) to Create Databases in Oracle 12c](https://www.dummies.com/programming/databases/how-to-use-the-database-configuration-assistant-dbca-to-create-databases-in-oracle-12c/)
 - 執行 `$ORACLE_HOME/bin/dbca`
     - operations
         - [x] create a database
+            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/oracle/dbca-db-install-1.png">
     - database templates
         - [x] customer database
     - database identification
         - global database name / SID 要和環境變數一樣
+            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/oracle/dbca-db-install-2.png">
     - managerment options
         - enterprise managerment 不設定
     - database file locations
         - storage type: file system
+            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/oracle/dbca-db-install-3.png">
         - storage location: use common location for all database files
     - recovery configuration
         - 不用 specify flash recovery area
@@ -162,10 +162,8 @@ export PATH
     - finish
 
 ### Alter Install
-```bash
-# audit_file_dest
-mkdir -p $ORACLE_BASE/admin/$ORACLE_SID/adump
-```
+- 設定 audit 位置
+    - `mkdir -p $ORACLE_BASE/admin/$ORACLE_SID/adump`
 
 ### Option Setting
 #### Mail relay
