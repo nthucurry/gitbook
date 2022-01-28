@@ -22,3 +22,5 @@
   path.config: "/etc/logstash/conf.d/1110-*.conf"
 - pipeline.id: m365-office-activity
   path.config: "/etc/logstash/conf.d/1200-*.conf"
+- pipeline.id: oracle-table-size
+  path.config: "/etc/logstash/conf.d/1300-*.conf"

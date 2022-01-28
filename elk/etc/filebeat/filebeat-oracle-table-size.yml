@@ -1,0 +1,32 @@
+# ============================== Filebeat inputs ===============================
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /data-to-local/oracle-table-size/*-*-*-*-*.log
+  fields:
+    log_type: "oracle-table-size"
+  fields_under_root: true
+# ------------------------------ Logstash Output -------------------------------
+output.logstash:
+# ---------------------------- Azure Service Output ----------------------------
+  hosts: ["filebeat:1300"]
+  indices:
+    - index: "oracle-table-size"
+      when.contains:
+        log_type: "oracle-table-size"
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+# ================================== Logging ===================================
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat-oracle-table-size.log
+  keepfiles: 1
+  permissions: 0644

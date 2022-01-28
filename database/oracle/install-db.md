@@ -28,16 +28,17 @@ PATH=$PATH:$HOME/bin:$ORACLE_HOME/bin
 export PATH
 ```
 
-## Prerequisites(option)
+## Prerequisites (option)
 - 更新 EPEL repository: `yum install epel-release -y`
     - `wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo`
     - `wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle`
 - 安裝懶人包
     - `yum install oracle-rdbms-server-11gR2-preinstall -y`
 - 確認記憶體是否足夠
-    - automatic memory management(此設定會影響 MEMORY_TARGET)
+    - automatic memory management
+        - 此設定會影響 MEMORY_TARGET
     - `df -h /dev/shm/`
-    - 永久有效(7G 的置換空間)
+    - 永久有效 (7G 的置換空間)
         - `shmfs /dev/shm tmpfs size=7g 0`
         - `mount -t tmpfs shmfs -o size=7g /dev/shm`
 - `yum install gcc* libaio-devel* glibc-* libXi* libXtst* unixODBC* compat-libstdc* libstdc* binutils* compat-libcap1* ksh -y`
@@ -49,14 +50,16 @@ export PATH
 ## 安裝 Oracle Software
 - 改參數
     - `sed -i 's/CV_ASSUME_DISTID=OEL4/CV_ASSUME_DISTID=OEL6/g' ~/database/stage/cvu/cv/admin/cvu_config`
-- `~/database/runInstaller`(用 oracle 帳號，不能用 root)
+- `~/database/runInstaller`
+    - 需用 oracle 帳號，不能用 root
     - 遇到 xdpyinfo 問題的解決方法: https://support.oracle.com/epmos/faces/SearchDocDisplay?_adf.ctrl-state=m8p0v6j86_4&_afrLoop=63722001626700
     - `ssh -Y oracle@t-db.southeastasia.cloudapp.azure.com`
 - [x] install database software only
 - [x] single instance database installation
-- [x] enterprise edition(企業版才有 data guard)
+- [x] enterprise edition
+    - 企業版才有 data guard
 - [x] prerequisite checks
-    - `vi /etc/sysctl.conf`(有用懶人包會自動生成)
+    - `vi /etc/sysctl.conf` (用懶人包會自動生成)
         ```
         fs.file-max = 6815744
         kernel.shmall = 2097152
@@ -108,7 +111,7 @@ export PATH
 - 執行 `$ORACLE_HOME/bin/netca`
 - 一直下一步
     - [不容易發現的問題](https://www.itread01.com/content/1549111156.html)
-- `vi $TNS_ADMIN/listener.ora`(如果沒有就新增)
+- `vi $TNS_ADMIN/listener.ora` (如果沒有就新增)
     ```
     LISTENER =
         (DESCRIPTION_LIST =
@@ -154,7 +157,7 @@ export PATH
     - database content
         - 僅選 enterprise managerment repository
     - initialization parameters
-        - sizing(option)
+        - sizing (option)
             - processes: 150 -> 1500
         - character sets
             - use unicode
@@ -166,6 +169,19 @@ export PATH
     - `mkdir -p $ORACLE_BASE/admin/$ORACLE_SID/adump`
 
 ### Option Setting
+#### 安裝 Oracle Client
+- 到官網下載 instance client
+    - `yum install oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm`
+    - `yum install oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm`
+- `vi ~/.bash_profile`
+    ```bash
+    LD_LIBRARY_PATH=/usr/lib/oracle/12.1/client64/lib:${LD_LIBRARY_PATH}
+    export LD_LIBRARY_PATH
+    export PATH=/usr/lib/oracle/12.1/client64/bin/:$PATH
+    export TNS_ADMIN=/usr/lib/oracle/12.1/client64/network/admin
+    ```
+- `source ~/.bash_profile`
+
 #### Mail relay
 ```bash
 vi /etc/postfix/main.cf
