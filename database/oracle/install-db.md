@@ -138,17 +138,17 @@ export PATH
 - 執行 `$ORACLE_HOME/bin/dbca`
     - operations
         - [x] create a database
-            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/oracle/dbca-db-install-1.png">
+            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/oracle/dbca-db-install-1.png" width=600>
     - database templates
         - [x] customer database
     - database identification
         - global database name / SID 要和環境變數一樣
-            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/oracle/dbca-db-install-2.png">
+            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/oracle/dbca-db-install-2.png" width=600>
     - managerment options
         - enterprise managerment 不設定
     - database file locations
         - storage type: file system
-            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/oracle/dbca-db-install-3.png">
+            <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/oracle/dbca-db-install-3.png" width=600>
         - storage location: use common location for all database files
     - recovery configuration
         - 不用 specify flash recovery area
