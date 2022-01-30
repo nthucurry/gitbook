@@ -5,7 +5,9 @@
   - [Azure WAF (v1 vs v2)](#azure-waf-v1-vs-v2)
   - [FortiWeb (WaaS vs VM)](#fortiweb-waas-vs-vm)
   - [Fortinet FortiWeb Web Application Firewall (WAF)](#fortinet-fortiweb-web-application-firewall-waf)
-- [FortiWeb Web Application Firewall](#fortiweb-web-application-firewall)
+  - [SOP](#sop)
+    - [Configuring virtual servers on your FortiWeb](#configuring-virtual-servers-on-your-fortiweb)
+  - [Configuring a server policy](#configuring-a-server-policy)
 - [FortoWeb Cloud](#fortoweb-cloud)
 - [~~Imperva WAF Gateway (On Prem WAF) v13~~](#imperva-waf-gateway-on-prem-waf-v13)
 
@@ -13,7 +15,7 @@
 - [Tutorial: Azure Active Directory single sign-on (SSO) integration with FortiWeb Web Application Firewall](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/fortiweb-web-application-firewall-tutorial)
 - [Tutorial: Azure Active Directory single sign-on (SSO) integration with Palo Alto Networks - GlobalProtect](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/palo-alto-networks-globalprotect-tutorial)
 - [Fortinet FortiWeb vs Microsoft Azure Application Gateway comparison](https://www.peerspot.com/products/comparisons/fortinet-fortiweb_vs_microsoft-azure-application-gateway)
-- [fortinet/azure-templates](https://github.com/fortinet/azure-templates)
+- [fortinet/azure-templates](https://github.com~`/fortinet/azure-templates)
 
 # Architecture
 <br><img src="https://docs.microsoft.com/en-us/azure/web-application-firewall/media/ag-overview/waf1.png"  width=600>
@@ -46,14 +48,14 @@
 ## Fortinet FortiWeb Web Application Firewall (WAF)
 <br><img src="https://yurisk.info/assets/fortiweb-basic-setup.svg">
 <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/a654c346-45de-11ec-bdf2-fa163e15d75b/images/cdc018b06bc9b59df5d7ec10835b9f68_network_topology_inline.png" width=600>
+<br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/9606ca42-fd14-11e8-b86b-00505692583a/images/516c7581095f7922c360bbb9a808c42b_fweb%20for%20azure%20architecture.png" width=600>
 
-# FortiWeb Web Application Firewall
-- Vulnerability scanning
-- IP reputation, attack signatures, and antivirus powered by FortiGuard
-- Behavioral attack detection, threat scanning, protection against botnets (殭屍網絡), DDoS, automated attacks, and more
-- Integration with FortiSandbox for advanced threat protection (ATP) detection
-- Tools to give you valuable insights on attacks
-- Available in the Azure Marketplace
+## SOP
+### Configuring virtual servers on your FortiWeb
+- 注意事項
+    - A virtual server is more similar to a virtual IP on a FortiGate. It is **not** an actual server, but simply defines the listening network interface. Unlike a FortiGate VIP, it includes a specialized proxy that only picks up HTTP and HTTPS.
+
+## Configuring a server policy
 
 # FortoWeb Cloud
 <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/2ffc9903-bcb4-11e9-8977-00505692583a/images/2468b3e46f186060c6c4268e2efbb20b_traffic-flow.png" width=600>
