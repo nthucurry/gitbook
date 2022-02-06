@@ -8,6 +8,7 @@
     - [4. Create Protected Hostname](#4-create-protected-hostname)
     - [5. Create Server Pool](#5-create-server-pool)
     - [6. Create HTTP Server Policy](#6-create-http-server-policy)
+    - [Configuring a bridge (V-zone)](#configuring-a-bridge-v-zone)
 - [Option](#option)
   - [~~Azure WAF v2~~](#azure-waf-v2)
   - [~~FortoWeb Cloud~~](#fortoweb-cloud)
@@ -32,6 +33,10 @@
 
 ## SOP on Azure
 ### 1. Create Virtual IP
+The VIPs are the IPs that paired with the domain name of your application. When users visit your application, the destination of their requests are these IPs.
+
+You can later attach one or more **VIPs** to a virtual server, and then reference the **virtual server** in a **server policy**. The **web protection profile** in the server policy will be applied to all the virtual IPs attached to this virtual server.
+
 ### 2. Create Virtual Server
 - 注意事項
     - A virtual server is more similar to a virtual IP on a FortiGate. It is **not** an actual server, but simply defines the listening network interface. Unlike a FortiGate VIP, it includes a specialized proxy that only picks up HTTP and HTTPS.
@@ -40,6 +45,13 @@
 ### 4. Create Protected Hostname
 ### 5. Create Server Pool
 ### 6. Create HTTP Server Policy
+### Configuring a bridge (V-zone)
+If you have installed a physical FortiWeb appliance, plug in network cables to connect one of the physical ports in the bridge to your protected web servers, and the other port to the Internet or your internal network.
+
+Because port1 is reserved for connections with your management computer, for physical appliances (實體設備), this means that you must plug cables into at least 3 physical ports:
+- port1 to your management computer
+- one port to your web servers
+- one port to the Internet or your internal network
 
 # Option
 ## ~~Azure WAF v2~~
