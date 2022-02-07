@@ -110,6 +110,9 @@
         export PATH
         ```
     - `brew install gnu-sed`
+    - network utilities
+        - `brew install iproute2mac`
+        - `brew install nmap`
 
 # 開發工具
 ## Java
