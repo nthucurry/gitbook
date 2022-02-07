@@ -1,6 +1,6 @@
 # Azure Load Balancer components
 ## Frontend IP
-<br><img src="https://docs.microsoft.com/en-us/azure/load-balancer/media/load-balancer-overview/load-balancer.png" width=600>
+<br><img src="https://docs.microsoft.com/en-us/azure/load-balancer/media/load-balancer-overview/load-balancer.png">
 
 ## Backend pool
 ## Health probes
