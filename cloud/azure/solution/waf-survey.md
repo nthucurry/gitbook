@@ -18,8 +18,9 @@
 - [Tutorial: Azure Active Directory single sign-on (SSO) integration with FortiWeb Web Application Firewall](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/fortiweb-web-application-firewall-tutorial)
 - [Tutorial: Azure Active Directory single sign-on (SSO) integration with Palo Alto Networks - GlobalProtect](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/palo-alto-networks-globalprotect-tutorial)
 - [Fortinet FortiWeb vs Microsoft Azure Application Gateway comparison](https://www.peerspot.com/products/comparisons/fortinet-fortiweb_vs_microsoft-azure-application-gateway)
-- [fortinet/azure-templates](https://github.com~`/fortinet/azure-templates)
+- [fortinet/azure-templates](https://github.com/fortinet/azure-templates)
 - [FortiWeb on OCB-FE Configuration Guide](https://cloud.orange-business.com/wp-content/uploads/2020/08/FortiWeb_on_OCB_FE_Configuration_Guide.pdf)
+- [Configuring FortiWeb-VMs](https://docs.fortinet.com/document/fortiweb-public-cloud/latest/use-case-high-availability-for-fortiweb-on-azure/425287/configuring-fortiweb-vms)
 
 # Architecture
 <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/541c4d24-4c4a-11e9-94bf-00505692583a/images/18ad94c87b26bfff643c1013ab78f5c8_auto-scaling.png" width=800>
@@ -42,6 +43,8 @@
 The VIPs are the IPs that paired with the domain name of your application. When users visit your application, the destination of their requests are these IPs.
 
 You can later attach one or more **VIPs** to a virtual server, and then reference the **virtual server** in a **server policy**. The **web protection profile** in the server policy will be applied to all the virtual IPs attached to this virtual server.
+
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-1-interfce.png" width=600 border="0">
 
 ## 2. Create Virtual Server (WAF Subnet)
 - [Server Objects] → [Server] → [Virtual Server] → [Create New]
