@@ -2,9 +2,9 @@
 - [Architecture](#architecture)
   - [Fortinet FortiWeb Web Application Firewall (WAF)](#fortinet-fortiweb-web-application-firewall-waf)
 - [SOP on Azure](#sop-on-azure)
-  - [1. Create Virtual IP](#1-create-virtual-ip)
-  - [2. Create Virtual Server (WAF Subnet)](#2-create-virtual-server-waf-subnet)
-  - [3. Create Protected Hostname](#3-create-protected-hostname)
+  - [1. Create Interface](#1-create-interface)
+  - [2. Create Virtual IP](#2-create-virtual-ip)
+  - [3. Create Virtual Server (WAF Subnet)](#3-create-virtual-server-waf-subnet)
   - [4. Create Server Pool (Web Subnet)](#4-create-server-pool-web-subnet)
   - [5. Create HTTP Server Policy](#5-create-http-server-policy)
   - [Topology for Reverse Proxy mode](#topology-for-reverse-proxy-mode)
@@ -39,25 +39,32 @@
 # SOP on Azure
 <br><img src="https://yurisk.info/assets/fortiweb-basic-setup.svg" width=600>
 
-## 1. Create Virtual IP
+## 1. Create Interface
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-1-interfce.png" width=700>
+
+## 2. Create Virtual IP
 The VIPs are the IPs that paired with the domain name of your application. When users visit your application, the destination of their requests are these IPs.
 
 You can later attach one or more **VIPs** to a virtual server, and then reference the **virtual server** in a **server policy**. The **web protection profile** in the server policy will be applied to all the virtual IPs attached to this virtual server.
 
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-1-interfce.png" width=600 border="0">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-2-virtual-ip.png" width=700>
 
-## 2. Create Virtual Server (WAF Subnet)
-- [Server Objects] → [Server] → [Virtual Server] → [Create New]
+## 3. Create Virtual Server (WAF Subnet)
 - 注意事項
     - A virtual server is more similar to a VIP on a FortiGate. It is **not** an actual server, but simply defines the listening network interface. Unlike a FortiGate VIP, it includes a specialized proxy that only picks up HTTP and HTTPS.
     - By default, in Reverse Proxy mode, FortiWeb’s virtual servers do not forward non-HTTP/HTTPS traffic from virtual servers to your protected web servers.
 
-## 3. Create Protected Hostname
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-1.png" width=700>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-2.png" width=700>
+
 ## 4. Create Server Pool (Web Subnet)
-- [Server Objects] → [Server] → [Server Pool] → [Create HTTP Server Pool]
+
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-4-server-pool.png" width=700>
 
 ## 5. Create HTTP Server Policy
 - [Policy] → [Server Policy] → [Create HTTP Policy]
+
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-5-server-policy.png" width=700>
 
 ## Topology for Reverse Proxy mode
 Requests are destined for a virtual server’s network interface and IP on FortiWeb, **not a web server directly**. FortiWeb usually applies full NAT. FortiWeb applies the first applicable policy, then forwards permitted traffic to a web server. FortiWeb logs, blocks, or modifies violations according to the matching policy.
