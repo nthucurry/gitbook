@@ -1,5 +1,7 @@
 - [Reference](#reference)
 - [Architecture](#architecture)
+  - [Azure](#azure)
+  - [WAF](#waf)
   - [Fortinet FortiWeb Web Application Firewall (WAF)](#fortinet-fortiweb-web-application-firewall-waf)
 - [SOP on Azure](#sop-on-azure)
   - [1. Create Interface](#1-create-interface)
@@ -10,6 +12,7 @@
   - [Topology for Reverse Proxy mode](#topology-for-reverse-proxy-mode)
   - [Configuring a bridge (V-zone)](#configuring-a-bridge-v-zone)
 - [Deploy highly available NVAs (Network Virtual Appliances)](#deploy-highly-available-nvas-network-virtual-appliances)
+  - [HA architectures overview](#ha-architectures-overview)
 - [Option](#option)
   - [~~Azure WAF v2~~](#azure-waf-v2)
   - [~~FortoWeb Cloud~~](#fortoweb-cloud)
@@ -25,6 +28,11 @@
 - [Azure Route Server](https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/dmz/nva-ha?tabs=cli#azure-route-server)
 
 # Architecture
+## Azure
+- route server
+- load balacer
+
+## WAF
 <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/541c4d24-4c4a-11e9-94bf-00505692583a/images/18ad94c87b26bfff643c1013ab78f5c8_auto-scaling.png" width=800>
 <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/d99c9968-125b-11e9-b86b-00505692583a/images/7d3cc123897522bcede6eaaadfa51258_azureha.jpg.png" width=800>
 <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/0489513b-b3c1-11e9-a989-00505692583a/images/c7bc702000cf29097183e1f6c6ee8555_fig-AzureAS-PAYGonly.png" width=800>
@@ -78,6 +86,12 @@ Because port1 is reserved for connections with your management computer, for phy
 - one port to the Internet or your internal network
 
 # Deploy highly available NVAs (Network Virtual Appliances)
+- To inspect egress traffic from VMs to the Internet and prevent data exfiltration (滲出).
+- To inspect ingress traffic from the Internet to VMs and prevent attacks.
+- To filter traffic between VMs in Azure, to prevent lateral moves of compromised systems.
+- To filter traffic between on-premises systems and Azure virtual machines, if they are considered to belong to different security levels. (For example, if Azure hosts the DMZ, and on-premises the internal applications.)
+
+## HA architectures overview
 
 # Option
 ## ~~Azure WAF v2~~
