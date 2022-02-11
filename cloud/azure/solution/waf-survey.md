@@ -9,6 +9,7 @@
   - [5. Create HTTP Server Policy](#5-create-http-server-policy)
   - [Topology for Reverse Proxy mode](#topology-for-reverse-proxy-mode)
   - [Configuring a bridge (V-zone)](#configuring-a-bridge-v-zone)
+- [Deploy highly available NVAs (Network Virtual Appliances)](#deploy-highly-available-nvas-network-virtual-appliances)
 - [Option](#option)
   - [~~Azure WAF v2~~](#azure-waf-v2)
   - [~~FortoWeb Cloud~~](#fortoweb-cloud)
@@ -21,6 +22,7 @@
 - [fortinet/azure-templates](https://github.com/fortinet/azure-templates)
 - [FortiWeb on OCB-FE Configuration Guide](https://cloud.orange-business.com/wp-content/uploads/2020/08/FortiWeb_on_OCB_FE_Configuration_Guide.pdf)
 - [Configuring FortiWeb-VMs](https://docs.fortinet.com/document/fortiweb-public-cloud/latest/use-case-high-availability-for-fortiweb-on-azure/425287/configuring-fortiweb-vms)
+- [Azure Route Server](https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/dmz/nva-ha?tabs=cli#azure-route-server)
 
 # Architecture
 <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/541c4d24-4c4a-11e9-94bf-00505692583a/images/18ad94c87b26bfff643c1013ab78f5c8_auto-scaling.png" width=800>
@@ -62,8 +64,6 @@ You can later attach one or more **VIPs** to a virtual server, and then referenc
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-4-server-pool.png" width=700>
 
 ## 5. Create HTTP Server Policy
-- [Policy] → [Server Policy] → [Create HTTP Policy]
-
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-5-server-policy.png" width=700>
 
 ## Topology for Reverse Proxy mode
@@ -76,6 +76,8 @@ Because port1 is reserved for connections with your management computer, for phy
 - port1 to your management computer
 - one port to your web servers
 - one port to the Internet or your internal network
+
+# Deploy highly available NVAs (Network Virtual Appliances)
 
 # Option
 ## ~~Azure WAF v2~~
