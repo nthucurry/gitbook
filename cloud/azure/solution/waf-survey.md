@@ -31,6 +31,12 @@
 ## Azure
 - route server
 - load balacer
+- [network virtual appliance (nva)](https://aviatrix.com/learn-center/cloud-security/azure-network-virtual-appliance/)
+    - NVA is used in the Azure application to enhance HA. It is used as an advanced level of control over traffic flows, such as when building a DMZ in the cloud.
+    - In the above architecture, the network virtual appliance sits in a DMZ and checks all incoming and outgoing traffic and only allowing network traffic that meets the set rules hence providing a secure network boundary. However, if the Network virtual appliance fails there is no other path of network path available
+    <br><img src="https://2ujst446wdhv3307z249ttp0-wpengine.netdna-ssl.com/wp-content/uploads/2020/08/nva-image-1.png" width=800>
+    <br><img src="https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/dmz/nva-ha#pip-udr-nvas-without-snat" width=800>
+    <br><img src="https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/dmz/images/nva-ha/nvaha-pipudr-internet.png" width=800>
 
 ## WAF
 <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/541c4d24-4c4a-11e9-94bf-00505692583a/images/18ad94c87b26bfff643c1013ab78f5c8_auto-scaling.png" width=800>
