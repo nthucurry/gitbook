@@ -12,13 +12,16 @@ else
 fi
 az vm list \
     --subscription $subscription \
-    --show-details -g DBA-K8S \
+    --show-details -g DBA \
     --query \
         "[].{ \
             resourceGroup: resourceGroup, \
+            name: name, \
             privateIps: privateIps, \
-            osType: storageProfile.osDisk.osType \
-            offer: storageProfile.imageReference.offer \
+            osType: storageProfile.osDisk.osType, \
+            offer: storageProfile.imageReference.offer, \
+            exactVersion: storageProfile.imageReference.exactVersion, \
+            publisher: storageProfile.imageReference.publisher \
         }"
 
 # resourceGroup
@@ -28,3 +31,5 @@ az vm list \
 # storageProfile.imageReference.offer
 # storageProfile.imageReference.version
 # storageProfile.osDisk.osType
+# storageProfile.imageReference.exactVersion
+# storageProfile.imageReference.publisher
