@@ -39,6 +39,7 @@
     <br><img src="https://2ujst446wdhv3307z249ttp0-wpengine.netdna-ssl.com/wp-content/uploads/2020/08/nva-image-1.png" width=800>
     <br><img src="https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/dmz/nva-ha#pip-udr-nvas-without-snat" width=800>
     <br><img src="https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/dmz/images/nva-ha/nvaha-pipudr-internet.png" width=800>
+- [firewall and application gateway for vnet](https://docs.microsoft.com/en-us/azure/architecture/example-scenario/gateway/firewall-application-gateway)
 
 ## WAF
 <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/541c4d24-4c4a-11e9-94bf-00505692583a/images/18ad94c87b26bfff643c1013ab78f5c8_auto-scaling.png" width=800>
