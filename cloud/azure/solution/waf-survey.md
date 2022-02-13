@@ -1,22 +1,22 @@
 - [Reference](#reference)
 - [Architecture](#architecture)
-  - [Azure](#azure)
-  - [WAF](#waf)
-  - [Fortinet FortiWeb Web Application Firewall (WAF)](#fortinet-fortiweb-web-application-firewall-waf)
+    - [Azure](#azure)
+    - [WAF](#waf)
+    - [Fortinet FortiWeb Web Application Firewall (WAF)](#fortinet-fortiweb-web-application-firewall-waf)
 - [SOP on Azure](#sop-on-azure)
-  - [1. Create Interface](#1-create-interface)
-  - [2. Create Virtual IP](#2-create-virtual-ip)
-  - [3. Create Virtual Server (WAF Subnet)](#3-create-virtual-server-waf-subnet)
-  - [4. Create Server Pool (Web Subnet)](#4-create-server-pool-web-subnet)
-  - [5. Create HTTP Server Policy](#5-create-http-server-policy)
-  - [Topology for Reverse Proxy mode](#topology-for-reverse-proxy-mode)
-  - [Configuring a bridge (V-zone)](#configuring-a-bridge-v-zone)
+    - [1. Create Interface](#1-create-interface)
+    - [2. Create Virtual IP](#2-create-virtual-ip)
+    - [3. Create Virtual Server (WAF Subnet)](#3-create-virtual-server-waf-subnet)
+    - [4. Create Server Pool (Web Subnet)](#4-create-server-pool-web-subnet)
+    - [5. Create HTTP Server Policy](#5-create-http-server-policy)
+    - [Topology for Reverse Proxy mode](#topology-for-reverse-proxy-mode)
+    - [Configuring a bridge (V-zone)](#configuring-a-bridge-v-zone)
 - [Deploy highly available NVAs (Network Virtual Appliances)](#deploy-highly-available-nvas-network-virtual-appliances)
-  - [HA architectures overview](#ha-architectures-overview)
+    - [HA architectures overview](#ha-architectures-overview)
 - [Option](#option)
-  - [~~Azure WAF v2~~](#azure-waf-v2)
-  - [~~FortoWeb Cloud~~](#fortoweb-cloud)
-  - [~~Imperva WAF Gateway (On Prem WAF) v13~~](#imperva-waf-gateway-on-prem-waf-v13)
+    - [~~Azure WAF v2~~](#azure-waf-v2)
+    - [~~FortoWeb Cloud~~](#fortoweb-cloud)
+    - [~~Imperva WAF Gateway (On Prem WAF) v13~~](#imperva-waf-gateway-on-prem-waf-v13)
 
 # Reference
 - [Tutorial: Azure Active Directory single sign-on (SSO) integration with FortiWeb Web Application Firewall](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/fortiweb-web-application-firewall-tutorial)
@@ -30,7 +30,9 @@
 # Architecture
 ## Azure
 - route server
-- load balacer
+- [gateway load balancer](https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/dmz/nva-ha#gateway-load-balancer)
+    - Azure Gateway Load Balancer is a new way of inserting NVAs in the data path without the need to steer traffic with User-Defined Routes. For Virtual Machines that expose their workloads via an Azure Load Balancer or a public IP address, inbound and outbound traffic can be redirected transparently to a cluster of NVAs located in a different VNet. The following diagram describes the path that packets follow for inbound traffic from the public Internet in case the workloads expose the application via an Azure Load Balancer:
+    <br><img src="https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/dmz/images/nva-ha/nvaha-gwlb-internet.png" width=800>
 - [network virtual appliance (nva)](https://aviatrix.com/learn-center/cloud-security/azure-network-virtual-appliance/)
     - NVA is used in the Azure application to enhance HA. It is used as an advanced level of control over traffic flows, such as when building a DMZ in the cloud.
     - In the above architecture, the network virtual appliance sits in a DMZ and checks all incoming and outgoing traffic and only allowing network traffic that meets the set rules hence providing a secure network boundary. However, if the Network virtual appliance fails there is no other path of network path available
@@ -53,32 +55,32 @@
     <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/9606ca42-fd14-11e8-b86b-00505692583a/images/516c7581095f7922c360bbb9a808c42b_fweb%20for%20azure%20architecture.png" width=600>
 
 # SOP on Azure
-<br><img src="https://yurisk.info/assets/fortiweb-basic-setup.svg" width=600>
+<br><img src="https://yurisk.info/assets/fortiweb-basic-setup.svg" width=400>
 
 ## 1. Create Interface
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-1-interfce.png" width=700>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-1-interfce.png" width=800>
 
 ## 2. Create Virtual IP
 The VIPs are the IPs that paired with the domain name of your application. When users visit your application, the destination of their requests are these IPs.
 
 You can later attach one or more **VIPs** to a virtual server, and then reference the **virtual server** in a **server policy**. The **web protection profile** in the server policy will be applied to all the virtual IPs attached to this virtual server.
 
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-2-virtual-ip.png" width=700>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-2-virtual-ip.png" width=800>
 
 ## 3. Create Virtual Server (WAF Subnet)
 - 注意事項
     - A virtual server is more similar to a VIP on a FortiGate. It is **not** an actual server, but simply defines the listening network interface. Unlike a FortiGate VIP, it includes a specialized proxy that only picks up HTTP and HTTPS.
     - By default, in Reverse Proxy mode, FortiWeb’s virtual servers do not forward non-HTTP/HTTPS traffic from virtual servers to your protected web servers.
 
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-1.png" width=700>
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-2.png" width=700>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-1.png" width=800>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-2.png" width=800>
 
 ## 4. Create Server Pool (Web Subnet)
 
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-4-server-pool.png" width=700>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-4-server-pool.png" width=800>
 
 ## 5. Create HTTP Server Policy
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-5-server-policy.png" width=700>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-5-server-policy.png" width=800>
 
 ## Topology for Reverse Proxy mode
 Requests are destined for a virtual server’s network interface and IP on FortiWeb, **not a web server directly**. FortiWeb usually applies full NAT. FortiWeb applies the first applicable policy, then forwards permitted traffic to a web server. FortiWeb logs, blocks, or modifies violations according to the matching policy.
