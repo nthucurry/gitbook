@@ -10,6 +10,7 @@ if [[ $info == "1" ]]; then
 else
     subscription="a7bdf2e3-b855-4dda-ac93-047ff722cbbd"
 fi
+
 az vm list \
     --subscription $subscription \
     --show-details -g DBA \
@@ -23,13 +24,3 @@ az vm list \
             exactVersion: storageProfile.imageReference.exactVersion, \
             publisher: storageProfile.imageReference.publisher \
         }"
-
-# resourceGroup
-# powerState
-# privateIps
-# osProfile.computerName
-# storageProfile.imageReference.offer
-# storageProfile.imageReference.version
-# storageProfile.osDisk.osType
-# storageProfile.imageReference.exactVersion
-# storageProfile.imageReference.publisher
