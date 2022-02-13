@@ -53,7 +53,7 @@ yum install php-bcmath php-mbstring php-xml curl curl-devel net-snmp net-snmp-de
     - `zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p zabbix`
         - 輸入密碼: manager1
     - `vi /etc/opt/rh/rh-php72/php-fpm.d/zabbix.conf`
-        ```txt
+        ```
         php_value[date.timezone] = Asia/Taipei
         ```
     - 設定參數
@@ -61,7 +61,7 @@ yum install php-bcmath php-mbstring php-xml curl curl-devel net-snmp net-snmp-de
 - agent
     - `yum install zabbix-agent -y`
     - `vi /etc/zabbix/zabbix_agentd.conf`
-        ```txt
+        ```
         Server=[zabbix_server_ip]
         ```
     - `systemctl enable zabbix-agent`

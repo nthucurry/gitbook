@@ -102,7 +102,7 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 - `mkdir docker-test`
 - `cd docker-test`
 - `vi Dockerfile`
-    ```txt
+    ```
     FROM centos:7
     MAINTAINER jack
 

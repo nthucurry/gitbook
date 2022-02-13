@@ -12,7 +12,7 @@
     - 在 Startup > Tasks > {cmd::Cmder} > 右下角輸入 cmd /k "%ConEmuDir%\..\init.bat"  -new_console:d:D:\
     - 將 lambda 改成 $: \cmder\vendor\clink.lua，找 lambda
     - 環境變數
-        ```txt
+        ```
         set PATH=D:\yyyPortable\cmder\vendor\git-for-windows\usr\bin;%ConEmuBaseDir%\Scripts;C:\Users\Tonylee\AppData\Roaming\npm;%PATH%
         set LANG=zh_TW.UTF8
         alias ll=ls -list

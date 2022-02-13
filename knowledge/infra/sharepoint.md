@@ -7,7 +7,7 @@
 - [prerequisiteinstaller.exe](https://docs.microsoft.com/en-us/SharePoint/install/hardware-and-software-requirements#prerequisite-installer-operations-and-command-line-options)
 - [https://social.technet.microsoft.com/Forums/security/en-US/e0e19a7d-861a-4ae4-8ac1-dfb3c53f57e8/sharepoint-2016-standard-product-key?forum=SP2016](https://social.technet.microsoft.com/Forums/security/en-US/e0e19a7d-861a-4ae4-8ac1-dfb3c53f57e8/sharepoint-2016-standard-product-key?forum=SP2016)
 - overall
-    ```txt
+    ```
     Web Server (IIS) Role: add role (include dotNET 3.5)
     Microsoft SQL Server 2012 Native Client: 直接下載安裝
     Microsoft ODBC Driver 11 for SQL Server: 直接下載安裝
@@ -33,7 +33,7 @@
 - [設定 SMTP 服務](https://docs.microsoft.com/zh-tw/sharepoint/administration/incoming-email-configuration#to-configure-the-smtp-service)
 - 測試外送郵件
     - telnet au3mr1 25
-        ```txt
+        ```
         EHLO au3mr1
         MAIL FROM:SharePoint2016@gmail.com
         RCPT TO:xxxx@gmail.com
@@ -62,7 +62,7 @@
 - 建立工作流程
     ![](../../file/img/learning/moss/moss-designer-setting-1.png)
 - 內容
-    ```txt
+    ```
     Hi [%目前項目:指定給%]
     [%目前項目:建立者%]指派此報修給您
     Task

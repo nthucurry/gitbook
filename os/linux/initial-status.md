@@ -63,7 +63,7 @@ yum install htop -y
 
 ## SSH
 - `vi /etc/ssh/sshd_config`
-    ```txt
+    ```
     PasswordAuthentication yes
     PermitRootLogin no
     UseDNS no
@@ -105,7 +105,7 @@ yum install htop -y
 [http://ilms.csu.edu.tw/6736/doc/35571](http://ilms.csu.edu.tw/6736/doc/35571)
 - 先刪除 repo: `rm -fr /etc/yum.repos.d/CentOS-*`
 - `vi /etc/yum.repos.d/CentOS-Base.repo`
-    ```txt
+    ```
     [base]
     name=CentOS-$releasever - Base
     #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os

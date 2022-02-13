@@ -46,7 +46,7 @@ yum install zip unzip -y
 [How to use host names rather than ip addresses on home network?](https://askubuntu.com/questions/150617/how-to-use-host-names-rather-than-ip-addresses-on-home-network)
 
 ## How to resolve emergency mode
-```txt
+```
 Welcome to emergency mode! After logging in, type "journalctl -xb" to view
 system logs, "systemctl reboot" to reboot, "systemctl default" to try again
 to boot into default mode.
@@ -130,7 +130,7 @@ expect eof
 
 # CentOS 7 建立一個可以執行 sudo 的帳號
 - `sudo visudo`
-    ```txt
+    ```
     ## Allow root to run any commands anywhere
     root    ALL=(ALL)       ALL
     oracle  ALL=(ALL)       ALL
@@ -165,7 +165,7 @@ expect eof
 [http://ilms.csu.edu.tw/6736/doc/35571](http://ilms.csu.edu.tw/6736/doc/35571)
 - 先刪除 repo: `rm -fr /etc/yum.repos.d/CentOS-*`
 - `vi /etc/yum.repos.d/CentOS-Base.repo`
-    ```txt
+    ```
     [base]
     name=CentOS-$releasever – Base
     #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os
@@ -209,7 +209,7 @@ expect eof
     ```
 
 # 設定 sshd
-```txt
+```
 Port 22
 PermitRootLogin no
 PasswordAuthentication yes
