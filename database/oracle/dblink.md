@@ -32,7 +32,7 @@ order by tnsname, owner;
 ```
 
 ## tnsnames.ora
-```txt
+```
 DEMO =
     (DESCRIPTION =
         (ADDRESS = (PROTOCOL = TCP)(HOST = primary)(PORT = 1521))

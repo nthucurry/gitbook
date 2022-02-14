@@ -96,7 +96,7 @@ yum install glibc-devel.i686 -y
     - /oracle/agent
 - agent
     - 安裝帳號設定 sudo 權限: `visudo`
-        ```txt
+        ```
         # Defaults !visiblepw
         Defaults visiblepw
         oracle ALL=(ALL) ALL

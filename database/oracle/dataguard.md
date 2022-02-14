@@ -99,7 +99,7 @@
 
 ## listener.ora
 ### primary
-```txt
+```
 LISTENER =
     (DESCRIPTION_LIST =
         (DESCRIPTION =
@@ -120,7 +120,7 @@ ADR_BASE_LISTENER = /u01/oracle
 ```
 
 ### standby
-```txt
+```
 LISTENER =
     (DESCRIPTION_LIST =
         (DESCRIPTION =
@@ -142,7 +142,7 @@ ADR_BASE_LISTENER = /u01/oracle
 
 ## tnsname.ora
 ### primary and standby
-```txt
+```
 DEMO =
     (DESCRIPTION =
         (ADDRESS =
@@ -168,7 +168,7 @@ DEMO_STB =
 
 ## Parameter
 ### init[DEMO].ora
-```txt
+```
 ##### main config #####
 *.audit_file_dest='/u01/oracle/admin/DEMO/adump'
 *.audit_trail='db'
@@ -191,7 +191,7 @@ IFILE=/u01/oracle/11204/dbs/initDEMO_ifile.ora
 ```
 
 ### primary ifile
-```txt
+```
 ##### data guard config #####
 *.db_unique_name='DEMO'
 #*.fal_server='DEMO' # where to get archived logs
@@ -204,7 +204,7 @@ IFILE=/u01/oracle/11204/dbs/initDEMO_ifile.ora
 ```
 
 ### standby ifile
-```txt
+```
 ##### data guard config #####
 *.db_unique_name='DEMO_STB'
 *.fal_server='DEMO'
@@ -278,7 +278,7 @@ tnsping [ORACLE_SID]
 
 #### Archive log sync success information
 - standby
-    ```txt
+    ```
     Media Recovery Log /u01/oraarch/DEMO/DEMO_1_24_1050938955.dbf
     RFS[29]: Selected log 4 for thread 1 sequence 11574 dbid 244859031 branch 1034179942
     ```
@@ -368,7 +368,7 @@ startup
 
 ### Failover
 此時主庫異常跳電、硬體故障，無法執行資料庫作業(可 kill -9 SID 來測試)，可參考 https://codertw.com/%E8%B3%87%E6%96%99%E5%BA%AB/127062/
-```txt
+```
 Sun Sep 13 11:42:49 2020
 RFS[4]: Possible network disconnect with primary database
 Sun Sep 13 11:42:49 2020
@@ -383,7 +383,7 @@ Error 1034 received logging on to the standby
 FAL[client, USER]: Error 1034 connecting to DEMO for fetching gap sequence
 ```
 1. 停止**備庫** redo log: `recover managed standby database cancel;`(PHYSICAL STANDBY, NOT ALLOWED)
-    ```txt
+    ```
     Sun Sep 13 11:51:47 2020
     ALTER DATABASE RECOVER  managed standby database cancel
     Sun Sep 13 11:51:48 2020
@@ -397,7 +397,7 @@ FAL[client, USER]: Error 1034 connecting to DEMO for fetching gap sequence
     Completed: ALTER DATABASE RECOVER  managed standby database cancel
     ```
 2. 結束**備庫** redo log: `alter database recover managed standby database finish [force];`(PHYSICAL STANDBY, TO PRIMARY)
-    ```txt
+    ```
     Sun Sep 13 11:57:56 2020
     alter database recover managed standby database finish
     Attempt to do a Terminal Recovery (DEMO)
@@ -438,7 +438,7 @@ FAL[client, USER]: Error 1034 connecting to DEMO for fetching gap sequence
     Completed: alter database recover managed standby database finish
     ```
 3. 進行**備庫** switchover: `alter database commit to switchover to primary with session shutdown;`(PRIMARY, NOT ALLOWED)
-    ```txt
+    ```
     Sun Sep 13 11:59:51 2020
     alter database commit to switchover to primary with session shutdown
     ALTER DATABASE SWITCHOVER TO PRIMARY (DEMO)

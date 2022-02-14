@@ -38,12 +38,12 @@ impdp system/ncu5540 directory=datapump dumpfile=SCH_HR_METADATA.dmp schemas=HR
 impdp system/ncu5540 directory=datapump dumpfile=SCH_HR.dmp schemas=HR
 ```
 - 新增 datafile
-    ```txt
+    ```
     ORA-39171: Job is experiencing a resumable wait.
     ORA-01653: unable to extend table AUKM.EPO_CUST_TO by 8192 in tablespace TS_AUKM
     ```
 - 重新 reload impdp
-    ```txt
+    ```
     Processing object type SCHEMA_EXPORT/TABLE/STATISTICS/TABLE_STATISTICS
     ORA-39126: Worker unexpected fatal error in KUPW$WORKER.PUT_DDLS [TABLE_STATISTICS]
     ORA-06502: PL/SQL: numeric or value error
@@ -117,7 +117,7 @@ done
 - https://topic.alibabacloud.com/tc/a/table_exists_action-parameter-option-of-impdp_1_13_32463978.html
 - https://www.linuxidc.com/Linux/2016-03/129616.htm
 - `expdp system/ncu5540 parfile=gen-expdp.par`
-    ```txt
+    ```
     buffer     = 2000000
     file       = /backup/datapump/expdat.dmp
     log        = /backup/datapump/expdat.log
@@ -127,7 +127,7 @@ done
     query      = "WHERE hire_date BETWEEN TO_DATE('2002','yyyy') AND TO_DATE('2003','yyyy')"
     ```
 - `impdp system/ncu5540 parfile=gen-impdp.par`
-    ```txt
+    ```
     buffer      = 2000000
     file        = /backup/datapump/expdat.dmp
     log         = /backup/datapump/impdat.log
@@ -137,20 +137,20 @@ done
     data_options = skip_constraint_errors
     ```
     - 匯入時，如果限制條件衝突，就無法匯入，要用 data_options 處置
-        ```txt
+        ```
         ORA-00001: unique constraint (HR.EMP_EMAIL_UK) violated
         ```
     - 如果是不同 schema 的話，parfile 條件改為
         - https://support.oracle.com/epmos/faces/SearchDocDisplay?_adf.ctrl-state=1631wrq88k_4&_afrLoop=487209820791877#SYMPTOM
         - source 不用變
-            ```txt
+            ```
             file       = /backup/datapump/expdat.dmp
             log        = /backup/datapump/expdat.log
             tables     = HR.EMPLOYEES
             query      = "WHERE start_day BETWEEN to_date('2018-01-01','yyyy-mm-dd') AND to_date('2020-09-24','yyyy-mm-dd')"
             ```
         - target 需改變
-            ```txt
+            ```
             file        = /backup/datapump/expdat.dmp
             log         = /backup/datapump/impdat.log
             remap_schema= HR:HR_DEV

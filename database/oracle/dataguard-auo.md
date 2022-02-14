@@ -48,7 +48,7 @@ alias tree='tree --charset ASCII'
 # 連線資訊、參數檔設定
 ## Listener.ora
 ### Primary
-```txt
+```
 SID_LIST_LISTENER =
     (SID_LIST =
         (SID_DESC =
@@ -69,7 +69,7 @@ ADR_BASE_LISTENER = /u01/oracle/11204
 ```
 
 ### Standby
-```txt
+```
 SID_LIST_LISTENER =
     (SID_LIST =
         (SID_DESC =
@@ -91,7 +91,7 @@ ADR_BASE_LISTENER = /u01/oracle/11204
 
 ## Tnsnames.ora
 ### Same part
-```txt
+```
 ESHIP =
     (DESCRIPTION =
         (ADDRESS_LIST =
@@ -114,7 +114,7 @@ ESHIP_STB =
 ```
 
 ### Primary
-```txt
+```
 LISTENER_ESHIP =
   (ADDRESS = (PROTOCOL = TCP)(HOST = primary)(PORT = 1521))
 
@@ -122,7 +122,7 @@ LISTENER_ESHIP =
 ```
 
 ### Standby
-```txt
+```
 LISTENER_ESHIP =
     (ADDRESS = (PROTOCOL = TCP)(HOST = standby)(PORT = 1521))
 
@@ -131,7 +131,7 @@ LISTENER_ESHIP =
 
 ## Initial parameter
 ### Primary
-```txt
+```
 *._ash_size=67108864
 #*.audit_file_dest='/u01/p/oraeship/admin/ESHIP/adump'
 *.audit_trail='NONE'
@@ -173,7 +173,7 @@ LISTENER_ESHIP =
 ```
 
 ### Standby
-```txt
+```
 *._ash_size=67108864
 #*.audit_file_dest='/u01/oracle/admin/ESHIP/adump'
 *.audit_trail='NONE'
@@ -271,7 +271,7 @@ LISTENER_ESHIP =
 - `RMAN> recover database;`
 - `RMAN> restore archivelog all;`
     - 忽略此錯誤
-        ```txt
+        ```
         RMAN-03002: failure of recover command at 05/13/2020 16:50:20
         RMAN-06054: media recovery requesting unknown archived log for thread 1 with sequence 59 and starting SCN of 12317230020771
 
@@ -410,7 +410,7 @@ alter database open read only;
     - `select unique thread# as thread, max(sequence#) over (partition by thread#) as last from v$archived_log;`
 - 解決 any archived redo log gaps
     - `select * from v$archive_gap;`
-        ```txt
+        ```
         THREAD# LOW_SEQUENCE# HIGH_SEQUENCE#
         ---------- ------------- --------------
                 1            68            598
@@ -427,12 +427,12 @@ alter database open read only;
 # Prepare
 ## To do list
 - [x] group: `cat /etc/group | sort -i | grep -P "(dba|oinstall)"`
-    ```txt
+    ```
     dba:x:501:oraeship,oraoem
     oinstall:x:502:oraeship,oraoem
     ```
 - [x] passwd: `cat /etc/passwd | sort -i | grep -P "(ora)"`
-    ```txt
+    ```
     oraeship:x:501:1001::/home/oraeship:/bin/bash
     oraoem:x:1001:501::/home/oraoem:/bin/bash
     ```
@@ -460,6 +460,6 @@ scp -r -l 30000 /backup_new/2020-06-10 root@autcrptdb1:/backup/ESHIP_NEW
 
 ### Check firewall
 `netstat -lnt | grep 1521`
-```txt
+```
 tcp6       0      0 :::1521                 :::*                    LISTEN
 ```

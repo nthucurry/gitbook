@@ -1,6 +1,6 @@
 # 排程
 ## 建立排程
-```txt
+```
 0 1 * * * /home/demo/scripts/fullBackup.sh
 0 3 * * * /home/demo/scripts/delFullBackup.sh
 0 5 * * * /home/demo/scripts/delArch.sh

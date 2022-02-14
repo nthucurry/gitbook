@@ -100,7 +100,7 @@ run {
 EOF
 ```
 - error message
-    ```txt
+    ```
     RMAN-00571: ===========================================================
     RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
     RMAN-00571: ===========================================================
@@ -136,7 +136,7 @@ vi ESHIP_ora_20354.trc
 ## 原本: CREATE CONTROLFILE REUSE DATABASE "ESHIP" NORESETLOGS FORCE LOGGING ARCHIVELOG
 ## 改為: CREATE CONTROLFILE REUSE SET DATABASE "ESHIP" RESETLOGS NOARCHIVELOG
 ```
-```txt
+```
 SQL> startup nomount
 SQL> @cr.sql
 SQL> alter database open resetlogs;

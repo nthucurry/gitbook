@@ -83,7 +83,7 @@ SELECT dbms_metadata.get_ddl('MATERIALIZED_VIEW','MV_DEMO_EMPLOYEES','HR') FROM 
 
 ### By shell
 - `vi sql_gen_mview_log_list.txt`(log list)
-    ```txt
+    ```
     #HR MV_DEMO_EMPLOYEES
     SCM MV_DEMO_PRODUCT
     ```

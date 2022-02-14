@@ -29,7 +29,7 @@
     EOF
     ```
     - 如果 archive log 有缺
-        ```txt
+        ```
         RMAN-00571: ===========================================================
         RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
         RMAN-00571: ===========================================================
@@ -83,7 +83,7 @@
 
 ## Troubleshooting
 ### inconsist restore 還原失敗
-```txt
+```
 archived log for thread 1 with sequence 62 is already on disk as file /u01/oraarch/ERP/ERP_1_62_1054646243.dbf
 archived log file name=/u01/oraarch/ERP/ERP_1_62_1054646243.dbf thread=1 sequence=62
 archived log file name=/u01/oraarch/ERP/ERP_1_63_1054646243.dbf thread=1 sequence=63
@@ -96,7 +96,7 @@ RMAN-03002: failure of recover command at 12/09/2020 23:21:13
 RMAN-06054: media recovery requesting unknown archived log for thread 1 with sequence 64 and starting SCN of 3522838
 ```
 - 執行
-    ```txt
+    ```
     RMAN> run {
     2> set until sequence 63 thread 1;
     3> restore database;
@@ -106,7 +106,7 @@ RMAN-06054: media recovery requesting unknown archived log for thread 1 with seq
 
 ### Control file 太新
 - 執行此動作後出現錯誤: `recover database;`
-```txt
+```
 archived log file name=/u01/oraarch/DEMO/DEMO_1_528774_767540243.dbf thread=1 sequence=528774
 archived log file name=/u01/oraarch/DEMO/DEMO_1_528775_767540243.dbf thread=1 sequence=528775
 archived log file name=/u01/oraarch/DEMO/DEMO_1_528776_767540243.dbf thread=1 sequence=528776
@@ -126,7 +126,7 @@ RMAN>
 Recovery Manager complete.
 ```
 - 檢查 archive log 是否存在: `ls -l /backup/20201124/DEMO_arch_12855*`
-    ```txtk
+    ```k
     -rw-r----- 1 demo dba  600257024 Nov 24 00:18 /backup/20201124/DEMO_arch_128555_1_1057277750.bak
     -rw-r----- 1 demo dba  535184384 Nov 24 00:17 /backup/20201124/DEMO_arch_128556_1_1057277750.bak
     -rw-r----- 1 demo dba  993781760 Nov 24 08:04 /backup/20201124/DEMO_arch_128558_1_1057305618.bak
@@ -141,7 +141,7 @@ Recovery Manager complete.
 - @cr.sql
 - alter database open resetlogs;
 - select name, open_mode, database_role, switchover_status from v$database;
-    ```txt
+    ```
     NAME      OPEN_MODE            DATABASE_ROLE    SWITCHOVER_STATUS
     --------- -------------------- ---------------- --------------------
     DEMO      READ WRITE           PRIMARY          NOT ALLOWED
