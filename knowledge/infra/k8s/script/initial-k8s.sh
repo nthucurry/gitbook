@@ -63,7 +63,7 @@ echo "  3. Install Docker CE"
 # yum install containerd.io-1.2.13 docker-ce-19.03.11 docker-ce-cli-19.03.11 -y | grep Complete
 yum install containerd.io docker-ce docker-ce-cli -y | grep "Complete!"
 # echo "==== If necessary, remove it"
-# yum remove containerd.io && yum remove docker
+# yum remove containerd.io; yum remove docker
 
 echo "  4. Set up the Docker daemon"
 mkdir /etc/docker

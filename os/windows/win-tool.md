@@ -28,7 +28,7 @@
 - [Apache NetBeans](https://netbeans.apache.org/download/nb112/nb112.html)
 
 ## Browser
-- [Chromium](https://www.chromium.org/Home)
+- [Chromium](https://download-chromium.appspot.com/)
 - [Opera](https://www.opera.com/computer/portable)
 
 ## Programing

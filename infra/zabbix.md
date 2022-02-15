@@ -1,6 +1,6 @@
 - [Update and Install Package](#update-and-install-package)
-    - [Update repo](#update-repo)
-    - [Install Package](#install-package)
+  - [Update repo](#update-repo)
+  - [Install Package](#install-package)
 - [Step](#step)
 - [Template](#template)
 - [如果要修改參數](#如果要修改參數)
@@ -23,14 +23,20 @@
     ```
 - `vi /etc/yum.repos.d/zabbix.repo`
     ```
+    [zabbix-frontend]
+    ...
     enabled=1
+    ...
     ```
 
 ## Install Package
 ```bash
 rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/7/x86_64/zabbix-release-5.0-1.el7.noarch.rpm
-rpm -Uvh zabbix-release-5.0-1.el7.noarch.rpm
 
+timedatectl set-timezone Asia/Taipei
+sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
+yum update -y
 yum install zabbix-server-mysql zabbix-agent -y
 yum install centos-release-scl -y
 yum install zabbix-web-mysql-scl zabbix-apache-conf-scl -y
@@ -41,23 +47,35 @@ yum install php-bcmath php-mbstring php-xml curl curl-devel net-snmp net-snmp-de
 
 # Step
 - server
+    - `systemctl start mariadb; systemctl enable mariadb`
     - `mysql -uroot -p`
-    - 直接按 enter
-    - MariaDB [(none)]>
-        ```sql
-        create database zabbix character set utf8 collate utf8_bin;
-        create user zabbix@localhost identified by 'manager1';
-        grant all privileges on zabbix.* to zabbix@localhost;
-        quit;
-        ```
+        - 直接按 enter
+        - MariaDB [(none)]>
+            ```sql
+            create database zabbix character set utf8 collate utf8_bin;
+            create user zabbix@localhost identified by 'manager1';
+            grant all privileges on zabbix.* to zabbix@localhost;
+            quit;
+            ```
     - `zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p zabbix`
         - 輸入密碼: manager1
-    - `vi /etc/opt/rh/rh-php72/php-fpm.d/zabbix.conf`
+    - `vi /etc/opt/rh/rh-php72/php-fpm.d/zabbix.conf` (找不到在哪)
         ```
+        ...
         php_value[date.timezone] = Asia/Taipei
+        ...
         ```
-    - 設定參數
-    - 預設帳密: Admin/zabbix
+    - `vi /etc/zabbix/zabbix_server.conf`
+        ```
+        DBHost=localhost
+        DBName=zabbix
+        DBUser=zabbix
+        DBPassword=manager1
+        ```
+    - `systemctl restart zabbix-server zabbix-agent httpd rh-php72-php-fpm`
+    - `systemctl enable zabbix-server zabbix-agent httpd rh-php72-php-fpm`
+    - http://[zabbix_server_ip]/zabbix
+        - 預設帳密: Admin/zabbix
 - agent
     - `yum install zabbix-agent -y`
     - `vi /etc/zabbix/zabbix_agentd.conf`

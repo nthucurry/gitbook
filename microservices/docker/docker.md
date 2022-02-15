@@ -41,7 +41,7 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     sudo yum install yum-utils device-mapper-persistent-data lvm2 -y
     sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
     sudo yum install docker-ce -y
-    sudo systemctl start docker && sudo systemctl enable docker
+    sudo systemctl start docker; sudo systemctl enable docker
     sudo usermod -aG docker `whoami`
 
     # docker daemon setting

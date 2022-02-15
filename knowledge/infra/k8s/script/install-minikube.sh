@@ -27,7 +27,7 @@ yum install yum-utils device-mapper-persistent-data lvm2 -y
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 yum install docker-ce -y
 echo "2. Restart docker"
-systemctl start docker && systemctl enable docker
+systemctl start docker; systemctl enable docker
 usermod -aG docker $USER && newgrp docker # it can use docker command in non root role
 
 echo ".... K8S ...."
