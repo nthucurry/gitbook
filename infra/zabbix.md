@@ -86,7 +86,21 @@ yum install php-bcmath php-mbstring php-xml curl curl-devel net-snmp net-snmp-de
     - `systemctl restart zabbix-agent`
 
 # Template
-- SQL Server template: https://share.zabbix.com/databases/microsoft-sql-server/template-for-microsoft-sql-server
+- [SQL Server template](https://share.zabbix.com/databases/microsoft-sql-server/template-for-microsoft-sql-server)
+- FortiWeb
+    - [Fortigate SNMP template](https://share.zabbix.com/network_devices/fortigate/fortigate-snmp-template)
+    - 開啟 snmp 服務
+        - `systemctl start snmpd; systemctl enable snmpd`
+    - 安裝 MIB (管理資訊庫)
+        - `yum install net-snmp-libs -y`
+        - `yum install net-snmp-utils -y`
+    - 測試目標主機狀況
+        - `snmpwalk -c public -v 2c 10.1.87.4 OID`
+    - 檢查目標主機 snmp upd 有無開啟
+        - `nc -z -v -u 10.1.87.4 161`
+    - 參考
+        - [1-8.監控工具之一:Zabbix Snmp 網通設備資料收集](https://ithelp.ithome.com.tw/articles/10191378)
+        - [官方博文 | 連老手也容易犯錯的Zabbix SNMP該如何正確配置？](https://read01.com/zh-tw/Dn6NDmM.html#.Yg0Vme5BxGM)
 
 # 如果要修改參數
 - http://[zabbix_server_ip]/zabbix/setup.php
