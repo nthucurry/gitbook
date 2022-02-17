@@ -37,6 +37,7 @@ timedatectl set-timezone Asia/Taipei
 sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
 yum update -y
+yum install telnet -y
 yum install zabbix-server-mysql zabbix-agent -y
 yum install centos-release-scl -y
 yum install zabbix-web-mysql-scl zabbix-apache-conf-scl -y
@@ -89,15 +90,20 @@ yum install php-bcmath php-mbstring php-xml curl curl-devel net-snmp net-snmp-de
 - [SQL Server template](https://share.zabbix.com/databases/microsoft-sql-server/template-for-microsoft-sql-server)
 - FortiWeb
     - [Fortigate SNMP template](https://share.zabbix.com/network_devices/fortigate/fortigate-snmp-template)
-    - 開啟 snmp 服務
-        - `systemctl start snmpd; systemctl enable snmpd`
-    - 安裝 MIB (管理資訊庫)
-        - `yum install net-snmp-libs -y`
-        - `yum install net-snmp-utils -y`
-    - 測試目標主機狀況
-        - `snmpwalk -c public -v 2c 10.1.87.4 OID`
-    - 檢查目標主機 snmp upd 有無開啟
-        - `nc -z -v -u 10.1.87.4 161`
+    - 命令
+        - 開啟 SNMP 服務
+            - `systemctl start snmpd; systemctl enable snmpd`
+        - 安裝 MIB (管理資訊庫)
+            - `yum install net-snmp-libs -y`
+            - `yum install net-snmp-utils -y`
+        - 測試目標主機狀況
+            - `snmpwalk -v 2c -c public 10.1.87.4`
+            - `snmpwalk -v 2c -c public <host_name>`
+        - 檢查目標主機 SNMP UDP 有無開啟
+            - `nc -z -v -u 10.1.87.4 161`
+    - Web UI
+        - zabbix 匯入 template (SNMP)
+            <br><img src="../img/zabbix/fortiweb-snmp-template.png">
     - 參考
         - [1-8.監控工具之一:Zabbix Snmp 網通設備資料收集](https://ithelp.ithome.com.tw/articles/10191378)
         - [官方博文 | 連老手也容易犯錯的Zabbix SNMP該如何正確配置？](https://read01.com/zh-tw/Dn6NDmM.html#.Yg0Vme5BxGM)

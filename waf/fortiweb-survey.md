@@ -1,19 +1,20 @@
 - [Reference](#reference)
 - [Architecture](#architecture)
-    - [Application Gateway after firewall](#application-gateway-after-firewall)
-    - [Topology for Reverse Proxy mode](#topology-for-reverse-proxy-mode)
-    - [Topology for either of the transparent modes](#topology-for-either-of-the-transparent-modes)
+  - [Application Gateway after firewall](#application-gateway-after-firewall)
+  - [Topology for Reverse Proxy mode](#topology-for-reverse-proxy-mode)
+  - [Topology for either of the transparent modes](#topology-for-either-of-the-transparent-modes)
 - [SOP on Azure](#sop-on-azure)
-    - [1. Create Interface](#1-create-interface)
-    - [2. Create Virtual IP](#2-create-virtual-ip)
-    - [3. Create Virtual Server (WAF Subnet)](#3-create-virtual-server-waf-subnet)
-    - [4. Create Server Pool (Web Subnet)](#4-create-server-pool-web-subnet)
-    - [5. Create HTTP Server Policy](#5-create-http-server-policy)
+  - [1. Create Interface](#1-create-interface)
+  - [2. Create Virtual IP](#2-create-virtual-ip)
+  - [3. Create Virtual Server (WAF Subnet)](#3-create-virtual-server-waf-subnet)
+  - [4. Create Server Pool (Web Subnet)](#4-create-server-pool-web-subnet)
+  - [5. Create HTTP Server Policy](#5-create-http-server-policy)
 - [Deploy highly available NVAs (Network Virtual Appliances)](#deploy-highly-available-nvas-network-virtual-appliances)
-    - [HA architectures overview](#ha-architectures-overview)
+  - [HA architectures overview](#ha-architectures-overview)
+  - [SNMP](#snmp)
 - [Option](#option)
-    - [~~FortoWeb Cloud~~](#fortoweb-cloud)
-    - [架構圖](#架構圖)
+  - [~~FortoWeb Cloud~~](#fortoweb-cloud)
+  - [架構圖](#架構圖)
 
 # Reference
 - [Tutorial: Azure Active Directory single sign-on (SSO) integration with FortiWeb Web Application Firewall](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/fortiweb-web-application-firewall-tutorial)
@@ -75,6 +76,9 @@ You can later attach one or more **VIPs** to a virtual server, and then referenc
 - To filter traffic between on-premises systems and Azure virtual machines, if they are considered to belong to different security levels. (For example, if Azure hosts the DMZ, and on-premises the internal applications.)
 
 ## HA architectures overview
+
+## SNMP
+<br><img src="../img/fortiweb/snmp-enable.png">
 
 # Option
 ## ~~FortoWeb Cloud~~
