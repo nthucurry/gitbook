@@ -93,14 +93,44 @@ yum install php-bcmath php-mbstring php-xml curl curl-devel net-snmp net-snmp-de
     - 命令
         - 開啟 SNMP 服務
             - `systemctl start snmpd; systemctl enable snmpd`
+            - `service snmpd start; chkconfig snmpd on`
         - 安裝 MIB (管理資訊庫)
             - `yum install net-snmp-libs -y`
             - `yum install net-snmp-utils -y`
         - 測試目標主機狀況
             - `snmpwalk -v 2c -c public 10.1.87.4`
-            - `snmpwalk -v 2c -c public <host_name>`
+            - `snmpwalk -v 2c -c public <fortiweb_host_name>`
         - 檢查目標主機 SNMP UDP 有無開啟
-            - `nc -z -v -u 10.1.87.4 161`
+            - `nc -zvu 10.1.87.4 161`
+        - config
+            ```
+            #com2sec notConfigUser  default       public
+            com2sec local localhost public
+            com2sec mynetwork snmp_server_ip public
+
+            #group   notConfigGroup v1           notConfigUser
+            #group   notConfigGroup v2c           notConfigUser
+            group MyRWGroup v1 local
+            group MyRWGroup v2c local
+            group MyROGroup v1 mynetwork
+            group MyROGroup v2c mynetwork
+
+            ##           incl/excl subtree                          mask
+            view all    included  .1                               80
+
+            #access MyROGroup ""      any       noauth    0      all    none   none
+            #access MyRWGroup ""      any       noauth    0      all    all    all
+            access MyROGroup "" any noauth prefix all none none
+            access MyRWGroup "" any noauth prefix all all all
+
+            #syslocation Unknown (edit /etc/snmp/snmpd.conf)
+            #syscontact Root <root@localhost> (configure /etc/snmp/snmp.local.conf)
+            syslocation GangShan
+            syscontact Root (configure /etc/snmp/snmp.local.conf)
+
+            #proc mountd
+            proc snmpd
+            ```
     - Web UI
         - zabbix 匯入 template (SNMP)
             <br><img src="../img/zabbix/fortiweb-snmp-template.png">

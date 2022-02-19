@@ -31,6 +31,13 @@
 
 - [Network Virtual Appliance (NVA)](https://aviatrix.com/learn-center/cloud-security/azure-network-virtual-appliance/)
     - NVA is used in the Azure application to enhance HA. It is used as an advanced level of control over traffic flows, such as when building a DMZ in the cloud.
+    - 步驟
+        - Firewall
+            - DNAT
+                - Source: *
+                - Destination Addresses: web's public IP
+                - Translated Address: web's private IP
+
     <br><img src="https://2ujst446wdhv3307z249ttp0-wpengine.netdna-ssl.com/wp-content/uploads/2020/08/nva-image-1.png" width=600>
 
 ## Topology for Reverse Proxy mode
