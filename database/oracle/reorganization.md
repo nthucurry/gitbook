@@ -5,6 +5,7 @@
 - [How to move table from one tablespace to another](#how-to-move-table-from-one-tablespace-to-another)
   - [In oracle 11g](#in-oracle-11g)
   - [In oracle 12c](#in-oracle-12c)
+- [Index Status](#index-status)
 
 # Reference
 - [oracle 12.2 alter table move online](https://www.796t.com/article.php?id=105433)
@@ -46,3 +47,23 @@ ORDER BY blocks DESC;
 - `alter table <test.book> move tablespace <ts_audit>;`
 - check index
     - `select index_name, status from user_indexes order by 1;`
+
+# Index Status
+```sql
+SELECT 	status,	T.*
+FROM all_indexes T
+WHERE T.status = 'UNUSABLE' AND T.owner NOT IN ('SYSTEM','SYS')
+ORDER BY T.status DESC;
+
+SELECT status, COUNT(*), sysdate
+    FROM dba_indexes
+    GROUP BY status
+UNION
+SELECT status, COUNT(*), sysdate
+    FROM dba_ind_partitions
+    GROUP BY status
+UNION
+SELECT status, COUNT(*), sysdate
+    FROM dba_ind_subpartitions
+    GROUP BY status;
+```

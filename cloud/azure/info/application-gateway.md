@@ -66,12 +66,6 @@ Gets the backend health of the specified application gateway in a resource group
 
 ## Troubleshooting bad gateway errors in Application Gateway
 - NSG, UDR, or Custom DNS is blocking access to backend pool members.
-    <br>The NSG on the Application Gateway subnet is blocking inbound access to ports 65503-65534 (v1 SKU) or 65200-65535 (v2 SKU) from Internet.
-    | Type                    | port        | protocol | source   | destination |
-    |-------------------------|-------------|----------|----------|-------------|
-    | inbound                 | 80,443      | TCP      | internet | VNet        |
-    | inbound (health status) | 65503-65534 | TCP      | internet | VNet        |
-
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/agw-nsg-deny-80443.png" width="500">
 - ~~Back-end VMs or instances of virtual machine scale set aren't responding to the default health probe.~~
 - Invalid or improper (不當的) configuration of custom health probes.
