@@ -69,6 +69,7 @@ You can later attach one or more **VIPs** to a virtual server, and then referenc
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-2-virtual-ip-tmp.png" width=800>
 
 ## 3. Create Virtual Server (WAF Subnet)
+- [原文說明](https://docs.fortinet.com/document/fortiweb/6.3.0/administration-guide/219671/configuring-virtual-servers-on-your-fortiweb)
 - A virtual server is more similar to a VIP on a FortiGate. It is **not** an actual server, but simply defines the listening network interface. Unlike a FortiGate VIP, it includes a specialized proxy that only picks up HTTP and HTTPS. (非真實存在)
 - By default, in Reverse Proxy mode, FortiWeb’s virtual servers do not forward non-HTTP/HTTPS traffic from virtual servers to your protected web servers.
 
@@ -84,6 +85,8 @@ You can later attach one or more **VIPs** to a virtual server, and then referenc
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-5-server-policy.png" width=800>
 
 ## 6. Create Route (Not sure)
+- [原文說明](https://docs.fortinet.com/document/fortiweb/6.3.0/administration-guide/55130/configuring-the-network-settings)
+
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-6-route-tmp.png" width=800>
 
 # Deploy highly available NVAs (Network Virtual Appliances)
