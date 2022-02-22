@@ -1,3 +1,4 @@
+# Private IP
 {
   "query": {
     "regexp": {
@@ -22,6 +23,7 @@
   }
 }
 
+# Private IP 到 Public IP
 {
   "query": {
     "bool": {
@@ -33,7 +35,7 @@
         },
         {
           "regexp": {
-            "destinationIP": "10.<0-255>.<0-255>.<0-255>|172.17.<0-255>.<0-255>"
+            "destinationIP": "@&~(10.248.<0-255>.<0-255>)"
           }
         }
       ],
