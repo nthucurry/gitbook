@@ -9,7 +9,7 @@
     - [3. Create Virtual Server (WAF Subnet)](#3-create-virtual-server-waf-subnet)
     - [4. Create Server Pool (Web Subnet)](#4-create-server-pool-web-subnet)
     - [5. Create HTTP Server Policy](#5-create-http-server-policy)
-    - [6. Create Route (Not sure)](#6-create-route-not-sure)
+    - [6. Create Route](#6-create-route)
 - [Deploy highly available NVAs (Network Virtual Appliances)](#deploy-highly-available-nvas-network-virtual-appliances)
     - [HA architectures overview](#ha-architectures-overview)
     - [SNMP](#snmp)
@@ -30,21 +30,27 @@
 ## [Application Gateway after firewall](https://docs.microsoft.com/en-us/azure/architecture/example-scenario/gateway/firewall-application-gateway#application-gateway-after-firewall)
 <br><img src="https://docs.microsoft.com/en-us/azure/architecture/example-scenario/gateway/images/design5_500.png" width=500>
 
-- [Network Virtual Appliance (NVA)](https://aviatrix.com/learn-center/cloud-security/azure-network-virtual-appliance/)
+- [網路虛擬設備 (NVA)](https://aviatrix.com/learn-center/cloud-security/azure-network-virtual-appliance/)
     - NVA is used in the Azure application to enhance HA. It is used as an advanced level of control over traffic flows, such as when building a DMZ in the cloud.
     - 步驟
-        - Firewall
+        - firewall
             - DNAT
-                - Source: *
-                - Destination Addresses: web's public IP
-                - Translated Address: web's private IP
-        - https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-faq#are-there-any-restrictions-on-using-ip-addresses-within-these-subnets
-        - Route Table
+                - source: *
+                - destination addresses: web's public IP
+                - translated address: web's private IP
+        - route table
+            - subnet: web's private IP
+            - address prefix: 0.0.0.0/0
+            - next hop type: virtual appliance
+            - next hop ip address: 10.1.89.4
+        - gateway
+            - x.x.x.1: reserved by azure for the default gateway
+            - [Are there any restrictions on using IP addresses within these subnets?](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-faq#are-there-any-restrictions-on-using-ip-addresses-within-these-subnets)
 
     <br><img src="https://2ujst446wdhv3307z249ttp0-wpengine.netdna-ssl.com/wp-content/uploads/2020/08/nva-image-1.png" width=600>
 
 ## Topology for Reverse Proxy mode
-Requests are destined for a virtual server’s network interface and IP on FortiWeb, **not a web server directly.** FortiWeb usually applies full NAT. FortiWeb applies the first applicable policy, then forwards permitted traffic to a web server. FortiWeb logs, blocks, or modifies violations according to the matching policy.
+Requests are destined for a virtual server’s NIC and IP on FortiWeb, **not a web server directly.** FortiWeb usually applies full NAT. FortiWeb applies the first applicable policy, then forwards permitted traffic to a web server. FortiWeb logs, blocks, or modifies violations according to the matching policy.
 
 ## Topology for either of the transparent modes
 No changes to the IP address scheme of the network are required. **Requests are destined for a web server, not the FortiWeb appliance.** More features are supported than offline protection mode, but fewer than reverse proxy, and may vary if you use HTTPS.
@@ -69,23 +75,23 @@ You can later attach one or more **VIPs** to a virtual server, and then referenc
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-2-virtual-ip-tmp.png" width=800>
 
 ## 3. Create Virtual Server (WAF Subnet)
-- [原文說明](https://docs.fortinet.com/document/fortiweb/6.3.0/administration-guide/219671/configuring-virtual-servers-on-your-fortiweb)
-- A virtual server is more similar to a VIP on a FortiGate. It is **not** an actual server, but simply defines the listening network interface. Unlike a FortiGate VIP, it includes a specialized proxy that only picks up HTTP and HTTPS. (非真實存在)
-- By default, in Reverse Proxy mode, FortiWeb’s virtual servers do not forward non-HTTP/HTTPS traffic from virtual servers to your protected web servers.
+A virtual server is more similar to a VIP on a FortiGate. It is **not** an actual server, but simply defines the listening NIC. Unlike a FortiGate VIP, it includes a specialized proxy that only picks up HTTP and HTTPS. (非真實存在)
+
+By default, in Reverse Proxy mode, FortiWeb’s virtual servers do not forward non-HTTP/HTTPS traffic from virtual servers to your protected web servers. [原文說明](https://docs.fortinet.com/document/fortiweb/6.3.0/administration-guide/219671/configuring-virtual-servers-on-your-fortiweb)
 
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-1.png" width=800>
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-2.png" width=800>
 
 ## 4. Create Server Pool (Web Subnet)
-- DMZ Web
-
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-4-server-pool.png" width=800>
 
 ## 5. Create HTTP Server Policy
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-5-server-policy.png" width=800>
 
-## 6. Create Route (Not sure)
-- [原文說明](https://docs.fortinet.com/document/fortiweb/6.3.0/administration-guide/55130/configuring-the-network-settings)
+## 6. Create Route
+Static routes direct traffic exiting the FortiWeb appliance based upon the packet’s destination—you can specify through which NIC a packet leaves and the IP address of a next-hop router that is reachable from that NIC. ([原文說明](https://docs.fortinet.com/document/fortiweb/6.3.0/administration-guide/55130/configuring-the-network-settings))
+- You must configure FortiWeb with at **least one static route** that points to a router, often a router that is the gateway to the Internet.
+- gateway: x.x.x.1, reserved by azure for the default gateway
 
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-6-route-tmp.png" width=800>
 
