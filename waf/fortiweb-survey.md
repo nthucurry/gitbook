@@ -35,10 +35,6 @@
     - NVA is used in the Azure application to enhance HA. It is used as an advanced level of control over traffic flows, such as when building a DMZ in the cloud.
     - 步驟
         - firewall
-            - DNAT
-                - source: *
-                - destination addresses: web's public IP
-                - translated address: web's private IP
         - ~~route table~~
             - subnet: web's private IP
             - address prefix: 0.0.0.0/0
@@ -63,9 +59,14 @@ Unlike with Reverse Proxy mode, with both transparent modes, web servers will se
 <br><img src="https://yurisk.info/assets/fortiweb-basic-setup.svg" width=400>
 
 ## Configure of Firewall
+- source: *
+- destination addresses: web's public IP
+- translated address: web's private IP (ex: 10.1.87.4)
+
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-1-firewall-dnat.png" width=800>
 
 ## Create Interface
+在 FortiWeb VM 新增 NIC (ex: FWB-t-web, port 3)
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-add-nic-on-azure.png" width=800>
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-add-nic-on-fortiweb.png" width=800>
 
@@ -76,7 +77,7 @@ You can later attach one or more **VIPs** to a virtual server, and then referenc
 
 - 沒接防火牆，是 Public IP
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-2-virtual-ip.png" width=800>
-- 有接防火牆，是 Private IP (VIP) **(not sure)**
+- 有接防火牆，是 Private IP (VIP)
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-2-virtual-ip-tmp.png" width=800>
 
 ## Create Virtual Server (WAF Subnet)
@@ -85,8 +86,9 @@ A virtual server is more similar to a VIP on a FortiGate. It is **not** an actua
 By default, in Reverse Proxy mode, FortiWeb’s virtual servers do not forward non-HTTP/HTTPS traffic from virtual servers to your protected web servers. [原文說明](https://docs.fortinet.com/document/fortiweb/6.3.0/administration-guide/219671/configuring-virtual-servers-on-your-fortiweb)
 
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-1.png" width=800>
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-2.png" width=800>
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-3.png" width=800>
+- 用 interface，成功 (ex: port 1)
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-2.png" width=800>
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-3.png" width=800>
 
 ## Create Server Pool (Web Subnet)
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-4-server-pool.png" width=800>
