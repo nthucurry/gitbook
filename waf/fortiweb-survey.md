@@ -1,21 +1,22 @@
 - [Reference](#reference)
 - [Architecture](#architecture)
-    - [Application Gateway after firewall](#application-gateway-after-firewall)
-    - [Topology for Reverse Proxy mode](#topology-for-reverse-proxy-mode)
-    - [Topology for either of the transparent modes](#topology-for-either-of-the-transparent-modes)
+  - [Application Gateway after firewall](#application-gateway-after-firewall)
+  - [Topology for Reverse Proxy mode](#topology-for-reverse-proxy-mode)
+  - [Topology for either of the transparent modes](#topology-for-either-of-the-transparent-modes)
 - [SOP on Azure](#sop-on-azure)
-    - [1. Create Interface](#1-create-interface)
-    - [2. Create Virtual IP](#2-create-virtual-ip)
-    - [3. Create Virtual Server (WAF Subnet)](#3-create-virtual-server-waf-subnet)
-    - [4. Create Server Pool (Web Subnet)](#4-create-server-pool-web-subnet)
-    - [5. Create HTTP Server Policy](#5-create-http-server-policy)
-    - [6. Create Route](#6-create-route)
+  - [Configure of Firewall](#configure-of-firewall)
+  - [Create Interface](#create-interface)
+  - [Create Virtual IP](#create-virtual-ip)
+  - [Create Virtual Server (WAF Subnet)](#create-virtual-server-waf-subnet)
+  - [Create Server Pool (Web Subnet)](#create-server-pool-web-subnet)
+  - [Create HTTP Server Policy](#create-http-server-policy)
+  - [Create Route](#create-route)
 - [Deploy highly available NVAs (Network Virtual Appliances)](#deploy-highly-available-nvas-network-virtual-appliances)
-    - [HA architectures overview](#ha-architectures-overview)
-    - [SNMP](#snmp)
+  - [HA architectures overview](#ha-architectures-overview)
+  - [SNMP](#snmp)
 - [Option](#option)
-    - [~~FortoWeb Cloud~~](#fortoweb-cloud)
-    - [架構圖](#架構圖)
+  - [~~FortoWeb Cloud~~](#fortoweb-cloud)
+  - [架構圖](#架構圖)
 
 # Reference
 - [Tutorial: Azure Active Directory single sign-on (SSO) integration with FortiWeb Web Application Firewall](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/fortiweb-web-application-firewall-tutorial)
@@ -38,7 +39,7 @@
                 - source: *
                 - destination addresses: web's public IP
                 - translated address: web's private IP
-        - route table
+        - ~~route table~~
             - subnet: web's private IP
             - address prefix: 0.0.0.0/0
             - next hop type: virtual appliance
@@ -61,10 +62,14 @@ Unlike with Reverse Proxy mode, with both transparent modes, web servers will se
 # SOP on Azure
 <br><img src="https://yurisk.info/assets/fortiweb-basic-setup.svg" width=400>
 
-## 1. Create Interface
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-1-interfce.png" width=800>
+## Configure of Firewall
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-1-firewall-dnat.png" width=800>
 
-## 2. Create Virtual IP
+## Create Interface
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-add-nic-on-azure.png" width=800>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-add-nic-on-fortiweb.png" width=800>
+
+## Create Virtual IP
 The VIPs are the IPs that paired with the domain name of your application. When users visit your application, the destination of their requests are these IPs. (應該是從防火牆進來後需指定的 IP, DNAT)
 
 You can later attach one or more **VIPs** to a virtual server, and then reference the **virtual server** in a **server policy**. The **web protection profile** in the server policy will be applied to all the virtual IPs attached to this virtual server.
@@ -74,21 +79,22 @@ You can later attach one or more **VIPs** to a virtual server, and then referenc
 - 有接防火牆，是 Private IP (VIP) **(not sure)**
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-2-virtual-ip-tmp.png" width=800>
 
-## 3. Create Virtual Server (WAF Subnet)
+## Create Virtual Server (WAF Subnet)
 A virtual server is more similar to a VIP on a FortiGate. It is **not** an actual server, but simply defines the listening NIC. Unlike a FortiGate VIP, it includes a specialized proxy that only picks up HTTP and HTTPS. (非真實存在)
 
 By default, in Reverse Proxy mode, FortiWeb’s virtual servers do not forward non-HTTP/HTTPS traffic from virtual servers to your protected web servers. [原文說明](https://docs.fortinet.com/document/fortiweb/6.3.0/administration-guide/219671/configuring-virtual-servers-on-your-fortiweb)
 
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-1.png" width=800>
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-2.png" width=800>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-3-virtual-server-3.png" width=800>
 
-## 4. Create Server Pool (Web Subnet)
+## Create Server Pool (Web Subnet)
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-4-server-pool.png" width=800>
 
-## 5. Create HTTP Server Policy
+## Create HTTP Server Policy
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-5-server-policy.png" width=800>
 
-## 6. Create Route
+## Create Route
 Static routes direct traffic exiting the FortiWeb appliance based upon the packet’s destination—you can specify through which NIC a packet leaves and the IP address of a next-hop router that is reachable from that NIC. ([原文說明](https://docs.fortinet.com/document/fortiweb/6.3.0/administration-guide/55130/configuring-the-network-settings))
 - You must configure FortiWeb with at **least one static route** that points to a router, often a router that is the gateway to the Internet.
 - gateway: x.x.x.1, reserved by azure for the default gateway
