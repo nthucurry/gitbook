@@ -1,23 +1,3 @@
-- [Reference](#reference)
-- [Architecture](#architecture)
-  - [Application Gateway after firewall](#application-gateway-after-firewall)
-  - [Topology for Reverse Proxy mode](#topology-for-reverse-proxy-mode)
-  - [Topology for either of the transparent modes](#topology-for-either-of-the-transparent-modes)
-- [SOP on Azure](#sop-on-azure)
-  - [Configure of Firewall](#configure-of-firewall)
-  - [Create Interface](#create-interface)
-  - [Create Virtual IP](#create-virtual-ip)
-  - [Create Virtual Server (WAF Subnet)](#create-virtual-server-waf-subnet)
-  - [Create Server Pool (Web Subnet)](#create-server-pool-web-subnet)
-  - [Create HTTP Server Policy](#create-http-server-policy)
-  - [Create Route](#create-route)
-- [Deploy highly available NVAs (Network Virtual Appliances)](#deploy-highly-available-nvas-network-virtual-appliances)
-  - [HA architectures overview](#ha-architectures-overview)
-  - [SNMP](#snmp)
-- [Option](#option)
-  - [~~FortoWeb Cloud~~](#fortoweb-cloud)
-  - [架構圖](#架構圖)
-
 # Reference
 - [Tutorial: Azure Active Directory single sign-on (SSO) integration with FortiWeb Web Application Firewall](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/fortiweb-web-application-firewall-tutorial)
 - [Tutorial: Azure Active Directory single sign-on (SSO) integration with Palo Alto Networks - GlobalProtect](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/palo-alto-networks-globalprotect-tutorial)
@@ -102,6 +82,19 @@ Static routes direct traffic exiting the FortiWeb appliance based upon the packe
 - gateway: x.x.x.1, reserved by azure for the default gateway
 
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/fortiweb/deploy-web-6-route-tmp.png" width=800>
+
+## To configure a network interface or bridge
+- You must assign at least one FortiWeb NIC (usually port1) with an IP and netmask so that it can receive your connections. (ex: 10.1.87.4)
+- How should you configure the other network interfaces? Should you add more?
+    - In some cases, you may **not** want to assign IP addresses to the other NICs.
+- Multiple NICs (subinterfaces or virtual interfaces) can be associated with a single physical port, and vice versa (redundant interfaces/NIC teaming/NIC bonding or aggregated links).
+    - These can provide features such as link failure resilience or multi-network links.
+    <br><img src="https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/resources/8351daac-223d-11ea-9384-00505692583a/images/27ddd698358ceefdc87de671f33ab016_network-interface-types1.png" width=400>
+
+## Adding a gateway
+- Static routes direct traffic exiting the FortiWeb appliance based upon the packet’s destination
+
+## Creating a policy route
 
 # Deploy highly available NVAs (Network Virtual Appliances)
 - To inspect egress traffic from VMs to the Internet and prevent data exfiltration (滲出).
