@@ -1,6 +1,6 @@
 - [Update and Install Package](#update-and-install-package)
-  - [Update repo](#update-repo)
-  - [Install Package](#install-package)
+    - [Update repo](#update-repo)
+    - [Install Package](#install-package)
 - [Step](#step)
 - [Template](#template)
 - [如果要修改參數](#如果要修改參數)
@@ -98,8 +98,10 @@ yum install php-bcmath php-mbstring php-xml curl curl-devel net-snmp net-snmp-de
             - `yum install net-snmp-libs -y`
             - `yum install net-snmp-utils -y`
         - 測試目標主機狀況
-            - `snmpwalk -v 2c -c public 10.1.87.4`
-            - `snmpwalk -v 2c -c public <fortiweb_host_name>`
+            - `snmpwalk -v 2c -c public <fortiweb_snmp_hostname>`
+            - `snmpwalk -v 2c -c public <fortiweb_snmp_hostname> FORTI`
+            - `snmptranslate -On FORTINET-FORTIWEB-MIB::fwTotalConnectNumber.0`
+            - `snmptranslate .1.3.6.1.4.1.12356.101.4.1.8.0`
         - 檢查目標主機 SNMP UDP 有無開啟
             - `nc -zvu 10.1.87.4 161`
         - config
@@ -131,6 +133,25 @@ yum install php-bcmath php-mbstring php-xml curl curl-devel net-snmp net-snmp-de
             #proc mountd
             proc snmpd
             ```
+        - 環境變數
+            ```bash
+            export MIBDIRS=/usr/share/snmp/mibs
+            export MIBS=+ALL
+            ```
+        - 必知參數
+            - 連線數
+                - name: Current connections
+                - snmp_oid: .1.3.6.1.4.1.12356.101.4.1.8.0
+                - key: fortinetCurrentConnections
+            - CPU 使用率
+                - name: Current CPU Util
+                - snmp_oid: .1.3.6.1.4.1.12356.101.4.1.3.0
+                - key: fortinetCurrentCPUUtil
+            - RAM
+                - name: Current RAM Usage
+                - type: SNMP_AGENT
+                - snmp_oid: .1.3.6.1.4.1.12356.101.4.1.4.0
+                - key: fortinetCurrentRAMUtil
     - Web UI
         - zabbix 匯入 template (SNMP)
             <br><img src="../img/zabbix/fortiweb-snmp-template.png">
