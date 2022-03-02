@@ -1,5 +1,4 @@
-# Troubleshooting
-## Block sessions
+# Block sessions
 - 解決語法
     ```sql
     select
@@ -24,8 +23,8 @@
         ![](../../../img/oracle/troubleshooting/block-session-block-target.png)
 7. 只好 kill block session
 
-## Archive log gap
-### standby_file_management = manual
+# Archive log gap
+## standby_file_management = manual
 - [Background Media Recovery terminated with ORA-1274 after adding a Datafile (Doc ID 739618.1)](https://support.oracle.com/epmos/faces/DocumentDisplay?_afrLoop=726485895140737&parent=EXTERNAL_SEARCH&sourceId=PROBLEM&id=739618.1&_afrWindowMode=0&_adf.ctrl-state=3l4n1l4me_4)
 - ensure the standby_file_management = manual
     ```sql
@@ -39,3 +38,16 @@
     ```
 - change the standby_file_managment to auto: `alter system set standby_file_management=auto scope=both;`
 - start the mrp (this is using real time apply): `alter database recover managed standby database using current logfile disconnect;`
+
+# 資料庫直接掛掉
+- oracle process 消失
+    - `ps -ef | grep smon`
+- 找 oracle trace
+    - `bdump`
+- 找 ORA-XXX
+- 發現以下資訊
+    ```
+    Incident details in: /s01/oracle/diag/rdbms/scmdev/scmdev/incident/incdir_39512/scmdev_ora_8944_i39512.trc
+    ```
+- 檢查 trace log
+    - `tail -100 /s01/oracle/diag/rdbms/scmdev/scmdev/incident/incdir_39512/scmdev_ora_8944_i39512.trc`

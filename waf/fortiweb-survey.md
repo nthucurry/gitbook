@@ -3,9 +3,10 @@
 - [Tutorial: Azure Active Directory single sign-on (SSO) integration with Palo Alto Networks - GlobalProtect](https://docs.microsoft.com/en-us/azure/active-directory/saas-apps/palo-alto-networks-globalprotect-tutorial)
 - [Fortinet FortiWeb vs Microsoft Azure Application Gateway comparison](https://www.peerspot.com/products/comparisons/fortinet-fortiweb_vs_microsoft-azure-application-gateway)
 - [fortinet/azure-templates](https://github.com/fortinet/azure-templates)
-- [FortiWeb on OCB-FE Configuration Guide](https://cloud.orange-business.com/wp-content/uploads/2020/08/FortiWeb_on_OCB_FE_Configuration_Guide.pdf)
-- [Configuring FortiWeb-VMs](https://docs.fortinet.com/document/fortiweb-public-cloud/latest/use-case-high-availability-for-fortiweb-on-azure/425287/configuring-fortiweb-vms)
 - [Azure Route Server](https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/dmz/nva-ha?tabs=cli#azure-route-server)
+- [NET-SNMP Tutorial -- snmptranslate](https://net-snmp.sourceforge.io/tutorial/tutorial-5/commands/snmptranslate.html)
+- [SNMP OID 列表 监控需要用到的 OID](http://www.ttlsa.com/monitor/snmp-oid/)
+- [Linux snmp 导入 MIB 库](https://www.cnblogs.com/xwupiaomiao/p/11937324.html)
 
 # Architecture
 ## [Application Gateway after firewall](https://docs.microsoft.com/en-us/azure/architecture/example-scenario/gateway/firewall-application-gateway#application-gateway-after-firewall)
