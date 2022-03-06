@@ -22,8 +22,8 @@ fi
 ###################################
 echo "Input VM name: "
 read vm_name
-# image="OpenLogic:CentOS:7_9:7.9.2021020400"
-image="OpenLogic:CentOS:6.10:6.10.2020042900"
+image="OpenLogic:CentOS:7_9:7.9.2021020400"
+# image="OpenLogic:CentOS:6.10:6.10.2020042900"
 size="Standard_B2s" # CPU, RAM
 os_disk_size="30" # GB
 admin="azadmin"

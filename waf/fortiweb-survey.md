@@ -4,6 +4,7 @@
 - [Fortinet FortiWeb vs Microsoft Azure Application Gateway comparison](https://www.peerspot.com/products/comparisons/fortinet-fortiweb_vs_microsoft-azure-application-gateway)
 - [fortinet/azure-templates](https://github.com/fortinet/azure-templates)
 - [Azure Route Server](https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/dmz/nva-ha?tabs=cli#azure-route-server)
+- [Multiple frontends for Azure Load Balancer](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-multivip-overview)
 - [NET-SNMP Tutorial -- snmptranslate](https://net-snmp.sourceforge.io/tutorial/tutorial-5/commands/snmptranslate.html)
 - [SNMP OID 列表 监控需要用到的 OID](http://www.ttlsa.com/monitor/snmp-oid/)
 - [Linux snmp 导入 MIB 库](https://www.cnblogs.com/xwupiaomiao/p/11937324.html)
