@@ -1,10 +1,10 @@
 - [Reference](#reference)
 - [Check table size](#check-table-size)
 - [Reorganization](#reorganization)
-  - [Step](#step)
+    - [Step](#step)
 - [How to move table from one tablespace to another](#how-to-move-table-from-one-tablespace-to-another)
-  - [In oracle 11g](#in-oracle-11g)
-  - [In oracle 12c](#in-oracle-12c)
+    - [In oracle 11g](#in-oracle-11g)
+    - [In oracle 12c](#in-oracle-12c)
 - [Index Status](#index-status)
 
 # Reference
@@ -12,15 +12,15 @@
 
 # Check table size
 ```sql
-SELECT
+select
     owner,
     table_name,
     num_rows,
-    blocks * (SELECT value FROM v$parameter WHERE name = 'db_block_size')/1024/1024 "Size MB",
+    blocks * (select value from v$parameter where name = 'db_block_size')/1024/1024 "size mb",
     last_analyzed
-FROM dba_tables
-WHERE owner NOT IN ('SYS','SYSTEM','SYSMAN') AND blocks IS NOT NULL AND owner = 'GAUDIT_CA'
-ORDER BY blocks DESC;
+from dba_tables
+where owner not in ('sys','system','sysman') and blocks is not null and owner = 'gaudit_ca'
+order by blocks desc;
 ```
 
 # Reorganization
@@ -38,9 +38,9 @@ ORDER BY blocks DESC;
 # How to move table from one tablespace to another
 ## In oracle 11g
 - `alter table <test.book> move tablespace <ts_audit>;`
-- this will invalidate all table's indexes. So this command is usually followed by
+- this will invalidate all table's indexes, so this command is usually followed by
     - `alter index <ts_audit> rebuild online;`
-    - `select 'alter index '||owner||'.'||index_name||' rebuild tablespace TO_NEW_TABLESPACE_NAME;' from all_indexes where owner='OWNERNAME';`
+    - `select 'alter index '||owner||'.'||index_name||' rebuild tablespace TO_NEW_TABLESPACE_NAME;' from all_indexes where owner = '<schema_name>';`
 - check index
     - `select index_name, status from user_indexes order by 1;`
 ## In oracle 12c
@@ -50,20 +50,20 @@ ORDER BY blocks DESC;
 
 # Index Status
 ```sql
-SELECT 	status,	T.*
-FROM all_indexes T
-WHERE T.status = 'UNUSABLE' AND T.owner NOT IN ('SYSTEM','SYS')
-ORDER BY T.status DESC;
+select 	status,	t.*
+from all_indexes t
+where t.status = 'unusable' and t.owner not in ('system','sys')
+order by t.status desc;
 
-SELECT status, COUNT(*), sysdate
-    FROM dba_indexes
-    GROUP BY status
-UNION
-SELECT status, COUNT(*), sysdate
-    FROM dba_ind_partitions
-    GROUP BY status
-UNION
-SELECT status, COUNT(*), sysdate
-    FROM dba_ind_subpartitions
-    GROUP BY status;
+select status, count(*), sysdate
+    from dba_indexes
+    group by status
+union
+select status, count(*), sysdate
+    from dba_ind_partitions
+    group by status
+union
+select status, count(*), sysdate
+    from dba_ind_subpartitions
+    group by status;
 ```

@@ -1,4 +1,4 @@
-# RAC
+# RAC (todo)
 ## 安裝順序
 1. grid infrastructure(ASM)
 2. oracle database

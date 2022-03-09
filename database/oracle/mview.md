@@ -13,14 +13,14 @@
 ## Build M-View
 ### Privilege
 ```sql
-GRANT CREATE ANY MATERIALIZED VIEW TO SYSTEM;
+grant create any materialized view to system;
 ```
 
 ### Source DB
 ```sql
 -- step 1: DB link
 create public database link DL_ERP connect to HR identified by hr using 'ERP';
-SELECT * FROM dba_db_links;
+select * from dba_db_links;
 
 -- step 2: MView log
 create materialized view log on HR.PLAYER
@@ -69,13 +69,13 @@ DROP MATERIALIZED VIEW HR.MV_ERP_PLAYER;
 -- source
 
 -- target
-SELECT
-    ' CREATE MATERIALIZED VIEW '|| OWNER || '.' || MVIEW_NAME ||
-    ' BUILD IMMEDIATE ' ||
-    ' REFRESH FORCE ' ||
-    ' ON DEMAND ' ||
-    ' AS ' QUERY
-FROM all_mviews;
+select
+    ' create materialized view '|| owner || '.' || mview_name ||
+    ' build immediate ' ||
+    ' refresh force ' ||
+    ' on demand ' ||
+    ' as ' query
+from all_mviews;
 
 -- PL/SQL
 SELECT dbms_metadata.get_ddl('MATERIALIZED_VIEW','MV_DEMO_EMPLOYEES','HR') FROM dual;
