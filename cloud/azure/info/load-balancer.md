@@ -21,6 +21,7 @@
         ```bash
         yum install epel-release -y
         yum install iftop -y
+        tcpdump | grep "114-43-75-120" | grep http
         ```
     - [設定 reverse proxy](https://www.maxlist.xyz/2020/06/18/flask-nginx/)
         - `yum install nginx -y`
@@ -34,7 +35,32 @@
             listen       80;
             server_name  t-web.southeastasia.cloudapp.azure.com;
             location / {
-                proxy_pass http://t-web:80/;
+                proxy_pass http://t-web;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
                 #index index.html index.htm;
             } # end location
             ```
+    - [設定 iptables](http://www.noobyard.com/article/p-urmalkcy-t.html)
+        - `vi /etc/sysconfig/iptables`
+    - [設定 loopback address](https://leoprosoho.pixnet.net/blog/post/27398897)
+        ```conf
+        DEVICE=lo
+        IPADDR=127.0.0.1
+        NETMASK=255.0.0.0
+        NETWORK=127.0.0.0
+        BROADCAST=127.255.255.255
+        ONBOOT=yes
+        NAME=loopback
+
+        DEVICE=lo:1
+        IPADDR=10.1.87.100
+        NETMASK=255.255.255.0
+        NETWORK=10.1.87.0
+        BROADCAST=10.1.87.255
+        ONBOOT=yes
+        NAME=loopback1
+        ```
+        - systemctl restart network
