@@ -1,6 +1,6 @@
 - [Update and Install Package](#update-and-install-package)
-    - [Update repo](#update-repo)
-    - [Install Package](#install-package)
+  - [Update repo](#update-repo)
+  - [Install Package](#install-package)
 - [Step](#step)
 - [Template](#template)
 - [如果要修改參數](#如果要修改參數)
@@ -157,7 +157,7 @@ yum install php-bcmath php-mbstring php-xml curl curl-devel net-snmp net-snmp-de
             <br><img src="../img/zabbix/fortiweb-snmp-template.png">
     - 參考
         - [1-8.監控工具之一:Zabbix Snmp 網通設備資料收集](https://ithelp.ithome.com.tw/articles/10191378)
-        - [官方博文 | 連老手也容易犯錯的Zabbix SNMP該如何正確配置？](https://read01.com/zh-tw/Dn6NDmM.html#.Yg0Vme5BxGM)
+        - [官方博文 | 連老手也容易犯錯的 Zabbix SNMP 該如何正確配置？](https://read01.com/zh-tw/Dn6NDmM.html#.Yg0Vme5BxGM)
 
 # 如果要修改參數
 - http://[zabbix_server_ip]/zabbix/setup.php

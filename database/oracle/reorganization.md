@@ -1,10 +1,12 @@
 - [Reference](#reference)
 - [Check table size](#check-table-size)
 - [Reorganization](#reorganization)
-    - [Step](#step)
+  - [Table static](#table-static)
+  - [FSFI (Free Space Fragmentation Index)](#fsfi-free-space-fragmentation-index)
+  - [Step](#step)
 - [How to move table from one tablespace to another](#how-to-move-table-from-one-tablespace-to-another)
-    - [In oracle 11g](#in-oracle-11g)
-    - [In oracle 12c](#in-oracle-12c)
+  - [In oracle 11g](#in-oracle-11g)
+  - [In oracle 12c](#in-oracle-12c)
 - [Index Status](#index-status)
 
 # Reference
@@ -26,6 +28,20 @@ order by blocks desc;
 # Reorganization
 - Move down the HWM
 - Releases unused extents
+
+## Table static
+This procedure gathers table and column (and index) statistics.
+```sql
+begin
+  dbms_stats.gather_table_stats(ownname => '<schema>', tabname => '<table>', estimate_percent => dbms_stats.auto_sample_size, method_opt => 'for all indexed columns', degree => 1, granularity => 'all', cascade => dbms_stats.auto_cascade);
+end;
+```
+
+## FSFI (Free Space Fragmentation Index)
+```sql
+select tablespace_name,sqrt(max(blocks)/sum(blocks))*(100/sqrt(sqrt(count(blocks)))) FSFI
+  from dba_free_space group by tablespace_name order by FSFI desc;
+```
 
 ## Step
 1. Reorganization
@@ -50,20 +66,21 @@ order by blocks desc;
 
 # Index Status
 ```sql
-select 	status,	t.*
-from all_indexes t
-where t.status = 'unusable' and t.owner not in ('system','sys')
-order by t.status desc;
+select
+    status, t.*
+  from all_indexes t
+  where t.status = 'unusable' and t.owner not in ('system','sys')
+  order by t.status desc;
 
 select status, count(*), sysdate
-    from dba_indexes
-    group by status
+  from dba_indexes
+  group by status
 union
 select status, count(*), sysdate
-    from dba_ind_partitions
-    group by status
+  from dba_ind_partitions
+  group by status
 union
 select status, count(*), sysdate
-    from dba_ind_subpartitions
-    group by status;
+  from dba_ind_subpartitions
+  group by status;
 ```

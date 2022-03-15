@@ -51,6 +51,17 @@
             ```
     - [設定 iptables](http://www.noobyard.com/article/p-urmalkcy-t.html)
         - `vi /etc/sysconfig/iptables`
+    - [設定 forwarding rule](https://docs.microsoft.com/en-us/azure/data-factory/tutorial-managed-virtual-network-on-premise-sql-server#creating-forwarding-rule-to-endpoint)
+        - `wget https://raw.githubusercontent.com/sajitsasi/az-ip-fwd/main/ip_fwd.sh`
+        - public ip
+            - `~/ip_fwd.sh -i eth0 -f 80 -a t-web.southeastasia.cloudapp.azure.com -b 80`
+        - private ip
+            - `~/ip_fwd.sh -i eth0 -f 80 -a t-web -b 80`
+            - `~/ip_fwd.sh -i eth0 -f 81 -a t-zbx -b 80`
+        - check
+            - `iptables -t nat -v -L PREROUTING -n --line-number`
+        - delete rule
+            - `iptables -D PREROUTING 1`
     - [設定 loopback address](https://leoprosoho.pixnet.net/blog/post/27398897)
         ```conf
         DEVICE=lo
