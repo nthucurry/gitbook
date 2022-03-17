@@ -17,16 +17,13 @@
         echo net.ipv4.ip_nonlocal_bind=1 >> /etc/sysctl.conf
         sysctl -p
         ```
-    - [安裝流量监控](https://www.geeksforgeeks.org/how-to-install-nload-in-linux/)
+    - [流量监控](https://www.geeksforgeeks.org/how-to-install-nload-in-linux/)
         ```bash
         yum install epel-release -y
         yum install iftop -y
+
+        tcpdump -nn | grep -vE "168.63.129.16|169.254.169.254|https|ssh|ntp" | grep http
         ```
-        - `tcpdump | grep -vE "168.63.129.16|169.254.169.254|https" | grep http`
-            1. 20:42:06.327395 IP 114-43-72-93.dynamic-ip.hinet.net.49993 > 20.212.147.113.http: Flags [S], seq 2348462565, win 65535, options [mss 1452,nop,wscale 5,nop,nop,TS val 1038367230 ecr 0,sackOK,eol], length 0
-            2. 20:42:06.327450 IP t-nva.internal.cloudapp.net.49993 > t-web.internal.cloudapp.net.http: Flags [S], seq 2348462565, win 65535, options [mss 1452,nop,wscale 5,nop,nop,TS val 1038367230 ecr 0,sackOK,eol], length 0
-            3. 20:42:06.328781 IP t-web.internal.cloudapp.net.http > t-nva.internal.cloudapp.net.49993: Flags [S.], seq 4006893232, ack 2348462566, win 28960, options [mss 1418,sackOK,TS val 359806 ecr 1038367230,nop,wscale 7], length 0
-            4. 20:42:06.328805 IP 20.212.147.113.http > 114-43-72-93.dynamic-ip.hinet.net.49993: Flags [S.], seq 4006893232, ack 2348462566, win 28960, options [mss 1418,sackOK,TS val 359806 ecr 1038367230,nop,wscale 7], length 0
     - [設定 reverse proxy](https://www.maxlist.xyz/2020/06/18/flask-nginx/)
         - `yum install nginx -y`
         - `systemctl start nginx.service; systemctl enable nginx.service`
@@ -38,20 +35,20 @@
             ```conf
             # virtualhost for t-web.southeastasia.cloudapp.azure.com
             server {
-                listen      80 default_server;
-                listen [::]:80 default_server;
-                server_name  t-web.southeastasia.cloudapp.azure.com;
-                location / {
-                    # 反向代理到 t-web 主機的 80 port
-                    proxy_pass http://t-web;
+              listen      80 default_server;
+              listen [::]:80 default_server;
+              server_name  t-web.southeastasia.cloudapp.azure.com;
+              location / {
+                # 反向代理到 t-web 主機的 80 port
+                proxy_pass http://t-web;
 
-                    # 把 ip、protocol 等 header 都一起送給反向代理的 server
-                    proxy_set_header Host $host;
-                    proxy_set_header X-Real-IP $remote_addr;
-                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                    proxy_set_header X-Forwarded-Proto $scheme;
-                    #index index.html index.htm;
-                }
+                # 把 ip、protocol 等 header 都一起送給反向代理的 server
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                #index index.html index.htm;
+              }
             }
             ```
     - [設定 iptables](http://www.noobyard.com/article/p-urmalkcy-t.html)
