@@ -60,14 +60,14 @@ if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; th
     if [[ `uname` == "Linux" ]]; then
         # In office environment
         ssh -oStrictHostKeyChecking=no $admin@$vm_name sudo timedatectl set-timezone Asia/Taipei
-        ssh -oStrictHostKeyChecking=no $admin@$vm_name wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/k8s/script/initial-k8s.sh
-        ssh -oStrictHostKeyChecking=no $admin@$vm_name chmod +x initial-k8s.sh
-        ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.6  k8m1" | sudo tee -a /etc/hosts'
-        ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.7  k8m2" | sudo tee -a /etc/hosts'
-        ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.10 k8m3" | sudo tee -a /etc/hosts'
-        ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.11 k8n1" | sudo tee -a /etc/hosts'
-        ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.12 k8n2" | sudo tee -a /etc/hosts'
-        ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.13 k8n3" | sudo tee -a /etc/hosts'
+        # ssh -oStrictHostKeyChecking=no $admin@$vm_name wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/k8s/script/initial-k8s.sh
+        # ssh -oStrictHostKeyChecking=no $admin@$vm_name chmod +x initial-k8s.sh
+        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.6  k8m1" | sudo tee -a /etc/hosts'
+        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.7  k8m2" | sudo tee -a /etc/hosts'
+        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.10 k8m3" | sudo tee -a /etc/hosts'
+        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.11 k8n1" | sudo tee -a /etc/hosts'
+        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.12 k8n2" | sudo tee -a /etc/hosts'
+        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.13 k8n3" | sudo tee -a /etc/hosts'
     else
         # In home environment
         az network nsg rule update \
@@ -77,6 +77,7 @@ if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; th
             --source-address-prefixes "$public_home_ip"
         public_ip=`az vm list -g $resource_group -d --query "[?name == '$vm_name'].publicIps" -o tsv`
         ssh -oStrictHostKeyChecking=no $admin@$public_ip sudo timedatectl set-timezone Asia/Taipei
+        ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "$admin ALL=(ALL) ALL" | sudo tee -a /etc/hosts'
         # ssh -oStrictHostKeyChecking=no $admin@$public_ip wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/k8s/script/initial-k8s.sh
         # ssh -oStrictHostKeyChecking=no $admin@$public_ip chmod +x initial-k8s.sh
         # ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.7  t-m1" | sudo tee -a /etc/hosts'
