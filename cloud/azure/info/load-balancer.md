@@ -6,7 +6,7 @@
 ## Health probes
 ## Load Balancer rules
 <br><img src="https://docs.microsoft.com/en-us/azure/load-balancer/media/load-balancer-components/lbrules.png" width=600>
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/lb-insights.png">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/lb-insights.png" width=600>
 
 - On Azure, Floating IP should enable
     - [Floating IP Guest OS configuration](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-floating-ip#floating-ip-guest-os-configuration)
@@ -80,7 +80,8 @@
             - `iptables-save`
         - delete rule
             - `iptables -t nat -D PREROUTING 1`
-    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/lb-rule.png">
+    - load balancer rule
+        <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/lb-rule.png" width=600>
 
 ## NSG
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/lb-float-ip-nsg.png" width=600>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/lb-float-ip-nsg.png" width=800>
