@@ -6,10 +6,10 @@
 ## Health probes
 ## Load Balancer rules
 <br><img src="https://docs.microsoft.com/en-us/azure/load-balancer/media/load-balancer-components/lbrules.png" width=600>
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/lb-insights.png">
 
 - On Azure, Floating IP should enable
-    <br><img src="https://docs.microsoft.com/en-us/azure/load-balancer/media/load-balancer-multivip-overview/load-balancer-multivip-dsr.png">
-- On OS, [Floating IP Guest OS configuration](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-floating-ip#floating-ip-guest-os-configuration)
+    - [Floating IP Guest OS configuration](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-floating-ip#floating-ip-guest-os-configuration)
     - [Linux 绑定 IP 与 net.ipv4.ip_nonlocal_bind 不存在](https://www.igiftidea.com/article/11556082942.html)
     - 設定 IP forward 和 bind 不存在的 IP
         ```bash
@@ -35,22 +35,34 @@
             ```conf
             # virtualhost for t-web.southeastasia.cloudapp.azure.com
             server {
-              listen      80 default_server;
-              listen [::]:80 default_server;
-              server_name  t-web.southeastasia.cloudapp.azure.com;
-              location / {
-                # 反向代理到 t-web 主機的 80 port
-                proxy_pass http://t-web;
+                listen      80 default_server;
+                listen [::]:80 default_server;
+                server_name  t-web.southeastasia.cloudapp.azure.com;
+                location / {
+                    # 反向代理到 t-web 主機的 80 port
+                    proxy_pass http://t-web;
 
-                # 把 ip、protocol 等 header 都一起送給反向代理的 server
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                #index index.html index.htm;
-              }
+                    # 把 ip、protocol 等 header 都一起送給反向代理的 server
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto $scheme;
+                    #index index.html index.htm;
+                }
             }
             ```
+    - ~~[設定 loopback address](https://leoprosoho.pixnet.net/blog/post/27398897)~~
+        ```conf
+        DEVICE=lo
+        IPADDR=127.0.0.1
+        NETMASK=255.0.0.0
+        NETWORK=127.0.0.0
+        BROADCAST=127.255.255.255
+        ONBOOT=yes
+        NAME=loopback
+        ```
+        - systemctl restart network
+- On Azure, Floating IP should disable
     - [設定 iptables](http://www.noobyard.com/article/p-urmalkcy-t.html)
         - `vi /etc/sysconfig/iptables`
     - [設定 forwarding rule](https://docs.microsoft.com/en-us/azure/data-factory/tutorial-managed-virtual-network-on-premise-sql-server#creating-forwarding-rule-to-endpoint)
@@ -67,18 +79,8 @@
         - save rule
             - `iptables-save`
         - delete rule
-            - `iptables -t nat -D PREROUTING 1` (待驗證)
-    - ~~[設定 loopback address](https://leoprosoho.pixnet.net/blog/post/27398897)~~
-        ```conf
-        DEVICE=lo
-        IPADDR=127.0.0.1
-        NETMASK=255.0.0.0
-        NETWORK=127.0.0.0
-        BROADCAST=127.255.255.255
-        ONBOOT=yes
-        NAME=loopback
-        ```
-        - systemctl restart network
+            - `iptables -t nat -D PREROUTING 1`
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/lb-rule.png">
 
 ## NSG
-<br><img src="../../../img/cloud/azure/lb-float-ip-nsg.png">
+<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/lb-float-ip-nsg.png" width=600>

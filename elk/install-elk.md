@@ -57,6 +57,7 @@
 - `yum install elasticsearch -y`
 - 更新資料存放位置
     - `mkdir -p /data/log`
+    - `chmod -R 777 /data`
     - `sed -i 's/path.data: \/var\/lib\/elasticsearch/path.data: \/data/g' /etc/elasticsearch/elasticsearch.yml`
     - `sed -i 's/path.logs: \/var\/log\/elasticsearch/path.logs: \/data\/log/g' /etc/elasticsearch/elasticsearch.yml`
 - 設定 elasticsearch 記憶體使用上限及下限，重開 VM 記憶體才會生效
