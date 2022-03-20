@@ -1,6 +1,6 @@
 - [Update and Install Package](#update-and-install-package)
-  - [Update repo](#update-repo)
-  - [Install Package](#install-package)
+    - [Update repo](#update-repo)
+    - [Install Package](#install-package)
 - [Step](#step)
 - [Template](#template)
 - [如果要修改參數](#如果要修改參數)
@@ -32,6 +32,7 @@
 ## Install Package
 ```bash
 rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/7/x86_64/zabbix-release-5.0-1.el7.noarch.rpm
+rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/7/x86_64/zabbix-release-5.0-1.el7.noarch.rpm --httpproxy http://t-nva:3128
 
 timedatectl set-timezone Asia/Taipei
 sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config

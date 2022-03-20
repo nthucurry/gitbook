@@ -36,7 +36,7 @@
     EOF
 
     # by proxy
-    rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch --httpproxy 10.248.15.8 --httpport 80
+    rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch --httpproxy http://t-nva:3128
     ```
 - `yum clean all`
 - `yum makecache`
@@ -60,8 +60,8 @@
     - `sed -i 's/path.data: \/var\/lib\/elasticsearch/path.data: \/data/g' /etc/elasticsearch/elasticsearch.yml`
     - `sed -i 's/path.logs: \/var\/log\/elasticsearch/path.logs: \/data\/log/g' /etc/elasticsearch/elasticsearch.yml`
 - 設定 elasticsearch 記憶體使用上限及下限，重開 VM 記憶體才會生效
-    - `sed -i 's/## -Xms4g/-Xms1g/g' /etc/elasticsearch/jvm.options`
-    - `sed -i 's/## -Xmx4g/-Xmx1g/g' /etc/elasticsearch/jvm.options`
+    - `sed -i 's/## -Xms4g/-Xms2g/g' /etc/elasticsearch/jvm.options`
+    - `sed -i 's/## -Xmx4g/-Xmx2g/g' /etc/elasticsearch/jvm.options`
 - `ln -s /etc/elasticsearch/elasticsearch.yml`
 - `vi /etc/elasticsearch/elasticsearch.yml`
     ```yml

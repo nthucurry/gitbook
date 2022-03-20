@@ -24,7 +24,7 @@
 
         tcpdump -nn | grep -vE "168.63.129.16|169.254.169.254|https|ssh|ntp" | grep http
         ```
-    - [設定 reverse proxy](https://www.maxlist.xyz/2020/06/18/flask-nginx/)
+    - ~~[設定 reverse proxy](https://www.maxlist.xyz/2020/06/18/flask-nginx/)~~
         - `yum install nginx -y`
         - `systemctl start nginx.service; systemctl enable nginx.service`
         - `nginx -t`
@@ -57,17 +57,18 @@
         - `wget https://raw.githubusercontent.com/sajitsasi/az-ip-fwd/main/ip_fwd.sh`
         - public ip
             - `~/ip_fwd.sh -i eth0 -f 80 -a t-web.southeastasia.cloudapp.azure.com -b 80` (待驗證)
+            - `~/ip_fwd.sh -i lo -f 80 -a t-web.southeastasia.cloudapp.azure.com -b 80` (待驗證)
         - private ip
-            - `~/ip_fwd.sh -i eth0 -f 80 -a t-web -b 80`
-            - `~/ip_fwd.sh -i eth0 -f 80 -a t-zbx -b 80` (待驗證)
-            - `~/ip_fwd.sh -i eth0 -f 81 -a t-zbx -b 80` (待驗證)
+            - `~/ip_fwd.sh -i eth0 -f 801 -a t-web -b 80`
+            - `~/ip_fwd.sh -i eth0 -f 802 -a t-elk -b 80`
+            - `~/ip_fwd.sh -i eth0 -f 803 -a t-zbx -b 80`
         - check
             - `iptables -t nat -v -L PREROUTING -n --line-number`
         - save rule
             - `iptables-save`
         - delete rule
             - `iptables -t nat -D PREROUTING 1` (待驗證)
-    - [設定 loopback address](https://leoprosoho.pixnet.net/blog/post/27398897)
+    - ~~[設定 loopback address](https://leoprosoho.pixnet.net/blog/post/27398897)~~
         ```conf
         DEVICE=lo
         IPADDR=127.0.0.1
@@ -76,14 +77,6 @@
         BROADCAST=127.255.255.255
         ONBOOT=yes
         NAME=loopback
-
-        DEVICE=lo:1
-        IPADDR=10.1.87.100
-        NETMASK=255.255.255.0
-        NETWORK=10.1.87.0
-        BROADCAST=10.1.87.255
-        ONBOOT=yes
-        NAME=loopback1
         ```
         - systemctl restart network
 
