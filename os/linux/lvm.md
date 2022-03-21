@@ -45,24 +45,24 @@
 
 ### (3) Volume Group, VG, 捲軸群組
 - 調整 VG
-    - `vgcreate vg_demo /dev/sdb`
-    - `vgextend vg_demo /dev/sdb`
-- `vgdisplay vg_demo`
+    - `vgcreate vg01 /dev/sdb`
+    - `vgextend vg01 /dev/sdc`
+- `vgdisplay vg01`
 
 ### (4) Logical Volume, LV, 邏輯捲軸
 - 調整 LV
-    - 固定大小: `lvcreate -L 50G -n lv_u01 vg_demo`
-    - 依照比例: `lvcreate -l +100%FREE -n lv_u01 vg_demo`
-    - 依照 PE: `lvcreate -l +(<Max PE> - 9) -n lv_u01 vg_demo`
+    - 固定大小: `lvcreate -L 50G -n lv_u01 vg01`
+    - 依照比例: `lvcreate -l +100%FREE -n lv_u01 vg01`
+    - 依照 PE: `lvcreate -l +(<Max PE> - 9) -n lv_u01 vg01`
 - `lvscan`
 
 ### (5) 磁碟格式化
-- `mkfs.xfs /dev/vg_demo/lv_u01`
+- `mkfs.xfs /dev/vg01/lv_s01`
 
 ### (6) 掛載
-- `mkdir /u01`
-- `mount /dev/mapper/vg_demo-lv_u01 /u01/`
-- `echo "/dev/mapper/vg_demo-lv_u01 /u01/ xfs defaults 0 0" > /etc/fstab`(開機自動執行)
+- `mkdir /s01`
+- `mount /dev/mapper/vg01-lv_s01 /s01/`
+- `echo "/dev/mapper/vg01-lv_s01 /s01/ xfs defaults 0 0" > /etc/fstab`(開機自動執行)
 - `reboot`(check again)
 
 ## 情境
@@ -71,34 +71,34 @@
 
 ### 增加 LV
 - 增加固定大小
-    - `lvextend -L +4G /dev/mapper/vg_demo-lv_u01`
-    - `lvextend -l 204790 /dev/mapper/vg_demo-lv_u01`
+    - `lvextend -L +4G /dev/mapper/vg01-lv_s01`
+    - `lvextend -l 204790 /dev/mapper/vg01-lv_s01`
 - 調整到目標大小
     - `lvresize -L +20G /dev/testvg/testlv`
     - `lvextend -l 291800 -n /dev/vg01/lv_s01`
     - `lvextend -l (<Alloc PE> + <Free PE> - 9) /dev/mapper/vg01-lv_s01`
 - 調整到 Max
-    - `lvextend -l +100%FREE /dev/mapper/vg_demo-lv_u01`
+    - `lvextend -l +100%FREE /dev/mapper/vg01-lv_s01`
 - 結果
     Size of logical volume testvg/testlv changed from 20.00 GiB (5120 extents) to 40.00 GiB (10240 extents).
         Logical volume testvg/testlv successfully resized.
 - 執行放大檔案系統
-    - xfs: `xfs_growfs /u01`
-    - ext: `resize2fs /dev/mapper/vg_demo-lv_u01`
-- check: `xfs_info /u01`
+    - xfs: `xfs_growfs /s01`
+    - ext: `resize2fs /dev/mapper/vg01-lv_s01`
+- check: `xfs_info /s01`
     <br><img src="https://github.com/ShaqtinAFool/gitbook/raw/master/img/linux/lvm/check-xfs-info.png">
 
 ### ~~縮小 LV(xfs無法縮小)~~
 ```bash
 # 縮小 3 GB
-lvresize -L -3G /dev/mapper/vg_demo-lv_u01
+lvresize -L -3G /dev/mapper/vg01-lv_s01
 ```
 
 ### 移除後擴充空間
 1. `umount /demo_ssd`
 2. `lvremove /dev/vg_demo/lv_ssd`
-3. `lvextend -l +100%FREE /dev/mapper/vg_demo-lv_u01`
-4. `xfs_growfs /u01`
+3. `lvextend -l +100%FREE /dev/mapper/vg01-lv_s01`
+4. `xfs_growfs /s01`
 
 ### 移除整個空間
 1. 先卸載系統上面的 LVM 檔案系統(包括快照與所有 LV): `umount /demo_ssd`
