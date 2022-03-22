@@ -1,0 +1,33 @@
+# ============================== Filebeat inputs ===============================
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/squid/access.log
+  fields:
+    log_type: "azure-squid"
+  fields_under_root: true
+# ================================== Outputs ===================================
+# ---------------------------- Elasticsearch Output ----------------------------
+# ------------------------------ Logstash Output -------------------------------
+output.logstash:
+  hosts: ["t-elk:1400"]
+  indices:
+    - index: "azure-squid"
+      when.contains:
+        log_type: "azure-squid"
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+# ================================== Logging ===================================
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat-azure-squid.log
+  keepfiles: 1
+  permissions: 0644
