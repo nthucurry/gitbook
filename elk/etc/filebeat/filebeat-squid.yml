@@ -3,7 +3,8 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /var/log/squid/access.log
+    # - /var/log/squid/access.log
+    - /data-to-local/my/azure-squid/proxy-tls/access.log
   fields:
     log_type: "azure-squid"
   fields_under_root: true
