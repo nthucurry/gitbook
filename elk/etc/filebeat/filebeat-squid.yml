@@ -17,6 +17,12 @@ output.logstash:
     - index: "azure-squid"
       when.contains:
         log_type: "azure-squid"
+    - index: "azure-squid-tls"
+      when.contains:
+        log_type: "azure-squid-tls"
+    - index: "azure-squid-sslbypass"
+      when.contains:
+        log_type: "azure-squid-sslbypass"
 # ================================= Processors =================================
 processors:
   - add_host_metadata:
