@@ -16,6 +16,10 @@
 - Azure
     - NSG Inbound: Internet → Any (VNet 也可以)
 
+# Firewall before WAF (VM Simulation)
+- `wget https://raw.githubusercontent.com/sajitsasi/az-ip-fwd/main/ip_fwd.sh`
+- `~/ip_fwd.sh -i eth0 -f 80 -a fortiweb -b 80`
+
 # Load Balancer before WAF
 - WAF
     - 設定外層 IP (WAF)
