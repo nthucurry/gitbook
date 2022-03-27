@@ -1,7 +1,7 @@
 $resourceGroup = "DBA-K8S"
 $location = "Southeast Asia"
 $vnet = "t-vnet"
-$firewall = "fortiweb"
+$firewall = "fortiweb-fw"
 $firewallPublicIP = "fortiweb-fw"
 
 # Stop an existing firewall
