@@ -1,17 +1,30 @@
+subscription="de61f224-9a69-4ede-8273-5bcef854dc20"
+resourceGroup="DBA-K8S"
+location="southeastasia"
+firewall="fortiweb-fw"
+firewallIPConfig="fortiweb-fw"
+publicIP="fortiweb-fw"
+vnet="t-vnet"
+
 az network firewall create \
-    --name "fortiweb" \
-    --subscription "de61f224-9a69-4ede-8273-5bcef854dc20" \
-    --resource-group "DBA-K8S" \
-    --allow-active-ftp false \
-    --firewall-policy "fortiweb" \
-    --location "southeastasia" \
-    --sku AZFW_VNet \
-    --tier "Standard"
+    --name $firewall \
+    --resource-group $resourceGroup \
+    --location $location
+
+az network public-ip create \
+    --name $publicIP \
+    --resource-group $resourceGroup \
+    --location $location \
+    --allocation-method static \
+    --sku standard
 
 # az network firewall ip-config create \
-#     --subscription "de61f224-9a69-4ede-8273-5bcef854dc20" \
-#     --resource-group "DBA-K8S" \
-#     --firewall-name "fortiweb" \
-#     --name fortiweb-fw \
-#     --public-ip-address "/subscriptions/de61f224-9a69-4ede-8273-5bcef854dc20/resourceGroups/DBA-K8S/providers/Microsoft.Network/publicIPAddresses/fortiweb-fw" \
-#     --vnet-name "t-vnet"
+#     --firewall-name $firewall \
+#     --name FW-config \
+#     --public-ip-address fw-pip \
+#     --resource-group Test-FW-RG \
+#     --vnet-name Test-FW-VN
+
+az network firewall update \
+    --name $firewall \
+    --resource-group $resourceGroup
