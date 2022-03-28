@@ -1,2 +1,2 @@
 # [Restrict access to a tenant](https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/tenant-restrictions)
-- [設定指定租戶的 proxy](../../../proxy/squid.md)
+- [設定指定租戶的 proxy](https://github.com/ShaqtinAFool/gitbook/blob/master/proxy/squid.md)

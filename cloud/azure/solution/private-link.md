@@ -9,6 +9,12 @@ Private endpoint enables connectivity between the consumers from the same:
 - On premises using VPN or Express Route
 - Services powered by Private Link
 
+# Private Endpoint vs Private Link Service
+- Private Endpoint
+    - Private Endpoint is a NIC that connects you privately and securely to a service powered by Azure Private Link. You can use Private Endpoints to connect to an Azure PaaS service that supports Private Link or to your own Private Link Service.
+- Private Link Service
+    - Private Link service is a service created by a service provider. Currently, a Private Link service can be attached to the frontend IP configuration of a Standard Load Balancer.
+
 ## Network security of private endpoints
 When using private endpoints, **traffic is secured** to a private link resource. The platform does an access control to validate network connections reaching only the specified private link resource.
 
