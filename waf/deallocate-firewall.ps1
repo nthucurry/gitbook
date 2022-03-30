@@ -2,7 +2,6 @@ $resourceGroup = "DBA-K8S"
 $location = "Southeast Asia"
 $vnet = "t-vnet"
 $firewall = "fortiweb-fw"
-$firewallPublicIP = "fortiweb-fw"
 
 # Stop an existing firewall
 $azfw = Get-AzFirewall -Name $firewall -ResourceGroupName $resourceGroup
@@ -12,6 +11,7 @@ Set-AzFirewall -AzureFirewall $azfw
 # Start the firewall
 $azfw = Get-AzFirewall -Name $firewall -ResourceGroupName $resourceGroup
 $vnet = Get-AzVirtualNetwork -ResourceGroupName $resourceGroup -Name $vnet
-$pip = Get-AzPublicIpAddress -Name $firewallPublicIP -ResourceGroupName $resourceGroup
-$azfw.Allocate($vnet, $pip)
+$pip1 = Get-AzPublicIpAddress -Name "fortiweb-fw" -ResourceGroupName $resourceGroup
+$pip2 = Get-AzPublicIpAddress -Name "fortiweb-t-web" -ResourceGroupName $resourceGroup
+$azfw.Allocate($vnet,@($pip1,$pip2))
 Set-AzFirewall -AzureFirewall $azfw
