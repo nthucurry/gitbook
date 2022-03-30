@@ -14,4 +14,4 @@ $azfw = Get-AzFirewall -Name $firewall -ResourceGroupName $resourceGroup
 $vnet = Get-AzVirtualNetwork -ResourceGroupName $resourceGroup -Name $vnet
 $pip = Get-AzPublicIpAddress -Name $firewallPublicIP -ResourceGroupName $resourceGroup
 $azfw.Allocate($vnet, $pip)
-$azfw | Set-AzFirewall
+Set-AzFirewall -AzureFirewall $azfw
