@@ -3,28 +3,20 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    # - /var/log/squid/access.log
-    - /data-to-local/my/azure-squid/proxy-tls/access.log
+    - /data-from-cloud/*-insights-logs-functionapplogs/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.WEB/SITES/*/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
-    log_type: "azure-squid"
-  tail_files: true
-  ignore_older: 1m
+    log_type: "azure-function-app"
+  ignore_older: 5m
   fields_under_root: true
 # ================================== Outputs ===================================
 # ---------------------------- Elasticsearch Output ----------------------------
 # ------------------------------ Logstash Output -------------------------------
 output.logstash:
-  hosts: ["t-elk:1400"]
+  hosts: ["t-elk:1060"]
   indices:
-    - index: "azure-squid"
+    - index: "azure-function-app"
       when.contains:
-        log_type: "azure-squid"
-    - index: "azure-squid-tls"
-      when.contains:
-        log_type: "azure-squid-tls"
-    - index: "azure-squid-sslbypass"
-      when.contains:
-        log_type: "azure-squid-sslbypass"
+        log_type: "azure-function-app"
 # ================================= Processors =================================
 processors:
   - add_host_metadata:
@@ -37,6 +29,6 @@ logging.level: info
 logging.to_files: true
 logging.files:
   path: /var/log/filebeat
-  name: filebeat-azure-squid.log
+  name: filebeat-azure-function-app.log
   keepfiles: 1
   permissions: 0644

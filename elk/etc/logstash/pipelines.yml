@@ -16,6 +16,8 @@
   path.config: "/etc/logstash/conf.d/1040-*.conf"
 - pipeline.id: azure-activity
   path.config: "/etc/logstash/conf.d/1050-*.conf"
+- pipeline.id: azure-function-app
+  path.config: "/etc/logstash/conf.d/1060-*.conf"
 # - pipeline.id: aad-audit
 #   path.config: "/etc/logstash/conf.d/1100-*.conf"
 - pipeline.id: aad-signin
