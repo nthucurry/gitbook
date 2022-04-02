@@ -1,10 +1,10 @@
 - [Reference](#reference)
 - [安裝步驟](#安裝步驟)
-    - [基本處置](#基本處置)
-    - [Java](#java)
-    - [Elasticsearch](#elasticsearch)
-    - [Kibana](#kibana)
-    - [Logstash](#logstash)
+  - [基本處置](#基本處置)
+  - [Java](#java)
+  - [Elasticsearch](#elasticsearch)
+  - [Kibana](#kibana)
+  - [Logstash](#logstash)
 - [Filebeat](#filebeat)
 - [匯入資料](#匯入資料)
 
@@ -36,7 +36,7 @@
     EOF
 
     # by proxy
-    rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch --httpproxy http://t-nva:3128
+    #rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch --httpproxy http://t-nva:3128
     ```
 - `yum clean all`
 - `yum makecache`
@@ -70,7 +70,7 @@
     cluster.initial_master_nodes: ["node-1"]
     network.host: 0.0.0.0 # localhost 僅本地端可以連，0.0.0.0 代表任何位址都可存取
     http.port: 9200 # 綁定 Port，預設 9200
-    discovery.seed_hosts: ["127.0.0.1", "[::1]"]
+    #discovery.seed_hosts: ["127.0.0.1", "[::1]"]
     xpack.security.enabled: false
     ```
 - 啟動服務
