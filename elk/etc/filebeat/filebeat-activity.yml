@@ -6,6 +6,7 @@ filebeat.inputs:
     - /data-to-local/*-insights-activity-logs/resourceId=/SUBSCRIPTIONS/*/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "azure-activity"
+  # ignore_older: 5m
   fields_under_root: true
 # ================================== Outputs ===================================
 # ---------------------------- Elasticsearch Output ----------------------------

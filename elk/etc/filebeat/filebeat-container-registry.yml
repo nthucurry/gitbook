@@ -3,16 +3,18 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /data-to-local/*-insights-logs-containerregistryloginevents/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.CONTAINERREGISTRY/REGISTRIES/*/y=*/m=*/d=*/h=*/m=*/*.json
+    - /data-from-cloud/*-insights-logs-containerregistryloginevents/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.CONTAINERREGISTRY/REGISTRIES/*/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "azure-cr-login"
+  ignore_older: 5m
   fields_under_root: true
 - type: log
   enabled: true
   paths:
-    - /data-to-local/*-insights-logs-containerregistryrepositoryevents/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.CONTAINERREGISTRY/REGISTRIES/*/y=*/m=*/d=*/h=*/m=*/*.json
+    - /data-from-cloud/*-insights-logs-containerregistryrepositoryevents/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.CONTAINERREGISTRY/REGISTRIES/*/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "azure-cr-repository"
+  ignore_older: 5m
   fields_under_root: true
 # ================================== Outputs ===================================
 # ---------------------------- Elasticsearch Output ----------------------------
