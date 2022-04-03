@@ -19,6 +19,7 @@
         - 0.0.0.0/0 → Firewall Private IP (Gateway)
 - Azure (Rule)
     - NSG Inbound: Internet → Any
+
 # Firewall before WAF (VM Simulation)
 - `wget https://raw.githubusercontent.com/sajitsasi/az-ip-fwd/main/ip_fwd.sh`
 - `~/ip_fwd.sh -i eth0 -f 80 -a fortiweb -b 80`
@@ -34,3 +35,17 @@
         - IP → Web IP
 - Azure
     - NSG Inbound: Internet → Any (VNet 也可以)
+
+# FortiWeb Config
+- Interface
+    <br><img src="../img/fortiweb/deploy-web-1-interfce.png">
+- Virtual IP
+    <br><img src="../img/fortiweb/deploy-web-2-virtual-ip.png">
+- Virtual Server
+    <br><img src="../img/fortiweb/deploy-web-3-virtual-server-1.png">
+    <br><img src="../img/fortiweb/deploy-web-3-virtual-server-2.png">
+- Server Pool
+    <br><img src="../img/fortiweb/deploy-web-4-server-pool.png">
+    <br><img src="../img/fortiweb/deploy-web-4-server-pool-detail.png" board="1">
+- Server Policy
+    <br><img src="../img/fortiweb/deploy-web-5-server-policy.png">
