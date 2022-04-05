@@ -37,7 +37,7 @@
     - NSG Inbound: Internet → Any (VNet 也可以)
 
 # FortiWeb Config
-- Interface
+- Interface (default)
     <br><img src="../img/fortiweb/deploy-web-1-interfce.png">
 - Virtual IP
     <br><img src="../img/fortiweb/deploy-web-2-virtual-ip.png">
@@ -46,6 +46,6 @@
     <br><img src="../img/fortiweb/deploy-web-3-virtual-server-2.png">
 - Server Pool
     <br><img src="../img/fortiweb/deploy-web-4-server-pool.png">
-    <br><img src="../img/fortiweb/deploy-web-4-server-pool-detail.png" board="1">
+    <br><img src="../img/fortiweb/deploy-web-4-server-pool-detail.png">
 - Server Policy
     <br><img src="../img/fortiweb/deploy-web-5-server-policy.png">
