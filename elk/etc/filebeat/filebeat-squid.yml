@@ -7,7 +7,9 @@ filebeat.inputs:
     - /data-to-local/my/azure-squid/proxy-tls/access.log
   fields:
     log_type: "azure-squid"
+  # Filebeat starts reading new files at the end of each file
   tail_files: true
+  # Filebeat ignores any files that were modified before the 1 min
   ignore_older: 1m
   fields_under_root: true
 # ================================== Outputs ===================================
