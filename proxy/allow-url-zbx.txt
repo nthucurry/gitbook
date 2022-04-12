@@ -1,0 +1,3 @@
+# zabbix
+repo.zabbix.com
+yum.mariadb.org

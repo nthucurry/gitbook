@@ -1,0 +1,3 @@
+# elk
+artifacts.elastic.co
+packages.elastic.co
