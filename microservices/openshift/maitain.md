@@ -31,9 +31,10 @@
     - [日常維運](#日常維運)
         - [Replacing an unhealthy etcd member](#replacing-an-unhealthy-etcd-member)
         - [Replacing the unhealthy etcd member (未完成...)](#replacing-the-unhealthy-etcd-member-未完成)
-        - [重啟 Pod](#重啟-pod)
+        - [常用指令](#常用指令)
     - [Alert Mail (TBD)](#alert-mail-tbd)
 - [Upgrade WKC](#upgrade-wkc)
+- [CA](#ca)
 
 # 重點概念
 - OpenShift cluster 不需備份 VM，因為已經是 cluster 架構了，壞了在透過 yaml rebuild 就好
@@ -382,10 +383,14 @@ sudo podman push $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:2.0.0-${BUILD_NUM}-${CP
 -  Replacing an unhealthy etcd member whose machine is not running or whose node is not ready
     1. Remove the unhealthy member.
 
-### 重啟 Pod
-- 刪除 Pod 後會自行重啟
+### 常用指令
+- 重啟 Pod，刪除 Pod 後會自行重啟
     - `oc get pods -n zen | grep iis-`
     - `oc delete iis-xxx`
+- 查詢 Pod log
+    - `oc logs pods iis-xxx`
+- cluster operator 狀態
+    - `oc get co`
 
 ## Alert Mail (TBD)
 - 從 log 抓 successfully... 等字串
@@ -413,3 +418,7 @@ sudo podman push $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:2.0.0-${BUILD_NUM}-${CP
 - Cloud Pak for Data
     - lite
     - WKC
+
+# CA
+- [openshift-authentication shows TLS handshake error with bad certificate or unknown certificate](https://access.redhat.com/solutions/5635881)
+- [TLS handshake error in OpenShift API logs](https://access.redhat.com/solutions/6268342)

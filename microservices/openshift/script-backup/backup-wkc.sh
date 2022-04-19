@@ -16,11 +16,11 @@ delete_time=`date +%Y-%m%d --date="-7 day"`
 
 # download wkc backup volume to file
 /home/azadmin/ibm/cpd-cli backup-restore volume-backup download cpdbk-$backup_time
-mv /home/azadmin/*cpdbk-$backup_time* /mnt/backup/wkc/
+mv /home/azadmin/*cpdbk-$backup_time* /mnt/backup/wkc/$service_type
 
 # delete expired wkc backup volume and file
 /home/azadmin/cmd/purge-wkc-bk.exp $delete_time
-rm /mnt/backup/wkc/*cpdbk-$delete_time*
+rm /mnt/backup/wkc/$service_type/*cpdbk-$delete_time*
 
 # delete NFS backup file
 ssh dev-nfs "sudo rm -fr /data/zen-cpdbr-pvc-pvc-f9570ad4-1a6f-45df-bd43-4794cb70c7ec/cpd/data/volbackups/cpdbk-$delete_time"
