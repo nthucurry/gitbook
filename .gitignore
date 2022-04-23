@@ -1,6 +1,7 @@
 ### block list
 SUMMARY.md
 temp.md
+ServiceTags_Public_*.json
 .DS_Store
 *.cer
 *.crt

@@ -6,6 +6,7 @@ filebeat.inputs:
     - /data-to-local/*-insights-logs-azurefirewall/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/*/y=*/m=*/d=*/h=*/m=*/*.json
   fields:
     log_type: "azure-firewall"
+  scan_frequency: 10s
   fields_under_root: true
 # ================================== Outputs ===================================
 # ---------------------------- Elasticsearch Output ----------------------------
