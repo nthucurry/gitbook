@@ -1,0 +1,1 @@
+cat /data-to-local/*/azure-squid/proxy-*/access.log | grep $1 | awk '{print $7}' | sort > tmp.txt; uniq tmp.txt -c
