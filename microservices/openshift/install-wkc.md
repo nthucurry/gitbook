@@ -10,8 +10,8 @@
 - [設定 Disk 路徑 on NFS VM](#設定-disk-路徑-on-nfs-vm)
 - [安裝 Command-Line Interface on Bastion VM](#安裝-command-line-interface-on-bastion-vm)
 - [建置專案 zen](#建置專案-zen)
-    - [安裝 Control Plane (lite)](#安裝-control-plane-lite)
-    - [安裝 WKC (Watson Knowledge Catalog)](#安裝-wkc-watson-knowledge-catalog)
+  - [安裝 Control Plane (lite)](#安裝-control-plane-lite)
+  - [安裝 WKC (Watson Knowledge Catalog)](#安裝-wkc-watson-knowledge-catalog)
 - [如果 WKC 安裝失敗](#如果-wkc-安裝失敗)
 - [設定 Machine Config on Bastion VM](#設定-machine-config-on-bastion-vm)
 - [設定 Proxy on Bastion VM](#設定-proxy-on-bastion-vm)
@@ -487,6 +487,7 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
         spec:
             httpProxy: http://squid.gotdns.ch:3128
             httpsProxy: http://squid.gotdns.ch:3128
+            noProxy: .wkc.test.org,.apps.wkc.test.org
         ```
 - proxy 連線清單
     ```
