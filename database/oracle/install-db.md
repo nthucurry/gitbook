@@ -29,8 +29,8 @@ export PATH
 ```
 
 ## Prerequisites (option)
-- 更新 EPEL repository: `yum install epel-release -y`
-    - `wget http://public-yum.oracle.com/public-yum-ol7.repo -O /etc/yum.repos.d/public-yum-ol7.repo`
+- 更新 EPEL repository
+    - `yum install epel-release -y`
     - `wget http://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol7 -O /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle`
 - 安裝懶人包
     - `yum install oracle-rdbms-server-11gR2-preinstall -y`
@@ -52,7 +52,7 @@ export PATH
     - `sed -i 's/CV_ASSUME_DISTID=OEL4/CV_ASSUME_DISTID=OEL6/g' ~/database/stage/cvu/cv/admin/cvu_config`
 - `~/database/runInstaller`
     - 需用 oracle 帳號，不能用 root
-    - 遇到 xdpyinfo 問題的解決方法: https://support.oracle.com/epmos/faces/SearchDocDisplay?_adf.ctrl-state=m8p0v6j86_4&_afrLoop=63722001626700
+    - ~~遇到 xdpyinfo 問題的解決方法: https://support.oracle.com/epmos/faces/SearchDocDisplay?_adf.ctrl-state=m8p0v6j86_4&_afrLoop=63722001626700~~
     - `ssh -Y oracle@t-db.southeastasia.cloudapp.azure.com`
 - [x] install database software only
 - [x] single instance database installation
