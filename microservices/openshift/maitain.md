@@ -33,7 +33,6 @@
         - [Replacing the unhealthy etcd member (未完成...)](#replacing-the-unhealthy-etcd-member-未完成)
         - [常用指令](#常用指令)
     - [Alert Mail (TBD)](#alert-mail-tbd)
-- [Upgrade WKC](#upgrade-wkc)
 - [CA](#ca)
 
 # 重點概念
@@ -395,29 +394,6 @@ sudo podman push $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:2.0.0-${BUILD_NUM}-${CP
 ## Alert Mail (TBD)
 - 從 log 抓 successfully... 等字串
 - 若無符合，mail 通知
-
-# Upgrade WKC
-- [OpenShift](https://docs.openshift.com/container-platform/4.5/updating/updating-cluster-cli.html#update-upgrading-cli_updating-cluster-cli)
-    - Install the jq package
-        - `yum install jq -y`
-    - Ensure that your cluster is available
-        - `oc get clusterversion`
-    - Confirm that your channel is set to stable-4.5
-        - `oc get clusterversion -o json | jq ".items[0].spec"`
-    - View the available updates that you want to apply
-        - `oc adm upgrade`
-    - Apply an update
-        - `oc adm upgrade --to-latest=true`
-        - `oc adm upgrade --to=<version>`
-    - Review the status of the Cluster Version Operator
-        - `oc get clusterversion -o json | jq ".items[0].spec"`
-    - Review the cluster version status history to monitor the status of the update
-        - `oc get clusterversion -o json | jq ".items[0].status.history"`
-    - Confirm the cluster version
-        - `oc get clusterversion`
-- Cloud Pak for Data
-    - lite
-    - WKC
 
 # CA
 - [openshift-authentication shows TLS handshake error with bad certificate or unknown certificate](https://access.redhat.com/solutions/5635881)

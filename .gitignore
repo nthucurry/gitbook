@@ -2,6 +2,7 @@
 SUMMARY.md
 tool-about-azure.md
 ServiceTags_Public_*.json
+diff*.txt
 .DS_Store
 *.cer
 *.crt

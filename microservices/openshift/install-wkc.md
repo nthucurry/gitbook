@@ -10,8 +10,8 @@
 - [設定 Disk 路徑 on NFS VM](#設定-disk-路徑-on-nfs-vm)
 - [安裝 Command-Line Interface on Bastion VM](#安裝-command-line-interface-on-bastion-vm)
 - [建置專案 zen](#建置專案-zen)
-  - [安裝 Control Plane (lite)](#安裝-control-plane-lite)
-  - [安裝 WKC (Watson Knowledge Catalog)](#安裝-wkc-watson-knowledge-catalog)
+    - [安裝 Control Plane (lite)](#安裝-control-plane-lite)
+    - [安裝 WKC (Watson Knowledge Catalog)](#安裝-wkc-watson-knowledge-catalog)
 - [如果 WKC 安裝失敗](#如果-wkc-安裝失敗)
 - [設定 Machine Config on Bastion VM](#設定-machine-config-on-bastion-vm)
 - [設定 Proxy on Bastion VM](#設定-proxy-on-bastion-vm)
@@ -477,7 +477,7 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
 # 設定 Proxy on Bastion VM
 - 設定 NSG
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/azure-nsg.png">
-- 編輯 proxy object
+- [編輯 proxy object](https://docs.openshift.com/container-platform/4.6/networking/enable-cluster-wide-proxy.html)
     - `oc edit proxy/cluster`
         ```yaml
         apiVersion: config.openshift.io/v1
@@ -502,6 +502,7 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
     infogw.api.openshift.com
     cloud.redhat.com
     management.azure.com
+    icr.io
     ```
 
 # 設定 User Managerment on CP4D Portal
