@@ -3,6 +3,14 @@
 - control file 一定要最後，不然不會記錄到 datafile、archivelog 的資訊
 - [大補帖](https://kknews.cc/code/ky5jo2b.html)
 - https://docs.oracle.com/cd/B19306_01/backup.102/b14194/rcmsynta033.htm
+- 轉換成 no-archive mode
+    ```
+    SQL> shutdown immediate
+    SQL> startup mount
+    SQL> alter database archivelog;
+    SQL> alter database open;
+    SQL> archive log list;
+    ```
 
 ## Backup
 - `vi backup.sh`
