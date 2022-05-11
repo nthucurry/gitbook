@@ -18,6 +18,76 @@
     - `oc get clusterversion`
 
 # [Setting up install variables](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=installing-best-practice-setting-up-install-variables)
+```bash
+# cpd_vars.sh
+export PROJECT_CPFS_OPS=ibm-common-services
+export PROJECT_CPD_OPS=ibm-common-services
+export PROJECT_CPD_INSTANCE=zen
+
+export IBM_ENTITLEMENT_SERVER=cp.icr.io
+export IBM_ENTITLEMENT_USER=cp
+export IBM_ENTITLEMENT_KEY=XXX
+export WORK_ROOT="$HOME/temp/work"
+
+export OFFLINEDIR_CPD="$HOME/offline/cpd"
+export OFFLINEDIR_CPFS="$HOME/offline/cpfs"
+export PATH_CASE_REPO="https://github.com/IBM/cloud-pak/raw/master/repo/case"
+export PROJECT_CATSRC=openshift-marketplace
+
+export APPROVAL_TYPE=Automatic
+
+export LICENSE_CPD=Enterprise
+
+mkdir -p $WORK_ROOT
+mkdir -p $OFFLINEDIR_CPD
+mkdir -p $OFFLINEDIR_CPFS
+```
+
+# [Obtaining your IBM entitlement API key](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-obtaining-your-entitlement-api-key)
+
+# [Setting up projects (namespaces) on Red Hat OpenShift Container Platform (Upgrading from Version 3.5)](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=upgrade-setting-up-projects-namespaces)
+- Create the appropriate projects for your environment
+    ```bash
+    oc new-project ${PROJECT_CPFS_OPS}
+    oc new-project ${PROJECT_CPD_OPS}
+    oc new-project ${PROJECT_CPD_INSTANCE}
+    # oc new-project ${PROJECT_TETHERED}
+    ```
+- Create the appropriate operator groups based on the type of installation method you are using
+    ```bash
+    cat << EOF | oc apply -f -
+    apiVersion: operators.coreos.com/v1alpha2
+    kind: OperatorGroup
+    metadata:
+      name: operatorgroup
+      namespace: ${PROJECT_CPFS_OPS}
+    spec:
+      targetNamespaces:
+      - ${PROJECT_CPFS_OPS}
+    EOF
+    ```
+
+## [Configuring your cluster to pull Cloud Pak for Data images](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-configuring-your-cluster-pull-images#preinstall-cluster-setup__pull-secret)
+- Download the pull secret to the temporary directory
+    ```bash
+    oc get secret/pull-secret \
+        -n openshift-config \
+        --template='{{index .data ".dockerconfigjson" | base64decode}}' > ${WORK_ROOT}/global_pull_secret.cfg
+    ```
+- Add the new pull secret to the local copy of the global_pull_secret.cfg file
+    ```bash
+    oc registry login \
+        --registry="${IBM_ENTITLEMENT_SERVER}" \
+        --auth-basic="${IBM_ENTITLEMENT_USER}:${IBM_ENTITLEMENT_KEY}" \
+        --to=${WORK_ROOT}/global_pull_secret.cfg
+    ```
+- Update the global pull secret on your cluster
+    ```bash
+    oc set data secret/pull-secret \
+        -n openshift-config \
+        --from-file=.dockerconfigjson=${WORK_ROOT}/global_pull_secret.cfg
+    ```
+- Get the status of the nodes
 
 [Back to top](#)
 # Cloud Pak for Data (lite)
@@ -40,15 +110,6 @@
         mv cloudctl-linux-amd64 /usr/local/bin/cloudctl
         cloudctl --help
         ```
-
-- Environment variable
-    ```bash
-    export OFFLINEDIR_CPD=$HOME/offline/cpd
-    export OFFLINEDIR_CPFS=$HOME/offline/cpfs
-    export PATH_CASE_REPO=https://github.com/IBM/cloud-pak/raw/master/repo/case
-    export PROJECT_CATSRC=openshift-marketplace
-    mkdir -p $OFFLINEDIR_CPD
-    ```
 - Downloading the CASE packages
     ```bash
     cloudctl case save \
@@ -58,7 +119,6 @@
         --outputdir ${OFFLINEDIR_CPD} \
         --no-dependency
 
-    mkdir -p $OFFLINEDIR_CPFS
     cloudctl case save \
         --repo ${PATH_CASE_REPO} \
         --case ibm-cp-common-services \
@@ -150,12 +210,8 @@
         oc get catalogsource -n ${PROJECT_CATSRC} ibm-cpd-wkc-operator-catalog \
             -o jsonpath='{.status.connectionState.lastObservedState} {"\n"}'
         ```
+
 ## [Installing or upgrading IBM Cloud Pak foundational services](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=upgrade-installing-upgrading-cloud-pak-foundational-services)
-- Environment variable
-    ```bash
-    export PROJECT_CPFS_OPS=ibm-common-services
-    export PROJECT_CATSRC=openshift-marketplace
-    ```
 - Create the appropriate operator subscription for your environment
     ```bash
     cat << EOF | oc apply -f -
@@ -172,6 +228,167 @@
       sourceNamespace: ${PROJECT_CATSRC}
     EOF
     ```
+
+## [Creating operator subscriptions before upgrading from Version 3.5](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=upgrade-creating-operator-subscriptions)
+- (略) Creating an operator subscription for the scheduling service
+- Creating an operator subscription for the IBM Cloud Pak for Data platform operator
+    ```bash
+    cat << EOF | oc apply -f -
+    apiVersion: operators.coreos.com/v1alpha1
+    kind: Subscription
+    metadata:
+      name: cpd-operator
+      namespace: ${PROJECT_CPD_OPS}
+    spec:
+      channel: v2.0
+      installPlanApproval: ${APPROVAL_TYPE}
+      name: cpd-platform-operator
+      source: cpd-platform
+      sourceNamespace: ${PROJECT_CATSRC}
+    EOF
+
+    # Verify that the command returns cpd-platform-operator.v2.0.8
+    oc get sub -n ${PROJECT_CPD_OPS} cpd-operator -o jsonpath='{.status.installedCSV} {"\n"}'
+
+    # Verify that the command returns Succeeded : install strategy completed with no errors
+    oc get csv -n ${PROJECT_CPD_OPS} cpd-platform-operator.v2.0.8 -o jsonpath='{ .status.phase } : { .status.message} {"\n"}'
+
+    # Verify that the command returns an integer greater than or equal to 1
+    oc get deployments -n ${PROJECT_CPD_OPS} -l olm.owner="cpd-platform-operator.v2.0.8" -o jsonpath="{.items[0].status.availableReplicas} {'\n'}"
+    ```
+- (略) Enabling services to use namespace scoping with third-party operators
+- (略) Creating an operator subscription for services
+
+## [Creating custom security context constraints for services before upgrading from Version 3.5](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=upgrade-creating-custom-sccs)
+- To create the SCC **(wkc-iis-scc)**
+    ```bash
+    cat << EOF | oc apply -f -
+    allowHostDirVolumePlugin: false
+    allowHostIPC: false
+    allowHostNetwork: false
+    allowHostPID: false
+    allowHostPorts: false
+    allowPrivilegeEscalation: true
+    allowPrivilegedContainer: false
+    allowedCapabilities: null
+    apiVersion: security.openshift.io/v1
+    defaultAddCapabilities: null
+    fsGroup:
+      type: RunAsAny
+    kind: SecurityContextConstraints
+    metadata:
+      annotations:
+        kubernetes.io/description: WKC/IIS provides all features of the restricted SCC
+          but runs as user 10032.
+      name: wkc-iis-scc
+    readOnlyRootFilesystem: false
+    requiredDropCapabilities:
+    - KILL
+    - MKNOD
+    - SETUID
+    - SETGID
+    runAsUser:
+      type: MustRunAs
+      uid: 10032
+    seLinuxContext:
+      type: MustRunAs
+    supplementalGroups:
+      type: RunAsAny
+    volumes:
+    - configMap
+    - downwardAPI
+    - emptyDir
+    - persistentVolumeClaim
+    - projected
+    - secret
+    users:
+    - system:serviceaccount:${PROJECT_CPD_INSTANCE}:wkc-iis-sa
+    EOF
+    ```
+- Verify that the SCC was created
+- Create the SCC cluster role for wkc-iis-scc
+- Assign the wkc-iis-sa service account to the SCC cluster role
+- Confirm that the wkc-iis-sa service account can use the wkc-iis-scc SCC
+
+## [Changing required node settings before upgrading from Version 3.5](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=upgrade-changing-required-node-settings)
+- ~~Load balancer timeout settings (Azure 自己有 Load Balancer))~~
+- CRI-O container settings
+- Kernel parameter settings
+    ```bash
+    cat << EOF | oc apply -f -
+    apiVersion: machineconfiguration.openshift.io/v1
+    kind: KubeletConfig
+    metadata:
+      name: db2u-kubelet
+    spec:
+      machineConfigPoolSelector:
+        matchLabels:
+          db2u-kubelet: sysctl
+      kubeletConfig:
+        allowedUnsafeSysctls:
+          - "kernel.msg*"
+          - "kernel.shm*"
+          - "kernel.sem"
+    EOF
+    ```
+
+## [Installing Cloud Pak for Data](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=installing-cloud-pak-data)
+- Enable the IBM Cloud Pak for Data platform operator and the IBM Cloud Pak foundational services operator to watch the project where you will install IBM Cloud Pak for Data
+    ```bash
+    cat << EOF | oc apply -f -
+    apiVersion: operator.ibm.com/v1alpha1
+    kind: OperandRequest
+    metadata:
+      name: empty-request
+      namespace: ${PROJECT_CPD_INSTANCE}
+    spec:
+      requests: []
+    EOF
+    ```
+- Create a custom resource to install Cloud Pak for Data **(The cluster uses NFS storage)**
+    ```bash
+    cat << EOF | oc apply -f -
+    apiVersion: cpd.ibm.com/v1
+    kind: Ibmcpd
+    metadata:
+        name: ibmcpd-cr
+        namespace: ${PROJECT_CPD_INSTANCE}
+        csNamespace: ${PROJECT_CPFS_OPS}
+    spec:
+        license:
+        accept: true
+        license: ${LICENSE_CPD}
+        storageClass: managed-nfs-storage
+    EOF
+
+    # Now using project "zen" on server "https://api.wkc-dev.corpnet.auo.com:6443"
+    oc project ${PROJECT_CPD_INSTANCE}
+
+    # Verifying the installation: Completed
+    oc get Ibmcpd ibmcpd-cr -o jsonpath="{.status.controlPlaneStatus}{'\n'}"
+    oc get ZenService lite-cr -o jsonpath="{.status.zenStatus}{'\n'}"
+    ```
+
+## [Specifying the install plan for operators that are automatically installed by Operand Deployment Lifecycle Manager](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-specifying-install-plan-automatically-installed-operators)
+- Choosing an upgrade plan for the Cloud Pak for Data control plane
+    ```bash
+    oc patch ZenService lite-cr \
+        --namespace ${PROJECT_CPD_INSTANCE} \
+        --type=merge \
+        --patch '{"spec": {"version":"4.4.3"}}'
+
+    # Wait for the command to return Completed
+    oc get ZenService lite-cr \
+        --namespace ${PROJECT_CPD_INSTANCE} \
+        -o jsonpath="{.status}"
+    ```
+
+## [Integrating with the IAM Service](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-integrating-iam-service)
+## [Making monitoring data highly available](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-making-monitoring-data-highly-available)
+## [Changing the route to the platform](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-changing-route-platform)
+## [Configuring an external route to the Flight service](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-configuring-external-route-flight-service)
+## [Securing communication ports](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-securing-communication-ports)
+## Setting up the Cloud Pak for Data web client
 
 [Back to top](#)
 # Watson Knowledge Catalog (wkc)
