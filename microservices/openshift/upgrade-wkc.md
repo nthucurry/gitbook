@@ -1,3 +1,34 @@
+- [Upgrade OpenShift](#upgrade-openshift)
+- [Setting up install variables](#setting-up-install-variables)
+- [Obtaining your IBM entitlement API key](#obtaining-your-ibm-entitlement-api-key)
+- [Setting up projects (namespaces) on Red Hat OpenShift Container Platform (Upgrading from Version 3.5)](#setting-up-projects-namespaces-on-red-hat-openshift-container-platform-upgrading-from-version-35)
+  - [Configuring your cluster to pull Cloud Pak for Data images](#configuring-your-cluster-to-pull-cloud-pak-for-data-images)
+- [Cloud Pak for Data (lite)](#cloud-pak-for-data-lite)
+  - [Creating catalog sources that pull specific versions of images from the IBM Entitled Registry (Upgrading from Version 3.5)](#creating-catalog-sources-that-pull-specific-versions-of-images-from-the-ibm-entitled-registry-upgrading-from-version-35)
+  - [Installing or upgrading IBM Cloud Pak foundational services](#installing-or-upgrading-ibm-cloud-pak-foundational-services)
+  - [Creating operator subscriptions before upgrading from Version 3.5](#creating-operator-subscriptions-before-upgrading-from-version-35)
+  - [Creating custom security context constraints for services before upgrading from Version 3.5](#creating-custom-security-context-constraints-for-services-before-upgrading-from-version-35)
+  - [Changing required node settings before upgrading from Version 3.5](#changing-required-node-settings-before-upgrading-from-version-35)
+  - [Installing Cloud Pak for Data](#installing-cloud-pak-for-data)
+  - [Specifying the install plan for operators that are automatically installed by Operand Deployment Lifecycle Manager](#specifying-the-install-plan-for-operators-that-are-automatically-installed-by-operand-deployment-lifecycle-manager)
+  - [Integrating with the IAM Service](#integrating-with-the-iam-service)
+  - [Making monitoring data highly available](#making-monitoring-data-highly-available)
+  - [Changing the route to the platform](#changing-the-route-to-the-platform)
+  - [Configuring an external route to the Flight service](#configuring-an-external-route-to-the-flight-service)
+  - [Securing communication ports](#securing-communication-ports)
+  - [Setting up the Cloud Pak for Data web client](#setting-up-the-cloud-pak-for-data-web-client)
+- [Watson Knowledge Catalog (wkc)](#watson-knowledge-catalog-wkc)
+  - [Fixing the productVersion value for specific releases](#fixing-the-productversion-value-for-specific-releases)
+  - [(略) Sizing and scaling up the XMETA data store portion of your InfoSphere® Information Server Db2® instance](#略-sizing-and-scaling-up-the-xmeta-data-store-portion-of-your-infosphere-information-server-db2-instance)
+  - [Determining which upgrade method to use for your environment](#determining-which-upgrade-method-to-use-for-your-environment)
+  - [Setting the values of your Watson Knowledge Catalog data store](#setting-the-values-of-your-watson-knowledge-catalog-data-store)
+  - [Upgrading the service](#upgrading-the-service)
+  - [Verifying the upgrade](#verifying-the-upgrade)
+  - [Updating column character limit (known issue)](#updating-column-character-limit-known-issue)
+  - [(略) Running the XMETA data store backup and restore](#略-running-the-xmeta-data-store-backup-and-restore)
+  - [Resizing the PersistentVolumeClaim (PVC)](#resizing-the-persistentvolumeclaim-pvc)
+  - [Update the indexes in the XMETA database](#update-the-indexes-in-the-xmeta-database)
+
 # [Upgrade OpenShift](https://docs.openshift.com/container-platform/4.5/updating/updating-cluster-cli.html#update-upgrading-cli_updating-cluster-cli)
 - Install the jq package
     - `yum install jq -y`
@@ -392,3 +423,70 @@ mkdir -p $OFFLINEDIR_CPFS
 
 [Back to top](#)
 # Watson Knowledge Catalog (wkc)
+**Rolling back the upgrade is not supported when upgrading from the Version 3.5 release to a Version 4.0.x release.**
+
+## Fixing the productVersion value for specific releases
+## (略) Sizing and scaling up the XMETA data store portion of your InfoSphere® Information Server Db2® instance
+## Determining which upgrade method to use for your environment
+- Offline upgrade (XMETA data store is larger than 500 GB)
+- Online upgrade (default, XMETA data store is smaller than 500 GB)
+
+## Setting the values of your Watson Knowledge Catalog data store
+> If you are using NFS for storage, **skip this part** of the upgrade procedure. If you are using Red Hat OpenShift Container Storage or Portworx, you must complete the steps in this part of the upgrade procedure.
+
+## Upgrading the service
+```bash
+cat << EOF | oc apply -f -
+apiVersion: wkc.cpd.ibm.com/v1beta1
+kind: WKC
+metadata:
+  name: wkc-cr     # This is the recommended name, but you can change it
+  namespace: ${PROJECT_CPD_INSTANCE}
+spec:
+  license:
+    accept: true
+    license: ${LICENSE_CPD}
+  version: 4.0.8
+  storageClass: managed-nfs-storage          # If you use a different storage class, replace it with the appropriate storage class
+  # wkc_db2u_set_kernel_params: True
+  # iis_db2u_set_kernel_params: True
+  # install_wkc_core_only: true     # To install the core version of the service, remove the comment tagging from the beginning of the line.
+EOF
+```
+
+## Verifying the upgrade
+```bash
+export Namespace=wkc
+
+# Lite
+oc get cm zen-lite-operation-configmap --namespace $Namespace -o jsonpath='{.data.operation}{"\n"}'
+# CCS
+oc get ccs ccs-cr --namespace $Namespace -o jsonpath='{.status.ccsUpgradeStatus}' | awk '{print $NF}'
+# DR
+oc get DataRefinery datarefinery-sample --namespace $Namespace  -o jsonpath="{.status.datarefineryUpgradeStatus}" ; echo
+# DB2u
+oc get Db2aaserviceService db2aaservice-cr --namespace $Namespace -o jsonpath="{.status.db2aaserviceStatus}" ; echo
+# IIS
+oc get iis iis-cr --namespace $Namespace -o jsonpath="{.status.iisUpgradeStatus}"
+# UG
+oc get ug ug-cr --namespace $Namespace -o jsonpath="{.status.ugUpgradeStatus}"
+# WKC(Overall CR status)
+oc get wkc wkc-cr --namespace $Namespace -o jsonpath="{.status.wkcUpgradeStatus}" ; echo
+```
+
+## Updating column character limit (known issue)
+## (略) Running the XMETA data store backup and restore
+## Resizing the PersistentVolumeClaim (PVC)
+## Update the indexes in the XMETA database
+- Download
+    - `wget https://www.ibm.com/support/pages/node/6481667#:~:text=dq_manage_indices.zip`
+- Copy the scripts from the attached ZIP file to the c-db2oltp-iis-db2u-0 pod
+    - `oc cp dq_manage_indices.sh c-db2oltp-iis-db2u-0:/tmp/dq_manage_indices.sh`
+    - `oc cp dq_create_indices.sql c-db2oltp-iis-db2u-0:/tmp/dq_create_indices.sql`
+    - `oc cp dq_drop_indices.sql c-db2oltp-iis-db2u-0:/tmp/dq_drop_indices.sql`
+- Log on to the Db2U pod
+    - `oc rsh c-db2oltp-iis-db2u-0 bash`
+- Run the script to the update the indexes in the XMETA database
+    - `cd /tmp/`
+    - `chmod 755 dq*.*`
+    - `./dq_manage_indices.sh`
