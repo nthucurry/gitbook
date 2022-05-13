@@ -2,32 +2,32 @@
 - [Setting up install variables](#setting-up-install-variables)
 - [Obtaining your IBM entitlement API key](#obtaining-your-ibm-entitlement-api-key)
 - [Setting up projects (namespaces) on Red Hat OpenShift Container Platform (Upgrading from Version 3.5)](#setting-up-projects-namespaces-on-red-hat-openshift-container-platform-upgrading-from-version-35)
-  - [Configuring your cluster to pull Cloud Pak for Data images](#configuring-your-cluster-to-pull-cloud-pak-for-data-images)
+    - [Configuring your cluster to pull Cloud Pak for Data images](#configuring-your-cluster-to-pull-cloud-pak-for-data-images)
 - [Cloud Pak for Data (lite)](#cloud-pak-for-data-lite)
-  - [Creating catalog sources that pull specific versions of images from the IBM Entitled Registry (Upgrading from Version 3.5)](#creating-catalog-sources-that-pull-specific-versions-of-images-from-the-ibm-entitled-registry-upgrading-from-version-35)
-  - [Installing or upgrading IBM Cloud Pak foundational services](#installing-or-upgrading-ibm-cloud-pak-foundational-services)
-  - [Creating operator subscriptions before upgrading from Version 3.5](#creating-operator-subscriptions-before-upgrading-from-version-35)
-  - [Creating custom security context constraints for services before upgrading from Version 3.5](#creating-custom-security-context-constraints-for-services-before-upgrading-from-version-35)
-  - [Changing required node settings before upgrading from Version 3.5](#changing-required-node-settings-before-upgrading-from-version-35)
-  - [Installing Cloud Pak for Data](#installing-cloud-pak-for-data)
-  - [Specifying the install plan for operators that are automatically installed by Operand Deployment Lifecycle Manager](#specifying-the-install-plan-for-operators-that-are-automatically-installed-by-operand-deployment-lifecycle-manager)
-  - [Integrating with the IAM Service](#integrating-with-the-iam-service)
-  - [Making monitoring data highly available](#making-monitoring-data-highly-available)
-  - [Changing the route to the platform](#changing-the-route-to-the-platform)
-  - [Configuring an external route to the Flight service](#configuring-an-external-route-to-the-flight-service)
-  - [Securing communication ports](#securing-communication-ports)
-  - [Setting up the Cloud Pak for Data web client](#setting-up-the-cloud-pak-for-data-web-client)
+    - [Creating catalog sources that pull specific versions of images from the IBM Entitled Registry (Upgrading from Version 3.5)](#creating-catalog-sources-that-pull-specific-versions-of-images-from-the-ibm-entitled-registry-upgrading-from-version-35)
+    - [Installing or upgrading IBM Cloud Pak foundational services](#installing-or-upgrading-ibm-cloud-pak-foundational-services)
+    - [Creating operator subscriptions before upgrading from Version 3.5](#creating-operator-subscriptions-before-upgrading-from-version-35)
+    - [Creating custom security context constraints for services before upgrading from Version 3.5](#creating-custom-security-context-constraints-for-services-before-upgrading-from-version-35)
+    - [Changing required node settings before upgrading from Version 3.5](#changing-required-node-settings-before-upgrading-from-version-35)
+    - [Installing Cloud Pak for Data](#installing-cloud-pak-for-data)
+    - [Specifying the install plan for operators that are automatically installed by Operand Deployment Lifecycle Manager](#specifying-the-install-plan-for-operators-that-are-automatically-installed-by-operand-deployment-lifecycle-manager)
+    - [Integrating with the IAM Service](#integrating-with-the-iam-service)
+    - [Making monitoring data highly available](#making-monitoring-data-highly-available)
+    - [Changing the route to the platform](#changing-the-route-to-the-platform)
+    - [Configuring an external route to the Flight service](#configuring-an-external-route-to-the-flight-service)
+    - [Securing communication ports](#securing-communication-ports)
+    - [Setting up the Cloud Pak for Data web client](#setting-up-the-cloud-pak-for-data-web-client)
 - [Watson Knowledge Catalog (wkc)](#watson-knowledge-catalog-wkc)
-  - [Fixing the productVersion value for specific releases](#fixing-the-productversion-value-for-specific-releases)
-  - [(略) Sizing and scaling up the XMETA data store portion of your InfoSphere® Information Server Db2® instance](#略-sizing-and-scaling-up-the-xmeta-data-store-portion-of-your-infosphere-information-server-db2-instance)
-  - [Determining which upgrade method to use for your environment](#determining-which-upgrade-method-to-use-for-your-environment)
-  - [Setting the values of your Watson Knowledge Catalog data store](#setting-the-values-of-your-watson-knowledge-catalog-data-store)
-  - [Upgrading the service](#upgrading-the-service)
-  - [Verifying the upgrade](#verifying-the-upgrade)
-  - [Updating column character limit (known issue)](#updating-column-character-limit-known-issue)
-  - [(略) Running the XMETA data store backup and restore](#略-running-the-xmeta-data-store-backup-and-restore)
-  - [Resizing the PersistentVolumeClaim (PVC)](#resizing-the-persistentvolumeclaim-pvc)
-  - [Update the indexes in the XMETA database](#update-the-indexes-in-the-xmeta-database)
+    - [Fixing the productVersion value for specific releases](#fixing-the-productversion-value-for-specific-releases)
+    - [(略) Sizing and scaling up the XMETA data store portion of your InfoSphere® Information Server Db2® instance](#略-sizing-and-scaling-up-the-xmeta-data-store-portion-of-your-infosphere-information-server-db2-instance)
+    - [Determining which upgrade method to use for your environment](#determining-which-upgrade-method-to-use-for-your-environment)
+    - [Setting the values of your Watson Knowledge Catalog data store](#setting-the-values-of-your-watson-knowledge-catalog-data-store)
+    - [Upgrading the service](#upgrading-the-service)
+    - [Verifying the upgrade](#verifying-the-upgrade)
+    - [Updating column character limit (known issue)](#updating-column-character-limit-known-issue)
+    - [(略) Running the XMETA data store backup and restore](#略-running-the-xmeta-data-store-backup-and-restore)
+    - [Resizing the PersistentVolumeClaim (PVC)](#resizing-the-persistentvolumeclaim-pvc)
+    - [Update the indexes in the XMETA database](#update-the-indexes-in-the-xmeta-database)
 
 # [Upgrade OpenShift](https://docs.openshift.com/container-platform/4.5/updating/updating-cluster-cli.html#update-upgrading-cli_updating-cluster-cli)
 - Install the jq package
@@ -50,7 +50,7 @@
 
 # [Setting up install variables](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=installing-best-practice-setting-up-install-variables)
 ```bash
-# cpd_vars.sh
+# source cpd_vars.sh
 export PROJECT_CPFS_OPS=ibm-common-services
 export PROJECT_CPD_OPS=ibm-common-services
 export PROJECT_CPD_INSTANCE=zen
@@ -288,7 +288,35 @@ mkdir -p $OFFLINEDIR_CPFS
     oc get deployments -n ${PROJECT_CPD_OPS} -l olm.owner="cpd-platform-operator.v2.0.8" -o jsonpath="{.items[0].status.availableReplicas} {'\n'}"
     ```
 - (略) Enabling services to use namespace scoping with third-party operators
-- (略) Creating an operator subscription for services
+- Creating an operator subscription for services
+    ```bash
+    cat << EOF | oc apply -f -
+    apiVersion: operators.coreos.com/v1alpha1
+    kind: Subscription
+    metadata:
+    labels:
+        app.kubernetes.io/instance:  ibm-cpd-wkc-operator-catalog-subscription
+        app.kubernetes.io/managed-by: ibm-cpd-wkc-operator
+        app.kubernetes.io/name:  ibm-cpd-wkc-operator-catalog-subscription
+    name: ibm-cpd-wkc-operator-catalog-subscription
+    namespace: ${PROJECT_CPD_OPS}
+    spec:
+        channel: v1.0
+        installPlanApproval: ${APPROVAL_TYPE}
+        name: ibm-cpd-wkc
+        source: ibm-cpd-wkc-operator-catalog
+        sourceNamespace: ${PROJECT_CATSRC}
+    EOF
+
+    # Verify that the command returns ibm-cpd-wkc.v1.0.8
+    oc get sub -n ${PROJECT_CPD_OPS} ibm-cpd-wkc-operator-catalog-subscription -o jsonpath='{.status.installedCSV} {"\n"}'
+
+    # Verify that the command returns Succeeded : install strategy completed with no errors
+    oc get csv -n ${PROJECT_CPD_OPS} ibm-cpd-wkc.v1.0.8 -o jsonpath='{ .status.phase } : { .status.message} {"\n"}'
+
+    # Verify that the command returns an integer greater than or equal to 1
+    oc get deployments -n ${PROJECT_CPD_OPS} -l olm.owner="ibm-cpd-wkc.v1.0.8" -o jsonpath="{.items[0].status.availableReplicas} {'\n'}"
+    ```
 
 ## [Creating custom security context constraints for services before upgrading from Version 3.5](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=upgrade-creating-custom-sccs)
 - To create the SCC **(wkc-iis-scc)**
@@ -423,7 +451,7 @@ mkdir -p $OFFLINEDIR_CPFS
 
 [Back to top](#)
 # Watson Knowledge Catalog (wkc)
-**Rolling back the upgrade is not supported when upgrading from the Version 3.5 release to a Version 4.0.x release.**
+> Rolling back the upgrade is **not supported** when upgrading from the Version 3.5 release to a Version 4.0.x release.
 
 ## Fixing the productVersion value for specific releases
 ## (略) Sizing and scaling up the XMETA data store portion of your InfoSphere® Information Server Db2® instance
@@ -456,7 +484,9 @@ EOF
 
 ## Verifying the upgrade
 ```bash
-export Namespace=wkc
+# ./check-wkc.sh
+
+export Namespace=zen
 
 # Lite
 oc get cm zen-lite-operation-configmap --namespace $Namespace -o jsonpath='{.data.operation}{"\n"}'
