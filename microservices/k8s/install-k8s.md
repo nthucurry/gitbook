@@ -16,7 +16,7 @@
 - kubelet
     - node 用來 master 溝通的內部元件
     - the component that runs on all of the machines in your cluster and does things like starting pods and containers
-- kubectl
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
     - 控制 K8S
     - the command line util to talk to your cluster
     - `kubectl cluster-info`

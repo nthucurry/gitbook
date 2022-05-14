@@ -12,12 +12,12 @@ else
 fi
 
 echo "  2. Environment value"
-timedatectl set-timezone Asia/Taipei
+# timedatectl set-timezone Asia/Taipei
 LANG=en_US.UTF-8
 swapoff -a
-echo "alias vi='vim'" >> /home/$USER/.bashrc
+# echo "alias vi='vim'" >> /home/$USER/.bashrc
 echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> /root/.bashrc
-echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+# echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 echo "  3. Proxy"
 if [ $where_am_i == "auo250" ]; then
@@ -43,31 +43,30 @@ else
 fi
 
 echo "  4. Update OS"
-yum update -y | grep "Complete!"
-yum install epel-release -y | grep "Complete!"
-yum install htop -y | grep "Complete!"
-yum install telnet -y | grep "Complete!"
-yum install traceroute -y | grep "Complete!"
-yum install nc -y | grep "Complete!"
-yum install nmap -y | grep "Complete!"
+yum update -y | grep "Complete"
+yum install epel-release -y | grep "Complete"
+yum install htop -y | grep "Complete"
+yum install telnet -y | grep "Complete"
+yum install yum-utils device-mapper-persistent-data lvm2 -y | grep "Complete"
+# yum install traceroute -y | grep "Complete"
+# yum install nc -y | grep "Complete"
+# yum install nmap -y | grep "Complete"
 echo -e
 
 echo ".... Docker ...."
-echo "  1. Install Docker CE"
-yum install yum-utils device-mapper-persistent-data lvm2 -y | grep "Complete!"
 
-echo "  2. Add the Docker repository"
+echo "  1. Add the Docker repository"
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-echo "  3. Install Docker CE"
+echo "  2. Install Docker CE"
 # yum install containerd.io-1.2.13 docker-ce-19.03.11 docker-ce-cli-19.03.11 -y | grep Complete
-yum install containerd.io docker-ce docker-ce-cli -y | grep "Complete!"
+yum install containerd.io docker-ce docker-ce-cli -y | grep "Complete"
 # echo "==== If necessary, remove it"
 # yum remove containerd.io; yum remove docker
 
-echo "  4. Set up the Docker daemon"
+echo "  3. Set up the Docker daemon"
 mkdir /etc/docker
-cat << EOF | tee /etc/docker/daemon.json
+cat << EOF | tee -a /etc/docker/daemon.json
 {
     "exec-opts": ["native.cgroupdriver=systemd"],
     "log-driver": "json-file",
@@ -85,17 +84,20 @@ echo "  5. Start docker"
 systemctl daemon-reload
 systemctl enable docker
 systemctl start docker
+# docker run hello-world
+# docker ps -a
+# exit
 
 echo ".... K8S ...."
 echo "  1. Letting iptables see bridged traffic"
-cat << EOF | sudo tee /etc/modules-load.d/k8s.conf
+cat << EOF | tee -a /etc/modules-load.d/k8s.conf
 br_netfilter
 EOF
-cat << EOF | sudo tee /etc/sysctl.d/k8s.conf
+cat << EOF | tee -a /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
-sudo sysctl --system
+sysctl --system
 
 echo "  2. Set SELinux in permissive mode (effectively disabling it)"
 setenforce 0
@@ -103,7 +105,7 @@ sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 echo -e
 
 echo "  3. Installing kubeadm, kubelet and kubectl"
-cat << EOF | tee /etc/yum.repos.d/kubernetes.repo
+cat << EOF | tee -a /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
 baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
@@ -113,9 +115,14 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kubelet kubeadm kubectl
 EOF
-yum install kubeadm kubelet kubectl -y --disableexcludes=kubernetes | grep "Complete!"
+yum install kubeadm kubelet kubectl -y --disableexcludes=kubernetes --nogpgcheck | grep "Complete"
 systemctl enable --now kubelet
 echo -e
+
+# curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# chmod +x kubectl
+# kubectl completion bash | tee -a /etc/bash_completion.d/kubectl > /dev/null
+# echo -e
 
 echo "  4. Pull the images for kubeadm requires"
 kubeadm config images pull
