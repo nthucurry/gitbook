@@ -198,8 +198,7 @@ mkdir -p $OFFLINEDIR_CPFS
             --args "--registry icr.io --inputDir ${OFFLINEDIR_CPFS} --recursive"
 
         # Verify that ibm-cpd-scheduling-catalog is READY
-        oc get catalogsource -n ${PROJECT_CATSRC} ibm-cpd-scheduling-catalog \
-            -o jsonpath='{.status.connectionState.lastObservedState} {"\n"}'
+        oc get catalogsource -n ${PROJECT_CATSRC} ibm-cpd-scheduling-catalog -o jsonpath='{.status.connectionState.lastObservedState} {"\n"}'
         ```
     - Create the scheduling service catalog source **(ibm-cpd-scheduling)**
         ```bash
@@ -211,8 +210,7 @@ mkdir -p $OFFLINEDIR_CPFS
             --args "--inputDir ${OFFLINEDIR_CPD} --recursive"
 
         # Verify that ibm-cpd-scheduling-catalog is READY
-        oc get catalogsource -n ${PROJECT_CATSRC} ibm-cpd-scheduling-catalog \
-            -o jsonpath='{.status.connectionState.lastObservedState} {"\n"}'
+        oc get catalogsource -n ${PROJECT_CATSRC} ibm-cpd-scheduling-catalog -o jsonpath='{.status.connectionState.lastObservedState} {"\n"}'
         ```
     - Create the IBM Cloud Pak for Data catalog source **(ibm-cp-datacore)**
         ```bash
@@ -224,8 +222,7 @@ mkdir -p $OFFLINEDIR_CPFS
             --args "--inputDir ${OFFLINEDIR_CPD} --recursive"
 
         # Verify that cpd-platform is READY
-        oc get catalogsource -n ${PROJECT_CATSRC} cpd-platform \
-            -o jsonpath='{.status.connectionState.lastObservedState} {"\n"}'
+        oc get catalogsource -n ${PROJECT_CATSRC} cpd-platform -o jsonpath='{.status.connectionState.lastObservedState} {"\n"}'
         ```
     - (略) Create the Db2U catalog source if you plan to upgrade or install one of the following services
     - Create the Watson Knowledge Catalog catalog source **(ibm-wkc)**
@@ -238,8 +235,7 @@ mkdir -p $OFFLINEDIR_CPFS
             --args "--inputDir ${OFFLINEDIR_CPD} --recursive"
 
         # Verify that ibm-cpd-wkc-operator-catalog is READY
-        oc get catalogsource -n ${PROJECT_CATSRC} ibm-cpd-wkc-operator-catalog \
-            -o jsonpath='{.status.connectionState.lastObservedState} {"\n"}'
+        oc get catalogsource -n ${PROJECT_CATSRC} ibm-cpd-wkc-operator-catalog -o jsonpath='{.status.connectionState.lastObservedState} {"\n"}'
         ```
 
 ## [Installing or upgrading IBM Cloud Pak foundational services](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=upgrade-installing-upgrading-cloud-pak-foundational-services)
