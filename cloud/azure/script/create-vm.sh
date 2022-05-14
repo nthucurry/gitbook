@@ -83,8 +83,8 @@ if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; th
         ssh -oStrictHostKeyChecking=no $admin@$vm_name.southeastasia.cloudapp.azure.com "echo alias vi=\'vim\' | sudo tee -a /etc/bashrc"
         ssh -oStrictHostKeyChecking=no $admin@$vm_name.southeastasia.cloudapp.azure.com "echo alias grep=\'grep --color=always\' | sudo tee -a /etc/bashrc"
         ssh -oStrictHostKeyChecking=no $admin@$vm_name.southeastasia.cloudapp.azure.com "echo alias tree=\'tree --charset ASCII\' | sudo tee -a /etc/bashrc"
-        # ssh -oStrictHostKeyChecking=no $admin@$public_ip wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/k8s/script/initial-k8s.sh
-        # ssh -oStrictHostKeyChecking=no $admin@$public_ip chmod +x initial-k8s.sh
+        ssh -oStrictHostKeyChecking=no $admin@$vm_name.southeastasia.cloudapp.azure.com wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/k8s/script/initial-k8s.sh
+        ssh -oStrictHostKeyChecking=no $admin@$vm_name.southeastasia.cloudapp.azure.com chmod +x initial-k8s.sh
         # ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.7  t-m1" | sudo tee -a /etc/hosts'
         # ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.8  t-m2" | sudo tee -a /etc/hosts'
         # ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.9  t-m3" | sudo tee -a /etc/hosts'
