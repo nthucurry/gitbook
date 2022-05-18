@@ -42,9 +42,9 @@ cp ./install-config.yaml ./ocp4.5_cust
 cd ~
 mkdir ocp4.5_client
 cd ./ocp4.5_client
-wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-client-linux-4.5.36.tar.gz
-# wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.6.56/openshift-client-linux-4.6.56.tar.gz
-tar xvfz openshift-client-linux-4.5.36.tar.gz
+# wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-client-linux-4.5.36.tar.gz
+wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.6.56/openshift-client-linux-4.6.56.tar.gz
+tar xvfz openshift-client-linux-4.6.56.tar.gz
 sudo cp ./oc /usr/bin
 
 # openshift tab completion
@@ -52,6 +52,7 @@ oc completion bash > oc_bash_completion
 sudo cp oc_bash_completion /etc/bash_completion.d/
 
 # download useful script
+cd ~
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script-backup/backup-etcd.sh
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script-maintain/check-pod.sh
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/login-ocp.sh

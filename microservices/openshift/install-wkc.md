@@ -10,8 +10,8 @@
 - [設定 Disk 路徑 on NFS VM](#設定-disk-路徑-on-nfs-vm)
 - [安裝 Command-Line Interface on Bastion VM](#安裝-command-line-interface-on-bastion-vm)
 - [建置專案 zen](#建置專案-zen)
-  - [安裝 Control Plane (lite)](#安裝-control-plane-lite)
-  - [安裝 WKC (Watson Knowledge Catalog)](#安裝-wkc-watson-knowledge-catalog)
+    - [安裝 Control Plane (lite)](#安裝-control-plane-lite)
+    - [安裝 WKC (Watson Knowledge Catalog)](#安裝-wkc-watson-knowledge-catalog)
 - [如果 WKC 安裝失敗](#如果-wkc-安裝失敗)
 - [設定 Machine Config on Bastion VM](#設定-machine-config-on-bastion-vm)
 - [設定 Proxy on Bastion VM](#設定-proxy-on-bastion-vm)
@@ -53,37 +53,32 @@
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/openshift/install-flow.png" width=700>
 
 # 到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password
-- `az ad sp create-for-rbac --role="Contributor" --name="http://test.org" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
+> 建立 Service Principal
+- `az ad sp create-for-rbac --role="Contributor" --name="WKC Test" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
     ```json
     {
         "appId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-        "displayName": "test.org",
-        "name": "http://test.org",
+        "displayName": "WKC Test",
         "password": "**********************************",
         "tenant": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
     }
     ```
 - `az ad sp list --filter "appId eq 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'"`
-- `az role assignment create --role "User Access Administrator" --assignee-object-id "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
+- ~~`az role assignment create --role "User Access Administrator" --assignee-object-id "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`~~
+- 也可以到 Azure Portal 建立 Service Principal
+- 注意密碼會過期
 
 # 設定 Install Config
-[install-config.yaml](./config/install-config.yaml)
+> [install-config.yaml](./config/install-config.yaml)
 
 # 前置作業 on Bastion VM
-- `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/1-initial-setting.sh`
-- 執行 [1-initial-setting.sh](./script/1-initial-setting.sh)
-    - 安裝 azure cli
-    - 安裝 openshift install package
-    - 產生 ssh key
-    - 更新 install-config.yaml 的 pullSecret 和 sshKey
-    - 安裝 openshift client tool
-    - 安裝 openshift tab completion
-- 下載實用 script
-    ```bash
-    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/login-ocp.sh
-    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/check-pod.sh
-    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/backup-etcd.sh
-    ```
+> 執行 [1-initial-setting.sh](./script/1-initial-setting.sh)
+1. 安裝 azure cli
+2. 安裝 openshift install package
+3. 產生 ssh key
+4. 更新 install-config.yaml 的 pullSecret 和 sshKey
+5. 安裝 openshift client tool
+6. 安裝 openshift tab completion
 
 # 安裝 OpenShift on Bastion VM
 - 在 baseDomainResourceGroupName 建立 private DNS zone: wkc.test.org
@@ -131,9 +126,9 @@
     ```
 - `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/4-install-nfs.sh`
 - 執行 [4-install-nfs.sh](./script/4-install-nfs.sh)
-    - 安裝 NFS
-    - 設定 NFS config
-    - 安裝 openshift client tool
+    1. 安裝 NFS
+    2. 設定 NFS config
+    3. 安裝 openshift client tool
 - 安裝 NFS
     ```bash
     sudo yum install nfs-utils -y
@@ -271,49 +266,49 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
     mkdir -p $DOWNLOAD_FOLDER
 
     ./cpd-cli preload-images \
-    --repo ./repo.yaml \
-    --assembly $ASSEMBLY \
-    --download-path=$DOWNLOAD_FOLDER \
-    --action download \
-    --accept-all-licenses
+        --repo ./repo.yaml \
+        --assembly $ASSEMBLY \
+        --download-path=$DOWNLOAD_FOLDER \
+        --action download \
+        --accept-all-licenses
     ```
 - 下載必備檔案
     ```bash
     ./cpd-cli preload-images \
-    --assembly $ASSEMBLY \
-    --action push \
-    --target-registry-username kubeadmin \
-    --target-registry-password $IMAGE_REGISTRY_PASSWORD \
-    --load-from $LOAD_FROM \
-    --transfer-image-to $REGISTRY/$NAMESPACE \
-    --insecure-skip-tls-verify \
-    --accept-all-licenses
+        --assembly $ASSEMBLY \
+        --action push \
+        --target-registry-username kubeadmin \
+        --target-registry-password $IMAGE_REGISTRY_PASSWORD \
+        --load-from $LOAD_FROM \
+        --transfer-image-to $REGISTRY/$NAMESPACE \
+        --insecure-skip-tls-verify \
+        --accept-all-licenses
     ```
 - 設定 control plane 參數
     ```bash
     ./cpd-cli adm \
-    --assembly $ASSEMBLY \
-    --latest-dependency \
-    --namespace $NAMESPACE \
-    --load-from $LOAD_FROM \
-    --apply \
-    --verbose \
-    --accept-all-licenses
+        --assembly $ASSEMBLY \
+        --latest-dependency \
+        --namespace $NAMESPACE \
+        --load-from $LOAD_FROM \
+        --apply \
+        --verbose \
+        --accept-all-licenses
     ```
 - 安裝
     ```bash
     ./cpd-cli install \
-    --assembly $ASSEMBLY \
-    --namespace $NAMESPACE \
-    --storageclass $STORAGE_CLASS \
-    --load-from $LOAD_FROM \
-    --cluster-pull-username=kubeadmin \
-    --cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
-    --cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
-    --latest-dependency \
-    --accept-all-licenses \
-    --verbose \
-    --insecure-skip-tls-verify
+        --assembly $ASSEMBLY \
+        --namespace $NAMESPACE \
+        --storageclass $STORAGE_CLASS \
+        --load-from $LOAD_FROM \
+        --cluster-pull-username=kubeadmin \
+        --cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
+        --cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
+        --latest-dependency \
+        --accept-all-licenses \
+        --verbose \
+        --insecure-skip-tls-verify
     ```
 - 確認狀態
     - `~/ibm/cpd-cli status --assembly lite --namespace zen`
@@ -337,51 +332,51 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
     mkdir -p $DOWNLOAD_FOLDER
 
     ./cpd-cli preload-images \
-    --repo ./repo.yaml \
-    --assembly $ASSEMBLY \
-    --download-path=$DOWNLOAD_FOLDER \
-    --action download \
-    --accept-all-licenses
+        --repo ./repo.yaml \
+        --assembly $ASSEMBLY \
+        --download-path=$DOWNLOAD_FOLDER \
+        --action download \
+        --accept-all-licenses
     ```
 - 避免 504 錯誤
     - `oc annotate route default-route default-route --overwrite haproxy.router.openshift.io/timeout=10m -n openshift-image-registry`
 - 下載必備檔案
     ```bash
     ./cpd-cli preload-images \
-    --assembly $ASSEMBLY \
-    --action push \
-    --target-registry-username $IMAGE_REGISTRY_USER \
-    --target-registry-password $IMAGE_REGISTRY_PASSWORD \
-    --load-from $LOAD_FROM \
-    --transfer-image-to $REGISTRY/$NAMESPACE \
-    --insecure-skip-tls-verify \
-    --accept-all-licenses
+        --assembly $ASSEMBLY \
+        --action push \
+        --target-registry-username $IMAGE_REGISTRY_USER \
+        --target-registry-password $IMAGE_REGISTRY_PASSWORD \
+        --load-from $LOAD_FROM \
+        --transfer-image-to $REGISTRY/$NAMESPACE \
+        --insecure-skip-tls-verify \
+        --accept-all-licenses
     ```
 - 設定參數
     ```bash
     ./cpd-cli adm \
-    --assembly $ASSEMBLY \
-    --latest-dependency \
-    --namespace $NAMESPACE \
-    --load-from $LOAD_FROM \
-    --apply \
-    --verbose \
-    --accept-all-licenses
+        --assembly $ASSEMBLY \
+        --latest-dependency \
+        --namespace $NAMESPACE \
+        --load-from $LOAD_FROM \
+        --apply \
+        --verbose \
+        --accept-all-licenses
     ```
 - 安裝
     ```bash
     ./cpd-cli install \
-    --assembly $ASSEMBLY \
-    --namespace $NAMESPACE \
-    --storageclass $STORAGE_CLASS \
-    --load-from $LOAD_FROM \
-    --cluster-pull-username=$IMAGE_REGISTRY_USER \
-    --cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
-    --cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
-    --latest-dependency \
-    --accept-all-licenses \
-    --verbose \
-    --insecure-skip-tls-verify
+        --assembly $ASSEMBLY \
+        --namespace $NAMESPACE \
+        --storageclass $STORAGE_CLASS \
+        --load-from $LOAD_FROM \
+        --cluster-pull-username=$IMAGE_REGISTRY_USER \
+        --cluster-pull-password=$IMAGE_REGISTRY_PASSWORD \
+        --cluster-pull-prefix image-registry.openshift-image-registry.svc:5000/$NAMESPACE \
+        --latest-dependency \
+        --accept-all-licenses \
+        --verbose \
+        --insecure-skip-tls-verify
     ```
 - 確認狀態
     - `~/ibm/cpd-cli status --assembly wkc --namespace zen`

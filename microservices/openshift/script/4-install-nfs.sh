@@ -13,8 +13,9 @@ sudo systemctl restart nfs-server
 cd ~
 mkdir ocp4.5_client
 cd ./ocp4.5_client
-wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-client-linux-4.5.36.tar.gz
-tar xvfz openshift-client-linux-4.5.36.tar.gz
+# wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-client-linux-4.5.36.tar.gz
+wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.6.56/openshift-client-linux-4.6.56.tar.gz
+tar xvfz openshift-client-linux-4.6.56.tar.gz
 sudo cp ./oc /usr/bin
 
 # K8S incubator
