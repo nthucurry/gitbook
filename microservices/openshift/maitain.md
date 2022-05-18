@@ -390,6 +390,8 @@ sudo podman push $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:2.0.0-${BUILD_NUM}-${CP
     - `oc logs pods iis-xxx`
 - cluster operator 狀態
     - `oc get co`
+- Pod 狀態
+    - `oc describe pods dsx-mount-pvc-job-zfb8v`
 
 ## Alert Mail (TBD)
 - 從 log 抓 successfully... 等字串
