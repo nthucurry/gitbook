@@ -1,12 +1,12 @@
 sudo timedatectl set-timezone Asia/Taipei
-sudo yum update -y | grep "Complete!"
-sudo yum install epel-release -y | grep "Complete!"
-sudo yum install htop telnet nc nmap -y | grep "Complete!"
-sudo yum install nfs-utils -y | grep "Complete!"
-sudo yum install expect -y | grep "Complete!"
+sudo yum update -y | grep "Complete"
+sudo yum install epel-release -y | grep "Complete"
+sudo yum install htop telnet nc nmap -y | grep "Complete"
+sudo yum install nfs-utils -y | grep "Complete"
+sudo yum install expect -y | grep "Complete"
 
 # replace redhad docker tool
-sudo yum install podman -y | grep "Complete!"
+sudo yum install podman -y | grep "Complete"
 
 # azure cli
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
@@ -16,7 +16,7 @@ baseurl=https://packages.microsoft.com/yumrepos/azure-cli
 enabled=1
 gpgcheck=1
 gpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.repos.d/azure-cli.repo
-sudo yum install azure-cli -y | grep "Complete!"
+sudo yum install azure-cli -y | grep "Complete"
 
 # openshift install package
 cd ~
@@ -28,7 +28,7 @@ tar xvf openshift-install-linux-4.5.36.tar.gz
 # openshift install config
 cd ~
 mkdir ocp4.5_cust
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/config/install-config.yaml
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/config/install-config.yaml
 
 # generate ssh key
 ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa <<< y
@@ -52,7 +52,7 @@ oc completion bash > oc_bash_completion
 sudo cp oc_bash_completion /etc/bash_completion.d/
 
 # download useful script
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/backup-etcd.sh
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/check-pod.sh
-wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/login-ocp.sh
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script-backup/backup-etcd.sh
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script-maintain/check-pod.sh
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/login-ocp.sh
 chmod +x backup-etcd.sh check-pod.sh login-ocp.sh

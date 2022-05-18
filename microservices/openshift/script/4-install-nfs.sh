@@ -1,7 +1,7 @@
 sudo timedatectl set-timezone Asia/Taipei
-sudo yum update -y | grep "Complete!"
-sudo yum install epel-release -y | grep "Complete!"
-sudo yum install nfs-utils -y "Complete!"
+sudo yum update -y | grep "Complete"
+sudo yum install epel-release -y | grep "Complete"
+sudo yum install nfs-utils -y "Complete"
 sudo systemctl enable rpcbind
 sudo systemctl enable nfs-server
 sudo systemctl start rpcbind
