@@ -70,7 +70,7 @@
 [install-config.yaml](./config/install-config.yaml)
 
 # 前置作業 on Bastion VM
-- `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/1-initial-setting.sh`
+- `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/1-initial-setting.sh`
 - 執行 [1-initial-setting.sh](./script/1-initial-setting.sh)
     - 安裝 azure cli
     - 安裝 openshift install package
@@ -80,9 +80,9 @@
     - 安裝 openshift tab completion
 - 下載實用 script
     ```bash
-    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/login-ocp.sh
-    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/check-pod.sh
-    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/backup-etcd.sh
+    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/login-ocp.sh
+    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/check-pod.sh
+    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/backup-etcd.sh
     ```
 
 # 安裝 OpenShift on Bastion VM
@@ -129,7 +129,7 @@
     vi /etc/fstab
     chown azadmin:azadmin /data
     ```
-- `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/openshift/script/4-install-nfs.sh`
+- `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/script/4-install-nfs.sh`
 - 執行 [4-install-nfs.sh](./script/4-install-nfs.sh)
     - 安裝 NFS
     - 設定 NFS config
