@@ -102,6 +102,7 @@ yum install glibc-devel.i686 -y
         oracle ALL=(ALL) ALL
         ```
     - `alter user dbsnmp identified by dbsnmp account unlock;`
+    - `/oracle/agent_inst/bin/emctl start agent`
 
 ### 指令
 - 站台: https://cloud-control:7803/em
