@@ -20,14 +20,14 @@ sudo yum install azure-cli -y | grep "Complete"
 
 # openshift install package
 cd ~
-mkdir ocp4.6_inst
-cd ~/ocp4.6_inst
+mkdir ocp4.5_inst
+cd ~/ocp4.5_inst
 wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-install-linux-4.5.36.tar.gz
 tar xvf openshift-install-linux-4.5.36.tar.gz
 
 # openshift install config
 cd ~
-mkdir ocp4.6_cust
+mkdir ocp4.5_cust
 wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/openshift/config/install-config.yaml
 
 # generate ssh key
@@ -36,8 +36,8 @@ ssh_key_values="`cat ~/.ssh/id_rsa.pub`"
 
 # update ssh key in install-config.yaml
 sed -i "s|ssh-rsa XXXX|$ssh_key_values|g" ~/install-config.yaml
-mv ~/install-config.yaml ~/ocp4.6_cust
-ln -s ~/ocp4.6_cust/install-config.yaml
+mv ~/install-config.yaml ~/ocp4.5_cust
+ln -s ~/ocp4.5_cust/install-config.yaml
 
 # openshift client tool
 cd ~
