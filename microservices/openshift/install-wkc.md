@@ -10,8 +10,8 @@
 - [設定 Disk 路徑 on NFS VM](#設定-disk-路徑-on-nfs-vm)
 - [安裝 Command-Line Interface on Bastion VM](#安裝-command-line-interface-on-bastion-vm)
 - [建置專案 zen](#建置專案-zen)
-    - [安裝 Control Plane (lite)](#安裝-control-plane-lite)
-    - [安裝 WKC (Watson Knowledge Catalog)](#安裝-wkc-watson-knowledge-catalog)
+  - [安裝 Control Plane (lite)](#安裝-control-plane-lite)
+  - [安裝 WKC (Watson Knowledge Catalog)](#安裝-wkc-watson-knowledge-catalog)
 - [如果 WKC 安裝失敗](#如果-wkc-安裝失敗)
 - [設定 Machine Config on Bastion VM](#設定-machine-config-on-bastion-vm)
 - [設定 Proxy on Bastion VM](#設定-proxy-on-bastion-vm)
@@ -54,18 +54,20 @@
 
 # 到 Azure Portal 進 Console 找出 subscription, tenant, client (appId), client password
 > 建立 Service Principal
-- `az ad sp create-for-rbac --role="Contributor" --name="WKC Test" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
-    ```json
-    {
-        "appId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-        "displayName": "WKC Test",
-        "password": "**********************************",
-        "tenant": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-    }
-    ```
-- `az ad sp list --filter "appId eq 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'"`
-- ~~`az role assignment create --role "User Access Administrator" --assignee-object-id "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`~~
-- 也可以到 Azure Portal 建立 Service Principal
+- By az cli
+  - `az ad sp create-for-rbac --role="Contributor" --name="WKC Test" --scopes="/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
+      ```json
+      {
+          "appId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+          "displayName": "WKC Test",
+          "password": "**********************************",
+          "tenant": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+      }
+      ```
+  - `az ad sp list --filter "appId eq 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'"`
+  - `az role assignment create --role "User Access Administrator" --assignee-object-id "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
+- By Azure Portal
+    - 需要該訂閱的 Contributor、User Access Administrator
 - 注意密碼會過期
 
 # 設定 Install Config
