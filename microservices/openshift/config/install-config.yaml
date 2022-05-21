@@ -44,9 +44,9 @@ platform:
   azure:
     baseDomainResourceGroupName: DBA-K8S
     networkResourceGroupName: DBA-K8S
-    virtualNetwork: vnet-k8s
-    controlPlaneSubnet: vm
-    computeSubnet: vm
+    virtualNetwork: t-vnet
+    controlPlaneSubnet: dmz-web
+    computeSubnet: dmz-web
     region: southeastasia
 publish: Internal
 pullSecret: '{"auths":{"cloud.openshift.com":{"auth":"XXXX","email":"XXX@gmail.com"},"quay.io":{"auth":"XXXX","email":"XXX@gmail.com"},"registry.connect.redhat.com":{"auth":"XXXX","email":"XXX@gmail.com"},"registry.redhat.io":{"auth":"XXXX","email":"XXX@gmail.com"}}}'
