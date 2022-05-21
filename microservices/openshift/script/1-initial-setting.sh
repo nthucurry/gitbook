@@ -46,7 +46,7 @@ cd ~/ocp4.6_client
 # wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.5.36/openshift-client-linux-4.5.36.tar.gz
 wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.6.56/openshift-client-linux-4.6.56.tar.gz
 tar xvfz openshift-client-linux-4.6.56.tar.gz
-sudo cp oc /usr/bin
+sudo cp ./oc /usr/bin
 
 # openshift tab completion
 oc completion bash > oc_bash_completion
