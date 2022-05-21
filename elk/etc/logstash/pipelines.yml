@@ -1,7 +1,5 @@
 # - pipeline.id: main
 #   path.config: "/etc/logstash/conf.d/*.conf"
-- pipeline.id: azure-nsg-flow
-  path.config: "/etc/logstash/conf.d/1000-*.conf"
 - pipeline.id: azure-storage-audit
   path.config: "/etc/logstash/conf.d/1010-*.conf"
 - pipeline.id: azure-waf-access
@@ -18,6 +16,8 @@
   path.config: "/etc/logstash/conf.d/1070-*.conf"
 - pipeline.id: azure-databricks
   path.config: "/etc/logstash/conf.d/1080-*.conf"
+- pipeline.id: azure-nsg-flow
+  path.config: "/etc/logstash/conf.d/1090-*.conf"
 # - pipeline.id: aad-audit
 #   path.config: "/etc/logstash/conf.d/1100-*.conf"
 - pipeline.id: aad-signin
