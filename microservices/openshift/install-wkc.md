@@ -223,8 +223,9 @@
 # 安裝 cpd-cli
 mkdir ~/ibm
 cd ~/ibm
-wget https://github.com/IBM/cpd-cli/releases/download/v3.5.3/cpd-cli-linux-EE-3.5.3.tgz
-tar xzvf cpd-cli-linux-EE-3.5.3.tgz
+# wget https://github.com/IBM/cpd-cli/releases/download/v3.5.3/cpd-cli-linux-EE-3.5.3.tgz
+wget https://github.com/IBM/cpd-cli/releases/download/v3.5.10/cpd-cli-linux-EE-3.5.10.tgz
+tar xzvf cpd-cli-linux-EE-3.5.10.tgz
 
 # 設定 cpd key
 export registry_key="<cpd_key>"
