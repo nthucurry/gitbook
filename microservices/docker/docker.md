@@ -34,8 +34,28 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 
 ## 安裝 Docker
 - Ubuntu
-    - 安裝 curl：`sudo apt install curl`
-    - 安裝 docker：`curl -sSL https://get.docker.com/ubuntu/ | sudo sh`
+    ```bash
+    # Install Docker Engine on Ubuntu
+    ## Set up the repository
+    apt-get update
+    apt-get install ca-certificates curl gnupg lsb-release -y
+    curl -x 10.248.15.8:80 -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    ## Install Docker Engine (latest version)
+    apt-get update
+    apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+    docker run hello-world
+
+    ## Post-installation steps for Linux
+    groupadd docker
+    usermod -aG docker $USER
+    chmod 777 /var/run/docker.sock
+
+    ## Configure Docker to start on boot
+    systemctl enable docker.service
+    systemctl enable containerd.service
+    ```
 - CentOS (請用 user account 執行)
     ```bash
     sudo yum install yum-utils device-mapper-persistent-data lvm2 -y
@@ -78,20 +98,20 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 
 ## 操作步驟
 1. `sudo docker run hello-world`
-    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/run-hello-world.png)
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/run-hello-world.png">
 2. `docker run -d --publish-all jenkins`
-    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/jenkins.png)
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/jenkins.png">
 3. `docker ps -a`
-    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/docker-list.png)
     - 停止 container: `docker stop b551697c6c55`
     - 刪除 container: `docker rm b551697c6c55`
     - 刪除 image: `docker rmi 300e315adb2f`
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/docker-list.png">
 4. 輸入網址：localhost:32769
-    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/login-page.png)
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/login-page.png">
 5. `docker logs gifted_gauss`
-    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/get-password.png)
-    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/copy-password.png)
-    - ![](https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/finish.png)
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/get-password.png">
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/copy-password.png">
+    <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/docker/finish.png">
 
 ## Run MariaDB
 - `docker run --name scm-mariadb -e MYSQL_ROOT_PASSWORD=ncu5540 -d mariadb`
@@ -130,7 +150,7 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     - 使用到的 Docker Image 名稱，今天使用 CentOS
 - MAINTAINER jack
     - 用來說明，撰寫和維護這個 Dockerfile 的人是誰，也可以給 E-mail 的資訊
-- RUN yum install -y wget
+- RUN yum install wget -y
 - RUN cd /
     - RUN 指令後面放 Linux 指令，用來執行安裝和設定這個 Image 需要的東西
 - ADD jdk-8u152-linux-x64.tar.gz /
