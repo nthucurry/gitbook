@@ -9,6 +9,7 @@
 - http://ftp.tc.edu.tw/pub/Apache/tomcat/tomcat-9/v9.0.44/bin/
 - [NGINX 設定 HTTPS 網頁加密連線，建立自行簽署的 SSL 憑證](https://blog.gtwang.org/linux/nginx-create-and-install-ssl-certificate-on-ubuntu-linux/)
 - 第三方認證: https://manage.sslforfree.com/dashboard
+- [My No-IP](https://my.noip.com/)
 
 # NGINX
 - `mkdir /etc/nginx/ssl`

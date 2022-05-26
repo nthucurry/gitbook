@@ -223,8 +223,9 @@
 # 安裝 cpd-cli
 mkdir ~/ibm
 cd ~/ibm
-wget https://github.com/IBM/cpd-cli/releases/download/v3.5.3/cpd-cli-linux-EE-3.5.3.tgz
-tar xzvf cpd-cli-linux-EE-3.5.3.tgz
+# wget https://github.com/IBM/cpd-cli/releases/download/v3.5.3/cpd-cli-linux-EE-3.5.3.tgz
+wget https://github.com/IBM/cpd-cli/releases/download/v3.5.10/cpd-cli-linux-EE-3.5.10.tgz
+tar xzvf cpd-cli-linux-EE-3.5.10.tgz
 
 # 設定 cpd key
 export registry_key="<cpd_key>"
@@ -263,7 +264,7 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
     export LOAD_FROM=~/ibm/$VERSION/$ASSEMBLY/
     export DOWNLOAD_FOLDER=~/ibm/$VERSION/$ASSEMBLY/
     ```
-- 下載 lite
+- 下載 Lite
     ```bash
     mkdir -p $DOWNLOAD_FOLDER
 
@@ -274,7 +275,7 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
         --action download \
         --accept-all-licenses
     ```
-- 下載必備檔案
+- ~~下載必備檔案 (option)~~
     ```bash
     ./cpd-cli preload-images \
         --assembly $ASSEMBLY \
@@ -286,7 +287,7 @@ sed -i -e "s/<entitlement key>/$registry_key/g" ./repo.yaml
         --insecure-skip-tls-verify \
         --accept-all-licenses
     ```
-- 設定 control plane 參數
+- 設定 Control Plane 參數
     ```bash
     ./cpd-cli adm \
         --assembly $ASSEMBLY \

@@ -24,6 +24,7 @@ echo "Input VM name: "
 read vm_name
 image="OpenLogic:CentOS:7_9:7.9.2021020400"
 # image="OpenLogic:CentOS:6.10:6.10.2020042900"
+# image="tidalmediainc:ubuntu-server-20-04-minimal:ubuntu-20-04-minimal:1.0.2"
 size="Standard_B2s" # CPU, RAM
 os_disk_size="30" # GB
 admin="azadmin"
@@ -63,14 +64,6 @@ if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; th
         ssh -oStrictHostKeyChecking=no $admin@$vm_name "echo alias vi=\'vim\' | sudo tee -a /etc/bashrc"
         ssh -oStrictHostKeyChecking=no $admin@$vm_name "echo alias grep=\'grep --color=always\' | sudo tee -a /etc/bashrc"
         ssh -oStrictHostKeyChecking=no $admin@$vm_name "echo alias tree=\'tree --charset ASCII\' | sudo tee -a /etc/bashrc"
-        # ssh -oStrictHostKeyChecking=no $admin@$vm_name wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/knowledge/infra/k8s/script/initial-k8s.sh
-        # ssh -oStrictHostKeyChecking=no $admin@$vm_name chmod +x initial-k8s.sh
-        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.6  k8m1" | sudo tee -a /etc/hosts'
-        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.7  k8m2" | sudo tee -a /etc/hosts'
-        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.10 k8m3" | sudo tee -a /etc/hosts'
-        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.11 k8n1" | sudo tee -a /etc/hosts'
-        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.12 k8n2" | sudo tee -a /etc/hosts'
-        # ssh -oStrictHostKeyChecking=no $admin@$vm_name 'echo "10.248.15.13 k8n3" | sudo tee -a /etc/hosts'
     else
         # In home environment
         az network nsg rule update \
