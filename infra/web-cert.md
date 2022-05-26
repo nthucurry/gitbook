@@ -1,4 +1,5 @@
 - [參考](#參考)
+- [NGINX](#nginx)
 - [Tomcat](#tomcat)
 - [Apache](#apache)
 
@@ -6,7 +7,42 @@
 - https://www.ionos.com/digitalguide/server/configuration/apache-tomcat-on-centos/
 - https://downloads.apache.org/tomcat/tomcat-9/
 - http://ftp.tc.edu.tw/pub/Apache/tomcat/tomcat-9/v9.0.44/bin/
+- [NGINX 設定 HTTPS 網頁加密連線，建立自行簽署的 SSL 憑證](https://blog.gtwang.org/linux/nginx-create-and-install-ssl-certificate-on-ubuntu-linux/)
 - 第三方認證: https://manage.sslforfree.com/dashboard
+
+# NGINX
+- `mkdir /etc/nginx/ssl`
+- 產生自我簽署的金鑰 (trusted certificate)
+    - `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt`
+        ```
+        Country Name (2 letter code) [XX]:TW
+        State or Province Name (full name) []:Taiwan
+        Locality Name (eg, city) [Default City]:Taipei
+        Organization Name (eg, company) [Default Company Ltd]:Test Inc.
+        Organizational Unit Name (eg, section) []:IT Department
+        Common Name (eg, your name or your server's hostname) []:api.ddns.net
+        Email Address []:admin@example.com
+        ```
+- 更新設定檔
+    - `vi /etc/nginx/nginx.conf`
+        ```
+        server {
+            listen       80;
+            listen       [::]:80;
+            server_name  _;
+            root         /usr/share/nginx/html;
+
+            listen 443 ssl default_server;
+            listen [::]:443 ssl default_server;
+
+            ssl_certificate /etc/nginx/ssl/nginx.crt;
+            ssl_certificate_key /etc/nginx/ssl/nginx.key;
+
+            ...
+        ```
+- 重啟服務
+- 產出 pfx 憑證 (windows)
+    - `openssl pkcs12 -export -out nginx.pfx -inkey nginx.key -in nginx.crt`
 
 # Tomcat
 - 安裝 Tomcat
@@ -56,6 +92,6 @@
             ServerName squid.gotdns.ch:443
         </VirtualHost>
         ```
-- 重啟 apache 服務
+- 重啟服務
 - 測試: sslshopper.com
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/security/ssl-result.png" width=500>
