@@ -8,9 +8,8 @@
 # 參考
 - https://www.ionos.com/digitalguide/server/configuration/apache-tomcat-on-centos/
 - https://downloads.apache.org/tomcat/tomcat-9/
-- http://ftp.tc.edu.tw/pub/Apache/tomcat/tomcat-9/v9.0.44/bin/
 - [NGINX 設定 HTTPS 網頁加密連線，建立自行簽署的 SSL 憑證](https://blog.gtwang.org/linux/nginx-create-and-install-ssl-certificate-on-ubuntu-linux/)
-- 第三方認證: https://manage.sslforfree.com/dashboard
+- 免費 SSL 認證: https://manage.sslforfree.com/dashboard
 - [My No-IP](https://my.noip.com/)
 
 # 彼此關係
@@ -19,16 +18,22 @@
    - 憑證要求檔 (server.csr)
 2. 憑證經銷商給客戶
    - 伺服器憑證
-3. 客戶合併**伺服器憑證** + **私密金鑰檔** --> server.pfx
-   - `openssl pkcs12 -in server.cer -inkey my.key -export -out server.pfx -password pass:1234`
-4. 從 server.pfx 匯出**伺服器憑證檔** + **私密金鑰檔**
-   - `openssl pkcs12 -in server.pfx -nokeys -password "pass:1234" -out - 2>/dev/null | openssl x509 -out server.crt`
+3. 客戶合併**伺服器憑證** + **私密金鑰檔** --> server-my.pfx
+   - `openssl pkcs12 -in server.cer -inkey my.key -export -out server-my.pfx -password pass:1234`
+4. 從 server-my.pfx 匯出**伺服器憑證檔** + **私密金鑰檔**
+   - `openssl pkcs12 -in server-my.pfx -nokeys -password "pass:1234" -out - 2>/dev/null | openssl x509 -out server.crt`
 
 # 轉換憑證格式
 ```bash
-openssl x509 -outform der -in cert.pem -out FindATRs.der
-openssl x509 -in FindATRs.der -inform DER -out FindARTs.cer
+# crt 轉成 cer (DER 編碼二進制格式)
+openssl x509 -in cert.pem -out FindARTs.der -outform der
+
+openssl x509 -in FindARTs.der -out FindARTs.cer -inform DER
 openssl pkcs12 -in FindARTs.cer -inkey privkey.pem -export -out FindARTs.pfx -password pass:1234
+# cer 轉成 crt (DER 編碼二進制格式)
+openssl x509 -in server.cer -out server2.crt -inform DER
+
+openssl pkcs12 -in cert.pem -inkey privkey.pem -export -out FindARTs.pfx -password pass:1234
 ```
 
 # NGINX
