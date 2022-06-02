@@ -1,6 +1,6 @@
 - [參考](#參考)
 - [彼此關係](#彼此關係)
-- [轉換憑證格式](#轉換憑證格式)
+- [轉換憑證格式 (有點複雜...)](#轉換憑證格式-有點複雜)
 - [NGINX](#nginx)
 - [Tomcat](#tomcat)
 - [Apache](#apache)
@@ -9,21 +9,21 @@
 - https://www.ionos.com/digitalguide/server/configuration/apache-tomcat-on-centos/
 - https://downloads.apache.org/tomcat/tomcat-9/
 - [NGINX 設定 HTTPS 網頁加密連線，建立自行簽署的 SSL 憑證](https://blog.gtwang.org/linux/nginx-create-and-install-ssl-certificate-on-ubuntu-linux/)
-- 免費 SSL 認證: https://manage.sslforfree.com/dashboard
+- [SSL For Free](https://manage.sslforfree.com/dashboard)
 - [My No-IP](https://my.noip.com/)
 
 # 彼此關係
 1. 客戶產生後，給憑證經銷商
-   - 私密金鑰檔
+   - 私密金鑰檔 (private.key)
    - 憑證要求檔 (server.csr)
 2. 憑證經銷商給客戶
    - 伺服器憑證
-3. 客戶合併**伺服器憑證** + **私密金鑰檔** --> server-my.pfx
-   - `openssl pkcs12 -in server.cer -inkey my.key -export -out server-my.pfx -password pass:1234`
-4. 從 server-my.pfx 匯出**伺服器憑證檔** + **私密金鑰檔**
-   - `openssl pkcs12 -in server-my.pfx -nokeys -password "pass:1234" -out - 2>/dev/null | openssl x509 -out server.crt`
+3. 客戶合併**伺服器憑證** + **私密金鑰檔** --> server-private.pfx
+   - `openssl pkcs12 -in server.cer -inkey private.key -export -out server-private.pfx -password pass:1234`
+4. 從 server-private.pfx 匯出**伺服器憑證檔** + **私密金鑰檔**
+   - `openssl pkcs12 -in server-private.pfx -nokeys -password "pass:1234" -out - 2>/dev/null | openssl x509 -out server.crt`
 
-# 轉換憑證格式
+# 轉換憑證格式 (有點複雜...)
 ```bash
 # crt 轉成 cer (DER 編碼二進制格式)
 openssl x509 -in cert.pem -out FindARTs.der -outform der
