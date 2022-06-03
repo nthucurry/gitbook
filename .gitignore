@@ -90,3 +90,4 @@ knowledge/exam/*
 !knowledge/infra/elk
 !knowledge/exam
 !knowledge/exam/oracle-11g.md
+test.json
