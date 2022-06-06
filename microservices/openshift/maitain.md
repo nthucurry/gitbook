@@ -5,7 +5,6 @@
     - [Creating a Self-Signed SSL Certificate for your Intranet Services](#creating-a-self-signed-ssl-certificate-for-your-intranet-services)
         - [Replacing the default ingress certificate](#replacing-the-default-ingress-certificate)
     - [調整 worker 數量](#調整-worker-數量)
-    - [未整理筆記](#未整理筆記)
 - [備份](#備份)
     - [OpenShift](#openshift-1)
         - [Backing up etcd](#backing-up-etcd)
@@ -26,7 +25,7 @@
 - [維運](#維運)
     - [大型維運](#大型維運)
         - [[用不到] ~~Shutting down the cluster~~](#用不到-shutting-down-the-cluster)
-        - [Restarting the cluster gracefully](#restarting-the-cluster-gracefully)
+        - [Evacuate (撤出) pods on nodes](#evacuate-撤出-pods-on-nodes)
         - [Disaster Recovery](#disaster-recovery)
     - [日常維運](#日常維運)
         - [Replacing an unhealthy etcd member](#replacing-an-unhealthy-etcd-member)
@@ -149,25 +148,6 @@
 2. Scale the machine set
     - `oc scale --replicas=2 machineset <machineset> -n openshift-machine-api`
     - `oc edit machineset <machineset> -n openshift-machine-api`
-
-## 未整理筆記
-```bash
-ssh core@$node sudo shutdown -h now
-nodes=$(oc get nodes -ojsonpath='{​​​​​​​​.items[*].metadata.name}​​​​​​​​')
-
-# 重啟 Worker 步驟
-https://docs.openshift.com/container-platform/4.5/nodes/nodes/nodes-nodes-working.html
-oc adm cordon <worker-node>
-oc adm drain <worker-node> --ignore-daemonsets --force=true --delete-local-data=true
-
-ssh core@NODE_NAME
-sudo -i
-systemctl stop kubelet
-systemctl stop crio
-systemctl reboot
-
-oc adm uncordon <worker-node>
-```
 
 [Back to top](#)
 # 備份
@@ -367,7 +347,39 @@ sudo podman push $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:2.0.0-${BUILD_NUM}-${CP
 # 維運
 ## 大型維運
 ### [用不到] ~~Shutting down the cluster~~
-### Restarting the cluster gracefully
+### Evacuate (撤出) pods on nodes
+> Mark the nodes unschedulable before performing the pod evacuation.
+- Mark the node as unschedulable
+    - `oc adm cordon <node1>`
+- Check that the node status is `NotReady,SchedulingDisabled`
+    - `oc get node <node1>`
+- Force the deletion of bare pods using the `--force` option
+    - `oc adm drain <node1> <node2> --force=true`
+    - When set to true, deletion continues even if there are pods not managed by a replication controller, replica set, job, daemon set, or stateful set
+- List objects that will be migrated without actually performing the evacuation
+    - `oc adm drain <node1> <node2>  --dry-run=true`
+- Mark the node as schedulable when done
+    - `oc adm uncordon <node1>`
+
+```bash
+ssh core@$node sudo shutdown -h now
+nodes=$(oc get nodes -ojsonpath='{​​​​​​​​.items[*].metadata.name}​​​​​​​​')
+
+# 重啟 Worker 步驟
+https://docs.openshift.com/container-platform/4.5/nodes/nodes/nodes-nodes-working.html
+https://docs.openshift.com/container-platform/4.6/nodes/nodes/nodes-nodes-working.html
+oc adm cordon <worker-node>
+oc adm drain <worker-node> --ignore-daemonsets --force=true --delete-local-data=true
+
+ssh core@NODE_NAME
+sudo -i
+systemctl stop kubelet
+systemctl stop crio
+systemctl reboot
+
+oc adm uncordon <worker-node>
+```
+
 ### Disaster Recovery
 
 ## 日常維運
