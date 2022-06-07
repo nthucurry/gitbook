@@ -37,19 +37,19 @@
 
 # 2. 網路配置
 ## Virtual Network (VNet)
-| Subnet             | CIDR            | NSG             |
-|--------------------|-----------------|-----------------|
-| server-farm        | 10.0.0.0/24     | nsg-server-farm |
-| AzureBastionSubnet | 10.0.169.0/24   |                 |
-| GatewaySubnet      | 10.0.170.0/24   |                 |
-| waf                | 10.0.171.0/24   |                 |
-| dmz                | 10.0.172.0/26   | nsg-dmz         |
-| dmz-app            | 10.0.172.192/27 | nsg-dmz         |
-| dmz-apim           | 10.0.172.224/27 | nsg-dmz         |
+| Type        | Subnet             | CIDR            | NSG             |
+| ----------- | ------------------ | --------------- | --------------- |
+| Server Farm | server-farm        | 10.0.0.0/24     | nsg-server-farm |
+| DMZ         | AzureBastionSubnet | 10.0.169.0/24   |                 |
+| DMZ         | GatewaySubnet      | 10.0.170.0/24   |                 |
+| DMZ         | waf                | 10.0.171.0/24   |                 |
+| DMZ         | dmz                | 10.0.172.0/26   | nsg-dmz         |
+| DMZ         | dmz-app            | 10.0.172.192/27 | nsg-dmz         |
+| DMZ         | dmz-apim           | 10.0.172.224/27 | nsg-dmz         |
 
 ## Network security groups (NSG)
 | Rule    | Name                | Port        | Protocol | Source         | Destination    | Action |
-|---------|---------------------|-------------|----------|----------------|----------------|--------|
+| ------- | ------------------- | ----------- | -------- | -------------- | -------------- | ------ |
 | Inbound | from_APIM           | 3443        | TCP      | ApiManagement  | VirtualNetwork | Allow  |
 | Inbound | from_GatewayManager | 65200-65535 | TCP      | GatewayManager | Any            | Allow  |
 
