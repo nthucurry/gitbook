@@ -6,13 +6,15 @@
   - [建立 Key Vault](#建立-key-vault)
   - [上傳 PFX](#上傳-pfx)
 - [4. FindARTs Portal](#4-findarts-portal)
-  - [建立 App Service](#建立-app-service)
+  - [建立 App Service (東南亞資源不足，無法建立)](#建立-app-service-東南亞資源不足無法建立)
   - [設定 Custom Domains](#設定-custom-domains)
 - [5. FindARTs API/Web 管理平台](#5-findarts-apiweb-管理平台)
   - [建立 API Management (APIM)](#建立-api-management-apim)
   - [設定 Custom Domain](#設定-custom-domain)
 - [6. FindARTs API 防火牆](#6-findarts-api-防火牆)
   - [建立 Applicate Gateway (WAF)](#建立-applicate-gateway-waf)
+  - [匯入憑證](#匯入憑證)
+  - [Backend settings](#backend-settings)
 - [7. FindARTs 內部 & 外部 Storage](#7-findarts-內部--外部-storage)
   - [建立 Storage Account](#建立-storage-account)
 - [8. VPN 通道](#8-vpn-通道)
@@ -63,7 +65,7 @@
     - Connectivity method: **Private endpoint**
 
 ## 上傳 PFX
-- 位置
+- Portal 位置
     - Settings → Certificates → Generate/Import
 - Method of Certificate Creation: **Import**
 - Certificate Name: **certificate-private-api**
@@ -72,7 +74,7 @@
 
 [Back to top](#)
 # 4. FindARTs Portal
-## 建立 App Service
+## 建立 App Service (東南亞資源不足，無法建立)
 - Instance Details
     - Publish: **Code**
     - Runtime stack: **PHP 8.0**
@@ -103,7 +105,7 @@
         - Resource name: **findarts-apim**
         - Organization name: **FindARTs**
         - Administrator email: **tony.lee@auo.com**
-    - Pricing tier: **Developer (no SLA)**
+    - Pricing tier: **Developer (no SLA)** (佈署後可再調整)
 - Monitoring
     - Application Insights: **None** (佈署後可再調整)
 - Scale: **Developer 無法使用**
@@ -131,8 +133,8 @@
     - Application gateway name: **findarts-waf**
     - Instance details
         - Tier: **WAF V2**
-        - Enable autoscaling: **No** (佈署後可再調整)
-        - Minimum / Maximum instance count: **1/1** (佈署後可再調整)
+        - Enable autoscaling: **Yes** (佈署後可再調整)
+        - Minimum / Maximum instance count: **1/10** (佈署後可再調整)
         - Availability zone: **None**
         - HTTP2: **Disabled**
         - WAF Policy: **policy** (Create new)
@@ -151,6 +153,38 @@
         - Port: **80**
     - Backend targets: **findarts-apim**
 
+[Back to top](#)
+## 匯入憑證
+- Listener
+    - Listener name: **listener_443_api.findarts.tech**
+    - Frontend IP: **Public**
+    - Protocol: **HTTPS**
+    - Port: **443**
+    - Choose a certificate: **certificate-private.pfx** (Create new)
+    - Listener type: **Multi site**
+    - Host type: **Multiple/Wildcard**
+        - Host names: **api.findarts.tech**
+    - Min protocol version: **TLSv1_2**
+- Listener
+    - Listener name: **listener_443_www.findarts.tech**
+    - Frontend IP: **Public**
+    - Protocol: **HTTPS**
+    - Port: **443**
+    - Choose a certificate: **certificate-private-portal.pfx** (Create new)
+    - Listener type: **Multi site**
+    - Host type: **Multiple/Wildcard**
+        - Host names: **www.findarts.tech**
+        - Host names: **findarts.tech**
+    - Min protocol version: **TLSv1_2**
+
+## Backend settings
+- Backend settings name: **bs_443_www.findarts.tech**
+- Backend protocol: **HTTPS**
+- Use well known CA certificate: **Yes**
+- Use custom probe: **Yes**
+- Custom probe: **hp_443_www.findarts.tech**
+
+[Back to top](#)
 # 7. FindARTs 內部 & 外部 Storage
 ## 建立 Storage Account
 
@@ -164,7 +198,7 @@
 ## 建立 VPN Gateway
 - Basics
     - Project details
-        - Resource group: Infra
+        - Resource group: **Infra**
     - Instance details
         - Name: **vpn-gateway**
         - Region: **Southeast Asia**
