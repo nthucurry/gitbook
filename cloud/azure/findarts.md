@@ -5,6 +5,7 @@
 - [3. 存放憑證](#3-存放憑證)
   - [建立 Key Vault](#建立-key-vault)
   - [上傳 PFX](#上傳-pfx)
+  - [產生測試用憑證](#產生測試用憑證)
 - [4. FindARTs Portal](#4-findarts-portal)
   - [建立 App Service (東南亞資源不足，無法建立)](#建立-app-service-東南亞資源不足無法建立)
   - [設定 Custom Domains](#設定-custom-domains)
@@ -72,6 +73,12 @@
 - Upload Certificate File
 - Password: **1234**
 
+## 產生測試用憑證
+- [SSL for Free](https://www.sslforfree.com/)
+    - 引導式設定
+- 產生 PFX 憑證
+    - `openssl pkcs12 -export -out nginx.pfx -inkey nginx.key -in nginx.crt`
+
 [Back to top](#)
 # 4. FindARTs Portal
 ## 建立 App Service (東南亞資源不足，無法建立)
@@ -113,7 +120,7 @@
     - System assigned managed identity: **None**
 - Virtual network
     - Connectivity type: **Virtual network**
-    - Type: **External**
+    - Type: **Internal**
     - Subnet: **dmz-apim**
 - Protocol settings: **None**
 
