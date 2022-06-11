@@ -66,6 +66,7 @@ if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; th
         ssh -oStrictHostKeyChecking=no $admin@$vm_name "echo alias tree=\'tree --charset ASCII\' | sudo tee -a /etc/bashrc"
     else
         # In home environment
+        az vm auto-shutdown -g $resource_group -n $vm_name --time 1500
         az network nsg rule update \
             -g $resource_group \
             --nsg-name $nsg \
@@ -78,12 +79,6 @@ if [[ $resource_group == "DBA_Test" ]] || [[ $resource_group == "DBA-K8S" ]]; th
         ssh -oStrictHostKeyChecking=no $admin@$vm_name.southeastasia.cloudapp.azure.com "echo alias tree=\'tree --charset ASCII\' | sudo tee -a /etc/bashrc"
         ssh -oStrictHostKeyChecking=no $admin@$vm_name.southeastasia.cloudapp.azure.com wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/k8s/script/initial-k8s.sh
         ssh -oStrictHostKeyChecking=no $admin@$vm_name.southeastasia.cloudapp.azure.com chmod +x initial-k8s.sh
-        # ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.7  t-m1" | sudo tee -a /etc/hosts'
-        # ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.8  t-m2" | sudo tee -a /etc/hosts'
-        # ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.9  t-m3" | sudo tee -a /etc/hosts'
-        # ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.10 t-n1" | sudo tee -a /etc/hosts'
-        # ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.11 t-n2" | sudo tee -a /etc/hosts'
-        # ssh -oStrictHostKeyChecking=no $admin@$public_ip 'echo "10.0.8.12 t-n3" | sudo tee -a /etc/hosts'
     fi
 else
     echo "[Warning...] It is not test resource group!!"

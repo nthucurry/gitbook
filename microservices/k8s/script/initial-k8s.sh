@@ -1,48 +1,21 @@
 #!/bin/bash
 
 echo ".... OS initial ...."
-USER=azadmin
-os_name=`cat /etc/os-release | head -1`
-if [[ `hostname -i` == *"10.250"* ]]; then
-    where_am_i="auo250"
-    echo "  1. I am in" $where_am_i
-else
-    where_am_i="else"
-    echo "  1. I am in" $where_am_i
-fi
+# if [[ `hostname -i` == *"10.250"* ]]; then
+#     where_am_i="auo250"
+#     echo "  1. I am in" $where_am_i
+# else
+#     where_am_i="else"
+#     echo "  1. I am in" $where_am_i
+# fi
 
 echo "  2. Environment value"
-# timedatectl set-timezone Asia/Taipei
 LANG=en_US.UTF-8
 swapoff -a
-# echo "alias vi='vim'" >> /home/$USER/.bashrc
 echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> /root/.bashrc
-# echo "$USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+# timedatectl set-timezone Asia/Taipei
 
-echo "  3. Proxy"
-if [ $where_am_i == "auo250" ]; then
-    echo "    * Set proxy"
-cat >> /root/.bashrc << EOF
-export http_proxy=http://10.250.12.5:3128
-export https_proxy=https://10.250.12.5:3128
-EOF
-
-    mkdir -p /etc/systemd/system/docker.service.d
-    touch /etc/systemd/system/docker.service.d/proxy.conf
-    sudo echo '
-    [Service]
-    Environment="HTTP_PROXY=http://10.250.12.5:3128"
-    Environment="HTTPS_PROXY=http://10.250.12.5:3128"
-    ' >> /etc/systemd/system/docker.service.d/proxy.conf
-
-    echo "proxy=http://10.250.12.5:3128" >> /etc/yum.conf
-    echo "https_proxy=http://10.250.12.5:3128" >> /etc/wgetrc
-    echo "http_proxy=http://10.250.12.5:3128" >> /etc/wgetrc
-else
-    echo "    * Not action"
-fi
-
-echo "  4. Update OS"
+echo "  3. Update OS"
 yum update -y | grep "Complete"
 yum install epel-release -y | grep "Complete"
 yum install htop -y | grep "Complete"
@@ -59,8 +32,8 @@ echo "  1. Add the Docker repository"
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
 echo "  2. Install Docker CE"
-# yum install containerd.io-1.2.13 docker-ce-19.03.11 docker-ce-cli-19.03.11 -y | grep Complete
-yum install containerd.io docker-ce docker-ce-cli -y | grep "Complete"
+# yum install containerd.io docker-ce docker-ce-cli -y | grep "Complete"
+yum install docker-ce -y | grep "Complete"
 # echo "==== If necessary, remove it"
 # yum remove containerd.io; yum remove docker
 
@@ -82,8 +55,7 @@ EOF
 
 echo "  5. Start docker"
 systemctl daemon-reload
-systemctl enable docker
-systemctl start docker
+systemctl enable docker --now
 # docker run hello-world
 # docker ps -a
 # exit
@@ -104,7 +76,7 @@ setenforce 0
 sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 echo -e
 
-echo "  3. Installing kubeadm, kubelet and kubectl"
+echo "  3. Installing kubeadm, kubelet and kubectl (DO NOT CONFIG exclude=kubelet kubeadm kubectl)"
 cat << EOF | tee -a /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -113,31 +85,34 @@ enabled=1
 gpgcheck=1
 repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-exclude=kubelet kubeadm kubectl
 EOF
-yum install kubeadm kubelet kubectl -y --disableexcludes=kubernetes --nogpgcheck | grep "Complete"
-systemctl enable --now kubelet
+# yum install kubeadm kubelet kubectl -y --disableexcludes=kubernetes --nogpgcheck | grep "Complete"
+yum install kubelet kubeadm -y
+systemctl enable kubelet --now
+kubectl completion bash | tee -a /etc/bash_completion.d/kubectl > /dev/null
 echo -e
 
-# curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-# chmod +x kubectl
-# kubectl completion bash | tee -a /etc/bash_completion.d/kubectl > /dev/null
-# echo -e
+echo "  4. Install CRI-O (lightweight container runtime for kubernetes)"
+VERSION=1.17:1.17.3
+OS=CentOS_7
+curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/devel:kubic:libcontainers:stable.repo
+curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
+yum install cri-o -y
+systemctl enable crio --now
 
-echo "  4. Pull the images for kubeadm requires"
+echo "  5. Pull the images for kubeadm requires"
 kubeadm config images pull
 
-echo "  5. Start K8S"
+echo "  6. Start K8S"
 systemctl daemon-reload
 systemctl restart kubelet
-systemctl enable kubelet
 echo -e
 
-echo "  6. Set up autocomplete"
-# sudo -u $USER source <(kubectl completion bash)
-sudo -u $USER echo "source <(kubectl completion bash)" >> /home/$USER/.bashrc
-sudo -u $USER echo "alias k=kubectl" >> /home/$USER/.bashrc
-sudo -u $USER echo "complete -F __start_kubectl k" >> /home/$USER/.bashrc
+echo "  7. Set up autocomplete"
+USER=azadmin
+echo "source <(kubectl completion bash)" >> /home/$USER/.bashrc
+echo "alias k=kubectl" >> /home/$USER/.bashrc
+echo "complete -F __start_kubectl k" >> /home/$USER/.bashrc
 
 echo ".... Check status ...."
 systemctl status docker
