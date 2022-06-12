@@ -7,9 +7,11 @@
 - 範例
     - https://minikube.sigs.k8s.io/docs/start/
 - demo
-    - <img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/hello-minikube.png?raw=true" alt="drawing" width="700"/>
+    <br><img src="https://github.com/ShaqtinAFool/gitbook/blob/master/img/kubernetes/hello-minikube.png?raw=true" alt="drawing" width="700"/>
     - `kubectl get pods --all-namespaces`
-- SOP
-    - 登入 VM: `ssh -X azadmin@hostname`
+- minikube 基本指令
     - 啟動 minikube: `minikube start --driver=docker`
     - 開啟 dashboard: `minikube dashboard`
+    - 查詢 minikube 對外的 IP: `minikube ip`
+- k8s 基本指令
+    - 檢查所有 pod: `kubectl get pods --all-namespaces; kubectl get pods -A`

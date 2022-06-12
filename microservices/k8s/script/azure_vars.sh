@@ -1,0 +1,5 @@
+SUBSCRIPTION="de61f224-9a69-4ede-8273-5bcef854dc20"
+RESOURCE_GROUP="DBA-K8S"
+ACR_NAME="k8spoc"
+
+az account set -s $SUBSCRIPTION
