@@ -10,8 +10,8 @@
 - [設定 Disk 路徑 on NFS VM](#設定-disk-路徑-on-nfs-vm)
 - [安裝 Command-Line Interface on Bastion VM](#安裝-command-line-interface-on-bastion-vm)
 - [建置專案 zen](#建置專案-zen)
-  - [安裝 Control Plane (lite)](#安裝-control-plane-lite)
-  - [安裝 WKC (Watson Knowledge Catalog)](#安裝-wkc-watson-knowledge-catalog)
+    - [安裝 Control Plane (lite)](#安裝-control-plane-lite)
+    - [安裝 WKC (Watson Knowledge Catalog)](#安裝-wkc-watson-knowledge-catalog)
 - [如果 WKC 安裝失敗](#如果-wkc-安裝失敗)
 - [設定 Machine Config on Bastion VM](#設定-machine-config-on-bastion-vm)
 - [設定 Proxy on Bastion VM](#設定-proxy-on-bastion-vm)
@@ -224,8 +224,11 @@
 mkdir ~/ibm
 cd ~/ibm
 # wget https://github.com/IBM/cpd-cli/releases/download/v3.5.3/cpd-cli-linux-EE-3.5.3.tgz
-wget https://github.com/IBM/cpd-cli/releases/download/v3.5.10/cpd-cli-linux-EE-3.5.10.tgz
-tar xzvf cpd-cli-linux-EE-3.5.10.tgz
+# wget https://github.com/IBM/cpd-cli/releases/download/v3.5.10/cpd-cli-linux-EE-3.5.10.tgz
+# tar xzvf cpd-cli-linux-EE-3.5.10.tgz
+
+wget https://github.com/IBM/cpd-cli/releases/download/v10.0.2/cpd-cli-linux-EE-10.0.2.tgz
+tar xzvf cpd-cli-linux-EE-10.0.2.tgz
 
 # 設定 cpd key
 export registry_key="<cpd_key>"
