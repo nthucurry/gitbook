@@ -33,7 +33,7 @@ do
 
   if [[ $srcPath == *"NETWORKSECURITYGROUP"* ]];then
     # echo "      ~/update-file-for-nsg.sh $dstPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH"
-    $HOME/update-file-for-nsg.sh $dstPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH
+    $HOME/update-file-for-nsg.sh $dstPath/y=$getYY/m=$getMM/d=$getDD/h=$getHH > /dev/null
   fi
 
   rm -fr $dstPath/y=$delYY/m=$delMM/d=$delDD/h=$delHH
