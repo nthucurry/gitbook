@@ -3,6 +3,12 @@
 - Source Code 上傳至雲端
 - User 到源碼環境掃 Code
 
+# 預計 Scenario
+1. 登入 Azure DevOps Portal
+2. 上傳 Code
+3. 登入 WVD
+4. 執行白箱掃描
+
 # Azure Virtual Desktop (WVD)
 - 授權
     - Microsoft 365 E3, E5, A3, A5, F1, Business 或 Windows E3, E5, A3, A5 上述任一種授權
@@ -13,6 +19,7 @@
     - [華致資訊](https://www.infofab.com/microsoft.html)
         <br><img src="http://www.infofab.com/images/WVD02.JPG">
 - [Remote Desktop clients](https://docs.microsoft.com/en-us/azure/virtual-desktop/prerequisites#remote-desktop-clients)
+- [For subscriptions without Azure AD DS or AD DS](https://docs.microsoft.com/en-us/azure/virtual-desktop/getting-started-feature#for-subscriptions-without-azure-ad-ds-or-ad-ds)
 
 # Azure DevOps
 - User Price
