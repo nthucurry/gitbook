@@ -21,12 +21,13 @@
 - [8. VPN 通道](#8-vpn-通道)
     - [建立 AAD P2S VPN 連線](#建立-aad-p2s-vpn-連線)
     - [建立 VPN Gateway](#建立-vpn-gateway)
-- [9. 備份服務](#9-備份服務)
+- [9. VM](#9-vm)
+- [10. 備份服務](#10-備份服務)
     - [建立 Backup Vault (IaaS)](#建立-backup-vault-iaas)
     - [建立 SQL Database 備份 (PaaS)](#建立-sql-database-備份-paas)
     - [建立 Cache Redis DB 備份 (PaaS)](#建立-cache-redis-db-備份-paas)
-- [10. Log 收集與監控](#10-log-收集與監控)
-- [11. VM 服務高可用性 (Option)](#11-vm-服務高可用性-option)
+- [11. Log 收集與監控](#11-log-收集與監控)
+- [12. VM 服務高可用性 (Option)](#12-vm-服務高可用性-option)
 
 ---
 
@@ -220,7 +221,17 @@
         - Enable active-active mode: **Disabled**
         - Configure BGP: **Disabled**
 
-# 9. 備份服務
+# 9. VM
+- 安裝 NGINX
+    ```bash
+    yum install epel-release -y
+    yum install nginx -y
+    systemctl enable nginx.service --now
+    ```
+- 設定憑證
+- 重啟 NGINX 服務
+
+# 10. 備份服務
 ## 建立 Backup Vault (IaaS)
 - Basics
     - Project details
@@ -232,7 +243,5 @@
 
 ## 建立 SQL Database 備份 (PaaS)
 ## 建立 Cache Redis DB 備份 (PaaS)
-
-# 10. Log 收集與監控
-
-# 11. VM 服務高可用性 (Option)
+# 11. Log 收集與監控
+# 12. VM 服務高可用性 (Option)
