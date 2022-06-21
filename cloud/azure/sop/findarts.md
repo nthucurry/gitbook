@@ -163,7 +163,7 @@
 
 [Back to top](#)
 ## 匯入憑證
-- Listener
+- Listener (API)
     - Listener name: **listener_443_api.findarts.net**
     - Frontend IP: **Public**
     - Protocol: **HTTPS**
@@ -173,7 +173,7 @@
     - Host type: **Multiple/Wildcard**
         - Host names: **api.findarts.net**
     - Min protocol version: **TLSv1_2**
-- Listener
+- Listener (Portal)
     - Listener name: **listener_443_www.findarts.net**
     - Frontend IP: **Public**
     - Protocol: **HTTPS**
@@ -223,12 +223,11 @@
 
 # 9. VM
 - 安裝 NGINX
-    ```bash
-    yum install epel-release -y
-    yum install nginx -y
-    systemctl enable nginx.service --now
-    ```
+    - `yum install epel-release -y`
+    - `yum install nginx -y`
+    - `systemctl enable nginx.service --now`
 - 設定憑證
+    - `openssl pkcs12 -export -out cert.pfx -inkey private.key -in cert.crt`
 - 重啟 NGINX 服務
 
 # 10. 備份服務
