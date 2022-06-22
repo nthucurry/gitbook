@@ -22,12 +22,12 @@
 - [For subscriptions without Azure AD DS or AD DS](https://docs.microsoft.com/en-us/azure/virtual-desktop/getting-started-feature#for-subscriptions-without-azure-ad-ds-or-ad-ds)
 - [Supported identity scenarios](https://docs.microsoft.com/en-us/azure/virtual-desktop/prerequisites#supported-identity-scenarios)
 
-    | Identity scenario              | Session hosts         | User accounts                             |
-    |--------------------------------|-----------------------|-------------------------------------------|
-    | Azure AD + AD DS               | Joined to AD DS       | In AD DS and Azure AD, synchronized       |
-    | Azure AD + Azure AD DS         | Joined to Azure AD DS | In Azure AD and Azure AD DS, synchronized |
-    | Azure AD + Azure AD DS + AD DS | Joined to Azure AD DS | In Azure AD and AD DS, synchronized       |
-    | **Azure AD only**                  | Joined to Azure AD    | In Azure AD                               |
+| Identity scenario              | Session hosts         | User accounts                             |
+|--------------------------------|-----------------------|-------------------------------------------|
+| Azure AD + AD DS               | Joined to AD DS       | In AD DS and Azure AD, synchronized       |
+| Azure AD + Azure AD DS         | Joined to Azure AD DS | In Azure AD and Azure AD DS, synchronized |
+| Azure AD + Azure AD DS + AD DS | Joined to Azure AD DS | In Azure AD and AD DS, synchronized       |
+| **Azure AD only**              | Joined to Azure AD    | In Azure AD                               |
 
 # Azure DevOps
 - User Price

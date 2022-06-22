@@ -4,10 +4,10 @@
     - Project details
         - Validation environment: **No**
     - Host pool type
-        - Personal
+        - Personal (persistent)
             - Host pool type: **Personal**
             - Assignment type: **Automatic**
-        - Pooled
+        - Pooled (non-persistent)
             - Host pool type: **Pooled**
             - Load balancing algorithm: **Breadth-first** (廣度)
             - Max session limit: **5**
@@ -31,4 +31,12 @@
     - Register desktop app group: **Yes**
     - To this workspace: **t-wvd-ws** (Create new)
 
-## Manage app groups
+## [Manage app groups](https://docs.microsoft.com/en-us/azure/virtual-desktop/manage-app-groups)
+
+## Connect to Azure Virtual Desktop with the web client
+- https://client.wvd.microsoft.com/arm/webclient/index.html
+
+## [Deploy Azure AD-joined virtual machines in Azure Virtual Desktop](https://docs.microsoft.com/en-us/azure/virtual-desktop/deploy-azure-ad-joined-vm)
+- Known limitations
+
+## Enforce Azure Active Directory Multi-Factor Authentication for Azure Virtual Desktop using Conditional Access
