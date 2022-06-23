@@ -1,41 +1,12 @@
-- [1. Azure 基本設定](#1-azure-基本設定)
-- [2. 網路配置](#2-網路配置)
-    - [Virtual Network (VNet)](#virtual-network-vnet)
-    - [Network security groups (NSG)](#network-security-groups-nsg)
-- [3. 存放憑證](#3-存放憑證)
-    - [建立 Key Vault](#建立-key-vault)
-    - [上傳 PFX](#上傳-pfx)
-    - [產生測試用憑證](#產生測試用憑證)
-- [4. FindARTs Portal](#4-findarts-portal)
-    - [建立 App Service (東南亞資源不足，無法建立)](#建立-app-service-東南亞資源不足無法建立)
-    - [設定 Custom Domains](#設定-custom-domains)
-- [5. FindARTs API/Web 管理平台](#5-findarts-apiweb-管理平台)
-    - [建立 API Management (APIM)](#建立-api-management-apim)
-    - [設定 Custom Domain](#設定-custom-domain)
-- [6. FindARTs API 防火牆](#6-findarts-api-防火牆)
-    - [建立 Applicate Gateway (WAF)](#建立-applicate-gateway-waf)
-    - [匯入憑證](#匯入憑證)
-    - [Backend settings](#backend-settings)
-- [7. FindARTs 內部 & 外部 Storage](#7-findarts-內部--外部-storage)
-    - [建立 Storage Account](#建立-storage-account)
-- [8. VPN 通道](#8-vpn-通道)
-    - [建立 AAD P2S VPN 連線](#建立-aad-p2s-vpn-連線)
-    - [建立 VPN Gateway](#建立-vpn-gateway)
-- [9. VM](#9-vm)
-- [10. 備份服務](#10-備份服務)
-    - [建立 Backup Vault (IaaS)](#建立-backup-vault-iaas)
-    - [建立 SQL Database 備份 (PaaS)](#建立-sql-database-備份-paas)
-    - [建立 Cache Redis DB 備份 (PaaS)](#建立-cache-redis-db-備份-paas)
-- [11. Log 收集與監控](#11-log-收集與監控)
-- [12. VM 服務高可用性 (Option)](#12-vm-服務高可用性-option)
-
----
-
 # 1. Azure 基本設定
 - 新建 Tenant
 - 新建 Subscription
 - 新建 Resource Group
 - 新建 AAD
+
+## Conditional Access
+- Named locations: 設定信任的 IP
+- New policy
 
 # 2. 網路配置
 ## Virtual Network (VNet)
@@ -78,11 +49,11 @@
 - [SSL for Free](https://www.sslforfree.com/)
     - 引導式設定
 - 產生 PFX 憑證
-    - `openssl pkcs12 -export -out nginx.pfx -inkey nginx.key -in nginx.crt`
+    - `openssl pkcs12 -export -out certificate-private.pfx -inkey private.key -in certificate.crt`
 
 [Back to top](#)
 # 4. FindARTs Portal
-## 建立 App Service (東南亞資源不足，無法建立)
+## 建立 App Service
 - Instance Details
     - Publish: **Code**
     - Runtime stack: **PHP 8.0**
@@ -96,6 +67,13 @@
     - Enable network injection: **Off**
 - Monitoring
     - Enable Application Insights: **No**
+
+## 設定內網
+- Networking
+    - Add Private Endpoint
+    - Integrate with private DNS zone: **Yes**
+- VNet Integration
+    - Add VNet: **dmz-app**
 
 ## 設定 Custom Domains
 - Add custom domain

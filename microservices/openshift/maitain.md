@@ -399,7 +399,7 @@ oc adm uncordon <worker-node>
     - `oc get pods -n zen | grep iis-`
     - `oc delete iis-xxx`
 - 查詢 Pod log
-    - `oc logs pods iis-xxx`
+    - `oc logs iis-xxx`
 - cluster operator 狀態
     - `oc get co`
 - Pod 狀態

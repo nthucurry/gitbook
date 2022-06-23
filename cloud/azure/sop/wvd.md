@@ -38,5 +38,14 @@
 
 ## [Deploy Azure AD-joined virtual machines in Azure Virtual Desktop](https://docs.microsoft.com/en-us/azure/virtual-desktop/deploy-azure-ad-joined-vm)
 - Known limitations
+    - Azure AD-joined VMs **don't currently support** external identities, such as AAD B2B and AAD B2C
+- Assign user access to host pools
+    - Assign your users the **Virtual Machine User Login** role so they can sign in to the VMs.
+- Access Azure AD-joined VMs
+    - Connect using the Windows Desktop client (略)
+    - Connect using the other clients
+        - you must add **targetisaadjoined:i:1** as a custom RDP property
+
+## [Create an autoscale scaling plan for Azure Virtual Desktop](https://docs.microsoft.com/en-us/azure/virtual-desktop/autoscale-scaling-plan) (Preview)
 
 ## Enforce Azure Active Directory Multi-Factor Authentication for Azure Virtual Desktop using Conditional Access
