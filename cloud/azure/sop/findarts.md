@@ -240,5 +240,21 @@
 
 ## 建立 SQL Database 備份 (PaaS)
 ## 建立 Cache Redis DB 備份 (PaaS)
+
+# IoT hub
+## 建立 IoT hub
+- Basics
+    - Instance details
+        - IoT hub name: **findarts-iothub**
+- Networking
+    - Connectivity configuration: **Public access**
+- Management
+    - Scale tier and units
+        - Pricing and scale tier: **S1: Standard tier**
+        - Defender for IoT: **On**
+    - Role-based access control: **Shared access policy + RBAC**
+
+## 設定 Endpoint
+
 # 11. Log 收集與監控
 # 12. VM 服務高可用性 (Option)
