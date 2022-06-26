@@ -11,7 +11,7 @@
 # 2. 網路配置
 ## Virtual Network (VNet)
 | Type        | Subnet             | CIDR            | NSG             |
-| ----------- | ------------------ | --------------- | --------------- |
+|-------------|--------------------|-----------------|-----------------|
 | Server Farm | server-farm        | 10.0.0.0/24     | nsg-server-farm |
 | DMZ         | AzureBastionSubnet | 10.0.169.0/24   |                 |
 | DMZ         | GatewaySubnet      | 10.0.170.0/24   |                 |
@@ -22,9 +22,19 @@
 
 ## Network security groups (NSG)
 | Rule    | Name                | Port        | Protocol | Source         | Destination    | Action |
-| ------- | ------------------- | ----------- | -------- | -------------- | -------------- | ------ |
+|---------|---------------------|-------------|----------|----------------|----------------|--------|
 | Inbound | from_APIM           | 3443        | TCP      | ApiManagement  | VirtualNetwork | Allow  |
 | Inbound | from_GatewayManager | 65200-65535 | TCP      | GatewayManager | Any            | Allow  |
+
+# 3. 解析 IP
+## 建立 Private DNS Zone
+- Basics
+    - Instance details: **findarts.net**
+
+## 設定 Virtual network links
+- Link name: **vnet**
+- Virtual network: **vnet**
+- Enable auto registration: **打勾**
 
 # 3. 存放憑證
 ## 建立 Key Vault
@@ -90,7 +100,7 @@
         - Region: **Japan East**
         - Resource name: **findarts-apim**
         - Organization name: **FindARTs**
-        - Administrator email: **tony.lee@auo.com**
+        - Administrator email: **tony.lee@findarts.onmicrosoft.com**
     - Pricing tier: **Developer (no SLA)** (佈署後可再調整)
 - Monitoring
     - Application Insights: **None** (佈署後可再調整)
@@ -163,6 +173,15 @@
         - Host names: **findarts.net**
     - Min protocol version: **TLSv1_2**
 
+## 設定 Private DNS Zone
+| FQDN                                   | IP           |
+|----------------------------------------|--------------|
+| findarts-apim.developer.azure-api.net  | 10.0.172.229 |
+| findarts-apim.azure-api.net            | 10.0.172.229 |
+| findarts-apim.management.azure-api.net | 10.0.172.229 |
+| findarts-apim.portal.azure-api.net     | 10.0.172.229 |
+| findarts-apim.scm.azure-api.net        | 10.0.172.229 |
+
 ## Backend settings
 - Backend settings name: **bs_443_www.findarts.net**
 - Backend protocol: **HTTPS**
@@ -206,7 +225,7 @@
     - `systemctl enable nginx.service --now`
 - 設定憑證
     - `openssl pkcs12 -export -out cert.pfx -inkey private.key -in cert.crt`
-- [參數設定](../../../infra/nginx.md)
+- [參數設定](https://github.com/ShaqtinAFool/gitbook/blob/master/infra/nginx.md)
 - 重啟 NGINX 服務
 
 # 10. 備份服務
