@@ -206,6 +206,7 @@
     - `systemctl enable nginx.service --now`
 - 設定憑證
     - `openssl pkcs12 -export -out cert.pfx -inkey private.key -in cert.crt`
+- [參數設定](../../../infra/nginx.md)
 - 重啟 NGINX 服務
 
 # 10. 備份服務
