@@ -30,6 +30,7 @@
 ## 建立 Private DNS Zone
 - Basics
     - Instance details: **findarts.net**
+    - Instance details: **azure-api.net**
 
 ## 設定 Virtual network links
 - Link name: **vnet**
@@ -174,13 +175,14 @@
     - Min protocol version: **TLSv1_2**
 
 ## 設定 Private DNS Zone
-| FQDN                                   | IP           |
-|----------------------------------------|--------------|
-| findarts-apim.developer.azure-api.net  | 10.0.172.229 |
-| findarts-apim.azure-api.net            | 10.0.172.229 |
-| findarts-apim.management.azure-api.net | 10.0.172.229 |
-| findarts-apim.portal.azure-api.net     | 10.0.172.229 |
-| findarts-apim.scm.azure-api.net        | 10.0.172.229 |
+| FQDN                                       | IP           |
+|--------------------------------------------|--------------|
+| findarts-apim.developer.azure-api.net      | 10.0.172.229 |
+| findarts-apim.azure-api.net                | 10.0.172.229 |
+| findarts-apim.management.azure-api.net     | 10.0.172.229 |
+| findarts-apim.portal.azure-api.net         | 10.0.172.229 |
+| findarts-apim.scm.azure-api.net            | 10.0.172.229 |
+| apimanagement-cors-proxy-prd.azure-api.net | 13.91.254.72 |
 
 ## Backend settings
 - Backend settings name: **bs_443_www.findarts.net**
@@ -257,4 +259,13 @@
 ## 設定 Endpoint
 
 # 11. Log 收集與監控
+- [Monitor hybrid security using Microsoft Defender for Cloud and Microsoft Sentinel](https://docs.microsoft.com/en-us/azure/architecture/hybrid/hybrid-security-monitoring)
+    1. Create a Log Analytics workspace in the Azure portal
+    2. Enable Defender for Cloud
+    3. Upgrade to the Standard tier
+    4. Enable Microsoft Defender for Cloud monitoring of XXX
+    5. Enable Microsoft Sentinel
+
+<br><img src="https://docs.microsoft.com/en-us/azure/architecture/hybrid/images/hybrid-security-monitoring.png">
+
 # 12. VM 服務高可用性 (Option)
