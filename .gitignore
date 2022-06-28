@@ -3,6 +3,8 @@ SUMMARY.md
 tool-about-azure.md
 ServiceTags_Public_*.json
 diff*.txt
+test.json
+test.xml
 .DS_Store
 *.cer
 *.crt
@@ -90,4 +92,3 @@ knowledge/exam/*
 !knowledge/infra/elk
 !knowledge/exam
 !knowledge/exam/oracle-11g.md
-test.json
