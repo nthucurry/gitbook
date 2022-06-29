@@ -123,8 +123,8 @@
         - Clinet identidy: **System assigned identity**
 
 [Back to top](#)
-# 6. FindARTs API 防火牆
-## (1) 建立 Applicate Gateway (WAF)
+# 6. FindARTs API/Web 防火牆
+## (1) 建立 Application Gateway (WAF)
 - Basics
     - Resource group:  **Infra**
     - Application gateway name: **findarts-waf**
@@ -179,6 +179,9 @@
     - Backend settings name: **api.findarts.net**
     - Backend protocol: **HTTPS**
     - Use well known CA certificate: **No**
+        - CER 可以從根憑證取得 (from 瀏覽器)
+        - [Export authentication certificate (for v1 SKU)](https://docs.microsoft.com/en-us/azure/application-gateway/certificates-for-backend-authentication#export-authentication-certificate-for-v1-sku)
+        - [Export trusted root certificate (for v2 SKU)](https://docs.microsoft.com/en-us/azure/application-gateway/certificates-for-backend-authentication#export-trusted-root-certificate-for-v2-sku)
     - Use custom probe: **Yes**
     - Custom probe: **hp_443_api.findarts.net**
 - Listener (Portal)
