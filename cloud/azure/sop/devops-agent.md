@@ -1,6 +1,6 @@
 # Linux
 - Portal
-    - token: kisrjdk52hskoc2heeymi44756fupadgxymz7oywtc7pjtva3haa
+    - 取 token
 - CMD
     ```bash
     wget https://vstsagentpackage.azureedge.net/agent/2.204.0/vsts-agent-linux-x64-2.204.0.tar.gz
