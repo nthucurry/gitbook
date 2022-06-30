@@ -1,5 +1,8 @@
 # 1. Azure 基本設定
 - 新建 Tenant
+    - Organization name
+    - Initial domain name
+    - Country/Region
 - 新建 Subscription
 - 新建 Resource Group
 - 新建 AAD
@@ -253,8 +256,8 @@
 ## 建立 SQL Database 備份 (PaaS)
 ## 建立 Cache Redis DB 備份 (PaaS)
 
-# IoT hub
-## (1) 建立 IoT hub
+# IoT Hub
+## (1) 建立 IoT Hub
 - Basics
     - Instance details
         - IoT hub name: **findarts-iothub**
@@ -267,6 +270,17 @@
     - Role-based access control: **Shared access policy + RBAC**
 
 ## (2) 設定 Endpoint
+- [Azure Storage as a routing endpoint](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-messages-d2c#azure-storage-as-a-routing-endpoint)
+
+# IoT Hub Device Provisioning Service
+## (1) 建立 IoT Hub DPS
+- Basics
+    - Instance details
+        - Name: **findarts-iothub-dps**
+- Networking
+    - Connectivity configuration: **Public access**
+- Management
+    - 用預設的
 
 # 11. Log 收集與監控
 - [Monitor hybrid security using Microsoft Defender for Cloud and Microsoft Sentinel](https://docs.microsoft.com/en-us/azure/architecture/hybrid/hybrid-security-monitoring)
