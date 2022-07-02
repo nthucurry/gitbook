@@ -58,7 +58,8 @@
     mysql-database: guacdb
     mysql-username: guacuser
     mysql-password: guacpass
-    #Additional settings
+
+    # Additional settings
     mysql-default-max-connections-per-user: 0
     mysql-default-max-group-connections-per-user: 0
     ```
@@ -73,7 +74,42 @@
     - `systemctl enable guacd --now`
 - Finish
     - 帳/密: guacadmin/guacadmin
-    - URL: http://t-rdp:8080/guacamole
+    - URL: http://t-rdp.southeastasia.cloudapp.azure.com:8080/guacamole
+- Change the port of Tomcat from 8080 to 80
+    ```bash
+    echo "iptables -t nat -A PREROUTING -p tcp --dport  80 -j REDIRECT --to-port 8080" >> /etc/rc.local
+    echo "iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443" >> /etc/rc.local
+    ```
+
+## Add Certification (SSL for Test)
+- 註冊
+    ```bash
+    TOMCAT_HOME=/usr/share/tomcat
+    mkdir -p $TOMCAT_HOME/webapps/.well-known/pki-validation
+    ```
+- `mkdir /etc/ssl/private`
+- `vi /etc/tomcat/service.xml`
+    ```xml
+    <Connector port="8443" protocol="org.apache.coyote.http11.Http11Protocol"
+            maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
+            clientAuth="false" sslProtocol="TLS">
+        <SSLHostConfig>
+            <Certificate certificateKeyFile="/etc/ssl/private/private_ssl4free.key" certificateFile="/etc/ssl/certs/certificate_ssl4free.crt" certificateChainFile="/etc/ssl/certs/ca_bundle_ssl4free.crt" type="RSA" />
+        </SSLHostConfig>
+    </Connector>
+    ```
+
+# Check Service Status
+```bash
+systemctl status tomcat
+systemctl status mariadb
+systemctl status guacd
+```
+
+# [Apache Guacamole with Azure AD using SAML](https://sintax.medium.com/apache-guacamole-with-azure-ad-using-saml-5d890c7e08bf)
+- `wget https://archive.apache.org/dist/guacamole/1.3.0/binary/guacamole-auth-saml-1.3.0.tar.gz`
+- `tar -zxf guacamole-auth-saml-1.3.0.tar.gz`
+- `cp guacamole-auth-saml-1.3.0/guacamole-auth-saml-1.3.0.jar /usr/share/tomcat/.guacamole/extensions/`
 
 # [Installing Guacamole natively](https://guacamole.apache.org/doc/1.4.0/gug/installing-guacamole.html)
 
