@@ -87,16 +87,58 @@
     TOMCAT_HOME=/usr/share/tomcat
     mkdir -p $TOMCAT_HOME/webapps/.well-known/pki-validation
     ```
+- 取得憑證
+    - ca_bundle(_ssl4free).crt
+    - certificate(_ssl4free).crt
+    - private(_ssl4free).key
 - `mkdir /etc/ssl/private`
+- `cd /etc/ssl/certs`
+    ```bash
+    openssl pkcs12 -export \
+        -out certificate_ssl4free.pfx \
+        -inkey "/etc/ssl/private/private_ssl4free.key" \
+        -in certificate_ssl4free.crt \
+        -certfile ca_bundle_ssl4free.crt
+    # 123456
+    ```
+    ```bash
+    keytool -importkeystore \
+        -srckeystore "/etc/ssl/certs/certificate_ssl4free.pfx" \
+        -srcstorepass 123456 \
+        -srcstoretype pkcs12 \
+        -destkeystore "/etc/ssl/certs/certificate_ssl4free.jks" \
+        -deststoretype pkcs12 \
+        -deststorepass 123456
+    ```
 - `vi /etc/tomcat/service.xml`
     ```xml
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11Protocol"
-            maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
-            clientAuth="false" sslProtocol="TLS">
-        <SSLHostConfig>
-            <Certificate certificateKeyFile="/etc/ssl/private/private_ssl4free.key" certificateFile="/etc/ssl/certs/certificate_ssl4free.crt" certificateChainFile="/etc/ssl/certs/ca_bundle_ssl4free.crt" type="RSA" />
-        </SSLHostConfig>
-    </Connector>
+               maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
+               clientAuth="false" sslProtocol="TLS"
+               keystoreFile="/etc/ssl/certs/certificate_ssl4free.jks" keystorePass="123456"
+               ciphers="TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384" />
+    ```
+- `systemctl restart tomcat`
+- `tail -f /var/log/tomcat/catalina.2022-07-02.log`
+
+## [Tomcat 配置 https 協議、以及 http 協議自動 REDIRECT 到 HTTPS](https://www.796t.com/content/1546493424.html)
+- 在 /usr/share/tomcat/confweb.xml 中的 <\/welcome-file-list> 後面加上這樣一段
+    ```xml
+    <login-config>
+        <!-- Authorization setting for SSL -->
+        <auth-method>CLIENT-CERT</auth-method>
+        <realm-name>Client Cert Users-only Area</realm-name>
+    </login-config>
+    <security-constraint>
+        <!-- Authorization setting for SSL -->
+        <web-resource-collection >
+            <web-resource-name >SSL</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
     ```
 
 # Check Service Status

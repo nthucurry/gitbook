@@ -71,6 +71,7 @@ openssl pkcs12 -in cert.pem -inkey privkey.pem -export -out FindARTs.pfx -passwo
     - `openssl pkcs12 -export -out nginx.pfx -inkey nginx.key -in nginx.crt`
 
 # Tomcat
+- [Tomcat7 升級 Https](https://medium.com/@eliu01011/tomcat7-%E5%8D%87%E7%B4%9A-https-with-lets-encrypt-29ea499730f9)
 - 安裝 Tomcat
     - `yum install tomcat`
     - `yum install tomcat-webapps tomcat-admin-webapps tomcat-docs-webapp tomcat-javadoc`
