@@ -2,8 +2,13 @@
 - [Installing Guacamole natively](https://guacamole.apache.org/doc/1.4.0/gug/installing-guacamole.html)
 - [Deploying Guacamole](https://guacamole.apache.org/doc/gug/installing-guacamole.html#deploying-guacamole)
 - [Using the default authentication](https://guacamole.apache.org/doc/1.4.0/gug/configuring-guacamole.html#basic-auth)
+- [针对 Active Directory 的 Apache Guacamole 身份验证](https://www.bujarra.com/autenticacion-de-apache-guacamole-contra-directorio-activo/?lang=zh)
 
 # [Apache Guacamole 1.1.0 Install Guide](https://www.byteprotips.com/post/apache-guacamole-1-1-0-install-guide)
+- Environment Variable
+    ```bash
+    GUACAMOLE_HOME=/etc/guacamole
+    ```
 - Enable the Enterprise Linux Repositories (EPEL)
     - `yum install epel-release -y`
     - `yum update -y`
@@ -51,7 +56,7 @@
     - `mkdir -p /etc/guacamole`
     - `vi /etc/guacamole/guacamole.properties`
 - Paste the following into the file
-    ```properties
+    ```
     # MySQL properties
     mysql-hostname: localhost
     mysql-port: 3306
@@ -151,7 +156,23 @@ systemctl status guacd
 # [Apache Guacamole with Azure AD using SAML](https://sintax.medium.com/apache-guacamole-with-azure-ad-using-saml-5d890c7e08bf)
 - `wget https://archive.apache.org/dist/guacamole/1.3.0/binary/guacamole-auth-saml-1.3.0.tar.gz`
 - `tar -zxf guacamole-auth-saml-1.3.0.tar.gz`
-- `cp guacamole-auth-saml-1.3.0/guacamole-auth-saml-1.3.0.jar /usr/share/tomcat/.guacamole/extensions/`
+- `mkdir /etc/guacamole/extensions`
+- `cp guacamole-auth-saml-1.3.0/guacamole-auth-saml-1.3.0.jar /etc/guacamole/extensions/`
+- `vi /etc/guacamole/guacamole.properties`
+    ```
+    # SAML
+    saml-idp-url: https://login.microsoftonline.com/<tentant id>/saml2
+    saml-entity-id: https://t-rdp.southeastasia.cloudapp.azure.com
+    saml-callback-url: https://t-rdp.southeastasia.cloudapp.azure.com
+    extension-priority: *, saml
+    ```
+- 設定好後登入 https://t-rdp.southeastasia.cloudapp.azure.com/guacamole
+    ```
+    AADSTS50105: Your administrator has configured the application Apache Guacamole SAML SSO ('449e9933-4540-4b10-bec6-6e909e81cb6e') to block users unless they are specifically granted ('assigned') access to the application. The signed in user 'tony.lee@findarts.onmicrosoft.com' is blocked because they are not a direct member of a group with access, nor had access directly assigned by an administrator. Please contact your administrator to assign access to this application.
+    ```
+    ```
+    AADSTS50011: The reply URL 'https://t-rdp.southeastasia.cloudapp.azure.com/api/ext/saml/callback' specified in the request does not match the reply URLs configured for the application 'https://t-rdp.southeastasia.cloudapp.azure.com'. Make sure the reply URL sent in the request matches one added to your application in the Azure portal. Navigate to https://aka.ms/urlMismatchError to learn more about how to fix this.
+    ```
 
 # [Installing Guacamole natively](https://guacamole.apache.org/doc/1.4.0/gug/installing-guacamole.html)
 
