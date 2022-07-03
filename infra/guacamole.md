@@ -42,6 +42,12 @@
     - `systemctl enable mariadb --now`
 - Secure our mysql/mariadb installation
     - `mysql_secure_installation` (照著設定)
+        - Enter current password for root (enter for none): enter
+        - Set root password? [Y/n] n
+        - Remove anonymous users? [Y/n] Y
+        - Disallow root login remotely? [Y/n] Y
+        - Remove test database and access to it? [Y/n] Y
+        - Reload privilege tables now? [Y/n] Y
 - Configure the tables and database scheme
     - `mysql -u root -p`
     - `CREATE DATABASE IF NOT EXISTS guacdb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;`
@@ -69,9 +75,9 @@
     mysql-default-max-group-connections-per-user: 0
     ```
 - Fix some file permissions
-    - `chown tomcat:tomcat /etc/guacamole/guacamole.properties`
+    - ~~`chown tomcat:tomcat /etc/guacamole/guacamole.properties`~~
     - `ln -s /etc/guacamole/guacamole.properties /usr/share/tomcat/.guacamole/`
-    - `chown tomcat:tomcat /var/lib/tomcat/webapps/guacamole.war`
+    - ~~`chown tomcat:tomcat /var/lib/tomcat/webapps/guacamole.war`~~
 - Fix a permission issue with SELinux
     - `setsebool -P tomcat_can_network_connect_db on`
     - `restorecon -R -v /usr/share/tomcat/.guacamole/lib/mysql-connector-java-8.0.26.jar`
@@ -84,6 +90,7 @@
     ```bash
     echo "iptables -t nat -A PREROUTING -p tcp --dport  80 -j REDIRECT --to-port 8080" >> /etc/rc.local
     echo "iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443" >> /etc/rc.local
+    chmod +x /etc/rc.d/rc.local
     ```
 
 ## Add Certification (SSL for Test)
@@ -91,43 +98,50 @@
     ```bash
     TOMCAT_HOME=/usr/share/tomcat
     mkdir -p $TOMCAT_HOME/webapps/.well-known/pki-validation
+    vi $TOMCAT_HOME/webapps/.well-known/pki-validation/test.html
     ```
 - 取得憑證
     - ca_bundle(_ssl4free).crt
-    - certificate(_ssl4free).crt
-    - private(_ssl4free).key
+    - certificate.crt
+    - private.key
 - `mkdir /etc/ssl/private`
+- 複製憑證
+    ```bash
+    cp ca_bundle.crt /etc/ssl/certs/ca_bundle_ssl4free.crt
+    cp certificate.crt /etc/ssl/certs/
+    cp private.key /etc/ssl/private/
+    ```
 - `cd /etc/ssl/certs`
     ```bash
     openssl pkcs12 -export \
-        -out certificate_ssl4free.pfx \
-        -inkey "/etc/ssl/private/private_ssl4free.key" \
-        -in certificate_ssl4free.crt \
-        -certfile ca_bundle_ssl4free.crt
+        -out "/etc/ssl/certs/certificate.pfx" \
+        -inkey "/etc/ssl/private/private.key" \
+        -in "/etc/ssl/certs/certificate.crt" \
+        -certfile "/etc/ssl/certs/ca_bundle_ssl4free.crt"
     # 123456
     ```
     ```bash
     keytool -importkeystore \
-        -srckeystore "/etc/ssl/certs/certificate_ssl4free.pfx" \
+        -srckeystore "/etc/ssl/certs/certificate.pfx" \
         -srcstorepass 123456 \
         -srcstoretype pkcs12 \
-        -destkeystore "/etc/ssl/certs/certificate_ssl4free.jks" \
+        -destkeystore "/etc/ssl/certs/certificate.jks" \
         -deststoretype pkcs12 \
         -deststorepass 123456
     ```
-- `vi /etc/tomcat/service.xml`
+- `vi /etc/tomcat/server.xml`
     ```xml
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11Protocol"
                maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
                clientAuth="false" sslProtocol="TLS"
-               keystoreFile="/etc/ssl/certs/certificate_ssl4free.jks" keystorePass="123456"
+               keystoreFile="/etc/ssl/certs/certificate.jks" keystorePass="123456"
                ciphers="TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384" />
     ```
 - `systemctl restart tomcat`
-- `tail -f /var/log/tomcat/catalina.2022-07-02.log`
+- `tail -100f /var/log/tomcat/catalina.2022-07-02.log`
 
 ## [Tomcat 配置 https 協議、以及 http 協議自動 REDIRECT 到 HTTPS](https://www.796t.com/content/1546493424.html)
-- 在 /usr/share/tomcat/confweb.xml 中的 <\/welcome-file-list> 後面加上這樣一段
+- 在 /usr/share/tomcat/conf/web.xml 中的 <\/welcome-file-list> 後面加上這樣一段
     ```xml
     <login-config>
         <!-- Authorization setting for SSL -->
@@ -156,8 +170,10 @@ systemctl status guacd
 # [Apache Guacamole with Azure AD using SAML](https://sintax.medium.com/apache-guacamole-with-azure-ad-using-saml-5d890c7e08bf)
 - `wget https://archive.apache.org/dist/guacamole/1.3.0/binary/guacamole-auth-saml-1.3.0.tar.gz`
 - `tar -zxf guacamole-auth-saml-1.3.0.tar.gz`
-- `mkdir /etc/guacamole/extensions`
-- `cp guacamole-auth-saml-1.3.0/guacamole-auth-saml-1.3.0.jar /etc/guacamole/extensions/`
+- ~~`mkdir /etc/guacamole/extensions`~~
+- ~~`cp guacamole-auth-saml-1.3.0/guacamole-auth-saml-1.3.0.jar /etc/guacamole/extensions/`~~
+- `cp guacamole-auth-saml-1.3.0/guacamole-auth-saml-1.3.0.jar /usr/share/tomcat/.guacamole/extensions`
+    - GET https://t-rdp.southeastasia.cloudapp.azure.com/guacamole/api/tokens: 500 Internal Server Error
 - `vi /etc/guacamole/guacamole.properties`
     ```
     # SAML
@@ -167,12 +183,19 @@ systemctl status guacd
     extension-priority: *, saml
     ```
 - 設定好後登入 https://t-rdp.southeastasia.cloudapp.azure.com/guacamole
-    ```
-    AADSTS50105: Your administrator has configured the application Apache Guacamole SAML SSO ('449e9933-4540-4b10-bec6-6e909e81cb6e') to block users unless they are specifically granted ('assigned') access to the application. The signed in user 'tony.lee@findarts.onmicrosoft.com' is blocked because they are not a direct member of a group with access, nor had access directly assigned by an administrator. Please contact your administrator to assign access to this application.
-    ```
-    ```
-    AADSTS50011: The reply URL 'https://t-rdp.southeastasia.cloudapp.azure.com/api/ext/saml/callback' specified in the request does not match the reply URLs configured for the application 'https://t-rdp.southeastasia.cloudapp.azure.com'. Make sure the reply URL sent in the request matches one added to your application in the Azure portal. Navigate to https://aka.ms/urlMismatchError to learn more about how to fix this.
-    ```
+    - 沒有 SAML SSO 權限
+        ```
+        AADSTS50105: Your administrator has configured the application Apache Guacamole SAML SSO ('449e9933-4540-4b10-bec6-6e909e81cb6e') to block users unless they are specifically granted ('assigned') access to the application. The signed in user 'XXX@XXX.onmicrosoft.com' is blocked because they are not a direct member of a group with access, nor had access directly assigned by an administrator. Please contact your administrator to assign access to this application.
+        ```
+    - 不在 AAD 內的帳號登入
+        ```
+        AADSTS50020: User account 'XXX@hotmail.com' from identity provider 'live.com' does not exist in tenant 'AUO Corporation' and cannot access the application 'https://t-rdp.southeastasia.cloudapp.azure.com'(Apache Guacamole SAML SSO) in that tenant. The account needs to be added as an external user in the tenant first. Sign out and sign in again with a different Azure Active Directory user account.
+        ```
+    - ??
+        ```
+        AADSTS50011: The reply URL 'https://t-rdp.southeastasia.cloudapp.azure.com/api/ext/saml/callback' specified in the request does not match the reply URLs configured for the application 'https://t-rdp.southeastasia.cloudapp.azure.com'. Make sure the reply URL sent in the request matches one added to your application in the Azure portal. Navigate to https://aka.ms/urlMismatchError to learn more about how to fix this.
+        ```
+- `tail -100f /var/logmessages`
 
 # [Installing Guacamole natively](https://guacamole.apache.org/doc/1.4.0/gug/installing-guacamole.html)
 
