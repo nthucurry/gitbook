@@ -18,6 +18,9 @@
     # 請輸入 代理程式名稱 (請為 t-dol 按 Enter) > 按 Enter
     # 請輸入 工作資料夾 (請為 _work 按 Enter) > 按 Enter
     ./run.sh
+
+    yum install https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm
+    yum install git -y
     ```
 - [Run as a systemd service](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/v2-linux?view=azure-devops-2020#run-as-a-systemd-service)
     ```bash
