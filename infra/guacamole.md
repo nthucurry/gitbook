@@ -2,6 +2,7 @@
 - [Guacamole for AWS (SAML 2.0)](https://docs.netcubed.io/products/guacamole/authentication/saml/)
 - [Guacamole Integration with AuthPoint](https://www.watchguard.com/help/docs/help-center/en-US/Content/Integration-Guides/AuthPoint/Guacamole_saml_authpoint.html)
 - [针对 Active Directory 的 Apache Guacamole 身份验证](https://www.bujarra.com/autenticacion-de-apache-guacamole-contra-directorio-activo/?lang=zh)
+- [Guacamole RDP won't connect](https://stackoverflow.com/questions/68458381/guacamole-rdp-wont-connect)
 
 # [Apache Guacamole 1.1.0 Install Guide](https://www.byteprotips.com/post/apache-guacamole-1-1-0-install-guide)
 - Environment Variable
@@ -72,6 +73,10 @@
     # Additional settings
     mysql-default-max-connections-per-user: 0
     mysql-default-max-group-connections-per-user: 0
+
+    # Hostname and port of guacamole proxy
+    guacd-hostname: localhost
+    guacd-port:     4822
     ```
 - Fix some file permissions
     - `chown tomcat:tomcat /etc/guacamole/guacamole.properties`
@@ -79,7 +84,7 @@
     - `chown tomcat:tomcat /var/lib/tomcat/webapps/guacamole.war`
 - Fix a permission issue with SELinux
     - `setsebool -P tomcat_can_network_connect_db on`
-    - `restorecon -R -v /usr/share/tomcat/.guacamole/lib/mysql-connector-java-8.0.26.jar`
+    - `restorecon -R -v /usr/share/tomcat/.guacamole/lib/mysql-connector-java-8.0.28.jar`
 - Start Guacamole
     - `systemctl enable guacd --now`
 - Finish
@@ -193,7 +198,78 @@ systemctl status tomcat mariadb guacd | grep Active
         AADSTS50011: The reply URL 'https://t-rdp.southeastasia.cloudapp.azure.com/api/ext/saml/callback' specified in the request does not match the reply URLs configured for the application 'https://t-rdp.southeastasia.cloudapp.azure.com'. Make sure the reply URL sent in the request matches one added to your application in the Azure portal. Navigate to https://aka.ms/urlMismatchError to learn more about how to fix this.
         ```
 - `systemctl restart tomcat guacd`
-- `tail -100f /var/logmessages`
+- `tail -100f /var/log/messages`
+    ```
+    Jul  5 19:51:26 t-rdp server: 19:51:26.488 [http-bio-8443-exec-6] INFO  o.a.g.r.auth.AuthenticationService - User "tony.lee@findarts.onmicrosoft.com" successfully authenticated from 111.249.81.108.
+    Jul  5 19:51:28 t-rdp server: 19:51:28.894 [http-bio-8443-exec-1] ERROR o.a.g.w.GuacamoleWebSocketTunnelEndpoint - Creation of WebSocket tunnel to guacd failed: java.net.ConnectException: Connection refused (Connection refused)
+    Jul  5 19:51:29 t-rdp server: 19:51:29.031 [http-bio-8443-exec-6] ERROR o.a.g.s.GuacamoleHTTPTunnelServlet - HTTP tunnel request failed: java.net.ConnectException: Connection refused (Connection refused)
+    ```
 
 # [Installing Guacamole natively](https://guacamole.apache.org/doc/1.4.0/gug/installing-guacamole.html)
 # [Configuring Guacamole](https://guacamole.apache.org/doc/gug/configuring-guacamole.html#configuring-guacamole)
+- `vi /etc/guacamole/logback.xml`
+    ```xml
+    <configuration>
+
+        <!-- Appender for debugging -->
+        <appender name="GUAC-DEBUG" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <!-- Log at DEBUG level -->
+        <root level="debug">
+            <appender-ref ref="GUAC-DEBUG"/>
+        </root>
+
+    </configuration>
+    ```
+- `vi /etc/guacamole/user-mapping.xml`
+    ```xml
+    <user-mapping>
+
+        <!-- Per-user authentication and config information -->
+        <authorize username="USERNAME" password="PASSWORD">
+            <protocol>ssh</protocol>
+            <param name="hostname">10.1.86.6</param>
+            <param name="port">22</param>
+            <param name="password">VNCPASS</param>
+            <param name="ignore-cert">true</param>
+        </authorize>
+
+        <!-- Per-user authentication and config information -->
+        <authorize username="USERNAME" password="PASSWORD">
+            <protocol>vnc</protocol>
+            <param name="hostname">localhost</param>
+            <param name="port">5900</param>
+            <param name="password">VNCPASS</param>
+        </authorize>
+
+        <!-- Another user, but using md5 to hash the password
+            (example below uses the md5 hash of "PASSWORD") -->
+        <authorize
+                username="USERNAME2"
+                password="319f4d26e3c536b5dd871bb2c52e3178"
+                encoding="md5">
+
+            <!-- First authorized connection -->
+            <connection name="localhost">
+                <protocol>vnc</protocol>
+                <param name="hostname">localhost</param>
+                <param name="port">5901</param>
+                <param name="password">VNCPASS</param>
+            </connection>
+
+            <!-- Second authorized connection -->
+            <connection name="otherhost">
+                <protocol>vnc</protocol>
+                <param name="hostname">otherhost</param>
+                <param name="port">5900</param>
+                <param name="password">VNCPASS</param>
+            </connection>
+
+        </authorize>
+
+    </user-mapping>
+    ```
