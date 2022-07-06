@@ -3,6 +3,7 @@
 - [Guacamole Integration with AuthPoint](https://www.watchguard.com/help/docs/help-center/en-US/Content/Integration-Guides/AuthPoint/Guacamole_saml_authpoint.html)
 - [针对 Active Directory 的 Apache Guacamole 身份验证](https://www.bujarra.com/autenticacion-de-apache-guacamole-contra-directorio-activo/?lang=zh)
 - [Guacamole RDP won't connect](https://stackoverflow.com/questions/68458381/guacamole-rdp-wont-connect)
+- [ubuntu 安装 guacamole 远程 windows 指导书_胡同老道的博客-程序员 ITS401](https://its401.com/article/obana/121003969)
 
 # [Apache Guacamole 1.1.0 Install Guide](https://www.byteprotips.com/post/apache-guacamole-1-1-0-install-guide)
 - Environment Variable
@@ -77,11 +78,20 @@
     # Hostname and port of guacamole proxy
     guacd-hostname: localhost
     guacd-port:     4822
+
+    #basic-user-mapping: /etc/guacamole/user-mapping.xml
+    #user-mapping: /etc/guacamole/user-mapping.xml
     ```
 - Fix some file permissions
     - `chown tomcat:tomcat /etc/guacamole/guacamole.properties`
     - `chown tomcat:tomcat /var/lib/tomcat/webapps/guacamole.war`
     - `ln -s /etc/guacamole/guacamole.properties /usr/share/tomcat/.guacamole/`
+    - `touch /etc/guacamole/guacd.conf`
+    - `touch /etc/guacamole/logback.xml`
+    - `touch /etc/guacamole/user-mapping.xml`
+    - `ln -s /etc/guacamole/guacd.conf /usr/share/tomcat/.guacamole/`
+    - `ln -s /etc/guacamole/logback.xml /usr/share/tomcat/.guacamole/`
+    - `ln -s /etc/guacamole/user-mapping.xml /usr/share/tomcat/.guacamole/`
 - Fix a permission issue with SELinux
     - `setsebool -P tomcat_can_network_connect_db on`
     - `restorecon -R -v /usr/share/tomcat/.guacamole/lib/mysql-connector-java-8.0.28.jar`
@@ -96,6 +106,8 @@
     echo "iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443" >> /etc/rc.local
     chmod +x /etc/rc.d/rc.local
     ```
+- Download a font for linux (ex: font-name: DroidSansMono)
+    - `yum install google-droid-sans-mono-fonts -y`
 
 ## Add Certification (SSL for Test)
 - 註冊
@@ -148,11 +160,14 @@
 - 在 /usr/share/tomcat/conf/web.xml 中的 <\/welcome-file-list> 後面加上這樣一段
     ```xml
     <login-config>
+
         <!-- Authorization setting for SSL -->
         <auth-method>CLIENT-CERT</auth-method>
         <realm-name>Client Cert Users-only Area</realm-name>
+
     </login-config>
     <security-constraint>
+
         <!-- Authorization setting for SSL -->
         <web-resource-collection >
             <web-resource-name >SSL</web-resource-name>
@@ -161,6 +176,7 @@
         <user-data-constraint>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
+
     </security-constraint>
     ```
 
@@ -190,13 +206,13 @@ tcp6       0      0 127.0.0.1:8005          :::*                    LISTEN
 - `vi /etc/guacamole/guacamole.properties`
     ```
     # SAML
+    #skip-if-unavailable: saml
     saml-idp-url: https://login.microsoftonline.com/<Tenant ID>/saml2
     saml-entity-id: https://t-rdp.southeastasia.cloudapp.azure.com/guacamole
     saml-callback-url: https://t-rdp.southeastasia.cloudapp.azure.com/guacamole
     saml-idp-metadata-url: https://login.microsoftonline.com/<Tenant ID>/federationmetadata/2007-06/federationmetadata.xml?appid=<Application ID>
     saml-debug: true
-    skip-if-unavailable: saml
-    extension-priority: saml, *
+    extension-priority: mysql, saml
     ```
 - 設定好後登入 https://t-rdp.southeastasia.cloudapp.azure.com/guacamole
     - 沒有 SAML SSO 權限
@@ -238,6 +254,16 @@ tcp6       0      0 127.0.0.1:8005          :::*                    LISTEN
         </root>
 
     </configuration>
+    ```
+- `vi /etc/guacamole/guacd.conf`
+    ```
+    [daemon]
+    pid_file=/var/run/guacd.pid
+    log_level=info
+
+    [server]
+    bind_host=127.0.0.1
+    bind_port=4822
     ```
 - ~~`vi /usr/share/tomcat/.guacamole/user-mapping.xml`~~ (not sure)
     ```xml
