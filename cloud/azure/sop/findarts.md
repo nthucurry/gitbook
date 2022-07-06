@@ -194,7 +194,11 @@
     - Use custom probe: **Yes**
     - Custom probe: **hp_443_www.findarts.net**
 
-## (4) 設定 Private DNS Zone
+## (4) 設定 Health probes
+- APIM Probe
+    - Path: **/status-0123456789abcdef**
+
+## (5) 設定 Private DNS Zone
 | FQDN                                       | IP           |
 |--------------------------------------------|--------------|
 | findarts-apim.developer.azure-api.net      | 10.0.172.229 |
