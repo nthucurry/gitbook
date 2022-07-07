@@ -185,20 +185,6 @@
 systemctl status tomcat mariadb guacd | grep Active
 ```
 
-# Check Firewall
-```
-Active Internet connections (only servers)
-Proto Recv-Q Send-Q Local Address           Foreign Address         State
-tcp        0      0 0.0.0.0:3306            0.0.0.0:*               LISTEN
-tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN
-tcp6       0      0 :::8009                 :::*                    LISTEN
-tcp6       0      0 :::8080                 :::*                    LISTEN
-tcp6       0      0 ::1:4822                :::*                    LISTEN
-tcp6       0      0 :::22                   :::*                    LISTEN
-tcp6       0      0 :::8443                 :::*                    LISTEN
-tcp6       0      0 127.0.0.1:8005          :::*                    LISTEN
-```
-
 # [Apache Guacamole with Azure AD using SAML](https://sintax.medium.com/apache-guacamole-with-azure-ad-using-saml-5d890c7e08bf)
 - `wget https://archive.apache.org/dist/guacamole/1.4.0/binary/guacamole-auth-sso-1.4.0.tar.gz`
 - `tar -zxf guacamole-auth-sso-1.4.0.tar.gz`
@@ -229,13 +215,7 @@ tcp6       0      0 127.0.0.1:8005          :::*                    LISTEN
         ```
 - `systemctl restart tomcat guacd`
 - `tail -100f /var/log/messages`
-    ```
-    Jul  5 19:51:26 t-rdp server: 19:51:26.488 [http-bio-8443-exec-6] INFO  o.a.g.r.auth.AuthenticationService - User "XXX@hotmail.com" successfully authenticated from 111.249.81.108.
-    Jul  5 19:51:28 t-rdp server: 19:51:28.894 [http-bio-8443-exec-1] ERROR o.a.g.w.GuacamoleWebSocketTunnelEndpoint - Creation of WebSocket tunnel to guacd failed: java.net.ConnectException: Connection refused (Connection refused)
-    Jul  5 19:51:29 t-rdp server: 19:51:29.031 [http-bio-8443-exec-6] ERROR o.a.g.s.GuacamoleHTTPTunnelServlet - HTTP tunnel request failed: java.net.ConnectException: Connection refused (Connection refused)
-    ```
 
-# [Installing Guacamole natively](https://guacamole.apache.org/doc/1.4.0/gug/installing-guacamole.html)
 # [Configuring Guacamole](https://guacamole.apache.org/doc/gug/configuring-guacamole.html#configuring-guacamole)
 - `vi /usr/share/tomcat/.guacamole/logback.xml`
     ```xml
@@ -313,3 +293,11 @@ tcp6       0      0 127.0.0.1:8005          :::*                    LISTEN
 
     </user-mapping>
     ```
+
+# Troubleshooting
+- RDP server closed/refused connection: SSL/TLS connection failed (untrusted/self-signed certificate?)
+    <br><img src="../img/guacamole/rdp-unknown-certificate.png" width=300>
+- [RDP server closed/refused connection: Server refused connection (wrong security type?)](https://stackoverflow.com/questions/44039126/guacamole-windows-10-rdp-failed)
+    <br><img src="../img/guacamole/rdp-wrong-security-type.png" width=500>
+- Creation of WebSocket tunnel to guacd failed: java.net.ConnectException: Connection refused (Connection refused)
+    - 需設定 /etc/guacamole/guacd.conf
