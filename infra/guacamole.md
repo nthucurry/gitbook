@@ -32,7 +32,7 @@
     - `cp guacamole-1.4.0.war /var/lib/tomcat/webapps/guacamole.war`
 - Configure Guacamole to support multiple users and connections (by MySQL)
     - `mkdir -p /usr/share/tomcat/.guacamole/{extensions,lib}`
-    - `wget https://cdn.mysql.com//Downloads/Connector-J/mysql-connector-java-8.0.28.tar.gz`
+    - `wget https://cdn.mysql.com/Downloads/Connector-J/mysql-connector-java-8.0.28.tar.gz`
     - `tar -zxf mysql-connector-java-8.0.28.tar.gz`
     - `cp mysql-connector-java-8.0.28/mysql-connector-java-8.0.28.jar /usr/share/tomcat/.guacamole/lib/`
     - `wget https://downloads.apache.org/guacamole/1.4.0/binary/guacamole-auth-jdbc-1.4.0.tar.gz`
