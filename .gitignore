@@ -16,6 +16,7 @@ img/chipbond
 office/*
 office/chipbond/*
 local/*
+test/*
 knowledge/*
 knowledge/oracle/*
 knowledge/oracle/note/*
@@ -92,3 +93,4 @@ knowledge/exam/*
 !knowledge/infra/elk
 !knowledge/exam
 !knowledge/exam/oracle-11g.md
+test.html
