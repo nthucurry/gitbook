@@ -1,0 +1,5 @@
+- Create a resource
+    - data-telemetryname: **Windows 10 Enterprise multi-session, version 21H2 + Microsoft 365 Apps**
+- 開啟 Local Users and Groups
+    - `lusrmgr`
+- 將帳號加入遠端連線群組: **Remote Desktop Users**
