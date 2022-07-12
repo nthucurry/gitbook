@@ -190,9 +190,9 @@ systemctl status tomcat mariadb guacd | grep Active
     - Identifier (Entity ID): **https://t-rdp.southeastasia.cloudapp.azure.com/guacamole**
     - Reply URL (Assertion Consumer Service URL): **https://t-rdp.southeastasia.cloudapp.azure.com/guacamole**
 - SAML Signing Certificate
-    - App Federation Metadata Url: https://login.microsoftonline.com/{Tenant ID}/federationmetadata/2007-06/federationmetadata.xml?appid={Application ID}
+    - App Federation Metadata Url: **https://login.microsoftonline.com/{Tenant ID}/federationmetadata/2007-06/federationmetadata.xml?appid={Application ID}**
 -  Set up Apache Guacamole SAML SSO
-    -  Login URL: https://login.microsoftonline.com/{Tenant ID}/saml2
+    -  Login URL: **https://login.microsoftonline.com/{Tenant ID}/saml2**
 
 # [Apache Guacamole with Azure AD using SAML](https://sintax.medium.com/apache-guacamole-with-azure-ad-using-saml-5d890c7e08bf)
 - `wget https://archive.apache.org/dist/guacamole/1.4.0/binary/guacamole-auth-sso-1.4.0.tar.gz`
