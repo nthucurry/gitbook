@@ -185,6 +185,15 @@
 systemctl status tomcat mariadb guacd | grep Active
 ```
 
+# Create SAML SSO Enterprise Application
+- Basic SAML Configuration
+    - Identifier (Entity ID): **https://t-rdp.southeastasia.cloudapp.azure.com/guacamole**
+    - Reply URL (Assertion Consumer Service URL): **https://t-rdp.southeastasia.cloudapp.azure.com/guacamole**
+- SAML Signing Certificate
+    - App Federation Metadata Url: https://login.microsoftonline.com/[Tenant ID]/federationmetadata/2007-06/federationmetadata.xml?appid=[Application ID]
+-  Set up Apache Guacamole SAML SSO
+    -  Login URL: https://login.microsoftonline.com/[Tenant ID]/saml2
+
 # [Apache Guacamole with Azure AD using SAML](https://sintax.medium.com/apache-guacamole-with-azure-ad-using-saml-5d890c7e08bf)
 - `wget https://archive.apache.org/dist/guacamole/1.4.0/binary/guacamole-auth-sso-1.4.0.tar.gz`
 - `tar -zxf guacamole-auth-sso-1.4.0.tar.gz`
@@ -193,10 +202,10 @@ systemctl status tomcat mariadb guacd | grep Active
     ```
     # SAML
     #skip-if-unavailable: saml
-    saml-idp-url: https://login.microsoftonline.com/<Tenant ID>/saml2
+    saml-idp-url: https://login.microsoftonline.com/[Tenant ID]/saml2
     saml-entity-id: https://t-rdp.southeastasia.cloudapp.azure.com/guacamole
     saml-callback-url: https://t-rdp.southeastasia.cloudapp.azure.com/guacamole
-    saml-idp-metadata-url: https://login.microsoftonline.com/<Tenant ID>/federationmetadata/2007-06/federationmetadata.xml?appid=<Application ID>
+    saml-idp-metadata-url: https://login.microsoftonline.com/[Tenant ID]/federationmetadata/2007-06/federationmetadata.xml?appid=[Application ID]
     saml-debug: true
     extension-priority: mysql, saml
     ```
