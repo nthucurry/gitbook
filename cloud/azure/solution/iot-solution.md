@@ -4,3 +4,18 @@
 - NS-3: Establish private network access to Azure services
 - NS-4: Protect applications and services from external network attacks
 - NS-6: Simplify network security rules
+
+# [Quickstart: Send telemetry from a device to an IoT hub and monitor it with the Azure CLI](https://docs.microsoft.com/en-us/azure/iot-hub/quickstart-send-telemetry-cli)
+- Prepare two CLI sessions
+    - The first session **simulates an IoT device** that communicates with your IoT hub. (終端設備)
+    - The second session either **monitors** the device in the first session, or sends messages, commands, and property updates. (後台)
+- Create a simulated device in an IoT Hub
+    - `az iot hub device-identity create -d simDevice -n findarts-iothub` (symmetric keys)
+- Starts the simulated device, the device sends telemetry to your IoT hub and receives messages from it
+    - `az iot device simulate -d simDevice -n findarts-iothub`
+- Continuously monitors the simulated device
+    - `az iot hub monitor-events --output table -p all -n findarts-iothub`
+- Use the CLI to send a message
+    - `az iot device c2d-message send -d simDevice --data "Hello World" --props "key0=value0;key1=value1" -n findarts-iothub`
+
+# [Tutorial: Send device data to Azure Storage using IoT Hub message routing](https://docs.microsoft.com/en-us/azure/iot-hub/tutorial-routing?tabs=portal)

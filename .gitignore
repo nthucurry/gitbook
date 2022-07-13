@@ -5,6 +5,7 @@ ServiceTags_Public_*.json
 diff*.txt
 test.json
 test.xml
+test.html
 .DS_Store
 *.cer
 *.crt
