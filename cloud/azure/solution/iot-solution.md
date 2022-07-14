@@ -19,3 +19,8 @@
     - `az iot device c2d-message send -d simDevice --data "Hello World" --props "key0=value0;key1=value1" -n findarts-iothub`
 
 # [Tutorial: Send device data to Azure Storage using IoT Hub message routing](https://docs.microsoft.com/en-us/azure/iot-hub/tutorial-routing?tabs=portal)
+
+# Reference
+- 架構
+    <br><img src="https://cdn.plainconcepts.com/wp-content/uploads/2020/09/router-azf-1.png">
+- [【 Cloud 】將 Azure IoT Hub 所接收到的數據透過 Azure Function 存入 Azure Digital Twins 再透過 Azure Event Grid 將警示資訊顯示於 Azure Indoor Map ( Node.js 版 )](https://learningsky.io/use-azure-iot-hub-azure-function-azure-event-grid-azure-digital-twins-to-update-an-azure-map-indoor-map-nodejs/)
