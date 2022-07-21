@@ -74,6 +74,8 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     mkdir -p $DOCKER_CONFIG/cli-plugins
     curl -SL https://github.com/docker/compose/releases/download/v2.7.0/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
     chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+    echo "DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}" >> ~/.bash_profile
+    echo "PATH=$PATH:$DOCKER_CONFIG/cli-plugins" >> ~/.bash_profile
     ```
 - 設定 Proxy
     ```bash
@@ -186,6 +188,25 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     - 用來設定環境變數
 - CMD ["/apache-tomcat-7.0.107/bin/catalina.sh", "run"]
     - 在指行 docker run 的指令時會直接呼叫開啟 Tomcat Service
+
+## Run service by docker-compose
+- `docker-compose -f docker-compose-nginx.yml up -d`
+    ```yml
+    services:
+      nginx:
+        image: nginx
+        volumes:
+          - ./templates:/etc/nginx/templates
+        ports:
+          - "80:80"
+        environment:
+          - NGINX_HOST=t-msa.southeastasia.cloudapp.azure.com
+          - NGINX_PORT=80
+    ```
+
+## Monitor docker
+- [CAdvisor](https://ithelp.ithome.com.tw/articles/10195244)
+    - `docker run -d --restart=always -v /var/run:/var/run:rw -p 8080:8080 --name=cadvisor google/cadvisor`
 
 ## Docker Network
 <br><img src="https://ithelp.ithome.com.tw/upload/images/20171223/20103456bATaXz4Pcl.png" board="1" />
