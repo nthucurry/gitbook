@@ -33,37 +33,50 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 - build image 如果資料夾內有 Dockerfile，就會成功
 
 ## 安裝 Docker
+- 環境設定
+    ```bash
+    # sudo groupadd docker
+    sudo usermod -aG docker $USER
+    sudo chmod 777 /var/run/docker.sock
+    ```
 - Ubuntu
     ```bash
     # Install Docker Engine on Ubuntu
     ## Set up the repository
-    apt-get update
-    apt-get install ca-certificates curl gnupg lsb-release -y
-    curl -x 10.248.15.8:80 -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    sudo apt-get update
+    sudo apt-get install ca-certificates curl gnupg lsb-release -y
+    sudo curl -x 10.248.15.8:80 -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     ## Install Docker Engine (latest version)
-    apt-get update
-    apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+    sudo apt-get update
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
     docker run hello-world
 
-    ## Post-installation steps for Linux
-    groupadd docker
-    usermod -aG docker $USER
-    chmod 777 /var/run/docker.sock
-
     ## Configure Docker to start on boot
-    systemctl enable docker.service
-    systemctl enable containerd.service
+    sudo systemctl enable docker.service --now
+    sudo systemctl enable containerd.service
+
+    ## Running multi-container Docker applications
+    sudo apt install docker-compose -y
     ```
 - CentOS (請用 user account 執行)
     ```bash
+    sudo yum update -y
     sudo yum install yum-utils device-mapper-persistent-data lvm2 -y
     sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
     sudo yum install docker-ce -y
-    sudo systemctl start docker; sudo systemctl enable docker
+
+    sudo systemctl enable docker --now
     sudo usermod -aG docker `whoami`
 
+    DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+    mkdir -p $DOCKER_CONFIG/cli-plugins
+    curl -SL https://github.com/docker/compose/releases/download/v2.7.0/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+    chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+    ```
+- 設定 Proxy
+    ```bash
     # docker daemon setting
     sudo mkdir -p /etc/systemd/system/docker.service.d
     echo "[Service]" >> /etc/systemd/system/docker.service.d/http-proxy.conf
@@ -72,6 +85,16 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 
     sudo systemctl daemon-reload
     sudo systemctl restart docker
+    ```
+- `sudo vi /etc/docker/daemon.json` (設定 Docker log size)
+    ```json
+    {
+        "log-driver": "json-file",
+        "log-opts": {
+            "max-size": "10m",
+            "max-file": "3"
+        }
+    }
     ```
 
 ## 名詞解釋
