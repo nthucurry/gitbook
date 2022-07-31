@@ -6,8 +6,8 @@ filebeat.inputs:
     - /data-to-local/*-insights-logs-networksecuritygroupflowevent/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/*/y=*/m=*/d=*/h=*/m=*/macAddress=*/*.json
   fields:
     log_type: "azure-nsg-flow"
-  ignore_older: 15m
-  scan_frequency: 4m
+  # ignore_older: 15m
+  # scan_frequency: 4m
   fields_under_root: true
 # ================================== Outputs ===================================
 # ---------------------------- Elasticsearch Output ----------------------------
