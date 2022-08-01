@@ -76,6 +76,7 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
     echo "DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}" >> ~/.bash_profile
     echo "PATH=$PATH:$DOCKER_CONFIG/cli-plugins" >> ~/.bash_profile
+    source ~/.bash_profile
     ```
 - 設定 Proxy
     ```bash
