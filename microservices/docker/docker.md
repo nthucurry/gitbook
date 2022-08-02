@@ -144,7 +144,7 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 - `docker run -itd --name scm-mariadb -p 3306:3306 -e MYSQL_ROOT_PASSWORD=ncu5540 mariadb`
 
 ## Run service by dockerfile
-- https://ithelp.ithome.com.tw/articles/10191016?sc=hot
+- [Day5: 實作撰寫第一個 Dockerfile](https://ithelp.ithome.com.tw/articles/10191016?sc=hot)
 - `mkdir docker-test`
 - `cd docker-test`
 - `vi Dockerfile`
@@ -204,6 +204,11 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
           - NGINX_HOST=t-msa.southeastasia.cloudapp.azure.com
           - NGINX_PORT=80
     ```
+
+## Push image to Azure container registry
+- `docker login adthub.azurecr.io`
+- `docker tag app-ssh-tool adthub.azurecr.io/app-ssh-tool`
+- `docker push adthub.azurecr.io/app-ssh-tool`
 
 ## Monitor docker
 - [CAdvisor](https://ithelp.ithome.com.tw/articles/10195244)
