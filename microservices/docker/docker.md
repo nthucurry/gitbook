@@ -150,10 +150,9 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 - `vi Dockerfile`
     ```
     FROM centos:7
-    MAINTAINER jack
+    MAINTAINER tony
 
-    RUN yum install -y wget
-
+    RUN yum install wget -y
     RUN cd /
 
     ADD jdk-8u152-linux-x64.tar.gz /
@@ -172,9 +171,10 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 - `docker exec -it a2294eea8345 /bin/bash`
 
 ### Resolve dockerfile
+- [當 Docker Hub 無法滿足你的需求，就寫 Dockerfile 吧](https://cutejaneii.gitbook.io/docker/docker-image-1/zhuan-xie-dockerfile)
 - FROM centos:7
-    - 使用到的 Docker Image 名稱，今天使用 CentOS
-- MAINTAINER jack
+    - 使用到的 Docker Image 名稱 (基底映像檔    )
+- MAINTAINER tony
     - 用來說明，撰寫和維護這個 Dockerfile 的人是誰，也可以給 E-mail 的資訊
 - RUN yum install wget -y
 - RUN cd /
@@ -203,7 +203,10 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
         environment:
           - NGINX_HOST=t-msa.southeastasia.cloudapp.azure.com
           - NGINX_PORT=80
+      app-ssh-tool:
+        image: adthub.azurecr.io/app-ssh-tool:latest
     ```
+- `docker-compose -f docker-compose-nginx.yml down`
 
 ## Push image to Azure container registry
 - `docker login adthub.azurecr.io`
