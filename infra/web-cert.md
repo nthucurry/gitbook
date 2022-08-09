@@ -4,13 +4,22 @@
 - [NGINX](#nginx)
 - [Tomcat](#tomcat)
 - [Apache](#apache)
+- [CentOS 7 匯入自簽憑證](#centos-7-匯入自簽憑證)
 
 # 參考
 - https://www.ionos.com/digitalguide/server/configuration/apache-tomcat-on-centos/
 - https://downloads.apache.org/tomcat/tomcat-9/
 - [NGINX 設定 HTTPS 網頁加密連線，建立自行簽署的 SSL 憑證](https://blog.gtwang.org/linux/nginx-create-and-install-ssl-certificate-on-ubuntu-linux/)
+- [AWS：建立和簽署 X509 憑證](https://docs.aws.amazon.com/zh_tw/elasticbeanstalk/latest/dg/configuring-https-ssl.html)
 - [SSL For Free](https://manage.sslforfree.com/dashboard)
 - [My No-IP](https://my.noip.com/)
+- 名詞解釋
+    - csr: Certificate Signing Request，證書簽名請求 (~公鑰)
+    - crt: 又稱 cer，為 **Cer**tificate 縮寫
+    - X.509: 一種證書格式，以 **.crt** 結尾，依內容編碼格式分為兩種
+        - PEM: Privacy Enhanced Mail，文字格式，以 "—–BEGIN..." 開頭、"—–END..." 結尾，常見於 Apache、Nginx
+        - DER: Distinguished Encoding Rules，二進位制，常見於 Java、Windows
+    - pfx: pkcs12，一種歸檔檔案格式，用來打包一個私 (private.key) 及一個 X.509 憑證 (server.cer)
 
 # 彼此關係
 1. 客戶產生後，給憑證經銷商
@@ -122,3 +131,9 @@ openssl pkcs12 -in cert.pem -inkey privkey.pem -export -out FindARTs.pfx -passwo
 - 重啟服務
 - 測試: sslshopper.com
     <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/security/ssl-result.png" width=500>
+
+# CentOS 7 匯入自簽憑證
+- 顯示證書詳細訊息
+    - `openssl x509 -in certificate.crt -text -noout`
+- `openssl x509 -inform DES -in checkmarx.pfx -out checkmarx.pem -text`
+- `cat checkmarx.pem >> /etc/pki/tls/certs/ca-bundle.crt`
