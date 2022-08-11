@@ -28,6 +28,16 @@
     sudo systemctl enable vsts.agent.XXX.Linux.maz\\x2ddevops1.service --now
     systemctl status vsts.agent.XXX.Linux.maz\\x2ddevops1.service
     ```
+- 重裝服務
+    ```bash
+    sudo ./svc.sh stop
+    sudo ./svc.sh uninstall
+    ./config.sh remove
+    ./config.sh
+    sudo ./svc.sh install azadmin
+    sudo ./svc.sh start
+    sudo ./svc.sh status
+    ```
 
 # Windows
 - CMD

@@ -26,9 +26,9 @@
    - 私密金鑰檔 (private.key)
    - 憑證要求檔 (server.csr)
 2. 憑證經銷商給客戶
-   - 伺服器憑證
+   - 伺服器憑證 (server.crt)
 3. 客戶合併**伺服器憑證**、**私密金鑰檔** --> server-private.pfx
-   - `openssl pkcs12 -in server.cer -inkey private.key -export -out server-private.pfx -password pass:1234`
+   - `openssl pkcs12 -in server.crt -inkey private.key -export -out server-private.pfx -password pass:1234`
 4. 從 server-private.pfx 匯出**伺服器憑證檔**、**私密金鑰檔**
    - `openssl pkcs12 -in server-private.pfx -nokeys -password "pass:1234" -out - 2>/dev/null | openssl x509 -out server.crt`
 
