@@ -1,6 +1,7 @@
 # ============================== Filebeat inputs ===============================
 filebeat.inputs:
-- type: log
+- type: filestream
+  id: nsg-flow
   enabled: true
   paths:
     - /data-to-local/*-insights-logs-networksecuritygroupflowevent/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/*/y=*/m=*/d=*/h=*/m=*/macAddress=*/*.json
