@@ -22,6 +22,7 @@ Restart=always
 WorkingDirectory=/
 Nice=19
 LimitNOFILE=16384
+# LimitNOFILE=infinity
 ```
 
 # Fiebeat Service
