@@ -1,5 +1,7 @@
 # 參考來源
-[從實戰經驗看到的 K8S 導入痛點](https://hackmd.io/@k8ssummit/20/%2F%40k8ssummit%2FByyAVbANv?fbclid=IwAR3q1kuVs8Sc9BF3L0cbPJA1twtx31IE17aq6JIwBqY7BCV5iK8U47-2pXE)
+- [從實戰經驗看到的 K8S 導入痛點](https://hackmd.io/@k8ssummit/20/%2F%40k8ssummit%2FByyAVbANv?fbclid=IwAR3q1kuVs8Sc9BF3L0cbPJA1twtx31IE17aq6JIwBqY7BCV5iK8U47-2pXE)
+- [Lightweight Kubernetes Showdown: Minikube vs. K3s vs. MicroK8s](https://www.itprotoday.com/cloud-computing-and-edge-computing/lightweight-kubernetes-showdown-minikube-vs-k3s-vs-microk8s)
+- [Microk8s vs K3s](https://thechief.io/c/editorial/microk8s-vs-k3s/)
 
 # 缺乏現代化 Infra 管理經驗
 ## 缺乏自動化管理能力
