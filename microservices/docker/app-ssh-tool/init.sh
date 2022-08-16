@@ -19,4 +19,4 @@ docker images ls
 docker push adthub.azurecr.io/app-ssh-tool
 
 # docker run
-docker run -dit --name my-running-app -p 80:80 httpd-ssh-tool
+docker run -dit --name my-running-app -p 80:80 app-ssh-tool
