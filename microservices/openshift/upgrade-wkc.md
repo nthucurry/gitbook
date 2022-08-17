@@ -2,7 +2,9 @@
 - [Setting up install variables](#setting-up-install-variables)
 - [Obtaining your IBM entitlement API key](#obtaining-your-ibm-entitlement-api-key)
 - [Setting up projects (namespaces) on Red Hat OpenShift Container Platform (Upgrading from Version 3.5)](#setting-up-projects-namespaces-on-red-hat-openshift-container-platform-upgrading-from-version-35)
+    - [Mirroring images to your private container registry](#mirroring-images-to-your-private-container-registry)
     - [Configuring your cluster to pull Cloud Pak for Data images](#configuring-your-cluster-to-pull-cloud-pak-for-data-images)
+    - [Configuring an image content source policy](#configuring-an-image-content-source-policy)
 - [Cloud Pak for Data (lite)](#cloud-pak-for-data-lite)
     - [Creating catalog sources that pull specific versions of images from the IBM Entitled Registry (Upgrading from Version 3.5)](#creating-catalog-sources-that-pull-specific-versions-of-images-from-the-ibm-entitled-registry-upgrading-from-version-35)
     - [Installing or upgrading IBM Cloud Pak foundational services](#installing-or-upgrading-ibm-cloud-pak-foundational-services)
@@ -58,6 +60,11 @@ export PROJECT_CPD_INSTANCE=zen
 export IBM_ENTITLEMENT_SERVER=cp.icr.io
 export IBM_ENTITLEMENT_USER=cp
 export IBM_ENTITLEMENT_KEY=XXX
+export PRIVATE_REGISTRY_LOCATION=XXX
+export PRIVATE_REGISTRY_PUSH_USER=azadmin
+export PRIVATE_REGISTRY_PUSH_PASSWORD=XXX
+export PRIVATE_REGISTRY_PULL_USER=azadmin
+export PRIVATE_REGISTRY_PULL_PASSWORD=XXX
 export WORK_ROOT="$HOME/temp/work"
 
 export OFFLINEDIR_CPD="$HOME/offline/cpd"
@@ -98,7 +105,16 @@ mkdir -p $OFFLINEDIR_CPFS
     EOF
     ```
 
+[Back to top](#)
+## [Mirroring images to your private container registry](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-mirroring-images-your-private-container-registry)
+- Downloading and installing the software needed to mirror images
+    - OpenShift CLI (本來就會有)
+    - IBM Cloud Pak CLI (cloudctl)
+    - httpd-tools
+        - `yum install httpd-tools`
+
 ## [Configuring your cluster to pull Cloud Pak for Data images](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-configuring-your-cluster-pull-images#preinstall-cluster-setup__pull-secret)
+- Configuring the global image pull secret
 - Download the pull secret to the temporary directory
     ```bash
     oc get secret/pull-secret \
@@ -106,12 +122,20 @@ mkdir -p $OFFLINEDIR_CPFS
         --template='{{index .data ".dockerconfigjson" | base64decode}}' > ${WORK_ROOT}/global_pull_secret.cfg
     ```
 - Add the new pull secret to the local copy of the global_pull_secret.cfg file
-    ```bash
-    oc registry login \
-        --registry="${IBM_ENTITLEMENT_SERVER}" \
-        --auth-basic="${IBM_ENTITLEMENT_USER}:${IBM_ENTITLEMENT_KEY}" \
-        --to=${WORK_ROOT}/global_pull_secret.cfg
-    ```
+    - IBM Entitled Registry
+        ```bash
+        oc registry login \
+            --registry="${IBM_ENTITLEMENT_SERVER}" \
+            --auth-basic="${IBM_ENTITLEMENT_USER}:${IBM_ENTITLEMENT_KEY}" \
+            --to=${WORK_ROOT}/global_pull_secret.cfg
+        ```
+    - Private container registry
+        ```bash
+        oc registry login \
+            --registry="${PRIVATE_REGISTRY_LOCATION}" \
+            --auth-basic="${PRIVATE_REGISTRY_PULL_USER}:${PRIVATE_REGISTRY_PULL_PASSWORD}" \
+            --to=${WORK_ROOT}/global_pull_secret.cfg
+        ```
 - Update the global pull secret on your cluster
     ```bash
     oc set data secret/pull-secret \
@@ -119,6 +143,37 @@ mkdir -p $OFFLINEDIR_CPFS
         --from-file=.dockerconfigjson=${WORK_ROOT}/global_pull_secret.cfg
     ```
 - Get the status of the nodes
+
+[Back to top](#)
+## Configuring an image content source policy
+- Create an image content source policy
+    ```bash
+    cat << EOF | oc apply -f -
+    apiVersion: operator.openshift.io/v1alpha1
+    kind: ImageContentSourcePolicy
+    metadata:
+      name: cloud-pak-for-data-mirror
+    spec:
+      repositoryDigestMirrors:
+      - mirrors:
+        - ${PRIVATE_REGISTRY_LOCATION}/cp
+        source: cp.icr.io/cp
+      - mirrors:
+        - ${PRIVATE_REGISTRY_LOCATION}/cp/cpd
+        source: cp.icr.io/cp/cpd
+      - mirrors:
+        - ${PRIVATE_REGISTRY_LOCATION}/cpopen
+        source: icr.io/cpopen
+      - mirrors:
+        - ${PRIVATE_REGISTRY_LOCATION}/db2u
+        source: icr.io/db2u
+      - mirrors:
+        - ${PRIVATE_REGISTRY_LOCATION}/guardium-insights
+        source: icr.io/guardium-insights
+    EOF
+    ```
+- Verify that the image content source policy was created
+    - `oc get imageContentSourcePolicy`
 
 [Back to top](#)
 # Cloud Pak for Data (lite)
