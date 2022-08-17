@@ -15,7 +15,7 @@ wget https://raw.githubusercontent.com/Azure-App-Service/node/master/10.14/start
 # docker build & push
 docker build -t app-ssh-tool . --no-cache
 docker tag app-ssh-tool adthub.azurecr.io/app-ssh-tool
-docker images ls
+docker images
 docker push adthub.azurecr.io/app-ssh-tool
 
 # docker run
