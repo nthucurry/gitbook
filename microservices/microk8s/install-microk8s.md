@@ -1,10 +1,10 @@
+# Install Microk8s
 - Update Server and Install Snap
     ```bash
     sudo yum install epel-release -y
     sudo yum update -y
     sudo yum install snapd -y
     sudo systemctl enable snapd.socket --now
-    sudo ln -s /var/lib/snapd/snap /snap
     ```
 - Disable SELinux
     ```bash
@@ -27,3 +27,11 @@
     - `sudo reboot`
 - Manage MicroK8s
     - `microk8s start`
+- Adding a node
+    - `microk8s add-node`
+
+# Tools
+- [nip.io](https://nip.io/)
+    - 10.0.0.1.nip.io maps to 10.0.0.1
+    - 192-168-1-250.nip.io maps to 192.168.1.250
+- [How to access Microk8s dashboard without proxy](https://garywoodfine.com/how-to-access-microk8s-dashboard-without-proxy/)
