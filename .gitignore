@@ -6,6 +6,7 @@ diff*.txt
 test.json
 test.xml
 test.html
+.zshrc
 .DS_Store
 *.cer
 *.crt
@@ -94,4 +95,3 @@ knowledge/exam/*
 !knowledge/infra/elk
 !knowledge/exam
 !knowledge/exam/oracle-11g.md
-test.html
