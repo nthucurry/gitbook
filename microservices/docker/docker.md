@@ -168,7 +168,8 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     - http://172.17.0.1
 - `docker run -p 8080:8080 mytomcat`
 - `docker ps -a`
-- `docker exec -it a2294eea8345 /bin/bash`
+- 在運行的容器中執行命令
+    - `docker exec -it a2294eea8345 /bin/bash`
 
 ### Resolve dockerfile
 - [當 Docker Hub 無法滿足你的需求，就寫 Dockerfile 吧](https://cutejaneii.gitbook.io/docker/docker-image-1/zhuan-xie-dockerfile)

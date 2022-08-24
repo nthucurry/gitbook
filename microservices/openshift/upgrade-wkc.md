@@ -51,35 +51,8 @@
     - `oc get clusterversion`
 
 # [Setting up install variables](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=installing-best-practice-setting-up-install-variables)
-```bash
-# source cpd_vars.sh
-export PROJECT_CPFS_OPS=ibm-common-services
-export PROJECT_CPD_OPS=ibm-common-services
-export PROJECT_CPD_INSTANCE=zen
-
-export IBM_ENTITLEMENT_SERVER=cp.icr.io
-export IBM_ENTITLEMENT_USER=cp
-export IBM_ENTITLEMENT_KEY=XXX
-export PRIVATE_REGISTRY_LOCATION=XXX
-export PRIVATE_REGISTRY_PUSH_USER=azadmin
-export PRIVATE_REGISTRY_PUSH_PASSWORD=XXX
-export PRIVATE_REGISTRY_PULL_USER=azadmin
-export PRIVATE_REGISTRY_PULL_PASSWORD=XXX
-export WORK_ROOT="$HOME/temp/work"
-
-export OFFLINEDIR_CPD="$HOME/offline/cpd"
-export OFFLINEDIR_CPFS="$HOME/offline/cpfs"
-export PATH_CASE_REPO="https://github.com/IBM/cloud-pak/raw/master/repo/case"
-export PROJECT_CATSRC=openshift-marketplace
-
-export APPROVAL_TYPE=Automatic
-
-export LICENSE_CPD=Enterprise
-
-mkdir -p $WORK_ROOT
-mkdir -p $OFFLINEDIR_CPD
-mkdir -p $OFFLINEDIR_CPFS
-```
+- `source cpd_vars.sh`
+    - [cpd_vars.sh](./script/cpd_vars.sh)
 
 # [Obtaining your IBM entitlement API key](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-obtaining-your-entitlement-api-key)
 
