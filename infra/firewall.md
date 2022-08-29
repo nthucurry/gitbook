@@ -35,3 +35,18 @@
     ```
 - `firewall-cmd --reload`
 - `firewall-cmd --runtime-to-permanent`
+
+# 重設 firewalld
+```bash
+for srv in $(firewall-cmd --list-services);
+do
+  firewall-cmd --remove-service=$srv;
+done
+firewall-cmd --add-service={ssh,dhcpv6-client}
+firewall-cmd --runtime-to-permanent
+```
+
+# 限制 outbound 存取
+```bash
+firewall-cmd --direct --add-rule ipv4 filter OUTPUT 0 -d 13.76.158.163/32 -j REJECT
+```
