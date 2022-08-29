@@ -6,6 +6,7 @@ diff*.txt
 test.json
 test.xml
 test.html
+test.css
 .zshrc
 .DS_Store
 *.cer
