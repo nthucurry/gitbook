@@ -1,12 +1,12 @@
 - [前言](#前言)
 - [安裝 Squid](#安裝-squid)
 - [修改參數](#修改參數)
-    - [Transparent](#transparent)
-    - [設定 Header & TLS](#設定-header--tls)
-    - [Header 測試工具](#header-測試工具)
-        - [Fiddler](#fiddler)
-        - [Wireshark](#wireshark)
-    - [OS 設定位置](#os-設定位置)
+  - [Transparent](#transparent)
+  - [設定 Header & TLS](#設定-header--tls)
+  - [Header 測試工具](#header-測試工具)
+    - [Fiddler](#fiddler)
+    - [Wireshark](#wireshark)
+  - [OS 設定位置](#os-設定位置)
 - [安裝報表 (Squid Analysis Report Generator)](#安裝報表-squid-analysis-report-generator)
 
 # 前言
@@ -97,6 +97,7 @@ source /etc/bashrc
 - check: `netstat -tulnp | grep squid`
 
 ## Transparent
+- https://maple52046.github.io/posts/setup-squid-transparent-proxy-with-docker/
 - 設定 IP Forwarding
     ```bash
     echo net.ipv4.ip_forward = 1 >> /etc/sysctl.conf
@@ -131,6 +132,44 @@ source /etc/bashrc
     16:15:17.791962 IP 81.59.117.34.bc.googleusercontent.com.squid > t-squid.internal.cloudapp.net.57474: Flags [R.], seq 0, ack 3174276359, win 0, length 0
     16:15:17.791975 IP 81.59.117.34.bc.googleusercontent.com.http > t-rdp.internal.cloudapp.net.57474: Flags [R.], seq 0, ack 3174276359, win 0, length 0
     ```
+- nat
+    ```
+    sysctl -w net.ipv4.ip_forward=1
+    sysctl -w net.ipv6.conf.all.forwarding=1
+    sysctl -w net.ipv4.conf.all.send_redirects=0`
+    ```
+- iptables
+    ```bash
+    iptables -t nat -A OUTPUT -p tcp -m tcp --dport 80 -m owner --uid-owner root -j RETURN
+    iptables -t nat -A OUTPUT -p tcp -m tcp --dport 80 -m owner --uid-owner squid -j RETURN
+
+    iptables -t nat -A PREROUTING -s 10.0.0.0/8 -p tcp --dport 80 -j REDIRECT --to-port 3129
+    iptables -t nat -A PREROUTING -s 10.0.0.0/8 -p tcp --dport 443 -j REDIRECT --to-port 3130
+
+    # iptables -t nat -A OUTPUT -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3129
+    ```
+- squid.conf
+    ```
+    acl allowurl url_regex -i "/etc/squid/allow_url.lst"
+    http_access deny !allowurl
+    http_access allow allowurl
+
+    http_access allow localnet
+    http_access allow localhost
+    http_access deny all
+
+    http_port 3128
+    http_port 3129 intercept
+    https_port 3130 intercept ssl-bump \
+        cert=/etc/squid/certs/squid-ca-cert-key.pem \
+        generate-host-certificates=off dynamic_cert_mem_cache_size=16MB
+    sslcrtd_program /usr/lib64/squid/ssl_crtd -s /var/lib/ssl_db -M 16MB
+    sslproxy_cert_error allow all
+    acl step1 at_step SslBump1
+    ssl_bump peek step1
+    ssl_bump bump all
+    ssl_bump splice all
+    ```
 
 ## 設定 Header & TLS
 - [ssl.conf](./certs/ssl.conf)
@@ -145,7 +184,6 @@ source /etc/bashrc
     openssl req -new -newkey rsa:2048 -sha256 -days 3650 -nodes -x509 -extensions v3_req -keyout server.key -out server.crt -config ssl.conf
 
     # 產生 CSR
-    openssl req -out server.csr -key server.key -new
     openssl req -out server.csr -key server.key -new -config ssl.conf
 
     # 產生 PFX (trusted certificate，放到 Client 端)
@@ -159,7 +197,7 @@ source /etc/bashrc
     cat server.crt server.key >> squid-ca-cert-key.pem
 
     # crt 轉成 cer，DER 編碼二進制格式
-    openssl x509 -outform DER -in server.crt -out server.cer
+    #openssl x509 -outform DER -in server.crt -out server.cer
     ```
 - 修改 squid.conf
     ```
@@ -189,10 +227,12 @@ source /etc/bashrc
 - 初始化憑證資料夾
     ```bash
     /usr/lib64/squid/ssl_crtd -c -s /var/lib/ssl_db
+    chown -R squid:squid /var/lib/ssl_db
     ```
 - Test
     ```bash
     curl --proxy http://squid.gotdns.ch:3128 ipinfo.io
+    curl -x http://squid.gotdns.ch:3128 ipinfo.io
     ```
 - 驗證該網站是否有透過 squid 的憑證交握
 - PAC 設定方式
