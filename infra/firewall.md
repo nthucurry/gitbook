@@ -2,6 +2,9 @@
 - [Firewalld 防火牆配置 CentOS7](https://lab.twidc.net/centos7-%E9%98%B2%E7%81%AB%E7%89%86-firewall-cmd-firewalld/)
 - [在 CentOS 7 使用 firewalld 架設 NAT](https://itopnet.blogspot.com/2019/04/centos-7-firewalld-nat.html)
 
+# [iptables 內建各表格與鏈的相關性](https://linux.vbird.org/linux_server/centos6/0250simple_firewall.php)
+<br><img src="https://linux.vbird.org/linux_server/centos6/0250simple_firewall//iptables_03.gif">
+
 # 使用 port forwarding
 - To forwards traffic from port 80 to port 3128 on the same server
     - `firewall-cmd --zone=public --add-forward-port=port=80:proto=tcp:toport=3128`
