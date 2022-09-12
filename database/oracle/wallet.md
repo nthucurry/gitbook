@@ -3,7 +3,9 @@
 
 # Oracle 錢包
 - Check Oracle Version
-  - more than 11.2.0.4 (support TLSv1)
+    - SSL 1.0/2.0/3.0 and TLS1.0 for 11g
+    - TLS 1.1/1.2 in 11.2.0.4
+    - TLS 1.0/1.1/1,2 for 12c
 - Get Site Certificates
     - 要使用 **Base-64 encoded X.509** 格式
 - Copy the Certificates to OS
