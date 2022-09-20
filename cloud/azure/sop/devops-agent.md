@@ -42,18 +42,54 @@
     sudo ./svc.sh status
     ```
 - 必要套件
-    ```bash
-    sudo yum install https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm
-    sudo yum install git -y
-
-    sudo yum update -y
-    sudo yum install yum-utils device-mapper-persistent-data lvm2 -y
-    sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    sudo yum install docker-ce -y
-    sudo usermod -aG docker $USER
-    sudo chmod 777 /var/run/docker.sock
-    sudo systemctl enable docker --now
-    ```
+    - git
+        ```bash
+        sudo yum install https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm
+        sudo yum install git -y
+        ```
+    - docker
+        ```bash
+        sudo yum update -y
+        sudo yum install yum-utils device-mapper-persistent-data lvm2 -y
+        sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+        sudo yum install docker-ce -y
+        sudo usermod -aG docker $USER
+        sudo chmod 777 /var/run/docker.sock
+        sudo systemctl enable docker --now
+        ```
+        - [proxy 設定請參考](/microservices/docker/docker.md)
+        - `vi ~/.docker/config.json`
+            ```json
+            {
+                "proxies":
+                {
+                    "default":
+                    {
+                        "httpProxy": "http://10.248.15.7:3128",
+                        "httpsProxy": "http://10.248.15.7:3128",
+                        "noProxy": "10.0.0.0/8,127.0.0.0/8"
+                    }
+                }
+            }
+            ```
+    - nuget
+        ```bash
+        sudo yum install nuget -y
+        ```
+        - `vi ~/.nuget/Nuget/Nuget.conf`
+            ```xml
+            <?xml version="1.0" encoding="utf-8"?>
+            <configuration>
+                <config>
+                    <add key="http_proxy" value="http://10.248.15.7:3128" />
+                    <add key="https_proxy" value="http://10.248.15.7:3128" />
+                </config>
+                <packageSources>
+                    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+                </packageSources>
+            </configuration>
+            ```
+    - dotnet
 
 # Windows Agent
 - CMD
