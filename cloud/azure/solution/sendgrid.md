@@ -1,6 +1,5 @@
 # Send Mail by SendGrid
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/sendgrid-login-portal.png">
-<br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/sendgrid-login-portal.png">
 <br><img src="https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/img/cloud/azure/sendgrid-api-curl.png">
 
 # Sample Code
