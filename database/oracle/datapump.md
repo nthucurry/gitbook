@@ -1,4 +1,7 @@
-# Datapump
+# Reference
+- [Expdp@impdp用法](https://zh.m.wikibooks.org/zh-tw/Expdp@impdp%E7%94%A8%E6%B3%95)
+- [Oracle Data Pump (expdp, impdp) in Oracle Database 10g, 11g, 12c, 18c, 19c, 21c](https://oracle-base.com/articles/10g/oracle-data-pump-10g)
+
 ## 權限 (用 system 不需要設定)
 ```sql
 -- 建立角色
