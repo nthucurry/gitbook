@@ -1,5 +1,5 @@
 # Datapump
-## 權限
+## 權限 (用 system 不需要設定)
 ```sql
 -- 建立角色
 CREATE ROLE datapump_exp_full_database;
@@ -13,30 +13,37 @@ GRANT datapump_exp_full_database TO TONYLEE;
 GRANT datapump_imp_full_database TO TONYLEE;
 ```
 
+## 執行時注意事項
+- tablespace 是否齊全
+- user / role 是否齊全
+- profile 是否齊全
+- db link 是否齊全
+
 ## SOP 1
-```sql
-CREATE OR REPLACE DIRECTORY datapump AS '/backup/datapump';
-```
+- 建立目錄
+    ```sql
+    CREATE OR REPLACE DIRECTORY datapump AS '/backup/datapump';
+    ```
+- 語法
+    ```bash
+    # ./expdp-full.sh
+    expdp system/ncu5540 directory=datapump dumpfile=FULL.dmp full=y content=metadata_only
 
-```bash
-# ./gen-expdp-full.sh
-expdp system/ncu5540 directory=datapump dumpfile=FULL.dmp full=y content=metadata_only
+    # ./impdp-full.sh
+    impdp system/ncu5540 directory=datapump dumpfile=FULL.dmp full=y
 
-# ./gen-impdp-full.sh
-impdp system/ncu5540 directory=datapump dumpfile=FULL.dmp full=y
+    # ./expdp-schema.sh
+    expdp system/ncu5540 directory=datapump dumpfile=SCH_HR_METADATA.dmp schemas=HR content=metadata_only
+    expdp system/ncu5540 directory=datapump dumpfile=SCH_HR.dmp schemas=HR content=data_only
+    expdp system/ncu5540 directory=datapump dumpfile=SCH_SCM_METADATA.dmp schemas=SCM content=metadata_only
+    expdp system/ncu5540 directory=datapump dumpfile=SCH_SCM.dmp schemas=SCM content=data_only
 
-# ./gen-impdp-sch.sh
-expdp system/ncu5540 directory=datapump dumpfile=SCH_HR_METADATA.dmp schemas=HR content=metadata_only
-expdp system/ncu5540 directory=datapump dumpfile=SCH_HR.dmp schemas=HR content=data_only
-expdp system/ncu5540 directory=datapump dumpfile=SCH_SCM_METADATA.dmp schemas=SCM content=metadata_only
-expdp system/ncu5540 directory=datapump dumpfile=SCH_SCM.dmp schemas=SCM content=data_only
-
-# ./gen-impdp-sch.sh
-impdp system/ncu5540 directory=datapump dumpfile=SCH_SCM_METADATA.dmp schemas=SCM
-impdp system/ncu5540 directory=datapump dumpfile=SCH_SCM.dmp schemas=SCM
-impdp system/ncu5540 directory=datapump dumpfile=SCH_HR_METADATA.dmp schemas=HR
-impdp system/ncu5540 directory=datapump dumpfile=SCH_HR.dmp schemas=HR
-```
+    # ./impdp-schema.sh
+    impdp system/ncu5540 directory=datapump dumpfile=SCH_SCM_METADATA.dmp schemas=SCM
+    impdp system/ncu5540 directory=datapump dumpfile=SCH_SCM.dmp schemas=SCM
+    impdp system/ncu5540 directory=datapump dumpfile=SCH_HR_METADATA.dmp schemas=HR
+    impdp system/ncu5540 directory=datapump dumpfile=SCH_HR.dmp schemas=HR
+    ```
 - 新增 datafile
     ```
     ORA-39171: Job is experiencing a resumable wait.
@@ -63,29 +70,64 @@ impdp system/ncu5540 directory=datapump dumpfile=SCH_HR.dmp schemas=HR
     ```
 
 ## SOP 2
-# 雙方主機建立 directory
-```sql
-CREATE OR REPLACE DIRECTORY DMPDIR AS '/backup/auorpt/datapump'; -- source
-CREATE OR REPLACE DIRECTORY datapump AS '/backup_from_source/datapump'; -- target
-```
-
-# table list
+- 雙方主機建立 directory
+    ```sql
+    CREATE OR REPLACE DIRECTORY DMPDIR AS '/backup/auorpt/datapump'; -- source
+    CREATE OR REPLACE DIRECTORY datapump AS '/backup_from_source/datapump'; -- target
+    ```
+- 資料庫 metadata_only (匯出)
+    ```bash
+    db=$SID
+    expdp system/ncu5540 directory=datapump \
+      content=metadata_only \
+      dumpfile=$db.dmp logfile=expdp_$db.log
+    chmod 777 /backup/eship_dev2clone/$db.dmp
+    ```
+- schema all (匯出)
+    ```bash
+    cat schema.lst | while read schema
+    do
+      if [[ $schema == *"#"* ]];then
+        continue
+      fi
+      echo $schema
+      expdp system/ncu5540 directory=datapump \
+        schemas=$schema \
+        content=all \
+        dumpfile=$schema.dmp logfile=expdp_$schema.log
+      chmod 777 /backup/eship_dev2clone/$schema.dmp
+    done
+    ```
+- 資料庫 metadata_only (匯入)
+    ```bash
+    db=$SID
+    impdp system/ncu5540 directory=datapump dumpfile=$db.dmp logfile=impdp_$db.log
+    ```
+- schema all (匯入)
+    ```bash
+    cat schema.lst | while read schema
+    do
+      if [[ $schema == *"#"* ]];then
+        continue
+      fi
+      echo $schema
+      impdp system/ncu5540 directory=datapump schemas=$schema dumpfile=$schema.dmp logfile=impdp_$schema.log
+    done
+    ```
 
 # source 匯出: `execute_expdp.sh`
-```bash
-#!/bin/bash
+    ```bash
+    #!/bin/bash
 
-cat table_list.txt | while read line
-do
-
-  expdp system/oracle \
-  directory=DMPDIR \
-  dumpfile=EXPDP_$line.dmp \
-  logfile=EXPDP_$line.log \
-  tables=$line
-
-done
-```
+    cat table_list.txt | while read line
+    do
+    expdp system/oracle \
+        directory=DMPDIR \
+        dumpfile=EXPDP_$line.dmp \
+        logfile=EXPDP_$line.log \
+        tables=$line
+    done
+    ```
 
 # target 匯入: `execute_impdp.sh`
 ```bash
@@ -93,14 +135,12 @@ done
 
 cat table_list.txt | while read line
 do
-
   impdp system/oracle \
-  directory=DMPDIR \
-  dumpfile=EXPDP_$line.dmp \
-  logfile=EXPDP_$line.log \
-  table_exists_action=replace \
-  tables=$line
-
+    directory=DMPDIR \
+    dumpfile=EXPDP_$line.dmp \
+    logfile=EXPDP_$line.log \
+    table_exists_action=replace \
+    tables=$line
 done
 ```
 
