@@ -21,6 +21,11 @@ GRANT datapump_imp_full_database TO TONYLEE;
 - user / role 是否齊全
 - profile 是否齊全
 - db link 是否齊全
+- [table_exists_action 謹慎使用](https://docs.oracle.com/database/121/SUTIL/GUID-C9664F8C-19C5-4177-AC20-5682AEABA07F.htm#SUTIL936)
+    - skip: 有資料就會略過 (data_only 除外)
+    - append
+    - truncate: delete 後匯入
+    - replace: drop 後匯入 (完全刪乾淨)
 
 ## SOP 1
 - 建立目錄
@@ -78,6 +83,7 @@ GRANT datapump_imp_full_database TO TONYLEE;
     CREATE OR REPLACE DIRECTORY DMPDIR AS '/backup/auorpt/datapump'; -- source
     CREATE OR REPLACE DIRECTORY datapump AS '/backup_from_source/datapump'; -- target
     ```
+- 目標主機安裝 Oracle
 - 資料庫 metadata_only (匯出)
     ```bash
     db=$SID
@@ -86,7 +92,7 @@ GRANT datapump_imp_full_database TO TONYLEE;
       dumpfile=$db.dmp logfile=expdp_$db.log
     chmod 777 /backup/eship_dev2clone/$db.dmp
     ```
-- schema all (匯出)
+- schema all (匯出): `expdp-schema.sh`
     ```bash
     cat schema.lst | while read schema
     do
@@ -106,7 +112,7 @@ GRANT datapump_imp_full_database TO TONYLEE;
     db=$SID
     impdp system/ncu5540 directory=datapump dumpfile=$db.dmp logfile=impdp_$db.log
     ```
-- schema all (匯入)
+- schema all (匯入): `impdp-schema.sh`
     ```bash
     cat schema.lst | while read schema
     do
@@ -115,7 +121,10 @@ GRANT datapump_imp_full_database TO TONYLEE;
       fi
       echo $schema
       impdp system/ncu5540 directory=datapump schemas=$schema dumpfile=$schema.dmp logfile=impdp_$schema.log
+      cat /backup/eship_dev2clone/impdp_$schema.log | grep -Ev "ORA-31684|ORA-39111|ORA-39151" > $HOME/datapump/log/impdp_renew_$schema.log
     done
+
+    # table_exists_action=replace \
     ```
 
 # source 匯出: `execute_expdp.sh`
