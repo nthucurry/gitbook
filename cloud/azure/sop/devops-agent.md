@@ -2,12 +2,13 @@
 - [Day19 Azure Pipelines服務 YAML 說明與設定](https://ithelp.ithome.com.tw/articles/10239784)
 
 # 流程
-<br><img src="https://i0.wp.com/torbenp.com/wp-content/uploads/2020/07/BlazorAppOnArm.png?w=1168&ssl=1" width=450>
-<br><img src="https://i0.wp.com/torbenp.com/wp-content/uploads/2020/07/adoci-2.png" width=450>
+<br><img src="https://i0.wp.com/torbenp.com/wp-content/uploads/2020/07/BlazorAppOnArm.png?w=1168&ssl=1" width=500 board="1">
+<br><img src="https://i0.wp.com/torbenp.com/wp-content/uploads/2020/07/adoci-2.png" width=500 board="1">
 
 # [Self-hosted Linux agents](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/v2-linux?view=azure-devops)
-- [Authenticate with a personal access token (PAT)](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/v2-linux?view=azure-devops#authenticate-with-a-personal-access-token-pat)
-- CMD
+- 取得 PAT
+    - [Authenticate with a personal access token (PAT)](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/v2-linux?view=azure-devops#authenticate-with-a-personal-access-token-pat)
+- 安裝
     ```bash
     wget https://vstsagentpackage.azureedge.net/agent/2.204.0/vsts-agent-linux-x64-2.204.0.tar.gz
     mkdir devops-agent
@@ -20,7 +21,7 @@
     # 請輸入 伺服器 URL > https://dev.azure.com/XXX
     # 請輸入 驗證類型 (請為 PAT 按 Enter) > 按 Enter
     # 請輸入 個人存取權杖 > ****************************************************
-    # 請輸入 代理程式集區 (請為 default 按 Enter) > Linux
+    # 請輸入 代理程式集區 (請為 default 按 Enter) > Linux (要先在 DevOps Portal 新增 Agent Pool)
     # 請輸入 代理程式名稱 (請為 t-dol 按 Enter) > 按 Enter
     # 請輸入 工作資料夾 (請為 _work 按 Enter) > 按 Enter
     ./run.sh
@@ -90,6 +91,19 @@
             </configuration>
             ```
     - dotnet
+    - wget
+        ```bash
+        # by root
+        yum install gcc
+        yum install gnutls-devel
+        wget https://ftp.gnu.org/gnu/wget/wget-latest.tar.gz
+        cd wget-1.21.3/
+        ./configure
+        make
+        make install
+        ln -s /usr/local/bin/wget /usr/bin/wget
+        wget --help | head -3
+        ```
 
 # Windows Agent
 - CMD
