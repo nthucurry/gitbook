@@ -1,35 +1,37 @@
 - [Upgrade OpenShift](#upgrade-openshift)
 - [Setting up install variables](#setting-up-install-variables)
+- [Upgrade cpd-cli version](#upgrade-cpd-cli-version)
 - [Obtaining your IBM entitlement API key](#obtaining-your-ibm-entitlement-api-key)
 - [Setting up projects (namespaces) on Red Hat OpenShift Container Platform (Upgrading from Version 3.5)](#setting-up-projects-namespaces-on-red-hat-openshift-container-platform-upgrading-from-version-35)
-    - [Mirroring images to your private container registry](#mirroring-images-to-your-private-container-registry)
-    - [Configuring your cluster to pull Cloud Pak for Data images](#configuring-your-cluster-to-pull-cloud-pak-for-data-images)
-    - [Configuring an image content source policy](#configuring-an-image-content-source-policy)
+  - [Mirroring images to your private container registry](#mirroring-images-to-your-private-container-registry)
+  - [Configuring your cluster to pull Cloud Pak for Data images](#configuring-your-cluster-to-pull-cloud-pak-for-data-images)
+  - [Configuring an image content source policy](#configuring-an-image-content-source-policy)
 - [Cloud Pak for Data (lite)](#cloud-pak-for-data-lite)
-    - [Creating catalog sources that pull specific versions of images from the IBM Entitled Registry (Upgrading from Version 3.5)](#creating-catalog-sources-that-pull-specific-versions-of-images-from-the-ibm-entitled-registry-upgrading-from-version-35)
-    - [Installing or upgrading IBM Cloud Pak foundational services](#installing-or-upgrading-ibm-cloud-pak-foundational-services)
-    - [Creating operator subscriptions before upgrading from Version 3.5](#creating-operator-subscriptions-before-upgrading-from-version-35)
-    - [Creating custom security context constraints for services before upgrading from Version 3.5](#creating-custom-security-context-constraints-for-services-before-upgrading-from-version-35)
-    - [Changing required node settings before upgrading from Version 3.5](#changing-required-node-settings-before-upgrading-from-version-35)
-    - [Installing Cloud Pak for Data](#installing-cloud-pak-for-data)
-    - [Specifying the install plan for operators that are automatically installed by Operand Deployment Lifecycle Manager](#specifying-the-install-plan-for-operators-that-are-automatically-installed-by-operand-deployment-lifecycle-manager)
-    - [Integrating with the IAM Service](#integrating-with-the-iam-service)
-    - [Making monitoring data highly available](#making-monitoring-data-highly-available)
-    - [Changing the route to the platform](#changing-the-route-to-the-platform)
-    - [Configuring an external route to the Flight service](#configuring-an-external-route-to-the-flight-service)
-    - [Securing communication ports](#securing-communication-ports)
-    - [Setting up the Cloud Pak for Data web client](#setting-up-the-cloud-pak-for-data-web-client)
+  - [Creating catalog sources that pull specific versions of images from the IBM Entitled Registry (Upgrading from Version 3.5)](#creating-catalog-sources-that-pull-specific-versions-of-images-from-the-ibm-entitled-registry-upgrading-from-version-35)
+  - [Installing or upgrading IBM Cloud Pak foundational services](#installing-or-upgrading-ibm-cloud-pak-foundational-services)
+  - [Creating operator subscriptions before upgrading from Version 3.5](#creating-operator-subscriptions-before-upgrading-from-version-35)
+  - [Creating custom security context constraints for services before upgrading from Version 3.5](#creating-custom-security-context-constraints-for-services-before-upgrading-from-version-35)
+  - [Changing required node settings before upgrading from Version 3.5](#changing-required-node-settings-before-upgrading-from-version-35)
+  - [Installing Cloud Pak for Data](#installing-cloud-pak-for-data)
+  - [Specifying the install plan for operators that are automatically installed by Operand Deployment Lifecycle Manager](#specifying-the-install-plan-for-operators-that-are-automatically-installed-by-operand-deployment-lifecycle-manager)
+  - [Integrating with the IAM Service](#integrating-with-the-iam-service)
+  - [Making monitoring data highly available](#making-monitoring-data-highly-available)
+  - [Changing the route to the platform](#changing-the-route-to-the-platform)
+  - [Configuring an external route to the Flight service](#configuring-an-external-route-to-the-flight-service)
+  - [Securing communication ports](#securing-communication-ports)
+  - [Setting up the Cloud Pak for Data web client](#setting-up-the-cloud-pak-for-data-web-client)
 - [Watson Knowledge Catalog (wkc)](#watson-knowledge-catalog-wkc)
-    - [Fixing the productVersion value for specific releases](#fixing-the-productversion-value-for-specific-releases)
-    - [(略) Sizing and scaling up the XMETA data store portion of your InfoSphere® Information Server Db2® instance](#略-sizing-and-scaling-up-the-xmeta-data-store-portion-of-your-infosphere-information-server-db2-instance)
-    - [Determining which upgrade method to use for your environment](#determining-which-upgrade-method-to-use-for-your-environment)
-    - [Setting the values of your Watson Knowledge Catalog data store](#setting-the-values-of-your-watson-knowledge-catalog-data-store)
-    - [Upgrading the service](#upgrading-the-service)
-    - [Verifying the upgrade](#verifying-the-upgrade)
-    - [Updating column character limit (known issue)](#updating-column-character-limit-known-issue)
-    - [(略) Running the XMETA data store backup and restore](#略-running-the-xmeta-data-store-backup-and-restore)
-    - [Resizing the PersistentVolumeClaim (PVC)](#resizing-the-persistentvolumeclaim-pvc)
-    - [Update the indexes in the XMETA database](#update-the-indexes-in-the-xmeta-database)
+  - [Fixing the productVersion value for specific releases](#fixing-the-productversion-value-for-specific-releases)
+  - [(略) Sizing and scaling up the XMETA data store portion of your InfoSphere® Information Server Db2® instance](#略-sizing-and-scaling-up-the-xmeta-data-store-portion-of-your-infosphere-information-server-db2-instance)
+  - [Determining which upgrade method to use for your environment](#determining-which-upgrade-method-to-use-for-your-environment)
+  - [Setting the values of your Watson Knowledge Catalog data store](#setting-the-values-of-your-watson-knowledge-catalog-data-store)
+  - [Upgrading the service](#upgrading-the-service)
+  - [Verifying the upgrade](#verifying-the-upgrade)
+  - [Updating column character limit (known issue)](#updating-column-character-limit-known-issue)
+  - [(略) Running the XMETA data store backup and restore](#略-running-the-xmeta-data-store-backup-and-restore)
+  - [Resizing the PersistentVolumeClaim (PVC)](#resizing-the-persistentvolumeclaim-pvc)
+  - [Update the indexes in the XMETA database](#update-the-indexes-in-the-xmeta-database)
+  - [Verifying the status](#verifying-the-status)
 
 # [Upgrade OpenShift](https://docs.openshift.com/container-platform/4.5/updating/updating-cluster-cli.html#update-upgrading-cli_updating-cluster-cli)
 - Install the jq package
@@ -53,6 +55,12 @@
 # [Setting up install variables](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=installing-best-practice-setting-up-install-variables)
 - `source cpd_vars.sh`
     - [cpd_vars.sh](./script/cpd_vars.sh)
+
+# Upgrade cpd-cli version
+```bash
+curl -sLkO https://github.com/IBM/cpd-cli/releases/download/v3.5.8/cpd-cli-linux-EE-3.5.8.tgz
+tar xzvf ./cpd-cli-linux-EE-3.5.8.tgz
+```
 
 # [Obtaining your IBM entitlement API key](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-obtaining-your-entitlement-api-key)
 
@@ -215,7 +223,7 @@
         cloudctl case launch \
             --case ${OFFLINEDIR_CPFS}/ibm-cp-common-services-1.13.0.tgz \
             --inventory ibmCommonServiceOperatorSetup \
-            --namespace ${PROJECT_CATSRC} \
+            -n ${PROJECT_CATSRC} \
             --action install-catalog \
             --args "--registry icr.io --inputDir ${OFFLINEDIR_CPFS} --recursive"
 
@@ -227,7 +235,7 @@
         cloudctl case launch \
             --case ${OFFLINEDIR_CPD}/ibm-cpd-scheduling-1.3.4.tgz \
             --inventory schedulerSetup \
-            --namespace ${PROJECT_CATSRC} \
+            -n ${PROJECT_CATSRC} \
             --action install-catalog \
             --args "--inputDir ${OFFLINEDIR_CPD} --recursive"
 
@@ -239,7 +247,7 @@
         cloudctl case launch \
             --case ${OFFLINEDIR_CPD}/ibm-cp-datacore-2.0.13+05022022.tgz \
             --inventory cpdPlatformOperator \
-            --namespace ${PROJECT_CATSRC} \
+            -n ${PROJECT_CATSRC} \
             --action install-catalog \
             --args "--inputDir ${OFFLINEDIR_CPD} --recursive"
 
@@ -252,7 +260,7 @@
         cloudctl case launch \
             --case ${OFFLINEDIR_CPD}/ibm-wkc-4.0.8.tgz \
             --inventory wkcOperatorSetup \
-            --namespace ${PROJECT_CATSRC} \
+            -n ${PROJECT_CATSRC} \
             --action install-catalog \
             --args "--inputDir ${OFFLINEDIR_CPD} --recursive"
 
@@ -450,12 +458,12 @@
 - Choosing an upgrade plan for the Cloud Pak for Data control plane
     ```bash
     oc patch ZenService lite-cr \
-        --namespace ${PROJECT_CPD_INSTANCE} \
+        -n ${PROJECT_CPD_INSTANCE} \
         --type=merge \
         --patch '{"spec": {"version":"4.4.3"}}'
 
     # Wait for the command to return Completed
-    oc get ZenService lite-cr --namespace ${PROJECT_CPD_INSTANCE} -o jsonpath="{.status}"
+    oc get ZenService lite-cr -n ${PROJECT_CPD_INSTANCE} -o jsonpath="{.status}"
     ```
 
 ## [Integrating with the IAM Service](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.0?topic=tasks-integrating-iam-service)
@@ -502,22 +510,22 @@ EOF
 ```bash
 # ./check-wkc.sh
 
-export Namespace=zen
+export namespace=zen
 
 # Lite
-oc get cm zen-lite-operation-configmap --namespace $Namespace -o jsonpath='{.data.operation}{"\n"}'
+oc get cm zen-lite-operation-configmap -n $namespace -o jsonpath='{.data.operation}{"\n"}'
 # CCS
-oc get ccs ccs-cr --namespace $Namespace -o jsonpath='{.status.ccsUpgradeStatus}' | awk '{print $NF}'
+oc get ccs ccs-cr -n $namespace -o jsonpath='{.status.ccsUpgradeStatus}' | awk '{print $NF}'
 # DR
-oc get DataRefinery datarefinery-sample --namespace $Namespace  -o jsonpath="{.status.datarefineryUpgradeStatus}" ; echo
+oc get DataRefinery datarefinery-sample -n $namespace  -o jsonpath="{.status.datarefineryUpgradeStatus}"; echo
 # DB2u
-oc get Db2aaserviceService db2aaservice-cr --namespace $Namespace -o jsonpath="{.status.db2aaserviceStatus}" ; echo
+oc get Db2aaserviceService db2aaservice-cr -n $namespace -o jsonpath="{.status.db2aaserviceStatus}"; echo
 # IIS
-oc get iis iis-cr --namespace $Namespace -o jsonpath="{.status.iisUpgradeStatus}"
+oc get iis iis-cr -n $namespace -o jsonpath="{.status.iisUpgradeStatus}"; echo
 # UG
-oc get ug ug-cr --namespace $Namespace -o jsonpath="{.status.ugUpgradeStatus}"
-# WKC(Overall CR status)
-oc get wkc wkc-cr --namespace $Namespace -o jsonpath="{.status.wkcUpgradeStatus}" ; echo
+oc get ug ug-cr -n $namespace -o jsonpath="{.status.ugUpgradeStatus}"; echo
+# WKC (Overall CR status)
+oc get wkc wkc-cr -n $namespace -o jsonpath="{.status.wkcUpgradeStatus}"; echo
 ```
 
 ## Updating column character limit (known issue)
@@ -536,3 +544,20 @@ oc get wkc wkc-cr --namespace $Namespace -o jsonpath="{.status.wkcUpgradeStatus}
     - `cd /tmp/`
     - `chmod 755 dq*.*`
     - `./dq_manage_indices.sh`
+
+## Verifying the status
+```bash
+# CCS
+oc get ccs ccs-cr -n zen
+# DR
+oc get datarefinery datarefinery-sample -n zen
+# DB2u
+oc get Db2aaserviceService db2aaservice-cr -n zen
+# IIS
+oc get IIS iis-cr -n zen
+oc get ZenService lite-cr -n zen
+# UG
+oc get UG ug-cr -n zen
+# WKC (Overall CR status)
+oc get WKC wkc-cr -n zen
+```
