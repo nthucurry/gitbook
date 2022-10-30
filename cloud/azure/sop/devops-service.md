@@ -1,11 +1,20 @@
-# 參考
+- [Self-Hosted Agent](#self-hosted-agent)
+  - [參考](#參考)
+  - [流程](#流程)
+  - [Self-hosted Linux agents](#self-hosted-linux-agents)
+  - [Windows Agent](#windows-agent)
+  - [Run a self-hosted agent behind a web proxy](#run-a-self-hosted-agent-behind-a-web-proxy)
+- [Choose the right authentication mechanism](#choose-the-right-authentication-mechanism)
+
+# Self-Hosted Agent
+## 參考
 - [Day19 Azure Pipelines服務 YAML 說明與設定](https://ithelp.ithome.com.tw/articles/10239784)
 
-# 流程
+## 流程
 <br><img src="https://i0.wp.com/torbenp.com/wp-content/uploads/2020/07/BlazorAppOnArm.png?w=1168&ssl=1" width=500 board="1">
 <br><img src="https://i0.wp.com/torbenp.com/wp-content/uploads/2020/07/adoci-2.png" width=500 board="1">
 
-# [Self-hosted Linux agents](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/v2-linux?view=azure-devops)
+## [Self-hosted Linux agents](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/v2-linux?view=azure-devops)
 - 取得 PAT
     - [Authenticate with a personal access token (PAT)](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/v2-linux?view=azure-devops#authenticate-with-a-personal-access-token-pat)
 - 安裝
@@ -105,13 +114,18 @@
         wget --help | head -3
         ```
 
-# Windows Agent
+## Windows Agent
 - CMD
     - 類似 Linux SOP
 - [NSSM - the Non-Sucking Service Manager](https://nssm.cc/download)
     - `nssm install 服務名稱 "路徑"`
     - `nssm start 服務名稱`
 
-# [Run a self-hosted agent behind a web proxy](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/proxy?view=azure-devops&tabs=windows)
+## [Run a self-hosted agent behind a web proxy](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/proxy?view=azure-devops&tabs=windows)
 - Linux: `./config.sh --proxyurl http://10.248.15.7:3128`
 - Windows: `./config.cmd --proxyurl http://10.248.15.7:3128`
+
+# [Choose the right authentication mechanism](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/authentication-guidance?view=azure-devops)
+> The Azure DevOps API doesn't support non-interactive service access via **service principals** yet, although it is on the roadmap.
+> If you need to call the Azure DevOps API from a non-interactive application (where an end user cannot authenticate interactively, such as a background job), it should use a **personal access token (PAT)**.
+- [Projects - List](https://learn.microsoft.com/en-us/rest/api/azure/devops/core/projects/list?view=azure-devops-rest-6.0&tabs=HTTP)
