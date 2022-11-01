@@ -7,7 +7,7 @@
     ```json
     {
       "properties": {
-        "displayName": "Storage account public access should be disallowed",
+        "displayName": "Storage account blob public access should be disallowed",
         "policyType": "Custom",
         "mode": "All",
         "description": "禁止 Public Access 存取 Storage Account Blob",
