@@ -1,6 +1,6 @@
-oragnisation=AUO-ADTAB2
-username=tonylee
-pat=x5rcnfqlnxquboawrdm6havdkv7bnufxsk6mn3frgmtkskrbt7aq
+oragnisation=xxx
+username=xxx
+pat=xxx
 curl --location \
     --request GET \'https://dev.azure.com/$oragnisation/_apis/projects?api-version=6.0\' \
     -u $username:$pat | jq '.value[].name'
