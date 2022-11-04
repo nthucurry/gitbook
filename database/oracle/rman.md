@@ -73,14 +73,14 @@
 - `vi delete_archive_log.sh`
     ```bash
     #/bin/bash
-    source ~/.bash_profile # = source ~/.bash_profile
+    source ~/.bash_profile
     $ORACLE_HOME/bin/rman target / nocatalog << EOF
     run {
         delete force noprompt copy of archivelog all completed before 'sysdate-1';
     }
     EOF
     ```
-    - 只刪除一天以前的 archive log
+    - 刪除一天以前的 archive log
 
 ## Check
 ### 清除人工刪除的檔案，但還留在 control file 的檔案(仍保留 metadata)

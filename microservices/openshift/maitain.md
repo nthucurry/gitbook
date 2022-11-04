@@ -195,13 +195,15 @@ CPU_ARCH=`uname -m`
 echo $CPU_ARCH
 BUILD_NUM=`~/ibm/cpd-cli backup-restore version | grep "Build Number" | cut -d : -f 2 | xargs`
 echo $BUILD_NUM
+VERSION="2.0.0"
+echo $VERSION
 
 # Pull cpdbr image from Docker Hub
-sudo podman pull docker.io/ibmcom/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
+sudo podman pull docker.io/ibmcom/cpdbr:${VERSION}-${BUILD_NUM}-${CPU_ARCH}
 # Push image to internal registry
 sudo podman login -u kubeadmin -p $(oc whoami -t) $IMAGE_REGISTRY --tls-verify=false
-sudo podman tag docker.io/ibmcom/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH} $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH}
-sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdbr:2.0.0-${BUILD_NUM}-${CPU_ARCH} --tls-verify=false
+sudo podman tag docker.io/ibmcom/cpdbr:${VERSION}-${BUILD_NUM}-${CPU_ARCH} $IMAGE_REGISTRY/$NAMESPACE/cpdbr:${VERSION}-${BUILD_NUM}-${CPU_ARCH}
+sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdbr:${VERSION}-${BUILD_NUM}-${CPU_ARCH} --tls-verify=false
 ```
 - View the version of the backup and restore service
     - `~/ibm/cpd-cli backup-restore version`
@@ -292,13 +294,15 @@ CPU_ARCH=`uname -m`
 echo $CPU_ARCH
 BUILD_NUM=`~/ibm/cpd-cli export-import version | grep "Build Number" | cut -d : -f 2 | xargs`
 echo $BUILD_NUM
+VERSION="2.0.0"
+echo $VERSION
 
 # Pull cpdtool image from Docker Hub
-sudo podman pull docker.io/ibmcom/cpdtool:2.0.0-${BUILD_NUM}-${CPU_ARCH}
+sudo podman pull docker.io/ibmcom/cpdtool:${VERSION}-${BUILD_NUM}-${CPU_ARCH}
 # Push image to internal registry
 sudo podman login -u kubeadmin -p $(oc whoami -t) $IMAGE_REGISTRY --tls-verify=false
-sudo podman tag docker.io/ibmcom/cpdtool:2.0.0-${BUILD_NUM}-${CPU_ARCH} $IMAGE_REGISTRY/$NAMESPACE/cpdtool:2.0.0-${BUILD_NUM}-${CPU_ARCH}
-sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdtool:2.0.0-${BUILD_NUM}-${CPU_ARCH} --tls-verify=false
+sudo podman tag docker.io/ibmcom/cpdtool:${VERSION}-${BUILD_NUM}-${CPU_ARCH} $IMAGE_REGISTRY/$NAMESPACE/cpdtool:${VERSION}-${BUILD_NUM}-${CPU_ARCH}
+sudo podman push $IMAGE_REGISTRY/$NAMESPACE/cpdtool:${VERSION}-${BUILD_NUM}-${CPU_ARCH} --tls-verify=false
 ```
 
 ### Install the zen-core-aux Docker image by using Podman
@@ -311,13 +315,15 @@ CPU_ARCH=`uname -m`
 echo $CPU_ARCH
 BUILD_NUM=`~/ibm/cpd-cli export-import version | grep "Build Number" | cut -d : -f 2 | xargs`
 echo $BUILD_NUM
+VERSION="2.0.0"
+echo $VERSION
 
 # Pull zen-core-aux image from Docker Hub
-sudo podman pull docker.io/ibmcom/zen-core-aux:2.0.0-${BUILD_NUM}-${CPU_ARCH}
+sudo podman pull docker.io/ibmcom/zen-core-aux:${VERSION}-${BUILD_NUM}-${CPU_ARCH}
 # Push image to internal registry
 sudo podman login -u kubeadmin -p $(oc whoami -t) $IMAGE_REGISTRY --tls-verify=false
-sudo podman tag docker.io/ibmcom/zen-core-aux:2.0.0-${BUILD_NUM}-${CPU_ARCH} $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:2.0.0-${BUILD_NUM}-${CPU_ARCH}
-sudo podman push $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:2.0.0-${BUILD_NUM}-${CPU_ARCH} --tls-verify=false
+sudo podman tag docker.io/ibmcom/zen-core-aux:${VERSION}-${BUILD_NUM}-${CPU_ARCH} $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:${VERSION}-${BUILD_NUM}-${CPU_ARCH}
+sudo podman push $IMAGE_REGISTRY/$NAMESPACE/zen-core-aux:${VERSION}-${BUILD_NUM}-${CPU_ARCH} --tls-verify=false
 ```
 
 ### Install the zen-core-aux Helm chart

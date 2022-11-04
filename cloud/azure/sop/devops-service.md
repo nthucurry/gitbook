@@ -129,3 +129,29 @@
 > The Azure DevOps API doesn't support non-interactive service access via **service principals** yet, although it is on the roadmap.
 > If you need to call the Azure DevOps API from a non-interactive application (where an end user cannot authenticate interactively, such as a background job), it should use a **personal access token (PAT)**.
 - [Projects - List](https://learn.microsoft.com/en-us/rest/api/azure/devops/core/projects/list?view=azure-devops-rest-6.0&tabs=HTTP)
+    ```bash
+    oragnisation=xxx
+    username=xxx
+    pat=xxx
+    curl --location \
+        --request GET \'https://dev.azure.com/${oragnisation}/_apis/projects?api-version=6.0\' \
+        -u $username:$pat | jq '.value[].name'
+    ```
+- Teams - Get All Teams
+    ```bash
+    oragnisation=xxx
+    username=xxx
+    pat=xxx
+    curl --location \
+        --request GET \'https://dev.azure.com/${oragnisation}/_apis/teams?api-version=6.0-preview.3\' \
+        -u $username:$pat | jq '.value[].projectName'
+    ```
+- Teams - Get Team Members With Extended Properties
+    ```bash
+    oragnisation=xxx
+    username=xxx
+    pat=xxx
+    curl --location \
+        --request GET \'https://dev.azure.com/${oragnisation}/_apis/projects/0fef353f-204f-4058-97c9-61bdcf64954a/teams/386438bf-71d4-43ac-b9ea-6457ce88c4d8/members?api-version=6.0\' \
+        -u $username:$pat
+    ```

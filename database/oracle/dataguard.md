@@ -229,7 +229,7 @@ alter database force logging;
 alter system switch logfile;
 ```
 
-### Standby
+### Standby (restart standby db after shutdown)
 ```sql
 startup nomount
 alter database mount standby database;
