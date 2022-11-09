@@ -4,9 +4,10 @@
   - [Self-hosted Linux agents](#self-hosted-linux-agents)
   - [Windows Agent](#windows-agent)
   - [Run a self-hosted agent behind a web proxy](#run-a-self-hosted-agent-behind-a-web-proxy)
+- [Pipeline Variables](#pipeline-variables)
 - [Choose the right authentication mechanism](#choose-the-right-authentication-mechanism)
   - [Authenticate with PATs](#authenticate-with-pats)
-  - [Authenticate with OAuth 2.0](#authenticate-with-oauth-20)
+  - [Authenticate with OAuth 2.0 (略)](#authenticate-with-oauth-20-略)
 
 # Self-Hosted Agent
 ## 參考
@@ -127,6 +128,10 @@
 - Linux: `./config.sh --proxyurl http://10.248.15.7:3128`
 - Windows: `./config.cmd --proxyurl http://10.248.15.7:3128`
 
+# Pipeline Variables
+- Build.DefinitionName: The name of the build pipeline (Project)
+- Build.TriggeredBy.ProjectID
+
 # [Choose the right authentication mechanism](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/authentication-guidance?view=azure-devops)
 > The Azure DevOps API doesn't support non-interactive service access via **service principals** yet, although it is on the roadmap.
 > If you need to call the Azure DevOps API from a non-interactive application (where an end user cannot authenticate interactively, such as a background job), it should use a **personal access token (PAT)**.
@@ -136,7 +141,7 @@
     username=xxx
     pat=xxx
     curl --location \
-        --request GET \'https://dev.azure.com/${oragnisation}/_apis/projects?api-version=6.0\' \
+        --request GET https://dev.azure.com/${oragnisation}/_apis/projects?api-version=6.0 \
         -u $username:$pat | jq '.value[].name'
     ```
 - Teams - Get All Teams
@@ -145,7 +150,7 @@
     username=xxx
     pat=xxx
     curl --location \
-        --request GET \'https://dev.azure.com/${oragnisation}/_apis/teams?api-version=6.0-preview.3\' \
+        --request GET https://dev.azure.com/${oragnisation}/_apis/teams?api-version=6.0-preview.3 \
         -u $username:$pat | jq '.value[].projectName'
     ```
 - Teams - Get Team Members With Extended Properties
@@ -154,7 +159,7 @@
     username=xxx
     pat=xxx
     curl --location \
-        --request GET \'https://dev.azure.com/${oragnisation}/_apis/projects/0fef353f-204f-4058-97c9-61bdcf64954a/teams/386438bf-71d4-43ac-b9ea-6457ce88c4d8/members?api-version=6.0\' \
+        --request GET https://dev.azure.com/${oragnisation}/_apis/projects/0fef353f-204f-4058-97c9-61bdcf64954a/teams/386438bf-71d4-43ac-b9ea-6457ce88c4d8/members?api-version=6.0 \
         -u $username:$pat
     ```
 
@@ -162,4 +167,4 @@
 - [Can I use basic auth with all Azure DevOps REST APIs?](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?toc=%2Fazure%2Fdevops%2Fmarketplace-extensibility%2Ftoc.json&bc=%2Fazure%2Fdevops%2Fmarketplace-extensibility%2Fbreadcrumb%2Ftoc.json&view=azure-devops&tabs=Windows#q-can-i-use-basic-auth-with-all-azure-devops-rest-apis)
     - No. You can use basic auth with most Azure DevOps REST APIs, but **organizations** and **profiles** only support OAuth. For more information, see Manage PATs using REST API.
 
-## Authenticate with OAuth 2.0
+## Authenticate with OAuth 2.0 (略)
