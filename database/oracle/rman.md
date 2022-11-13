@@ -79,6 +79,8 @@
         delete force noprompt copy of archivelog all completed before 'sysdate-1';
     }
     EOF
+
+    # noprompt: 删除的时候不再提示"是否删除"
     ```
     - 刪除一天以前的 archive log
 
