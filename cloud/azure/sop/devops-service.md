@@ -1,5 +1,5 @@
+- [參考](#參考)
 - [Self-Hosted Agent](#self-hosted-agent)
-  - [參考](#參考)
   - [流程](#流程)
   - [Self-hosted Linux agents](#self-hosted-linux-agents)
   - [Windows Agent](#windows-agent)
@@ -8,11 +8,14 @@
 - [Choose the right authentication mechanism](#choose-the-right-authentication-mechanism)
   - [Authenticate with PATs](#authenticate-with-pats)
   - [Authenticate with OAuth 2.0 (略)](#authenticate-with-oauth-20-略)
+- [客製化](#客製化)
+  - [Pipeline (CI/CD)](#pipeline-cicd)
+  - [推送 Ｔemplate 到其他的 Ｒepo](#推送-ｔemplate-到其他的-ｒepo)
 
-# Self-Hosted Agent
-## 參考
+# 參考
 - [Day19 Azure Pipelines服務 YAML 說明與設定](https://ithelp.ithome.com.tw/articles/10239784)
 
+# Self-Hosted Agent
 ## 流程
 <br><img src="https://i0.wp.com/torbenp.com/wp-content/uploads/2020/07/BlazorAppOnArm.png?w=1168&ssl=1" width=500 board="1">
 <br><img src="https://i0.wp.com/torbenp.com/wp-content/uploads/2020/07/adoci-2.png" width=500 board="1">
@@ -131,6 +134,8 @@
 # Pipeline Variables
 - Build.DefinitionName: The name of the build pipeline (Project)
 - Build.TriggeredBy.ProjectID
+- System.CollectionUri: https://dev.azure.com/xxx
+- System.TeamProjectId
 
 # [Choose the right authentication mechanism](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/authentication-guidance?view=azure-devops)
 > The Azure DevOps API doesn't support non-interactive service access via **service principals** yet, although it is on the roadmap.
@@ -168,3 +173,86 @@
     - No. You can use basic auth with most Azure DevOps REST APIs, but **organizations** and **profiles** only support OAuth. For more information, see Manage PATs using REST API.
 
 ## Authenticate with OAuth 2.0 (略)
+
+# 客製化
+## Pipeline (CI/CD)
+- 跑完後 Mail 通知: `sendMail.sh`
+    ```bash
+    #!/bin/bash
+
+    codePath="/home/azadmin"
+    oragnisation=`echo $1 | awk -F \/ '{print $4}'`
+    projectId=$2
+    userName="xxx"
+    pat="xxx"
+
+    teamId=`curl \
+        --location \
+        --request GET https://dev.azure.com/${oragnisation}/_apis/projects/${projectId}/teams?api-version=6.0 \
+        --user $userName:$pat | jq '.value[].id' | sed 's/"//g'`
+    mail=`curl \
+        --location \
+        --request GET https://dev.azure.com/${oragnisation}/_apis/projects/${projectId}/teams/${teamId}/members?api-version=7.1-preview.1 \
+        --user ${userName}:${pat} | jq '.value[].uniqueName' | sed 's/"//g'`
+
+    $codePath/updateMailScript.sh $mail
+    ```
+- 發 Mail Script: `updateMailScript.sh`
+    ```bash
+    #!/bin/bash
+
+    codePath="/home/azadmin/mail-relay"
+    mailRelay="xxx"
+    fromAdmin="xxx@xxx.xxx"
+    toUser=$1
+    expFile="$codePath/sendMail.exp"
+
+    cat << EOF | tee $expFile
+    #!/usr/bin/expect -f
+    spawn /usr/bin/telnet ${mailRelay} 25
+    expect "220 ${mailRelay} ESMTP Postfix"
+    send "EHLO auo.com\r"
+    expect "250 DNS"
+    send "MAIL FROM: ${fromAdmin}\r"
+    expect "250 2.1.0 Ok"
+    send "RCPT TO: ${toUser}\r"
+    expect "250 2.1.5 Ok"
+    send "DATA\r"
+    expect "354 End data with <CR><LF>.<CR><LF>"
+    send "Subject: Pipeline Result\r"
+    send ".\r"
+    expect "250 2.0.0 Ok: queued as E73FDE07B6"
+    send "quit\r"
+    EOF
+
+    chmod +x $expFile
+    $expFile
+    ```
+- YAML Pipeline
+    ```yaml
+    pool:
+      name: Linux
+
+    steps:
+    - task: Bash@3
+      inputs:
+        filePath: '/home/azadmin/mail-relay/sendMail.sh'
+        arguments: '$(System.CollectionUri) $(System.TeamProjectId)'
+    ```
+
+## 推送 Ｔemplate 到其他的 Ｒepo
+```bash
+#!/bin/bash
+
+# 推送 template 到其他的 repo (for new project)
+oragniation="aaa"
+project="bbb"
+git remote add ${oragniation}_${project} https://${oragniation}@dev.azure.com/${oragniation}/${project}/_git/${project}
+git remote -v
+git push -u ${oragniation}_${project} --all
+
+# git remote remove aaa_bbb
+# git push -u origin --all
+# git push -u repo1 --all
+# git push -u repo2 --all
+```
