@@ -1,0 +1,35 @@
+# ============================== Filebeat inputs ===============================
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /data-from-cloud/*-insights-logs-connections/resourceId=/SUBSCRIPTIONS/*/RESOURCEGROUPS/*/PROVIDERS/MICROSOFT.DEVICES/IOTHUBS/*/y=*/m=*/d=*/h=*/m=*/*.json
+  fields:
+    log_type: "azure-iothub-connection"
+  ignore_older: 15m
+  fields_under_root: true
+# ================================== Outputs ===================================
+# ---------------------------- Elasticsearch Output ----------------------------
+# ------------------------------ Logstash Output -------------------------------
+output.logstash:
+  hosts: ["t-elk:1080"]
+  index: "default"
+  indices:
+    - index: "azure-iothub-connection"
+      when.contains:
+        log_type: "azure-iothub-connection"
+# ================================= Processors =================================
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+# ================================== Logging ===================================
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat-azure-iothub-connection.log
+  keepfiles: 1
+  permissions: 0644
