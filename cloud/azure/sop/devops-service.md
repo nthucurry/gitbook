@@ -142,29 +142,29 @@
 > If you need to call the Azure DevOps API from a non-interactive application (where an end user cannot authenticate interactively, such as a background job), it should use a **personal access token (PAT)**.
 - [Projects - List](https://learn.microsoft.com/en-us/rest/api/azure/devops/core/projects/list?view=azure-devops-rest-6.0&tabs=HTTP)
     ```bash
-    oragnisation=xxx
+    organization=xxx
     username=xxx
     pat=xxx
     curl --location \
-        --request GET https://dev.azure.com/${oragnisation}/_apis/projects?api-version=6.0 \
+        --request GET https://dev.azure.com/${organization}/_apis/projects?api-version=6.0 \
         -u $username:$pat | jq '.value[].name'
     ```
 - Teams - Get All Teams
     ```bash
-    oragnisation=xxx
+    organization=xxx
     username=xxx
     pat=xxx
     curl --location \
-        --request GET https://dev.azure.com/${oragnisation}/_apis/teams?api-version=6.0-preview.3 \
+        --request GET https://dev.azure.com/${organization}/_apis/teams?api-version=6.0-preview.3 \
         -u $username:$pat | jq '.value[].projectName'
     ```
 - Teams - Get Team Members With Extended Properties
     ```bash
-    oragnisation=xxx
+    organization=xxx
     username=xxx
     pat=xxx
     curl --location \
-        --request GET https://dev.azure.com/${oragnisation}/_apis/projects/0fef353f-204f-4058-97c9-61bdcf64954a/teams/386438bf-71d4-43ac-b9ea-6457ce88c4d8/members?api-version=6.0 \
+        --request GET https://dev.azure.com/${organization}/_apis/projects/0fef353f-204f-4058-97c9-61bdcf64954a/teams/386438bf-71d4-43ac-b9ea-6457ce88c4d8/members?api-version=6.0 \
         -u $username:$pat
     ```
 
@@ -181,33 +181,65 @@
     #!/bin/bash
 
     codePath="/home/azadmin"
-    oragnisation=`echo $1 | awk -F \/ '{print $4}'`
+
+    # Azure DevOps
+    organization=`echo $1 | awk -F \/ '{print $4}'`
     projectId=$2
     userName="xxx"
     pat="xxx"
-
     teamId=`curl \
         --location \
-        --request GET https://dev.azure.com/${oragnisation}/_apis/projects/${projectId}/teams?api-version=6.0 \
+        --request GET https://dev.azure.com/${organization}/_apis/projects/${projectId}/teams?api-version=6.0 \
         --user $userName:$pat | jq '.value[].id' | sed 's/"//g'`
+    projectName=`curl \
+        --location \
+        --request GET https://dev.azure.com/${organization}/_apis/projects/${projectId}/teams?api-version=6.0 \
+        --user $userName:$pat | jq '.value[].projectName' | sed 's/"//g'`
     mail=`curl \
         --location \
-        --request GET https://dev.azure.com/${oragnisation}/_apis/projects/${projectId}/teams/${teamId}/members?api-version=7.1-preview.1 \
+        --request GET https://dev.azure.com/${organization}/_apis/projects/${projectId}/teams/${teamId}/members?api-version=7.1-preview.1 \
         --user ${userName}:${pat} | jq '.value[].uniqueName' | sed 's/"//g'`
 
-    $codePath/updateMailScript.sh $mail
+    # Mend
+    echo "jq "\'.ast[].devOps.organization == \"${organization}\"\'" ${codePath}/astConfig.json" > ${codePath}/checkASTConfig.sh
+    isOrganizationExistOnMend=`${codePath}/checkASTConfig.sh`
+    echo "jq "\'.ast[].mend.projectName == \"${projectName}\"\'" ${codePath}/astConfig.json" > ${codePath}/checkASTConfig.sh
+    isProjectNameExistOnMend=`${codePath}/checkASTConfig.sh`
+    [[ ${isOrganizationExistOnMend} == ${isProjectNameExistOnMend} ]] && isExistOnMend=true || isExistOnMend=false
+    requestType="getProjectRiskReport"
+    userKey="xxx"
+    if [[ ${isExistOnMend} ]]; then
+        projectToken=`jq '.ast[].mend.projectToken' ${codePath}/astConfig.json | sed 's/"//g'`
+        echo "curl \
+            -o ${codePath}/mend-${requestType}.pdf \
+            --location \
+            --request POST 'https://app.whitesourcesoftware.com/api/v1.3' \
+            --header 'Content-Type: application/json' \
+            --data '{
+                "requestType": "${requestType}",
+                "userKey": "${userKey}",
+                "projectToken": "${projectToken}"
+            }'" > ${codePath}/getMendReport.sh
+        ${codePath}/getMendReport.sh
+    fi
+
+    # Checkmarx
+
+    # Mail
+    ${codePath}/updateMailScript.sh $mail
     ```
 - 發 Mail Script: `updateMailScript.sh`
     ```bash
     #!/bin/bash
 
     codePath="/home/azadmin/mail-relay"
+    requestType="getProjectRiskReport"
     mailRelay="xxx"
     fromAdmin="xxx@xxx.xxx"
     toUser=$1
-    expFile="$codePath/sendMail.exp"
+    expFile="${codePath}/sendMail.exp"
 
-    cat << EOF | tee $expFile
+    cat << EOF | tee ${expFile}
     #!/usr/bin/expect -f
     spawn /usr/bin/telnet ${mailRelay} 25
     expect "220 ${mailRelay} ESMTP Postfix"
@@ -220,13 +252,20 @@
     send "DATA\r"
     expect "354 End data with <CR><LF>.<CR><LF>"
     send "Subject: Pipeline Result\r"
+    send "MIME-Version: 1.0\r"
+    send "Content-Type:multipart/mixed;boundary=\"KkK170891tpbkKk__FV_KKKkkkjjwq\"\r"
+    send "--KkK170891tpbkKk__FV_KKKkkkjjwq\r"
+    send "Content-Type:application/octet-stream;name=\"${codePath}/mend-${requestType}.pdf\"\r"
+    send "Content-Transfer-Encoding:base64\r"
+    send "Content-Disposition:attachment;filename=\"${codePath}/mend-${requestType}.pdf\"\r"
+    send "--KkK170891tpbkKk__FV_KKKkkkjjwq--\r"
     send ".\r"
     expect "250 2.0.0 Ok: queued as E73FDE07B6"
     send "quit\r"
     EOF
 
-    chmod +x $expFile
-    $expFile
+    chmod +x ${expFile}
+    ${expFile}
     ```
 - YAML Pipeline
     ```yaml
