@@ -181,6 +181,7 @@
     #!/bin/bash
 
     codePath="/home/azadmin"
+    reportPath="/home/azadmin"
 
     # Azure DevOps
     organization=`echo $1 | awk -F \/ '{print $4}'`
@@ -210,8 +211,9 @@
     userKey="xxx"
     if [[ ${isExistOnMend} ]]; then
         projectToken=`jq '.ast[].mend.projectToken' ${codePath}/astConfig.json | sed 's/"//g'`
+        project=`echo ${projectName} | sed 's/\s//g'`
         echo "curl \
-            -o ${codePath}/mend-${requestType}.pdf \
+            -o ${reportPath}/mend-${organization}_${project}-${requestType}.pdf \
             --location \
             --request POST 'https://app.whitesourcesoftware.com/api/v1.3' \
             --header 'Content-Type: application/json' \
@@ -226,7 +228,7 @@
     # Checkmarx
 
     # Mail
-    ${codePath}/updateMailScript.sh $mail
+    ${codePath}/updateMailScript.sh ${mail}
     ```
 - 發 Mail Script: `updateMailScript.sh`
     ```bash
@@ -234,20 +236,27 @@
 
     codePath="/home/azadmin/mail-relay"
     requestType="getProjectRiskReport"
-    mailRelay="xxx"
-    fromAdmin="xxx@xxx.xxx"
-    toUser=$1
+    mailRelay="smtp.sendgrid.net"
+    account=`echo -n "apikey" | base64`
+    password=`echo -n "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" | base64`
+    sender="xxx@xxx.xxx"
+    recipient=$1
     expFile="${codePath}/sendMail.exp"
 
     cat << EOF | tee ${expFile}
     #!/usr/bin/expect -f
-    spawn /usr/bin/telnet ${mailRelay} 25
+    spawn /usr/bin/telnet ${mailRelay} 587
     expect "220 ${mailRelay} ESMTP Postfix"
-    send "EHLO auo.com\r"
+    send "EHLO ${mailRelay}\r"
     expect "250 DNS"
-    send "MAIL FROM: ${fromAdmin}\r"
+    send "AUTH LOGIN"
+    expect "334 VXNlcm5hbWU6"
+    send "${account}"
+    expect "334 UGFzc3dvcmQ6"
+    send "${password}"
+    send "MAIL FROM: ${sender}\r"
     expect "250 2.1.0 Ok"
-    send "RCPT TO: ${toUser}\r"
+    send "RCPT TO: ${recipient}\r"
     expect "250 2.1.5 Ok"
     send "DATA\r"
     expect "354 End data with <CR><LF>.<CR><LF>"
@@ -266,6 +275,84 @@
 
     chmod +x ${expFile}
     ${expFile}
+    ```
+    ```bash
+    #!/bin/bash
+
+    filename="/home/azadmin/123.txt"
+    mailRelay="smtp.sendgrid.net"
+    sender="xxx@xxx.xxx"
+    recipient=$1
+    subject="Subject of my email"
+    txtmessage="This is the message I want to send"
+
+    {
+    sleep 1;
+    echo "EHLO ${mailRelay}"
+    sleep 1;
+    echo "AUTH LOGIN"
+    sleep 1;
+    echo "YXBpa2V5"
+    sleep 1;
+    echo "U0cuNWk3cUJXUU9UNXFTbzNGaUxEQ3Q2QS5JYXhtTTRaZWNXQS1IX2U2a2Q0UXBfS1p3RDVFakFs eWhTYnYzN1U4dWZ3"
+    sleep 1;
+    echo "MAIL FROM:${sender}"
+    sleep 1;
+    echo "RCPT TO:${recipient}"
+    sleep 1;
+    echo "DATA"
+    sleep 1;
+    echo "Subject:" ${subject}
+    sleep 1;
+    echo "Content-Type: multipart/mixed; boundary="KkK170891tpbkKk__FV_KKKkkkjjwq""
+    sleep 1;
+    echo ""
+    sleep 1;
+    echo "This is a MIME formatted message.  If you see this text it means that your"
+    sleep 1;
+    echo "email software does not support MIME formatted messages."
+    sleep 1;
+    echo ""
+    sleep 1;
+    echo "--KkK170891tpbkKk__FV_KKKkkkjjwq"
+    sleep 1;
+    echo "Content-Type: text/plain; charset=UTF-8; format=flowed"
+    sleep 1;
+    echo "Content-Disposition: inline"
+    sleep 1;
+    echo ""
+    sleep 1;
+    echo ${txtmessage}
+    sleep 1;
+    echo ""
+    sleep 1;
+    echo ""
+    sleep 1;
+    echo "--KkK170891tpbkKk__FV_KKKkkkjjwq"
+    sleep 1;
+    echo "Content-Type: file --mime-type -b filename-$(date +%y%m%d).zip; name=filename-$(date +%y%m%d).zip"
+    sleep 1;
+    echo "Content-Transfer-Encoding: base64"
+    sleep 1;
+    echo "Content-Disposition: attachment; filename="filename-$(date +%y%m%d).zip";"
+    sleep 1;
+    echo ""
+    sleep 1;
+    # The content is encoded in base64.
+    cat ${filename} | base64;
+    sleep 1;
+    echo ""
+    sleep 1;
+    echo ""
+    sleep 1;
+    echo "--KkK170891tpbkKk__FV_KKKkkkjjwq--"
+    sleep 1;
+    echo ""
+    sleep 1;
+    echo "."
+    sleep 1;
+    echo "quit"
+    } | telnet ${mailRelay} 25
     ```
 - YAML Pipeline
     ```yaml

@@ -8,6 +8,7 @@ test.xml
 test.html
 test.css
 test.md
+test.sh
 .zshrc
 .DS_Store
 *.cer
