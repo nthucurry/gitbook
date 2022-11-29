@@ -10,7 +10,7 @@
   - [Authenticate with OAuth 2.0 (略)](#authenticate-with-oauth-20-略)
 - [客製化](#客製化)
   - [Pipeline (CI/CD)](#pipeline-cicd)
-  - [推送 Ｔemplate 到其他的 Ｒepo](#推送-ｔemplate-到其他的-ｒepo)
+  - [推送 Ｔemplate 到其他的 Repo](#推送-ｔemplate-到其他的-repo)
 
 # 參考
 - [Day19 Azure Pipelines服務 YAML 說明與設定](https://ithelp.ithome.com.tw/articles/10239784)
@@ -143,29 +143,41 @@
 - [Projects - List](https://learn.microsoft.com/en-us/rest/api/azure/devops/core/projects/list?view=azure-devops-rest-6.0&tabs=HTTP)
     ```bash
     organization=xxx
-    username=xxx
+    userName=xxx
     pat=xxx
     curl --location \
         --request GET https://dev.azure.com/${organization}/_apis/projects?api-version=6.0 \
-        -u $username:$pat | jq '.value[].name'
+        -u ${userName}:${pat} | jq '.value[].name'
     ```
 - Teams - Get All Teams
     ```bash
     organization=xxx
-    username=xxx
+    userName=xxx
     pat=xxx
     curl --location \
         --request GET https://dev.azure.com/${organization}/_apis/teams?api-version=6.0-preview.3 \
-        -u $username:$pat | jq '.value[].projectName'
+        -u ${userName}:${pat} | jq '.value[].projectName'
     ```
 - Teams - Get Team Members With Extended Properties
     ```bash
     organization=xxx
-    username=xxx
+    userName=xxx
     pat=xxx
     curl --location \
         --request GET https://dev.azure.com/${organization}/_apis/projects/0fef353f-204f-4058-97c9-61bdcf64954a/teams/386438bf-71d4-43ac-b9ea-6457ce88c4d8/members?api-version=6.0 \
-        -u $username:$pat
+        -u ${userName}:${pat}
+    ```
+- Groups - List
+    ```bash
+    organization=xxx
+    userName=xxx
+    pat=xxx
+    curl --location \
+        --request GET 'https://vssps.dev.azure.com/${organization}/_apis/graph/groups?api-version=5.0-preview.1' \
+        -u ${userName}:${pat} | jq '.value[].displayName'
+    curl --location \
+        --request GET 'https://vssps.dev.azure.com/${organization}/_apis/graph/groups?api-version=5.0-preview.1' \
+        -u ${userName}:${pat} | jq '.value[].descriptor'
     ```
 
 ## Authenticate with PATs
@@ -212,8 +224,9 @@
     if [[ ${isExistOnMend} ]]; then
         projectToken=`jq '.ast[].mend.projectToken' ${codePath}/astConfig.json | sed 's/"//g'`
         project=`echo ${projectName} | sed 's/\s//g'`
+        mendReport="mend-${organization}_${project}-${requestType}.pdf"
         echo "curl \
-            -o ${reportPath}/mend-${organization}_${project}-${requestType}.pdf \
+            -o ${reportPath}/${mendReport} \
             --location \
             --request POST 'https://app.whitesourcesoftware.com/api/v1.3' \
             --header 'Content-Type: application/json' \
@@ -228,73 +241,26 @@
     # Checkmarx
 
     # Mail
-    ${codePath}/updateMailScript.sh ${mail}
+    ${codePath}/execMailRelay.sh ${mail} ${mendReport}
     ```
-- 發 Mail Script: `updateMailScript.sh`
+- 發 Mail Script: `execMailRelay.sh`
     ```bash
     #!/bin/bash
 
     codePath="/home/azadmin/mail-relay"
+    reportPath="/home/azadmin/report"
     requestType="getProjectRiskReport"
-    mailRelay="smtp.sendgrid.net"
-    account=`echo -n "apikey" | base64`
-    password=`echo -n "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" | base64`
-    sender="xxx@xxx.xxx"
+    mailRelay="au3mr1.corpnet.auo.com"
+    #account=`echo -n "apikey" | base64`
+    #password=`echo -n "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" | base64`
+    sender="DBAAlert@auo.com"
     recipient=$1
-    expFile="${codePath}/sendMail.exp"
-
-    cat << EOF | tee ${expFile}
-    #!/usr/bin/expect -f
-    spawn /usr/bin/telnet ${mailRelay} 587
-    expect "220 ${mailRelay} ESMTP Postfix"
-    send "EHLO ${mailRelay}\r"
-    expect "250 DNS"
-    send "AUTH LOGIN"
-    expect "334 VXNlcm5hbWU6"
-    send "${account}"
-    expect "334 UGFzc3dvcmQ6"
-    send "${password}"
-    send "MAIL FROM: ${sender}\r"
-    expect "250 2.1.0 Ok"
-    send "RCPT TO: ${recipient}\r"
-    expect "250 2.1.5 Ok"
-    send "DATA\r"
-    expect "354 End data with <CR><LF>.<CR><LF>"
-    send "Subject: Pipeline Result\r"
-    send "MIME-Version: 1.0\r"
-    send "Content-Type:multipart/mixed;boundary=\"KkK170891tpbkKk__FV_KKKkkkjjwq\"\r"
-    send "--KkK170891tpbkKk__FV_KKKkkkjjwq\r"
-    send "Content-Type:application/octet-stream;name=\"${codePath}/mend-${requestType}.pdf\"\r"
-    send "Content-Transfer-Encoding:base64\r"
-    send "Content-Disposition:attachment;filename=\"${codePath}/mend-${requestType}.pdf\"\r"
-    send "--KkK170891tpbkKk__FV_KKKkkkjjwq--\r"
-    send ".\r"
-    expect "250 2.0.0 Ok: queued as E73FDE07B6"
-    send "quit\r"
-    EOF
-
-    chmod +x ${expFile}
-    ${expFile}
-    ```
-    ```bash
-    #!/bin/bash
-
-    filename="/home/azadmin/123.txt"
-    mailRelay="smtp.sendgrid.net"
-    sender="xxx@xxx.xxx"
-    recipient=$1
-    subject="Subject of my email"
-    txtmessage="This is the message I want to send"
+    subject="AST Report"
+    fileName=$2
 
     {
     sleep 1;
     echo "EHLO ${mailRelay}"
-    sleep 1;
-    echo "AUTH LOGIN"
-    sleep 1;
-    echo "YXBpa2V5"
-    sleep 1;
-    echo "U0cuNWk3cUJXUU9UNXFTbzNGaUxEQ3Q2QS5JYXhtTTRaZWNXQS1IX2U2a2Q0UXBfS1p3RDVFakFs eWhTYnYzN1U4dWZ3"
     sleep 1;
     echo "MAIL FROM:${sender}"
     sleep 1;
@@ -304,42 +270,29 @@
     sleep 1;
     echo "Subject:" ${subject}
     sleep 1;
-    echo "Content-Type: multipart/mixed; boundary="KkK170891tpbkKk__FV_KKKkkkjjwq""
+    echo "MIME-Version: 1.0"
     sleep 1;
-    echo ""
+    echo "Content-Type: multipart/mixed; boundary=\"KkK170891tpbkKk__FV_KKKkkkjjwq\""
     sleep 1;
-    echo "This is a MIME formatted message.  If you see this text it means that your"
-    sleep 1;
-    echo "email software does not support MIME formatted messages."
-    sleep 1;
-    echo ""
+    #echo ""
     sleep 1;
     echo "--KkK170891tpbkKk__FV_KKKkkkjjwq"
     sleep 1;
-    echo "Content-Type: text/plain; charset=UTF-8; format=flowed"
-    sleep 1;
-    echo "Content-Disposition: inline"
-    sleep 1;
-    echo ""
-    sleep 1;
-    echo ${txtmessage}
+    echo "Content-Type:application/octet-stream;name=\"${reportPath}/${fileName}\""
+    echo "Content-Transfer-Encoding:base64"
+    echo "Content-Disposition:attachment;filename=\"${fileName}\""
     sleep 1;
     echo ""
     sleep 1;
-    echo ""
     sleep 1;
-    echo "--KkK170891tpbkKk__FV_KKKkkkjjwq"
     sleep 1;
-    echo "Content-Type: file --mime-type -b filename-$(date +%y%m%d).zip; name=filename-$(date +%y%m%d).zip"
     sleep 1;
-    echo "Content-Transfer-Encoding: base64"
     sleep 1;
-    echo "Content-Disposition: attachment; filename="filename-$(date +%y%m%d).zip";"
     sleep 1;
     echo ""
     sleep 1;
     # The content is encoded in base64.
-    cat ${filename} | base64;
+    cat ${reportPath}/${fileName} | base64;
     sleep 1;
     echo ""
     sleep 1;
@@ -354,6 +307,33 @@
     echo "quit"
     } | telnet ${mailRelay} 25
     ```
+- 設定檔
+    ```json
+    {
+        "ast": [
+            {
+                "devOps": {
+                    "organization": "xxx-xxx"
+                },
+                "mend": {
+                    "projectName": "xxx xxx",
+                    "projectToken": "xxxx"
+                },
+                "checkmarx": {}
+            },
+            {
+                "devOps": {
+                    "organization": "xxx-xxx"
+                },
+                "mend": {
+                    "projectName": "xxx xxx",
+                    "projectToken": "xxx"
+                },
+                "checkmarx": {}
+            }
+        ]
+    }
+    ```
 - YAML Pipeline
     ```yaml
     pool:
@@ -366,7 +346,7 @@
         arguments: '$(System.CollectionUri) $(System.TeamProjectId)'
     ```
 
-## 推送 Ｔemplate 到其他的 Ｒepo
+## 推送 Ｔemplate 到其他的 Repo
 ```bash
 #!/bin/bash
 
