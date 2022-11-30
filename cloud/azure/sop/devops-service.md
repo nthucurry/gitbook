@@ -9,8 +9,9 @@
   - [Authenticate with PATs](#authenticate-with-pats)
   - [Authenticate with OAuth 2.0 (略)](#authenticate-with-oauth-20-略)
 - [客製化](#客製化)
+  - [OS Requirement](#os-requirement)
   - [Pipeline (CI/CD)](#pipeline-cicd)
-  - [推送 Ｔemplate 到其他的 Repo](#推送-ｔemplate-到其他的-repo)
+  - [推送 Template 到其他的 Repo](#推送-template-到其他的-repo)
 
 # 參考
 - [Day19 Azure Pipelines服務 YAML 說明與設定](https://ithelp.ithome.com.tw/articles/10239784)
@@ -187,61 +188,90 @@
 ## Authenticate with OAuth 2.0 (略)
 
 # 客製化
+## OS Requirement
+```bash
+sudo su
+yum install gcc # gcc-4.8.5-44.el7.x86_64
+yum install gnutls-devel # gnutls-devel-3.3.29-9.el7_6.x86_64
+wget https://ftp.gnu.org/gnu/wget/wget-latest.tar.gz
+tar zxvf wget-latest.tar.gz
+cd wget-1.21.3/
+./configure
+make
+make install
+cp /root/wget-1.21.3/src/wget /bin
+wget --help | head -3
+```
+
 ## Pipeline (CI/CD)
 - 跑完後 Mail 通知: `sendMail.sh`
     ```bash
     #!/bin/bash
 
-    codePath="/home/azadmin"
-    reportPath="/home/azadmin"
+    codePath="/home/azadmin/mail-relay"
+    reportPath="/home/azadmin/report"
 
     # Azure DevOps
     organization=`echo $1 | awk -F \/ '{print $4}'`
     projectId=$2
+    mail=$3
     userName="xxx"
     pat="xxx"
     teamId=`curl \
-        --location \
-        --request GET https://dev.azure.com/${organization}/_apis/projects/${projectId}/teams?api-version=6.0 \
-        --user $userName:$pat | jq '.value[].id' | sed 's/"//g'`
+      --location \
+      --request GET https://dev.azure.com/${organization}/_apis/projects/${projectId}/teams?api-version=6.0 \
+      --user ${userName}:${pat} | jq '.value[].id' | sed 's/"//g'`
     projectName=`curl \
-        --location \
-        --request GET https://dev.azure.com/${organization}/_apis/projects/${projectId}/teams?api-version=6.0 \
-        --user $userName:$pat | jq '.value[].projectName' | sed 's/"//g'`
-    mail=`curl \
-        --location \
-        --request GET https://dev.azure.com/${organization}/_apis/projects/${projectId}/teams/${teamId}/members?api-version=7.1-preview.1 \
-        --user ${userName}:${pat} | jq '.value[].uniqueName' | sed 's/"//g'`
+      --location \
+      --request GET https://dev.azure.com/${organization}/_apis/projects/${projectId}/teams?api-version=6.0 \
+      --user ${userName}:${pat} | jq '.value[].projectName' | sed 's/"//g'`
+    descriptor=`curl \
+      --location \
+      --request GET https://vssps.dev.azure.com/${organization}/_apis/graph/groups?api-version=5.0-preview.1 \
+      --user ${userName}:${pat} | jq '.value[] | select((.displayName == "Contributors") and (.principalName | contains("SOP"))) | .    descriptor' | sed 's/"//g'`
+    #mail=`curl \
+    #  --location \
+    #  --request GET https://dev.azure.com/${organization}/_apis/projects/${projectId}/teams/${teamId}/members?api-version=7.1-preview.1 \
+    #  --user ${userName}:${pat} | jq '.value[].uniqueName' | sed 's/"//g'`
 
     # Mend
-    echo "jq "\'.ast[].devOps.organization == \"${organization}\"\'" ${codePath}/astConfig.json" > ${codePath}/checkASTConfig.sh
-    isOrganizationExistOnMend=`${codePath}/checkASTConfig.sh`
-    echo "jq "\'.ast[].mend.projectName == \"${projectName}\"\'" ${codePath}/astConfig.json" > ${codePath}/checkASTConfig.sh
-    isProjectNameExistOnMend=`${codePath}/checkASTConfig.sh`
-    [[ ${isOrganizationExistOnMend} == ${isProjectNameExistOnMend} ]] && isExistOnMend=true || isExistOnMend=false
     requestType="getProjectRiskReport"
     userKey="xxx"
-    if [[ ${isExistOnMend} ]]; then
-        projectToken=`jq '.ast[].mend.projectToken' ${codePath}/astConfig.json | sed 's/"//g'`
-        project=`echo ${projectName} | sed 's/\s//g'`
-        mendReport="mend-${organization}_${project}-${requestType}.pdf"
-        echo "curl \
-            -o ${reportPath}/${mendReport} \
-            --location \
-            --request POST 'https://app.whitesourcesoftware.com/api/v1.3' \
-            --header 'Content-Type: application/json' \
-            --data '{
-                "requestType": "${requestType}",
-                "userKey": "${userKey}",
-                "projectToken": "${projectToken}"
-            }'" > ${codePath}/getMendReport.sh
-        ${codePath}/getMendReport.sh
-    fi
+    echo "jq '.ast[] | select((.devOps.organization == \"${organization}\") and (.mend.projectName == \"${projectName}\")) | .mend.    projectToken' ${codePath}/astConfig.json" > ${codePath}/checkASTConfig.sh
+    projectToken=`${codePath}/checkASTConfig.sh | sed 's/"//g'`
+    project=`echo ${projectName} | sed 's/\s/-/g'`
+    mendReport="mend_${organization}_${project}_${requestType}.pdf"
+    echo "curl \
+      -o ${reportPath}/${mendReport} \
+      --location \
+      --request POST 'https://app.whitesourcesoftware.com/api/v1.3' \
+      --header 'Content-Type: application/json' \
+      --data '{
+        "requestType": "${requestType}",
+        "userKey": "${userKey}",
+        "projectToken": "${projectToken}"
+      }'" > ${codePath}/getMendReport.sh
+    ${codePath}/getMendReport.sh
 
     # Checkmarx
 
+    # Output
+    echo `date` > ${codePath}/123.txt
+    echo "${codePath}/sendMail.sh $1 $2 $3" >> ${codePath}/123.txt
+    echo "DevOps:" >> ${codePath}/123.txt
+    echo "  organization: ${organization}" >> ${codePath}/123.txt
+    echo "  projectName: ${projectName}" >> ${codePath}/123.txt
+    echo "  descriptor: ${descriptor}" >> ${codePath}/123.txt
+    echo "  mail: ${mail}" >> ${codePath}/123.txt
+    echo "Mend:" >> ${codePath}/123.txt
+    echo "  project: ${project}" >> ${codePath}/123.txt
+    echo "  mendReport: ${mendReport}" >> ${codePath}/123.txt
+
     # Mail
     ${codePath}/execMailRelay.sh ${mail} ${mendReport}
+
+    echo "Mail:" >> ${codePath}/123.txt
+    echo "  ${codePath}/execMailRelay.sh ${mail} ${mendReport}" >> ${codePath}/123.txt
     ```
 - 發 Mail Script: `execMailRelay.sh`
     ```bash
@@ -252,19 +282,22 @@
     requestType="getProjectRiskReport"
     mailRelay="au3mr1.corpnet.auo.com"
     #account=`echo -n "apikey" | base64`
-    #password=`echo -n "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" | base64`
+    #password=`echo -n "SG.xxx" | base64`
     sender="DBAAlert@auo.com"
     recipient=$1
-    subject="AST Report"
     fileName=$2
+    project=`echo ${fileName} | awk -F _ '{print $3}' | sed 's/-/ /g'`
+    subject=`cat ${codePath}/mailSubject.txt`
+    subject+=`echo ${project}`
 
     {
-    sleep 1;
+    #sleep 1;
     echo "EHLO ${mailRelay}"
     sleep 1;
-    echo "MAIL FROM:${sender}"
+    echo "MAIL FROM:<${sender}>"
     sleep 1;
-    echo "RCPT TO:${recipient}"
+    echo "RCPT TO:<${recipient}>"
+    echo "RCPT TO:<tony.lee@auo.com>"
     sleep 1;
     echo "DATA"
     sleep 1;
@@ -294,13 +327,13 @@
     # The content is encoded in base64.
     cat ${reportPath}/${fileName} | base64;
     sleep 1;
-    echo ""
+    #echo ""
     sleep 1;
-    echo ""
+    #echo ""
     sleep 1;
     echo "--KkK170891tpbkKk__FV_KKKkkkjjwq--"
     sleep 1;
-    echo ""
+    #echo ""
     sleep 1;
     echo "."
     sleep 1;
@@ -310,28 +343,28 @@
 - 設定檔
     ```json
     {
-        "ast": [
-            {
-                "devOps": {
-                    "organization": "xxx-xxx"
-                },
-                "mend": {
-                    "projectName": "xxx xxx",
-                    "projectToken": "xxxx"
-                },
-                "checkmarx": {}
-            },
-            {
-                "devOps": {
-                    "organization": "xxx-xxx"
-                },
-                "mend": {
-                    "projectName": "xxx xxx",
-                    "projectToken": "xxx"
-                },
-                "checkmarx": {}
-            }
-        ]
+      "ast": [
+        {
+          "devOps": {
+            "organization": "abc-abc"
+          },
+          "mend": {
+            "projectName": "abc",
+            "projectToken": "abc"
+          },
+          "checkmarx": {}
+        },
+        {
+          "devOps": {
+            "organization": "xyz-xyz"
+          },
+          "mend": {
+            "projectName": "xyz",
+            "projectToken": "xyz"
+          },
+          "checkmarx": {}
+        }
+      ]
     }
     ```
 - YAML Pipeline
@@ -343,19 +376,19 @@
     - task: Bash@3
       inputs:
         filePath: '/home/azadmin/mail-relay/sendMail.sh'
-        arguments: '$(System.CollectionUri) $(System.TeamProjectId)'
+        arguments: '$(System.CollectionUri) $(System.TeamProjectId) $(Build.RequestedForEmail)'
     ```
 
-## 推送 Ｔemplate 到其他的 Repo
+## 推送 Template 到其他的 Repo
 ```bash
 #!/bin/bash
 
 # 推送 template 到其他的 repo (for new project)
-oragniation="aaa"
+organization="aaa"
 project="bbb"
-git remote add ${oragniation}_${project} https://${oragniation}@dev.azure.com/${oragniation}/${project}/_git/${project}
+git remote add ${organization}_${project} https://${organization}@dev.azure.com/${organization}/${project}/_git/${project}
 git remote -v
-git push -u ${oragniation}_${project} --all
+git push -u ${organization}_${project} --all
 
 # git remote remove aaa_bbb
 # git push -u origin --all
