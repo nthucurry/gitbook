@@ -8,7 +8,9 @@ function FindProxyForURL(url, host) {
     )
         return "PROXY 10.0.8.4:3128";
     else if (
-        isInNet(host, "10.0.0.0", "255.255.0.0")
+        isInNet(host, "10.0.0.0", "255.255.0.0") ||
+        isInNet(host, "172.17.80.0", "255.255.255.0") ||
+        isInNet(host, "172.17.250.0", "255.255.255.0")
     )
         return "DIRECT";
     else
