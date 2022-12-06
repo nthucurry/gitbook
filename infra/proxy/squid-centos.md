@@ -1,7 +1,7 @@
 - [前言](#前言)
 - [安裝 Squid](#安裝-squid)
 - [修改參數](#修改參數)
-  - [設定 Header & TLS](#設定-header--tls)
+  - [設定 Header \& TLS](#設定-header--tls)
   - [Header 測試工具](#header-測試工具)
     - [Fiddler](#fiddler)
     - [Wireshark](#wireshark)
@@ -151,6 +151,7 @@ source /etc/bashrc
     squid -k check
     ```
 - 初始化憑證資料夾
+    ```bash
     rm -fr /var/lib/ssl_db
     /usr/lib64/squid/ssl_crtd -c -s /var/lib/ssl_db
     chown -R squid:squid /var/lib/ssl_db
