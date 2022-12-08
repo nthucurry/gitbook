@@ -210,6 +210,7 @@ wget --help | head -3
 
     codePath="/home/azadmin/mail-relay"
     reportPath="/home/azadmin/report"
+    checkASTConfig="123.txt"
 
     # Azure DevOps
     organization=`echo $1 | awk -F \/ '{print $4}'`
@@ -254,18 +255,65 @@ wget --help | head -3
     ${codePath}/getMendReport.sh
 
     # Checkmarx
+    userNameForCheckmarx="xxx"
+    passwordForCheckmarx="xxx"
+    grant_type="password"
+    scope="sast_rest_api"
+    client_id="resource_owner_client"
+    client_secret="014DF517-39D1-4453-B7B3-9930C563627C"
+    fullName=`echo ${organization} | sed 's/-/\//g'`
+    stage="Scan completed"
+    access_token=`curl -k --location \
+      --request POST 'https://checkmarx.corpnet.auo.com/cxrestapi/auth/identity/connect/token' \
+      --header 'Content-Type: application/x-www-form-urlencoded' \
+      --data-urlencode 'Content-Type=application/json;v=0.1/1.0/1.1/2.0' \
+      --data-urlencode username=${userNameForCheckmarx} \
+      --data-urlencode password=${passwordForCheckmarx} \
+      --data-urlencode grant_type=${grant_type} \
+      --data-urlencode scope=${scope} \
+      --data-urlencode client_id=${client_id} \
+      --data-urlencode client_secret=${client_secret} \
+      | jq .access_token | sed 's/"//g'`
+    teamIdForCheckmarx=`curl -k --location \
+      --request GET 'https://checkmarx.corpnet.auo.com/cxrestapi/auth/Teams' \
+      --header 'Accept: application/json;v=1.0' \
+      --header "Authorization: Bearer ${access_token}" \
+      | jq ".[] | select(.fullName  == "\"/CxServer/${fullName}\"") | .id"`
+    projectNameForCheckmarx=`curl -k --location \
+      --request GET 'https://checkmarx.corpnet.auo.com/cxrestapi/projects' \
+      --header "Authorization: Bearer ${access_token}" \
+      | jq ".[] | select((.teamId  == ${teamIdForCheckmarx}) and (.name  == "\"${projectName}\"")) | .name" | sed 's/"//g'`
+    scanId=`curl -k \
+      --request GET 'https://checkmarx.corpnet.auo.com/cxrestapi/sast/scans' \
+      --header "Authorization: Bearer ${access_token}" \
+      | jq ".[] | select ((.status.name == "\"Finished\"") and (.project.name  == "\"${projectNameForCheckmarx}\"")) | .id" | head -1`
+    reportId=`curl -k --location \
+      --request POST 'https://checkmarx.corpnet.auo.com/cxrestapi/reports/sastScan' \
+      --header 'Content-Type: application/json;v=1.0' \
+      --header 'cxOrigin: REST API' \
+      --header "Authorization: Bearer ${access_token}" \
+      --data '{
+        "reportRequest": "",
+        "reportType": "PDF",
+        "scanId": '${scanId}'
+      }' | jq .reportId`
 
     # Output
-    echo `date` > ${codePath}/123.txt
-    echo "${codePath}/sendMail.sh $1 $2 $3" >> ${codePath}/123.txt
-    echo "DevOps:" >> ${codePath}/123.txt
-    echo "  organization: ${organization}" >> ${codePath}/123.txt
-    echo "  projectName: ${projectName}" >> ${codePath}/123.txt
-    echo "  descriptor: ${descriptor}" >> ${codePath}/123.txt
-    echo "  mail: ${mail}" >> ${codePath}/123.txt
-    echo "Mend:" >> ${codePath}/123.txt
-    echo "  project: ${project}" >> ${codePath}/123.txt
-    echo "  mendReport: ${mendReport}" >> ${codePath}/123.txt
+    echo `date` > ${codePath}/${checkASTConfig}
+    echo "${codePath}/sendMail.sh $1 $2 $3" >> ${codePath}/${checkASTConfig}
+    echo "DevOps:" >> ${codePath}/${checkASTConfig}
+    echo "  organization: ${organization}" >> ${codePath}/${checkASTConfig}
+    echo "  projectName: ${projectName}" >> ${codePath}/${checkASTConfig}
+    #echo "  descriptor: ${descriptor}" >> ${codePath}/${checkASTConfig}
+    echo "  mail: ${mail}" >> ${codePath}/${checkASTConfig}
+    echo "Mend:" >> ${codePath}/${checkASTConfig}
+    echo "  project: ${project}" >> ${codePath}/${checkASTConfig}
+    echo "  mendReport: ${mendReport}" >> ${codePath}/${checkASTConfig}
+    echo "Checkmarx:" >> ${codePath}/${checkASTConfig}
+    echo "  teamId: ${teamIdForCheckmarx}" >> ${codePath}/${checkASTConfig}
+    echo "  projectName: ${projectNameForCheckmarx}" >> ${codePath}/${checkASTConfig}
+    echo "  scanId: ${scanId}" >> ${codePath}/${checkASTConfig}
+    echo "  reportId: ${reportId}"
 
     # Mail
     ${codePath}/execMailRelay.sh ${mail} ${mendReport}
