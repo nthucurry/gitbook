@@ -33,6 +33,7 @@ knowledge/erp/*
 knowledge/infra/*
 knowledge/infra/openshift/ser-info.txt
 knowledge/exam/*
+microservices/docker/docker-compose-sample
 
 ### open directories of interest and their contents
 # office

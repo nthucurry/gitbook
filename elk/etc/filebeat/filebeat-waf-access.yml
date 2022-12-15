@@ -11,7 +11,7 @@ filebeat.inputs:
 # ---------------------------- Elasticsearch Output ----------------------------
 # ------------------------------ Logstash Output -------------------------------
 output.logstash:
-  hosts: ["t-elk:1020"]
+  hosts: ["t-elk:1130"]
   indices:
     - index: "azure-waf-access"
       when.contains:
