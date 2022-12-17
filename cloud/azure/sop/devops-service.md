@@ -63,6 +63,7 @@
         ```bash
         sudo yum install https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm
         sudo yum install git -y
+        git config --global credential.helper store
         ```
     - docker
         ```bash
@@ -387,6 +388,18 @@ wget --help | head -3
     sleep 1;
     echo "quit"
     } | telnet ${mailRelay} 25
+    ```
+- 更新設定檔: `gitPullCode.sh`
+    ```bash
+    #!/bin/bash
+
+    configPath="/home/azadmin/config/SOP"
+    HOME="/home/azadmin"
+    organization="AUO-ADTAB2"
+
+    echo `date` > ${HOME}/456.txt
+    cd ${configPath}
+    git pull >> ${HOME}/456.txt
     ```
 - 設定檔
     ```json
