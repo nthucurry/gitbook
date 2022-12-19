@@ -27,10 +27,12 @@
    - 憑證要求檔 (server.csr)
 2. 憑證經銷商給客戶
    - 伺服器憑證 (server.crt)
-3. 客戶合併**伺服器憑證**、**私密金鑰檔** --> server-private.pfx
+3. 客戶合併**伺服器憑證**、**私密金鑰檔** --> server-private.pfx (for windows)
    - `openssl pkcs12 -in server.crt -inkey private.key -export -out server-private.pfx -password pass:1234`
 4. 從 server-private.pfx 匯出**伺服器憑證檔**、**私密金鑰檔**
    - `openssl pkcs12 -in server-private.pfx -nokeys -password "pass:1234" -out - 2>/dev/null | openssl x509 -out server.crt`
+5. CA
+   - `openssl pkcs12 -in server-private.pfx -password "pass:1234" -nokeys -nodes -cacerts -out ca.crt`
 
 # 轉換憑證格式 (有點複雜...)
 ```bash
@@ -77,7 +79,7 @@ openssl pkcs12 -in cert.pem -inkey privkey.pem -export -out FindARTs.pfx -passwo
         ```
 - 重啟服務
 - 產出 pfx 憑證 (windows)
-    - `openssl pkcs12 -export -out nginx.pfx -inkey nginx.key -in nginx.crt`
+    - `openssl pkcs12 -export -out nginx-server.pfx -inkey nginx-private.key -in nginx-server.crt`
 
 # Tomcat
 - [Tomcat7 升級 Https](https://medium.com/@eliu01011/tomcat7-%E5%8D%87%E7%B4%9A-https-with-lets-encrypt-29ea499730f9)
