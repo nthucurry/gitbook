@@ -1,0 +1,10 @@
+# Self-Hosted Integration Runtime
+- 說明
+    - APPLIES TO: Azure Data Factory、Azure Synapse Analytics
+    - A self-hosted integration runtime can run copy activities between a cloud data store and a data store in a private network.
+- [Prerequisites](https://learn.microsoft.com/en-us/azure/data-factory/create-self-hosted-integration-runtime?tabs=data-factory#prerequisites)
+    - Windows Server 2019
+    - 4 cores, 8 GB of RAM, and 80 GB of available hard drive space
+- [Create a self-hosted IR](https://learn.microsoft.com/en-us/azure/data-factory/create-self-hosted-integration-runtime?tabs=data-factory#create-a-self-hosted-ir-via-ui)
+- Configure a self-hosted IR
+- Set up a self-hosted IR on an Azure VM
