@@ -1,0 +1,72 @@
+version: '3'
+services:
+  op-node1:
+    image: auoazibmacr.azurecr.io/opensearch:latest
+    hostname: op-node1
+    container_name: op-node1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+      - "9600:9600" # required for Performance Analyzer
+    environment:
+      cluster.name: opensearch-cluster
+      node.name: node1
+      discovery.seed_hosts: 10.1.0.10:9300,10.1.0.10:9301
+      cluster.initial_master_nodes: node1,node2
+      network.publish_host: 10.1.0.10
+      network_host: 0.0.0.0
+      http.port: 9200
+      transport.tcp.port: 9300
+      bootstrap.memory_lock: "true"
+      OPENSEARCH_JAVA_OPTS: '-Xms512m -Xmx512m'
+      path.repo: "/usr/share/opensearch/snapshot"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      DISABLE_SECURITY_PLUGIN: "true"
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ./docker/opensearch-data/node1:/usr/share/opensearch/data
+      - ./docker/opensearch-logs/node1:/usr/share/opensearch/logs
+      - ./docker/snapshot-data/node1:/usr/share/opensearch/snapshot
+      - /etc/localtime:/etc/localtime:ro
+  op-node2:
+    image: auoazibmacr.azurecr.io/opensearch:latest
+    hostname: op-node2
+    container_name: op-node2
+    ports:
+      - "9201:9201"
+      - "9301:9301"
+      - "9601:9601" # required for Performance Analyzer
+    environment:
+      cluster.name: opensearch-cluster
+      node.name: node2
+      discovery.seed_hosts: 10.1.0.10:9300,10.1.0.10:9301
+      cluster.initial_master_nodes: node1,node2
+      network.publish_host: 10.1.0.10
+      network_host: 0.0.0.0
+      http.port: 9201
+      transport.tcp.port: 9301
+      bootstrap.memory_lock: "true"
+      OPENSEARCH_JAVA_OPTS: '-Xms512m -Xmx512m'
+      path.repo: "/usr/share/opensearch/snapshot"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      DISABLE_SECURITY_PLUGIN: "true"
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ./docker/opensearch-data/node2:/usr/share/opensearch/data
+      - ./docker/opensearch-logs/node2:/usr/share/opensearch/logs
+      - ./docker/snapshot-data/node2:/usr/share/opensearch/snapshot
+      - /etc/localtime:/etc/localtime:ro

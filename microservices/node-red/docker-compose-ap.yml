@@ -1,0 +1,132 @@
+version: '3'
+services:
+  zookeeper:
+    image: "auoazibmacr.azurecr.io/cp-zookeeper:latest"
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+      - '2888:2888'
+      - '3888:3888'
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOO_MY_ID: 0
+      ZOO_SERVERS: server.0=10.1.0.9:2888:3888;2181
+      ZOO_INIT_LIMIT: 60            #ZooKeeper初始化當前leader需要多長時間(預設5秒)
+      ZOO_SYNC_LIMIT: 2             #允許followers同步的等待時間(預設2秒)
+    volumes:
+      - ./docker/zookeeper-data:/var/lib/zookeeper/data # chown -R 1000:1000 /home/docker/zookeeper-data
+      - ./docker/zookeeper-log:/var/lib/zookeeper/log   # chown -R 1000:1000 /home/docker/zookeeper-log
+  kafka:
+    image: "auoazibmacr.azurecr.io/cp-kafka:latest"
+    hostname: kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "9999:9999"
+    environment:
+      KAFKA_BROKER_ID: 0
+      KAFKA_ZOOKEEPER_CONNECT: 10.1.0.9:2181
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://10.1.0.9:9092'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      JMX_PORT: 9999
+      KAFKA_JMX_OPTS: -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=10.1.0.9 -Dcom.sun.management.jmxremote.rmi.port=9999
+
+  schema_registry:
+    image: "auoazibmacr.azurecr.io/cp-schema-registry:latest"
+    hostname: schema_registry
+    container_name: schema_registry
+    depends_on:
+      - zookeeper
+      - kafka
+    ports:
+      - "8085:8085"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: 10.1.0.9
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 10.1.0.9:9092
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8085
+      SCHEMA_REGISTRY_DEBUG: "true"
+    command: bash -c "sleep 60; /etc/confluent/docker/run"
+
+  ai-serving:
+    image: "auoazibmacr.azurecr.io/ai-serving:latest"
+    hostname: ai-serving
+    container_name: ai-serving
+    volumes:
+      - ./docker/ai-serving:/opt/ai-serving
+    ports:
+      - 9090:9090
+      - 9091:9091
+
+  iradmin:
+    image: auoazibmacr.azurecr.io/iradmin:latest
+    container_name: iradmin
+    hostname: iradmin
+    working_dir: /iRAdmin
+    ports:
+      - "443:3050"
+      - "3051:3051"
+      - "3052:3052"
+      - "3053:3053"
+      - "3054:3054"
+      - "3055:3055"
+      - "3056:3056"
+      - "3057:3057"
+      - "3058:3058"
+      - "3059:3059"
+      - "3060:3060"
+      - "3061:3061"
+      - "3062:3062"
+      - "3063:3063"
+    depends_on:
+      - schema_registry
+      - ai-serving
+    environment:
+      NODE_ENV: production
+      TZ: Asia/Taipei
+      IRADMIN_APPNAME: admin
+      IRADMIN_PORT: 3050
+      WORKER_AUTOSTART: "true"
+      ESTOOLS_HOST_PORT: 10.1.0.10:9200
+      SNIFFINTERVAL: 60
+      ESTOOLS_MAX_RETRIES: 5
+      UV_THREADPOOL_SIZE:  100
+      NODE_RED_FUNCTION_TIME: 1
+      SYS_PERFDB: perfdb
+      DECISION_ALLOW_WORKER_THREADS: "false"
+      DECISION_NUM_OF_WORKER_THREADS: 10
+      AI_SERVING: http://ai-serving:9090
+      LD_LIBRARY_PATH: /iRAdmin/node-red-ext/OracleDB/instantclient_21_5
+      # - IRADMIN_MEMBER_SERVER: dh1@ibmdev.dyndns.biz:54050,dh2@ibmdev.dyndns.biz:54150,dh3@ibmdev.dyndns.biz:54250
+      IRADMIN_SCHEMA_REGISTRY_URL: http://schema_registry:8085
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
+      CAPSSO_API_URL: http://captest2.corpnet.auo.com/CAP_EX_API/api/AuthFuncs
+      CAPSSO_LOGIN_URL: https://logonts.corpnet.auo.com/login/index
+      CAPSSO_COOKIE_NAME: .AUOCAPFORMSAUTHTEST_TOKEN
+      CAPSSO_COOKIE_DOMAIN: auo.com
+      OTHERS_SERVER_URL: https://10.1.0.9
+      # APITOKENKEY: AUO_iradmin
+      PROXY_DEVELOP: "true"
+    volumes:
+      - ./iradmin:/iRAdmin
+      - /etc/localtime:/etc/localtime:ro
+      - ./tmp:/tmp
+    user: 1000:1000
+    command: bash -c "while ! curl -s http://10.1.0.10:9200 > /dev/null; do echo waiting for opensearch; sleep 3; done; (./pm2 start ecosystem.config.js) && tail -f /dev/null"
+
+  opensearch-dashboards:
+    image: auoazibmacr.azurecr.io//opensearch-dashboards:latest
+    hostname: opensearch-dashboards
+    container_name: opensearch-dashboards
+    ports:
+      - 5601:5601
+    environment:
+      OPENSEARCH_HOSTS: '["http://10.1.0.10:9200"]'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
+      SERVER_HOST: 0.0.0.0
+    volumes:
+      - ./docker/opensearch-dashboards/config:/usr/share/opensearch-dashboards/config
