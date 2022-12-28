@@ -13,7 +13,7 @@ elif [[ "$info" = "2" ]]; then
     resource_group="DBA-K8S"
     nsg="t-nsg"
     nsg_home_rule="from_Home"
-    public_home_ip=`curl https://ifconfig.me`
+    public_home_ip=`curl -k https://ifconfig.me`
 else
     subscription="a7bdf2e3-b855-4dda-ac93-047ff722cbbd"
     resource_group="DBA_Test"
