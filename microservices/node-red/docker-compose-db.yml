@@ -11,9 +11,9 @@ services:
     environment:
       cluster.name: opensearch-cluster
       node.name: node1
-      discovery.seed_hosts: 10.1.0.10:9300,10.1.0.10:9301
+      discovery.seed_hosts: 10.250.48.134:9300,10.250.48.134:9301
       cluster.initial_master_nodes: node1,node2
-      network.publish_host: 10.1.0.10
+      network.publish_host: 10.250.48.134
       network_host: 0.0.0.0
       http.port: 9200
       transport.tcp.port: 9300
@@ -46,9 +46,9 @@ services:
     environment:
       cluster.name: opensearch-cluster
       node.name: node2
-      discovery.seed_hosts: 10.1.0.10:9300,10.1.0.10:9301
+      discovery.seed_hosts: 10.250.48.134:9300,10.250.48.134:9301
       cluster.initial_master_nodes: node1,node2
-      network.publish_host: 10.1.0.10
+      network.publish_host: 10.250.48.134
       network_host: 0.0.0.0
       http.port: 9201
       transport.tcp.port: 9301
