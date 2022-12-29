@@ -1,0 +1,8 @@
+# KEY: Wallet type and location in the Microsoft Windows registry.
+LISTENER=
+  (DESCRIPTION=
+    (ADDRESS_LIST=
+      (ADDRESS=(PROTOCOL=tcp)(HOST=sale-server)(PORT=1521))
+      (ADDRESS=(PROTOCOL=ipc)(KEY=extproc))
+    )
+)

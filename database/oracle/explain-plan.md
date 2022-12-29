@@ -10,6 +10,7 @@ explain plan for select 1 from t
 # 訪問資料的方法
 ## table access full
 - HWL 越高，掃描越久，I/O 越高
+- ReOrg 可改善此情況
 
 ## table access by rowid
 ## index unique scan
