@@ -209,6 +209,17 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
     ```
 - `docker-compose -f docker-compose-nginx.yml down`
 
+## Dockerfile and docker-compose comparison chart
+| Comparison         | Dockerfile                | docker-compose            |
+|--------------------|---------------------------|---------------------------|
+| Purpose            | Image creation            | Run a container           |
+| Type               | Extensionless file        | Command and a YAML file   |
+| Associated command | docker build              | docker-compose up         |
+| Docker SDK         | Yes                       | Yes                       |
+| Reciprocity        | Can’t call docker-compose | Can invoke the Dockerfile |
+| Kubernetes SDK     | No                        | No                        |
+| Deprecated         | No                        | No                        |
+
 ## Push image to Azure container registry
 - `docker login adthub.azurecr.io`
 - `docker tag app-ssh-tool adthub.azurecr.io/app-ssh-tool`

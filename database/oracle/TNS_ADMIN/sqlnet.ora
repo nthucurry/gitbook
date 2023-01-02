@@ -1,0 +1,16 @@
+# To enable and disable valid node checking for incoming connections.
+tcp.validnode_checking = yes
+
+# To specify which clients are allowed access to the database.
+# This list takes precedence over the TCP.EXCLUDED_NODES parameter if both lists are present.
+# This parameter is only valid when the "tcp.validnode_checking" parameter is set to yes.
+tcp.invited_nodes =
+    (
+        sales.us.example.com,
+        hr.us.example.com,
+        192.0.*,
+        2001:DB8:200C:433B/32
+    )
+
+# To specify the order of the naming methods used for client name resolution lookups.
+names.directory_path=(tnsnames, ldap, ezconnect)

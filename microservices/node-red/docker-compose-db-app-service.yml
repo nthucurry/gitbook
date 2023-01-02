@@ -1,14 +1,14 @@
-version: '3' # docker-compose 本身版本，會影響 yml 寫法
+version: '3'
 services:
   op-node1:
-    image: auoazibmacr.azurecr.io/opensearch:latest # 決定基底 image 的設定
+    image: auoazibmacr.azurecr.io/opensearch:latest
     hostname: op-node1
     container_name: op-node1
-    ports: # 決定容器要 expose 出來的 ports
+    ports:
       - "9200:9200"
       - "9300:9300"
       - "9600:9600" # required for Performance Analyzer
-    environment: # 環境變數設定
+    environment:
       cluster.name: opensearch-cluster
       node.name: node1
       discovery.seed_hosts: localhost:9300,localhost:9301
@@ -22,6 +22,7 @@ services:
       path.repo: "/usr/share/opensearch/snapshot"
       DISABLE_INSTALL_DEMO_CONFIG: "true"
       DISABLE_SECURITY_PLUGIN: "true"
+
     ulimits:
       memlock:
         soft: -1
@@ -29,10 +30,10 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-    volumes: # 本機目錄至容器內部
-      - ./docker/opensearch-data/node1:/usr/share/opensearch/data
-      - ./docker/opensearch-logs/node1:/usr/share/opensearch/logs
-      - ./docker/snapshot-data/node1:/usr/share/opensearch/snapshot
+    volumes:
+      - /mnt/dataplatform/docker/opensearch-data/node1:/usr/share/opensearch/data
+      - /mnt/dataplatform/docker/opensearch-logs/node1:/usr/share/opensearch/logs
+      - /mnt/dataplatform/docker/snapshot-data/node1:/usr/share/opensearch/snapshot
       - /etc/localtime:/etc/localtime:ro
   op-node2:
     image: auoazibmacr.azurecr.io/opensearch:latest
@@ -56,6 +57,7 @@ services:
       path.repo: "/usr/share/opensearch/snapshot"
       DISABLE_INSTALL_DEMO_CONFIG: "true"
       DISABLE_SECURITY_PLUGIN: "true"
+
     ulimits:
       memlock:
         soft: -1
@@ -64,7 +66,7 @@ services:
         soft: 65536
         hard: 65536
     volumes:
-      - ./docker/opensearch-data/node2:/usr/share/opensearch/data
-      - ./docker/opensearch-logs/node2:/usr/share/opensearch/logs
-      - ./docker/snapshot-data/node2:/usr/share/opensearch/snapshot
+      - /mnt/dataplatform/docker/opensearch-data/node2:/usr/share/opensearch/data
+      - /mnt/dataplatform/docker/opensearch-logs/node2:/usr/share/opensearch/logs
+      - /mnt/dataplatform/docker/snapshot-data/node2:/usr/share/opensearch/snapshot
       - /etc/localtime:/etc/localtime:ro
