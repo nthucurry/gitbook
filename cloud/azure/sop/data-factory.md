@@ -8,3 +8,6 @@
 - [Create a self-hosted IR](https://learn.microsoft.com/en-us/azure/data-factory/create-self-hosted-integration-runtime?tabs=data-factory#create-a-self-hosted-ir-via-ui)
 - Configure a self-hosted IR
 - Set up a self-hosted IR on an Azure VM
+- [Proxy server considerations](https://learn.microsoft.com/en-us/azure/data-factory/create-self-hosted-integration-runtime?tabs=data-factory#proxy-server-considerations)
+- [Ports and firewalls](https://learn.microsoft.com/en-us/azure/data-factory/create-self-hosted-integration-runtime?tabs=data-factory#ports-and-firewalls)
+- [Troubleshoot self-hosted integration runtime](https://learn.microsoft.com/en-us/azure/data-factory/self-hosted-integration-runtime-troubleshoot-guide?tabs=data-factory#self-hosted-ir-connectivity-issues)
