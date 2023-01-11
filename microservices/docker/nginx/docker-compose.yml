@@ -1,0 +1,12 @@
+services:
+  nginx:
+    image: nginx
+    volumes:
+      - ./templates:/etc/nginx/templates
+    ports:
+      - "80:80"
+    environment:
+      - NGINX_HOST=t-msa.southeastasia.cloudapp.azure.com
+      - NGINX_PORT=80
+  app-ssh-tool:
+    image: auoazibmacr.azurecr.io/app-ssh-tool:latest
