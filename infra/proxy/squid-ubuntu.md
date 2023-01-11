@@ -15,19 +15,29 @@ netstat -ntl
 - `ln -s /etc/squid/squid.conf`
 - `vi squid.conf`
     ```
-    http_port 3128
-    http_port 3129 intercept
+    http_port 3127
+    http_port 3128 transparent
     ```
-- `apt-get install iptables`
-- `iptables -t nat -A OUTPUT -p tcp -m tcp --dport 80 -m owner --uid-owner root -j RETURN`
-- `iptables -t nat -A OUTPUT -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3129`
-- `iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3128`
+- `apt install iptables`
+- ~~`iptables -t nat -A OUTPUT -p tcp -m tcp --dport 80 -m owner --uid-owner root -j RETURN`~~
+- ~~`iptables -t nat -A OUTPUT -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3129`~~
+- ~~`iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3128`~~
+- `iptables -t nat -A PREROUTING -p tcp --dport  80 -j REDIRECT --to 3128` (驗證後 OK)
+- `iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to 3129` (驗證中...)
     - incoming HTTP traffic
     - 從其他機器上的外部的 IP 會發生效果
     - 從本地端發起的連線不會遵循 nat 表上 PREROUTING 鏈的設定
 - `vi /etc/sysctl.conf`
     - `net.ipv4.ip_forward = 1`
     - `sysctl -p`
+
+# Setup at Azure
+- route table
+    - destination: dmz_web
+    - next hop: t-squid (NVA)
+- **enable** ip forwarding
+- nsg
+    - open 80, 443 port
 
 # Reset iptables
 ```bash
