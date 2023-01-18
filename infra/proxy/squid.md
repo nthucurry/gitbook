@@ -1,11 +1,11 @@
 - [前言](#前言)
 - [安裝 Squid](#安裝-squid)
 - [修改參數](#修改參數)
-  - [設定 Header \& TLS](#設定-header--tls)
-  - [Header 測試工具](#header-測試工具)
-    - [Fiddler](#fiddler)
-    - [Wireshark](#wireshark)
-  - [OS 設定位置](#os-設定位置)
+    - [設定 Header & TLS](#設定-header--tls)
+    - [Header 測試工具](#header-測試工具)
+        - [Fiddler](#fiddler)
+        - [Wireshark](#wireshark)
+    - [OS 設定位置](#os-設定位置)
 - [安裝報表 (Squid Analysis Report Generator)](#安裝報表-squid-analysis-report-generator)
 
 # 前言
@@ -101,6 +101,7 @@ source /etc/bashrc
     ```bash
     mkdir -p /etc/squid/certs
     cd /etc/squid/certs
+    wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/infra/proxy/certs/ssl.conf
     ```
 - 產生 self-signed SSL certificate and trusted certificate
     ```bash
