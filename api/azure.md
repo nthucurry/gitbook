@@ -6,3 +6,4 @@
 # Azure Portal URL
 - https://portal.azure.com/auoptronics.onmicrosoft.com
 - https://portal.azure.com/tonylee1hotmail.onmicrosoft.com
+- https://portal.azure.com/auosdz.onmicrosoft.com
