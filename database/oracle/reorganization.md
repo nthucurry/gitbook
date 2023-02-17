@@ -11,6 +11,7 @@
 
 # Reference
 - [oracle 12.2 alter table move online](https://www.796t.com/article.php?id=105433)
+- [Table Reorganization(shrink space)](https://shinchuan1.blogspot.com/2014/01/table-reorganizationshrink-space.html)
 
 # Check table size
 ```sql
@@ -39,8 +40,12 @@ end;
 
 ## FSFI (Free Space Fragmentation Index)
 ```sql
-select tablespace_name,sqrt(max(blocks)/sum(blocks))*(100/sqrt(sqrt(count(blocks)))) FSFI
-  from dba_free_space group by tablespace_name order by FSFI desc;
+select
+    tablespace_name,
+    sqrt(max(blocks)/sum(blocks))*(100/sqrt(sqrt(count(blocks)))) FSFI
+  from dba_free_space
+  group by tablespace_name
+  order by FSFI desc;
 ```
 
 ## Step

@@ -96,10 +96,47 @@ iptables-save
 
 # squid.conf
 ```
+#
+# INSERT YOUR OWN RULE(S) HERE TO ALLOW ACCESS FROM YOUR CLIENTS
+#
+acl allowurl url_regex -i "/etc/squid/allow_url.lst"
+
+# Example rule allowing access from your local networks.
+# Adapt localnet in the ACL section to list your (internal) IP networks
+# from where browsing should be allowed
+http_access deny !allowurl
+http_access deny !localnet
+
 http_access allow localnet
+http_access allow localhost
+http_access allow allowurl
+
+
+# And finally deny all other access to this proxy
+http_access deny all
+
+# Squid normally listens to port 3128
 http_port 3127
 http_port 3128 transparent
 https_port 3129 transparent ssl-bump cert=/etc/squid/certs/server.crt key=/etc/squid/certs/server.key
+```
+
+# How to add trusted CA certificate on CentOS
+```bash=
+openssl verify /home/azadmin/server.crt
+openssl verify /etc/pki/tls/certs/ca-bundle.crt
+
+sudo su
+cd /etc/squid/certs/
+ll /etc/pki/ca-trust/source/anchors/
+cp /home/azadmin/server.crt /etc/pki/ca-trust/source/anchors/
+update-ca-trust extract
+
+update-ca-trust
+cat /home/azadmin/server.crt >> /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+curl -v https://ipinfo.io
+
+systemctl restart squid
 ```
 
 # Azure
