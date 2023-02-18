@@ -17,8 +17,8 @@
     orapki wallet add -wallet /u01/app/oracle/admin/DB11G/wallet -trusted_cert -cert "/home/oracle/ssl/ca-base.cer" -pwd WalletPasswd123
     ```
 - Test
-```sql
-SET SERVEROUTPUT ON
-EXEC utl_http.set_wallet('file:/u01/app/oracle/admin/DB11G/wallet', 'WalletPasswd123');
-SELECT utl_http.request('secret.encrypted-website.com') FROM dual;
-```
+    ```sql
+    SET SERVEROUTPUT ON
+    EXEC utl_http.set_wallet('file:/u01/app/oracle/admin/DB11G/wallet', 'WalletPasswd123');
+    SELECT utl_http.request('secret.encrypted-website.com') FROM dual;
+    ```
