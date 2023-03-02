@@ -128,6 +128,8 @@ https_port 3129 transparent ssl-bump cert=/etc/squid/certs/server.crt key=/etc/s
 openssl verify /home/azadmin/server.crt
 openssl verify /etc/pki/tls/certs/ca-bundle.crt
 
+wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/infra/proxy/certs/server.crt
+
 sudo su
 cd /etc/squid/certs/
 ll /etc/pki/ca-trust/source/anchors/
