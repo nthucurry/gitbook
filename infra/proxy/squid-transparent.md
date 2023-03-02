@@ -9,9 +9,11 @@
 ```bash
 yum update -y
 yum install epel-release -y
-yum install http://ngtech.co.il/repo/centos/7/squid-repo-1-1.el7.centos.noarch.rpm -y
+# yum install http://ngtech.co.il/repo/centos/7/squid-repo-1-1.el7.centos.noarch.rpm -y
 yum install squid -y
 yum install iptables-services -y
+squid -v
+# Squid Cache: Version 3.5.20
 
 echo "alias srs='systemctl restart squid.service'" >> /etc/bashrc
 echo "alias sss='systemctl status squid.service'" >> /etc/bashrc

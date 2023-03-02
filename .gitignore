@@ -12,7 +12,7 @@ test.sh
 .zshrc
 .DS_Store
 *.cer
-*.crt
+# *.crt
 *.key
 *.pfx
 
