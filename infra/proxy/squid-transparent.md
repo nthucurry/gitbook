@@ -144,17 +144,8 @@ systemctl restart squid
 ```
 
 # SOP
-- `vi genCert.sh`
-    ```bash
-    openssl req -out server.csr -key server.key -new -config ssl.conf
-    cat server.crt
-    systemctl restart squid
-    ```
-- `vi updateCert.sh`
-    ```bash
-    update-ca-trust
-    cat /home/azadmin/server.crt >> /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
-    ```
+- [genCert.sh](./certs/genCert.sh)
+- [updateCert.sh](./certs/updateCert.sh)
 
 # Azure
 - NSG

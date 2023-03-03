@@ -69,6 +69,7 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 
     sudo systemctl enable docker --now
     sudo usermod -aG docker `whoami`
+    sudo chmod 777 /var/run/docker.sock
 
     DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
     mkdir -p $DOCKER_CONFIG/cli-plugins
