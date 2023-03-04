@@ -1,0 +1,20 @@
+# test
+ipinfo.io
+
+# github
+raw.githubusercontent.com
+
+# storage account
+storagedbak8s.blob.core.windows.net
+
+# package
+.centos.org
+olcentgbl.trafficmanager.net
+.nuget.org
+
+# docker
+.docker.com
+.docker.io
+production.cloudflare.docker.com
+mcr.microsoft.com
+eastasia.data.mcr.microsoft.com
