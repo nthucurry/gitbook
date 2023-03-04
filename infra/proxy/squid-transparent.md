@@ -144,8 +144,8 @@ systemctl restart squid
 ```
 
 # SOP
-- [genCert.sh](./certs/genCert.sh)
-- [updateCert.sh](./certs/updateCert.sh)
+- [genCert.sh](../certs/genCert.sh)
+- [updateCert.sh](../certs/updateCert.sh)
 
 # Azure
 - NSG
