@@ -3,18 +3,20 @@ ipinfo.io
 
 # github
 raw.githubusercontent.com
+github.com
 
 # storage account
 storagedbak8s.blob.core.windows.net
 
 # package
 .centos.org
-olcentgbl.trafficmanager.net
 .nuget.org
+olcentgbl.trafficmanager.net
+packages.endpointdev.com
 
 # docker
 .docker.com
 .docker.io
-production.cloudflare.docker.com
+.data.mcr.microsoft.com
 mcr.microsoft.com
-eastasia.data.mcr.microsoft.com
+production.cloudflare.docker.com

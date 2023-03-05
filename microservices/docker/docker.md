@@ -237,3 +237,14 @@ docker 映象檔是一種分層堆疊的運作方式，採用了 aufs 的檔案�
 - [兩種對外服務連線方式](https://kknews.cc/zh-tw/news/9n9z5z8.html)
     - NAT port forwarding: 讓 Host 2 的 Port 對應到 Container 1 的 Port，然後 Host 1 會先連到 Host 2 實體主機的 Port，然後就會對應到 Container 1 的 Port
     - bridge(橋接): 讓 Container 橋接到實體主機網路卡
+
+# 測試
+- java
+    - `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/docker/hello-java/Dockerfile`
+    - `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/docker/hello-java/Hello.java`
+- dotnet
+    - `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/docker/dotnet/Dockerfile`
+- nginx
+    - `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/docker/nginx/Dockerfile`
+    - `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/docker/nginx/index.html`
+    - `wget https://raw.githubusercontent.com/ShaqtinAFool/gitbook/master/microservices/docker/nginx/nginx.conf`
