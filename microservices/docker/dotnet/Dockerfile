@@ -4,6 +4,10 @@ WORKDIR /source
 #
 # copy csproj and restore as distinct layers
 COPY *.csproj .
+ADD server.crt /usr/local/share/ca-certificates/server.crt
+RUN chmod 644 /usr/local/share/ca-certificates/server.crt && update-ca-certificates
+RUN curl https://ipinfo.io
+RUN curl https://api.nuget.org
 RUN dotnet restore --use-current-runtime
 #
 # copy and publish app and libraries
