@@ -97,3 +97,32 @@
     ```python
     dbutils.fs.mounts()
     ```
+
+# [How to import a custom CA certificate](https://learn.microsoft.com/en-us/azure/databricks/kb/python/import-custom-ca-cert)
+- 路由設定
+    - Address prefix: **Storage**
+    - Next hop type: **VirtualAppliance**
+    - Next hop IP address: **192.168.14.7**
+- [憑證製作](/infra/certs/certificate.md)
+- 匯入 CA 憑證
+    ```bash
+    %sh cat << 'EOF' > /usr/local/share/ca-certificates/server.crt
+    -----BEGIN CERTIFICATE-----
+    <CA CHAIN 1 CERTIFICATE CONTENT>
+    -----END CERTIFICATE-----
+    EOF
+    ```
+- 確認憑證是否產生: `%sh ls -al /usr/local/share/ca-certificates`
+    ```
+    total 16
+    drwxr-xr-x 1 root root 4096 Mar  7 14:42 .
+    drwxr-xr-x 1 root root 4096 Mar  7 13:52 ..
+    -rw-r--r-- 1 root root 1818 Mar  7 14:42 server.crt
+    ```
+- 更新憑證: `%sh update-ca-certificates`
+    ```
+    Updating certificates in /etc/ssl/certs...
+    0 added, 0 removed; done.
+    Running hooks in /etc/ca-certificates/update.d...
+    done.
+    ```

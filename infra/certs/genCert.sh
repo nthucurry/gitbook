@@ -9,3 +9,4 @@ openssl req -out server.csr -key server.key -new -config ssl.conf
 cat server.crt
 
 systemctl restart squid.service
+systemctl status squid.service
